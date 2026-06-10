@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SMS/WhatsApp Automation Dashboard</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        background: #f6f7fb;
+        color: #1f2937;
+      }
+
+      header {
+        background: #111827;
+        color: white;
+        padding: 20px 28px;
+      }
+
+      main {
+        display: grid;
+        gap: 20px;
+        padding: 24px;
+      }
+
+      section {
+        background: white;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 18px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+      }
+
+      .grid {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      }
+
+      label {
+        display: block;
+        font-weight: 700;
+        margin-top: 12px;
+      }
+
+      input,
+      textarea,
+      button {
+        box-sizing: border-box;
+        width: 100%;
+        margin-top: 6px;
+        padding: 10px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+      }
+
+      button {
+        cursor: pointer;
+        background: #2563eb;
+        border-color: #2563eb;
+        color: white;
+        font-weight: 700;
+      }
+
+      pre {
+        overflow: auto;
+        white-space: pre-wrap;
+        background: #f3f4f6;
+        padding: 12px;
+        border-radius: 8px;
+      }
+
+      .card {
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 12px;
+        margin-top: 10px;
+      }
+
+      .status {
+        display: inline-block;
+        padding: 3px 8px;
+        border-radius: 999px;
+        background: #eef2ff;
+        color: #3730a3;
+        font-size: 12px;
+        font-weight: 700;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>SMS/WhatsApp Automation Dashboard</h1>
+      <p>Manual intake, SMS gateway routing, reply matching, and WhatsApp reply review.</p>
+    </header>
+    <main>
+      <section>
+        <h2>Submit Request</h2>
+        <form id="requestForm">
+          <label>Requester name <input name="requesterName" value="Officer Rahim" /></label>
+          <label>Requester WhatsApp ID <input name="requesterWhatsappId" value="8801700000000" /></label>
+          <label>WhatsApp group ID <input name="whatsappGroupId" value="operations-group" /></label>
+          <label>Request text <textarea name="text">LRL 01712345678</textarea></label>
+          <button type="submit">Queue and Send SMS</button>
+        </form>
+      </section>
+
+      <section>
+        <h2>Simulate Operator Reply</h2>
+        <form id="smsForm">
+          <label>Gateway ID <input name="gatewayId" value="GP_PHONE_01" /></label>
+          <label>From short code <input name="from" value="12345" /></label>
+          <label>SMS body <textarea name="body">LRL cell location</textarea></label>
+          <button type="submit">Receive SMS Webhook</button>
+        </form>
+      </section>
+
+      <div class="grid">
+        <section>
+          <h2>Gateway Health</h2>
+          <div id="gateways"></div>
+        </section>
+        <section>
+          <h2>Operator Queues</h2>
+          <div id="queues"></div>
+        </section>
+      </div>
+
+      <section>
+        <h2>Requests</h2>
+        <div id="requests"></div>
+      </section>
+
+      <section>
+        <h2>Outbound SMS</h2>
+        <div id="outbox"></div>
+      </section>
+
+      <section>
+        <h2>WhatsApp Reply Drafts</h2>
+        <div id="replies"></div>
+      </section>
+
+      <section>
+        <h2>Audit Log</h2>
+        <div id="audit"></div>
+      </section>
+    </main>
+    <script src="/app.js"></script>
+  </body>
+</html>

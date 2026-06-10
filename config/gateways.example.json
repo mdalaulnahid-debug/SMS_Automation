@@ -1,0 +1,20 @@
+{
+  "GP": {
+    "gatewayUrl": "http://192.168.1.101:8080",
+    "sendPath": "/send-sms",
+    "apiKey": "",
+    "trustedSenders": ["12345"]
+  },
+  "ROBI": {
+    "gatewayUrl": "http://192.168.1.102:8080",
+    "sendPath": "/send-sms",
+    "apiKey": "",
+    "trustedSenders": ["12345"]
+  },
+  "BANGLALINK": {
+    "gatewayUrl": "http://192.168.1.103:8080",
+    "sendPath": "/send-sms",
+    "apiKey": "",
+    "trustedSenders": ["12345"]
+  }
+}
