@@ -6,7 +6,12 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
+    "import:training": "node scripts/importTrainingData.js",
+    "organize:training": "node scripts/reorganizeTrainingData.js",
     "test": "node --test"
+  },
+  "dependencies": {
+    "xlsx": "^0.18.5"
   },
   "engines": {
     "node": ">=18"

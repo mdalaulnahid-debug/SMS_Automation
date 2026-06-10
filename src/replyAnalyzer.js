@@ -1,5 +1,7 @@
 'use strict';
 
+const { existsSync, readFileSync } = require('node:fs');
+const { join } = require('node:path');
 const { REQUEST_TYPES } = require('./domain');
 const { extractSilentReference } = require('./store');
 
@@ -18,18 +20,48 @@ function analyzeOperatorReply({ request, messageBody }) {
     .map((pattern) => pattern.source)
     .filter((_, index) => expectedPatterns[index].test(body));
   const foundReference = extractSilentReference(body);
+  const trainingMatch = matchTrainingPattern(request, body);
 
   return {
     requestType: request.requestType,
     referenceMatched: Boolean(foundReference && foundReference === request.silentReference),
     foundReference,
-    patternMatched: matchedPatterns.length > 0,
+    patternMatched: matchedPatterns.length > 0 || trainingMatch.matched,
     matchedPatterns,
+    trainingMatch,
     confidence: confidenceScore({
       referenceMatched: Boolean(foundReference && foundReference === request.silentReference),
-      patternMatched: matchedPatterns.length > 0
+      patternMatched: matchedPatterns.length > 0 || trainingMatch.matched
     })
   };
+}
+
+function matchTrainingPattern(request, body) {
+  const training = loadTrainingPatterns();
+  const normalizedBody = body.toLowerCase();
+  const groups = training.patterns.filter((pattern) => {
+    return pattern.requestType === request.requestType && (!pattern.operator || request.operator === pattern.operator);
+  });
+  const matches = groups.flatMap((group) => {
+    return group.keywords
+      .filter(({ token }) => normalizedBody.includes(token.toLowerCase()))
+      .map(({ token, count }) => ({ token, count, operator: group.operator }));
+  });
+
+  return {
+    matched: matches.length > 0,
+    matches: matches.slice(0, 10)
+  };
+}
+
+function loadTrainingPatterns() {
+  const filePath = join(__dirname, '..', 'data', 'reply-patterns.json');
+  if (!existsSync(filePath)) return { patterns: [] };
+  try {
+    return JSON.parse(readFileSync(filePath, 'utf8'));
+  } catch {
+    return { patterns: [] };
+  }
 }
 
 function confidenceScore({ referenceMatched, patternMatched }) {
@@ -41,5 +73,6 @@ function confidenceScore({ referenceMatched, patternMatched }) {
 
 module.exports = {
   REPLY_PATTERNS,
-  analyzeOperatorReply
+  analyzeOperatorReply,
+  matchTrainingPattern
 };

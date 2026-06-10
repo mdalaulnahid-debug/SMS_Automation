@@ -1,0 +1,23 @@
+{
+  "status": "imported",
+  "sourceRoot": "Training Data/Automation",
+  "totalExamples": 48,
+  "blankReplies": 3,
+  "requestTypes": {
+    "IMEI-MS": 11,
+    "LCL": 14,
+    "LRL": 15,
+    "MS-NID": 5,
+    "NID-MS": 3
+  },
+  "operators": [
+    "GP",
+    "ROBI",
+    "BANGLALINK"
+  ],
+  "notes": [
+    "Training data covers all five request types and all three operators.",
+    "Blank reply rows should be reviewed or converted into explicit no-data examples.",
+    "Field extraction should be added for IMEI, MSISDN, IMSI, NID, location, date, and address instead of relying only on keyword matching."
+  ]
+}
