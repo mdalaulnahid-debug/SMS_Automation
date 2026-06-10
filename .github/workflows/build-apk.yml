@@ -40,8 +40,6 @@ jobs:
 
       - name: Build debug APK
         working-directory: android-gateway
-        env:
-          ANDROID_HOME: ${{ env.ANDROID_SDK_ROOT }}
         run: gradle assembleDebug --no-daemon
 
       - name: Upload APK
