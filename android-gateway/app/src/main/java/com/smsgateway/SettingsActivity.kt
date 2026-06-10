@@ -13,16 +13,15 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        title = "Settings"
 
         val gatewayIds = arrayOf("GP_PHONE_01", "ROBI_PHONE_01", "BANGLALINK_PHONE_01")
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, gatewayIds)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, gatewayIds)
         binding.spinnerGatewayId.adapter = adapter
 
         loadSettings(gatewayIds)
-
         binding.btnSave.setOnClickListener { saveSettings() }
     }
 
@@ -33,6 +32,9 @@ class SettingsActivity : AppCompatActivity() {
         binding.etBackendUrl.setText(Prefs.getBackendUrl(this))
         binding.etApiKey.setText(Prefs.getApiKey(this))
         binding.etPort.setText(Prefs.getHttpPort(this).toString())
+        binding.etTestGroupId.setText(Prefs.getTestGroupId(this))
+        binding.etTestRequesterId.setText(Prefs.getTestRequesterId(this))
+        binding.etTestRequesterName.setText(Prefs.getTestRequesterName(this))
     }
 
     private fun saveSettings() {
@@ -41,10 +43,7 @@ class SettingsActivity : AppCompatActivity() {
         val apiKey = binding.etApiKey.text.toString().trim()
         val port = binding.etPort.text.toString().trim().toIntOrNull()
 
-        if (backendUrl.isBlank()) {
-            Toast.makeText(this, "Backend URL is required", Toast.LENGTH_SHORT).show()
-            return
-        }
+        // Backend URL can be blank — the app auto-discovers the PC on the same Wi-Fi.
         if (port == null || port !in 1024..65535) {
             Toast.makeText(this, "Port must be between 1024 and 65535", Toast.LENGTH_SHORT).show()
             return
@@ -54,8 +53,11 @@ class SettingsActivity : AppCompatActivity() {
         Prefs.setBackendUrl(this, backendUrl)
         Prefs.setApiKey(this, apiKey)
         Prefs.setHttpPort(this, port)
+        Prefs.setTestGroupId(this, binding.etTestGroupId.text.toString().trim())
+        Prefs.setTestRequesterId(this, binding.etTestRequesterId.text.toString().trim())
+        Prefs.setTestRequesterName(this, binding.etTestRequesterName.text.toString().trim())
 
-        Toast.makeText(this, "Saved. Restart service to apply changes.", Toast.LENGTH_LONG).show()
+        Toast.makeText(this, "Saved. Restart service to apply connection changes.", Toast.LENGTH_LONG).show()
         finish()
     }
 

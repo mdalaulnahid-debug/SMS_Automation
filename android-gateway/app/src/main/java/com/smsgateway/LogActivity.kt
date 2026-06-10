@@ -25,8 +25,8 @@ class LogActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityLogBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        title = "SMS Log"
 
         val adapter = LogAdapter()
         binding.recyclerView.apply {
@@ -77,9 +77,9 @@ private class LogAdapter : RecyclerView.Adapter<LogAdapter.VH>() {
             b.tvStatus.setTextColor(
                 b.root.context.getColor(
                     when (entry.status) {
-                        "OK" -> android.R.color.holo_green_dark
-                        "FAILED" -> android.R.color.holo_red_dark
-                        else -> android.R.color.holo_orange_dark
+                        "OK" -> R.color.success
+                        "FAILED" -> R.color.danger
+                        else -> R.color.warning
                     }
                 )
             )

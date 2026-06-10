@@ -21,7 +21,13 @@ An authorized user submits a formatted request. The backend routes it safely, se
 ## Long-Term Direction
 
 - Persistent database with audit protection.
-- Android gateway companion app for the three phones.
+- Android gateway companion app for the three phones (**v1.2.1 shipped; E2E test passed 2026-06-11**).
 - Admin dashboard for queues, phone health, logs, and manual review.
 - Better extractor rules for `IMEI`, `MSISDN`, `NID`, `IMSI`, location, date, and address fields.
-- Official WhatsApp intake/reply integration when available.
+- Official WhatsApp intake/reply integration when available (`whatsappGroupId` stored on requests today; posting is manual).
+
+## Current MVP State (June 2026)
+
+- Test mode works: app Test Request → SMS via gateway phone → manual reply → backend draft with `@requesterName`.
+- WhatsApp group ID and requester metadata come from app Settings (Test Metadata); drafts appear on PC dashboard only.
+- Dual-SIM phones need correct default SMS SIM until the app adds a subscription picker.

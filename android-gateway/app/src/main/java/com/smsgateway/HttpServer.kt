@@ -10,7 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.json.JSONObject
 
-class HttpServer(private val context: Context, port: Int) : NanoHTTPD(port) {
+class HttpServer(private val context: Context, port: Int) : NanoHTTPD("0.0.0.0", port) {
     companion object {
         private const val TAG = "HttpServer"
     }

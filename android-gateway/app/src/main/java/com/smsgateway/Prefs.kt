@@ -16,7 +16,7 @@ object Prefs {
         prefs(context).edit().putString("gateway_id", value).apply()
 
     fun getBackendUrl(context: Context): String =
-        prefs(context).getString("backend_url", "http://192.168.1.200:3000") ?: "http://192.168.1.200:3000"
+        prefs(context).getString("backend_url", "") ?: ""
 
     fun setBackendUrl(context: Context, value: String) =
         prefs(context).edit().putString("backend_url", value).apply()
@@ -38,4 +38,28 @@ object Prefs {
 
     fun setServiceEnabled(context: Context, value: Boolean) =
         prefs(context).edit().putBoolean("service_enabled", value).apply()
+
+    fun getTestGroupId(context: Context): String =
+        prefs(context).getString("test_group_id", "test-whatsapp-group") ?: "test-whatsapp-group"
+
+    fun setTestGroupId(context: Context, value: String) =
+        prefs(context).edit().putString("test_group_id", value).apply()
+
+    fun getTestRequesterId(context: Context): String =
+        prefs(context).getString("test_requester_id", "test-requester") ?: "test-requester"
+
+    fun setTestRequesterId(context: Context, value: String) =
+        prefs(context).edit().putString("test_requester_id", value).apply()
+
+    fun getTestRequesterName(context: Context): String =
+        prefs(context).getString("test_requester_name", "Test User") ?: "Test User"
+
+    fun setTestRequesterName(context: Context, value: String) =
+        prefs(context).edit().putString("test_requester_name", value).apply()
+
+    fun getLastTestTarget(context: Context): String =
+        prefs(context).getString("last_test_target", "") ?: ""
+
+    fun setLastTestTarget(context: Context, value: String) =
+        prefs(context).edit().putString("last_test_target", value).apply()
 }

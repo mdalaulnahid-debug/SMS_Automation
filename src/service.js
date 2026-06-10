@@ -48,7 +48,8 @@ class AutomationService {
       targetOperators: parsed.targetOperators,
       requestType: parsed.requestType,
       payload: parsed.payload,
-      rawRequestText: input.text
+      rawRequestText: input.text,
+      testDestination: input.testDestination || null
     });
 
     this.queue.enqueue(request);
@@ -171,17 +172,34 @@ class AutomationService {
     return completed;
   }
 
-  timeoutWaitingRequests() {
+  async timeoutWaitingRequests() {
     const cutoff = Date.now() - this.replyWindowMs;
-    return this.store
+    const timedOut = this.store
       .listRequests()
       .filter((request) => request.status === STATUSES.WAITING_OPERATOR_REPLY)
-      .filter((request) => new Date(request.createdAt).getTime() < cutoff)
+      .filter((request) => this.requestSentBefore(request.requestId, cutoff))
       .map((request) =>
         this.store.updateRequestStatus(request.requestId, STATUSES.TIMEOUT, {
           failedReason: 'Operator reply timed out.'
         })
       );
+
+    const operatorsToDispatch = new Set(
+      timedOut.flatMap((request) => request.targetOperators)
+    );
+    await Promise.all(
+      [...operatorsToDispatch].map((operator) => this.smsGateway.dispatchNext(operator))
+    );
+
+    return timedOut;
+  }
+
+  requestSentBefore(requestId, cutoffMs) {
+    const sentTimes = this.store.smsOutbox
+      .filter((row) => row.requestId === requestId && row.sentStatus === 'SENT')
+      .map((row) => new Date(row.sentAt).getTime());
+    if (!sentTimes.length) return false;
+    return Math.max(...sentTimes) < cutoffMs;
   }
 }
 

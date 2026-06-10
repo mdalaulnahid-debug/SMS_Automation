@@ -133,19 +133,35 @@ function isTrustedSenderForGateway(gatewayId, sender) {
   });
 }
 
-function createRequestId(date = new Date(), sequence = 1) {
-  const yyyy = date.getUTCFullYear();
-  const mm = String(date.getUTCMonth() + 1).padStart(2, '0');
-  const dd = String(date.getUTCDate()).padStart(2, '0');
-  return `REQ-${yyyy}${mm}${dd}-${String(sequence).padStart(4, '0')}`;
-}
-
 function assertTransition(from, to) {
   if (from === to) return;
   const allowed = STATUS_TRANSITIONS[from] || [];
   if (!allowed.includes(to)) {
     throw new Error(`Invalid request status transition: ${from} -> ${to}`);
   }
+}
+
+function normalizePhoneNumber(value) {
+  const digits = String(value || '').replace(/\D/g, '');
+  if (!digits) return '';
+  if (digits.startsWith('880') && digits.length >= 12) {
+    return `0${digits.slice(3)}`;
+  }
+  return digits;
+}
+
+function normalizeSenderId(value) {
+  const phone = normalizePhoneNumber(value);
+  if (phone) return phone;
+  return String(value || '').trim().toUpperCase();
+}
+
+function createRequestId(date = new Date(), sequence = 1) {
+  const yyyy = date.getUTCFullYear();
+  const mm = String(date.getUTCMonth() + 1).padStart(2, '0');
+  const dd = String(date.getUTCDate()).padStart(2, '0');
+  const unique = Math.random().toString(36).slice(2, 6).toUpperCase();
+  return `REQ-${yyyy}${mm}${dd}-${String(sequence).padStart(4, '0')}-${unique}`;
 }
 
 module.exports = {
@@ -155,6 +171,8 @@ module.exports = {
   STATUSES,
   STATUS_TRANSITIONS,
   normalizeOperator,
+  normalizePhoneNumber,
+  normalizeSenderId,
   operatorForMsisdn,
   targetOperatorsForRequest,
   formatOperatorSms,

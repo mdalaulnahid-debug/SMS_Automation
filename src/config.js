@@ -7,7 +7,12 @@ function loadGatewayConfig() {
   const configPath = process.env.SMS_GATEWAYS_CONFIG || join(__dirname, '..', 'config', 'gateways.json');
   if (!existsSync(configPath)) return {};
 
-  const parsed = JSON.parse(readFileSync(configPath, 'utf8'));
+  let parsed;
+  try {
+    parsed = JSON.parse(readFileSync(configPath, 'utf8'));
+  } catch (error) {
+    throw new Error(`Invalid config/gateways.json: ${error.message}`);
+  }
   return Object.fromEntries(
     Object.entries(parsed).map(([operatorKey, config]) => [
       operatorKey.toUpperCase(),

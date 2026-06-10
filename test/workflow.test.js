@@ -222,6 +222,111 @@ test('ignores junk SMS from untrusted sender before analysis', async () => {
   assert.equal(store.getRequest(submitted.request.requestId).status, STATUSES.WAITING_OPERATOR_REPLY);
 });
 
+test('gateway config apiKey is sent as Authorization header', async () => {
+  const originalFetch = global.fetch;
+  const calls = [];
+  global.fetch = async (url, options) => {
+    calls.push({ url, options });
+    return { ok: true, status: 200, text: async () => '{"ok":true}' };
+  };
+
+  try {
+    const { service } = createHarness({
+      GP: {
+        gatewayUrl: 'http://phone-gp.local:8080',
+        sendPath: '/send-sms',
+        apiKey: 'secret-token',
+        trustedSenders: ['12345']
+      }
+    });
+    await service.submitWhatsAppRequest({
+      whatsappGroupId: 'operations',
+      requesterName: 'Officer Rahim',
+      requesterWhatsappId: '8801700000000',
+      text: 'LRL 01712345678'
+    });
+
+    assert.equal(calls[0].options.headers.authorization, 'Bearer secret-token');
+  } finally {
+    global.fetch = originalFetch;
+  }
+});
+
+test('requester authorization is preserved and enforced', async () => {
+  const { store, service } = createHarness();
+  store.upsertUser({
+    whatsappId: '8801700000000',
+    displayName: 'Officer Rahim',
+    allowedOperators: ['ROBI']
+  });
+
+  const blocked = await service.submitWhatsAppRequest({
+    whatsappGroupId: 'operations',
+    requesterName: 'Officer Rahim',
+    requesterWhatsappId: '8801700000000',
+    text: 'LRL 01712345678'
+  });
+
+  assert.equal(blocked.ok, false);
+  assert.match(blocked.errors[0], /not authorized for GP/);
+});
+
+test('matches branded operator sender ID without destination number equality', async () => {
+  const { service } = createHarness({
+    GP: {
+      trustedSenders: ['12345', 'GP-INFO']
+    }
+  });
+  const submitted = await service.submitWhatsAppRequest({
+    whatsappGroupId: 'operations',
+    requesterName: 'Officer Rahim',
+    requesterWhatsappId: '8801700000000',
+    text: 'LRL 01712345678'
+  });
+
+  const inbound = service.receiveSmsWebhook({
+    gatewayId: 'GP_PHONE_01',
+    from: 'GP-INFO',
+    body: 'LRL cell location'
+  });
+
+  assert.equal(inbound.ok, true);
+  assert.equal(inbound.request.requestId, submitted.request.requestId);
+});
+
+test('timeout sweep dispatches next queued request for same operator', async () => {
+  const { store, service } = createHarness();
+  await service.submitWhatsAppRequest({
+    whatsappGroupId: 'operations',
+    requesterName: 'Officer Rahim',
+    requesterWhatsappId: '8801700000000',
+    text: 'LRL 01712345678'
+  });
+  await service.submitWhatsAppRequest({
+    whatsappGroupId: 'operations',
+    requesterName: 'Officer Karim',
+    requesterWhatsappId: '8801800000000',
+    text: 'LRL 01798765432'
+  });
+
+  const waiting = store.listRequests().find((request) => request.requesterName === 'Officer Rahim');
+  store.smsOutbox[0].sentAt = new Date(Date.now() - 6 * 60 * 1000).toISOString();
+
+  const timedOut = await service.timeoutWaitingRequests();
+  assert.equal(timedOut.length, 1);
+  assert.equal(timedOut[0].status, STATUSES.TIMEOUT);
+  assert.equal(store.smsOutbox.length, 2);
+  assert.equal(store.smsOutbox[1].messageBody, 'LRL 01798765432');
+});
+
+test('request IDs stay unique across store restarts', () => {
+  const first = new AutomationStore();
+  const second = new AutomationStore();
+  const id1 = first.nextRequestId();
+  const id2 = second.nextRequestId();
+  assert.notEqual(id1, id2);
+});
+
 test('configured gateway receives clean hardbound SMS command over HTTP', async () => {
   const originalFetch = global.fetch;
   const calls = [];
@@ -255,4 +360,19 @@ test('configured gateway receives clean hardbound SMS command over HTTP', async 
   } finally {
     global.fetch = originalFetch;
   }
+});
+
+test('registers phone gateway URL dynamically at runtime', () => {
+  const { store } = createHarness({
+    GP: { gatewayUrl: '', trustedSenders: ['12345'] }
+  });
+
+  const gateway = store.registerGateway('GP_PHONE_01', {
+    host: '192.168.0.172',
+    port: 8080
+  });
+
+  assert.equal(gateway.gatewayUrl, 'http://192.168.0.172:8080');
+  assert.equal(gateway.status, 'CONFIGURED');
+  assert.equal(store.getGateway('GP_PHONE_01').gatewayUrl, 'http://192.168.0.172:8080');
 });

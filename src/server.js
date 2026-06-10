@@ -3,9 +3,34 @@
 const http = require('node:http');
 const { createApp } = require('./app');
 
+const host = process.env.HOST || '0.0.0.0';
 const port = Number(process.env.PORT || 3000);
-const app = createApp();
+const timeoutSweepMs = Number(process.env.TIMEOUT_SWEEP_MS || 60_000);
+let app;
+try {
+  app = createApp();
+} catch (error) {
+  console.error(error.message);
+  if (/gateways\.json/i.test(error.message)) {
+    console.error('Fix config/gateways.json, or delete it and restart to recreate from the example.');
+  }
+  process.exit(1);
+}
 
-http.createServer(app.handle).listen(port, () => {
-  console.log(`SMS/WhatsApp automation server listening on http://localhost:${port}`);
+http.createServer(app.handle).listen(port, host, () => {
+  console.log(`SMS/WhatsApp automation server listening on http://${host}:${port}`);
+  console.log(`Open dashboard at http://localhost:${port}`);
+
+  setInterval(() => {
+    app.service
+      .timeoutWaitingRequests()
+      .then((timedOut) => {
+        if (timedOut.length) {
+          console.log(`Timeout sweep marked ${timedOut.length} request(s) as TIMEOUT`);
+        }
+      })
+      .catch((error) => {
+        console.error(`Timeout sweep failed: ${error.message}`);
+      });
+  }, timeoutSweepMs).unref();
 });

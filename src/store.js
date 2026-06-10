@@ -1,6 +1,13 @@
 'use strict';
 
-const { OPERATORS, STATUSES, assertTransition, createRequestId } = require('./domain');
+const {
+  OPERATORS,
+  STATUSES,
+  assertTransition,
+  createRequestId,
+  normalizePhoneNumber,
+  normalizeSenderId
+} = require('./domain');
 
 function nowIso() {
   return new Date().toISOString();
@@ -31,6 +38,7 @@ class AutomationStore {
         shortcode: operator.shortcode,
         gatewayUrl: config.gatewayUrl || '',
         sendPath: config.sendPath || '/send-sms',
+        apiKey: config.apiKey || '',
         trustedSenders: config.trustedSenders?.length ? config.trustedSenders : operator.trustedSenders,
         status: config.gatewayUrl ? 'CONFIGURED' : 'MOCK',
         lastSeenAt: nowIso()
@@ -38,14 +46,17 @@ class AutomationStore {
     });
   }
 
-  upsertUser({ whatsappId, displayName, role = 'REQUESTER', allowedOperators = Object.keys(OPERATORS) }) {
+  upsertUser({ whatsappId, displayName, role, allowedOperators }) {
     const existing = this.users.get(whatsappId);
     const user = {
       id: existing?.id || randomId('user'),
       whatsappId,
       displayName,
-      role,
-      allowedOperators,
+      role: role !== undefined ? role : (existing?.role ?? 'REQUESTER'),
+      allowedOperators:
+        allowedOperators !== undefined
+          ? allowedOperators
+          : (existing?.allowedOperators ?? Object.keys(OPERATORS)),
       status: 'ACTIVE',
       createdAt: existing?.createdAt || nowIso()
     };
@@ -81,7 +92,8 @@ class AutomationStore {
       status: STATUSES.RECEIVED,
       createdAt: nowIso(),
       completedAt: null,
-      failedReason: null
+      failedReason: null,
+      testDestination: input.testDestination ? normalizePhoneNumber(input.testDestination) : null
     };
     this.requests.set(request.requestId, request);
     this.audit('system', 'REQUEST_RECEIVED', request.requestId, input);
@@ -162,6 +174,24 @@ class AutomationStore {
     return Array.from(this.requests.values()).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   }
 
+  registerGateway(gatewayId, input = {}) {
+    const gateway = this.gateways.get(gatewayId);
+    if (!gateway) throw new Error(`Gateway not configured: ${gatewayId}`);
+
+    const host = String(input.host || input.localIp || '').trim();
+    const port = Number(input.port || 8080);
+    if (!host) throw new Error('host is required');
+    if (!Number.isInteger(port) || port < 1 || port > 65535) {
+      throw new Error('port must be between 1 and 65535');
+    }
+
+    gateway.gatewayUrl = `http://${host}:${port}`;
+    gateway.status = 'CONFIGURED';
+    gateway.lastSeenAt = nowIso();
+    gateway.registeredAt = nowIso();
+    return gateway;
+  }
+
   listGateways() {
     return Array.from(this.gateways.values());
   }
@@ -187,9 +217,15 @@ class AutomationStore {
   isTrustedSenderForGateway(gatewayId, sender) {
     const gateway = this.gateways.get(gatewayId);
     if (!gateway) return false;
-    const normalizedSender = String(sender || '').trim().toUpperCase();
+    const normalizedSender = normalizeSenderId(sender);
     return gateway.trustedSenders.some((trustedSender) => {
-      return normalizedSender === String(trustedSender).trim().toUpperCase();
+      return normalizedSender === normalizeSenderId(trustedSender);
+    });
+  }
+
+  getOutboxForGateway(requestId, gatewayId) {
+    return this.smsOutbox.find((row) => {
+      return row.requestId === requestId && row.gatewayId === gatewayId && row.sentStatus === 'SENT';
     });
   }
 
@@ -212,12 +248,15 @@ class AutomationStore {
     const pending = this.listRequests()
       .filter((request) => request.status === STATUSES.WAITING_OPERATOR_REPLY)
       .filter((request) => {
-        const sent = this.smsOutbox.find((row) => {
-          return row.requestId === request.requestId && row.gatewayId === gatewayId;
-        });
-        return sent && sent.gatewayId === gatewayId && sent.destinationNumber === senderNumber;
-      })
-      .filter((request) => new Date(request.createdAt).getTime() >= cutoff);
+        const sent = this.getOutboxForGateway(request.requestId, gatewayId);
+        if (!sent || new Date(sent.sentAt).getTime() < cutoff) return false;
+
+        const senderMatchesDestination =
+          normalizePhoneNumber(sent.destinationNumber) === normalizePhoneNumber(senderNumber);
+        const senderIsTrustedOperator = this.isTrustedSenderForGateway(gatewayId, senderNumber);
+
+        return senderMatchesDestination || senderIsTrustedOperator;
+      });
 
     return pending.length === 1 ? pending[0] : null;
   }

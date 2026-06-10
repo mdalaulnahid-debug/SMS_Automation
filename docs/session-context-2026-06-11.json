@@ -1,0 +1,238 @@
+{
+  "schemaVersion": 1,
+  "sessionId": "b2308b4f-18d8-4b9a-a9f9-5bf92e154244",
+  "sessionDate": "2026-06-11",
+  "sessionTimezone": "Asia/Dhaka",
+  "project": "SMS_Automation",
+  "purpose": "Chat history context for continuing work on a different machine (office PC). Read alongside progress_tracker.md and todo.md.",
+
+  "summary": "Built and debugged the full SMS automation bridge: Node.js backend on Windows PC, Android gateway app on Samsung Galaxy A55, auto-discovery, dynamic gateway registration, and first successful end-to-end test in testDestination mode. Documentation updated for office handoff.",
+
+  "milestones": [
+    {
+      "date": "2026-06-10",
+      "event": "Android gateway project added; CI fix; initial APK build attempts"
+    },
+    {
+      "date": "2026-06-11",
+      "event": "Fixed Start Service crashes (v1.1.3 → v1.1.4)"
+    },
+    {
+      "date": "2026-06-11",
+      "event": "Fixed start-backend.bat, gateways.json, LAN IP scripts, firewall helper"
+    },
+    {
+      "date": "2026-06-11",
+      "event": "Implemented backend auto-discovery and POST /api/gateways/register (v1.2.0)"
+    },
+    {
+      "date": "2026-06-11",
+      "event": "Fixed discovery timeout/scan order (v1.2.1) — finds PC in ~0.2s"
+    },
+    {
+      "date": "2026-06-11",
+      "event": "First full E2E test PASSED: REQ-20260610-0002-P94E → NEEDS_MANUAL_REVIEW + WhatsApp draft"
+    },
+    {
+      "date": "2026-06-11",
+      "event": "All .md docs updated for office handoff; session context JSON created"
+    }
+  ],
+
+  "devices": {
+    "gatewayPhone": {
+      "model": "Samsung Galaxy A55",
+      "modelId": "SM-A556E",
+      "android": 16,
+      "appVersion": "1.2.1",
+      "versionCode": 8,
+      "gatewayId": "GP_PHONE_01",
+      "operator": "Grameenphone",
+      "homeWifiIp": "192.168.0.172",
+      "httpPort": 8080
+    },
+    "backendPc": {
+      "os": "Windows 10/11",
+      "homeWifiIp": "192.168.0.230",
+      "vpnAdapterToIgnore": "10.5.0.2 (NordVPN)",
+      "backendPort": 3000
+    },
+    "testReplyPhone": {
+      "number": "01936759367",
+      "role": "Receives test SMS and sends manual operator-style reply"
+    }
+  },
+
+  "networkUrls": {
+    "twoUrlRule": {
+      "phoneToPc": "http://<PC_LAN_IP>:3000 (Backend URL in app or auto-discovered)",
+      "pcToPhone": "http://<PHONE_IP>:8080 (gateways.json gatewayUrl or auto-registered)"
+    },
+    "homeSession": {
+      "dashboard": "http://192.168.0.230:3000",
+      "health": "http://192.168.0.230:3000/api/health",
+      "registeredGateway": "http://192.168.0.172:8080"
+    },
+    "officeNote": "IPs will change on office Wi-Fi. Use start-backend.bat printed IP and app auto-discovery."
+  },
+
+  "successfulE2eTest": {
+    "requestId": "REQ-20260610-0002-P94E",
+    "requestType": "LRL",
+    "payload": "01724761972",
+    "testDestination": "01936759367",
+    "outboundSmsBody": "LRL 01724761972",
+    "inboundSender": "+8801936759367",
+    "finalStatus": "NEEDS_MANUAL_REVIEW",
+    "whatsappDraftTag": "@Test User",
+    "whatsappGroupId": "test-whatsapp-group",
+    "replyAnalysisConfidence": "LOW",
+    "inboundReplySample": "GP LRL response with MSISDN, LACID, CellID, lat/long, address, CS/Volte status"
+  },
+
+  "failedOrSupersededTests": [
+    {
+      "requestId": "REQ-20260610-0001-DAYR",
+      "reason": "SMS failed on A55 — default SMS SIM was slot 1 (Emergency only). Backend showed SENT because phone HTTP returns ok before carrier confirms.",
+      "finalStatus": "TIMEOUT"
+    }
+  ],
+
+  "issuesAndFixes": [
+    {
+      "issue": "Start Service crash on Android 14+",
+      "fix": "foregroundServiceType dataSync/remoteMessaging; always startForeground(); notification fixes (v1.1.4)"
+    },
+    {
+      "issue": "Backend not found by app",
+      "fix": "BackendDiscovery v1.2.1: priority scan 200-254, 1s connect timeout, validate health JSON"
+    },
+    {
+      "issue": "Message sent failed on A55",
+      "fix": "Dual SIM: defaultSmsSubId pointed to dead SIM (Emergency only). User set SMS default to working GP SIM in phone Settings → SIM manager. TODO: SIM picker in app."
+    },
+    {
+      "issue": "gateways.json invalid JSON",
+      "fix": "Removed comma inside gatewayUrl string; GP gatewayUrl empty for auto-register"
+    },
+    {
+      "issue": "start-backend.bat closed immediately",
+      "fix": "Fixed CMD pipe bug; call npm start; auto-stop port 3000; pause on error"
+    },
+    {
+      "issue": "False positive SMS SENT in backend",
+      "cause": "SmsSender returns ok when queued to SmsManager, not when carrier delivers",
+      "todo": "PendingIntent sent callbacks"
+    }
+  ],
+
+  "whatsappBehavior": {
+    "autoPost": false,
+    "draftLocation": "PC dashboard http://<PC_IP>:3000 → WhatsApp Replies section",
+    "tagFormat": "Plain text @RequesterName from app Settings → Test Metadata",
+    "groupIdStored": true,
+    "groupIdUsedForPosting": false,
+    "approveAction": "POST /api/whatsapp-replies/:id/approve marks POSTED in backend only; manual copy/paste to WhatsApp"
+  },
+
+  "config": {
+    "gatewaysJson": {
+      "gitignored": true,
+      "gpGatewayUrl": "empty string — auto-register at runtime",
+      "gpTrustedSenders": ["12345", "01700000001", "01800000002", "01320151105", "01936759367"]
+    },
+    "appTestMetadataDefaults": {
+      "whatsappGroupId": "test-whatsapp-group",
+      "requesterWhatsappId": "test-requester",
+      "requesterName": "Test User"
+    }
+  },
+
+  "buildToolchain": {
+    "nodeTests": "18/18 pass (node --test)",
+    "gradle": "C:\\BuildTools\\gradle\\gradle-8.6\\bin\\gradle.bat",
+    "jdk": "C:\\Program Files\\Android\\Android Studio\\jbr",
+    "androidSdk": "C:\\BuildTools\\android-sdk (API 34 for CLI)",
+    "apkPath": "android-gateway/app/build/outputs/apk/release/app-release.apk",
+    "buildScript": "android-gateway/build-apk.bat",
+    "adb": "%LOCALAPPDATA%\\Android\\Sdk\\platform-tools\\adb.exe"
+  },
+
+  "keyFilesAddedOrChanged": {
+    "backend": [
+      "src/network.js",
+      "src/app.js (health + gateways/register)",
+      "src/store.js (registerGateway)",
+      "start-backend.bat",
+      "stop-backend.bat",
+      "scripts/get-lan-ip.ps1",
+      "scripts/stop-backend-port.ps1",
+      "scripts/ensure-firewall-3000.ps1"
+    ],
+    "android": [
+      "BackendDiscovery.kt",
+      "BackendClient.kt",
+      "NetworkUtils.kt",
+      "ServiceEvents.kt",
+      "PermissionsActivity.kt",
+      "build-apk.bat"
+    ],
+    "docs": [
+      "progress_tracker.md",
+      "todo.md",
+      "README.md",
+      "PROJECT_PLAN.md",
+      "architecture.md",
+      "docs/PHONE_GATEWAY_CONTRACT.md",
+      "android-gateway/README.md",
+      "android-gateway/ANDROID_STUDIO_DEBUG.md",
+      "docs/session-context-2026-06-11.json"
+    ]
+  },
+
+  "officePcChecklist": [
+    "git pull",
+    "Run start-backend.bat — note new LAN IP",
+    "Phone and PC on same Wi-Fi",
+    "App: Backend connected (or set Backend URL manually)",
+    "Start Service on A55",
+    "Verify dashboard GP gatewayUrl shows phone IP:8080",
+    "Confirm default SMS SIM is working GP SIM (dual-SIM)",
+    "Optional: repeat Test Request E2E (backend restart wipes in-memory state)"
+  ],
+
+  "nextPriorities": [
+    "SIM slot picker in Android app",
+    "SMS delivery callbacks (real FAILED status)",
+    "SQLite persistence (replace in-memory store)",
+    "Structured reply extractors",
+    "WhatsApp Business API evaluation"
+  ],
+
+  "conversationTopics": [
+    "SMS automation folder git status",
+    "How to proceed from .md files",
+    "Android APK build and CI",
+    "Start Service crash debugging (multiple iterations)",
+    "Backend connection / port 3000 / start-backend.bat",
+    "gateways.json configuration confusion (two URLs)",
+    "Auto IP discovery implementation",
+    "APK v1.2.0 and v1.2.1 build and install",
+    "Backend running but app cannot find it — discovery timeout fix",
+    "What to do after backend connected",
+    "Where test SMS went (testDestination flow)",
+    "Message sent failed — dual SIM diagnosis",
+    "Manual reply received — E2E success",
+    "Which WhatsApp group gets draft (none auto-posted)",
+    "Update all .md files for office handoff",
+    "Push to git with session context JSON"
+  ],
+
+  "relatedDocs": {
+    "startHere": "progress_tracker.md",
+    "tasks": "todo.md",
+    "architecture": "architecture.md",
+    "phoneContract": "docs/PHONE_GATEWAY_CONTRACT.md",
+    "androidBuild": "android-gateway/README.md"
+  }
+}

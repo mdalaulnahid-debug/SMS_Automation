@@ -1,118 +1,365 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:background="@color/bg_primary">
 
-    <LinearLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="20dp">
+        android:background="@color/bg_surface"
+        app:elevation="0dp">
 
-        <!-- Status card -->
-        <TextView
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Gateway Status"
-            android:textSize="13sp"
-            android:textColor="#888"
-            android:textAllCaps="true"
-            android:layout_marginBottom="6dp" />
+            android:layout_height="?attr/actionBarSize"
+            android:background="@color/bg_surface"
+            app:title="SMS Gateway"
+            app:titleTextColor="@color/text_primary"
+            app:subtitleTextColor="@color/text_secondary" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:padding="@dimen/screen_padding"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
-            android:layout_marginBottom="4dp">
-            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:text="Status" android:textSize="15sp" />
-            <TextView
-                android:id="@+id/tvServiceStatus"
-                android:layout_width="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Status card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="STOPPED"
-                android:textSize="15sp"
-                android:textStyle="bold" />
+                android:layout_marginBottom="@dimen/section_gap"
+                app:cardBackgroundColor="@color/bg_card"
+                app:cardCornerRadius="@dimen/card_radius"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/divider"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/card_padding">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Gateway Status"
+                            android:textAppearance="@style/TextAppearance.SmsGateway.CardTitle" />
+
+                        <TextView
+                            android:id="@+id/tvServiceStatus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_status_chip"
+                            android:paddingHorizontal="12dp"
+                            android:paddingVertical="6dp"
+                            android:text="STOPPED"
+                            android:textColor="@color/danger"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvBackendHealth"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Backend: checking..."
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="14dp"
+                        android:background="@color/divider" />
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:orientation="horizontal" android:layout_marginBottom="8dp">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                            android:layout_weight="1" android:text="Gateway ID"
+                            android:textColor="@color/text_muted" android:textSize="13sp" />
+                        <TextView android:id="@+id/tvGatewayId" android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" android:fontFamily="monospace"
+                            android:text="—" android:textColor="@color/text_primary" android:textSize="13sp" />
+                    </LinearLayout>
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:orientation="horizontal" android:layout_marginBottom="8dp">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                            android:layout_weight="1" android:text="HTTP Port"
+                            android:textColor="@color/text_muted" android:textSize="13sp" />
+                        <TextView android:id="@+id/tvPort" android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" android:fontFamily="monospace"
+                            android:text=":8080" android:textColor="@color/text_primary" android:textSize="13sp" />
+                    </LinearLayout>
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:orientation="horizontal" android:layout_marginBottom="8dp">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                            android:layout_weight="1" android:text="Local IP"
+                            android:textColor="@color/text_muted" android:textSize="13sp" />
+                        <TextView android:id="@+id/tvLocalIp" android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" android:fontFamily="monospace"
+                            android:text="—" android:textColor="@color/text_primary" android:textSize="13sp" />
+                    </LinearLayout>
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:orientation="horizontal" android:layout_marginBottom="8dp">
+                        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                            android:layout_weight="1" android:text="Backend"
+                            android:textColor="@color/text_muted" android:textSize="13sp" />
+                        <TextView android:id="@+id/tvBackendUrl" android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" android:fontFamily="monospace"
+                            android:text="—" android:textColor="@color/text_primary" android:textSize="13sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnCopyIp"
+                            style="@style/Widget.SmsGateway.Button.Outlined"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_weight="1"
+                            android:text="Copy IP" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnToggleService"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.4"
+                            android:text="Start Service" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnSettings"
+                            style="@style/Widget.SmsGateway.Button.Outlined"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_weight="1"
+                            android:text="Settings" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnLogs"
+                            style="@style/Widget.SmsGateway.Button.Outlined"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Activity Log" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Test request card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/section_gap"
+                app:cardBackgroundColor="@color/bg_card"
+                app:cardCornerRadius="@dimen/card_radius"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/accent_muted"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/card_padding">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Test Request"
+                        android:textAppearance="@style/TextAppearance.SmsGateway.CardTitle" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:layout_marginBottom="14dp"
+                        android:text="Send a test operator SMS to your target number. When that number replies manually, the gateway forwards the reply to the backend."
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="6dp"
+                        android:text="Request Type"
+                        android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel" />
+
+                    <Spinner
+                        android:id="@+id/spinnerRequestType"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:layout_marginBottom="12dp"
+                        android:background="@drawable/bg_card_elevated"
+                        android:paddingHorizontal="8dp" />
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Payload (MSISDN / NID / IMEI)"
+                        android:layout_marginBottom="12dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etPayload"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="phone"
+                            android:singleLine="true"
+                            android:textColor="@color/text_primary" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="Target number (who receives SMS and replies)"
+                        android:layout_marginBottom="8dp">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etTargetNumber"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="phone"
+                            android:singleLine="true"
+                            android:textColor="@color/text_primary" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="14dp"
+                        android:text="Add this target number to trustedSenders in config/gateways.json on the backend."
+                        android:textColor="@color/warning"
+                        android:textSize="12sp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnSendTest"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Send Test Request" />
+
+                    <TextView
+                        android:id="@+id/tvTestPreview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:fontFamily="monospace"
+                        android:text="Preview: LRL 017XXXXXXXX"
+                        android:textColor="@color/text_muted"
+                        android:textSize="12sp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Recent activity -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/bg_card"
+                app:cardCornerRadius="@dimen/card_radius"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/divider"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/card_padding">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="12dp"
+                        android:text="Recent Activity"
+                        android:textAppearance="@style/TextAppearance.SmsGateway.CardTitle" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Last sent"
+                        android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel" />
+
+                    <TextView
+                        android:id="@+id/tvLastSent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="12dp"
+                        android:fontFamily="monospace"
+                        android:text="—"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Last received"
+                        android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel" />
+
+                    <TextView
+                        android:id="@+id/tvLastReceived"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="12dp"
+                        android:fontFamily="monospace"
+                        android:text="—"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Pending retries"
+                        android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel" />
+
+                    <TextView
+                        android:id="@+id/tvRetryCount"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="None"
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
         </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="4dp">
-            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:text="Gateway ID" android:textSize="15sp" />
-            <TextView android:id="@+id/tvGatewayId" android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:text="—" android:textSize="15sp" />
-        </LinearLayout>
-
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="4dp">
-            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:text="HTTP Port" android:textSize="15sp" />
-            <TextView android:id="@+id/tvPort" android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:text=":8080" android:textSize="15sp" />
-        </LinearLayout>
-
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="4dp">
-            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:text="Local IP" android:textSize="15sp" />
-            <TextView android:id="@+id/tvLocalIp" android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:text="—" android:textSize="15sp" />
-        </LinearLayout>
-
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="horizontal" android:gravity="center_vertical" android:layout_marginBottom="16dp">
-            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                android:layout_weight="1" android:text="Backend" android:textSize="15sp" />
-            <TextView android:id="@+id/tvBackendUrl" android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:text="—" android:textSize="13sp" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/btnToggleService"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Start Service"
-            android:layout_marginBottom="8dp" />
-
-        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <Button android:id="@+id/btnSettings" android:layout_width="0dp"
-                android:layout_height="wrap_content" android:layout_weight="1"
-                android:text="Settings" android:layout_marginEnd="4dp" style="?attr/materialButtonOutlinedStyle" />
-            <Button android:id="@+id/btnLogs" android:layout_width="0dp"
-                android:layout_height="wrap_content" android:layout_weight="1"
-                android:text="View Log" android:layout_marginStart="4dp" style="?attr/materialButtonOutlinedStyle" />
-        </LinearLayout>
-
-        <View android:layout_width="match_parent" android:layout_height="1dp"
-            android:background="#DDD" android:layout_marginVertical="20dp" />
-
-        <!-- Activity summary -->
-        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:text="Recent Activity"
-            android:textSize="13sp" android:textColor="#888" android:textAllCaps="true"
-            android:layout_marginBottom="8dp" />
-
-        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:text="Last SMS sent" android:textSize="12sp" android:textColor="#888" />
-        <TextView android:id="@+id/tvLastSent" android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:text="—"
-            android:textSize="14sp" android:layout_marginBottom="12dp"
-            android:fontFamily="monospace" />
-
-        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:text="Last SMS received" android:textSize="12sp" android:textColor="#888" />
-        <TextView android:id="@+id/tvLastReceived" android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:text="—"
-            android:textSize="14sp" android:layout_marginBottom="12dp"
-            android:fontFamily="monospace" />
-
-        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
-            android:text="Pending retries" android:textSize="12sp" android:textColor="#888" />
-        <TextView android:id="@+id/tvRetryCount" android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:text="None" android:textSize="14sp" />
-
-    </LinearLayout>
-</ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

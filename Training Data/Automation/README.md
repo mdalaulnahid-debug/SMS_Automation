@@ -2,6 +2,8 @@
 
 Use this folder for raw operator request/reply examples.
 
+**2026-06-11:** A real GP `LRL` reply was captured during the first successful E2E test (MSISDN, LACID, CellID, lat/long, address, CS/Volte status). Consider adding it as a reference row under `LRL/1. GP/`. See `progress_tracker.md` and `todo.md`.
+
 Canonical structure:
 
 ```text

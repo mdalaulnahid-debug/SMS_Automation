@@ -20,8 +20,9 @@ class SmsGatewayClient {
       this.store.updateRequestStatus(request.requestId, STATUSES.SMS_SENT);
     }
 
+    const destinationNumber = request.testDestination || operator.shortcode;
     const sendResult = await this.sendViaGateway(gateway, {
-      to: operator.shortcode,
+      to: destinationNumber,
       message: messageBody,
       requestId: request.requestId,
       operator: operatorKey
@@ -32,7 +33,7 @@ class SmsGatewayClient {
       gatewayId: operator.gatewayId,
       operator: operatorKey,
       silentReference: request.silentReference,
-      destinationNumber: operator.shortcode,
+      destinationNumber,
       messageBody,
       sentStatus: sendResult.ok ? 'SENT' : 'FAILED',
       sendResult

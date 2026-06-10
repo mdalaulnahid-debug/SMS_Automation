@@ -7,6 +7,7 @@ const { OperatorQueue } = require('./queue');
 const { SmsGatewayClient } = require('./smsGateway');
 const { AutomationService } = require('./service');
 const { loadGatewayConfig } = require('./config');
+const { getBackendUrls, getLanAddresses, getPreferredLanIp } = require('./network');
 
 function createApp() {
   const gatewayConfig = loadGatewayConfig();
@@ -22,6 +23,36 @@ function createApp() {
       }
       if (req.method === 'GET' && req.url === '/app.js') {
         return serveFile(res, 'app.js', 'text/javascript; charset=utf-8');
+      }
+      if (req.method === 'GET' && req.url === '/api/health') {
+        const port = Number(process.env.PORT || 3000);
+        const lanAddresses = getLanAddresses();
+        const preferredLanIp = getPreferredLanIp();
+        return json(res, 200, {
+          ok: true,
+          service: 'sms-whatsapp-automation',
+          version: '0.1.0',
+          port,
+          preferredLanIp,
+          lanAddresses: lanAddresses.map((entry) => entry.address),
+          backendUrls: getBackendUrls(port)
+        });
+      }
+      if (req.method === 'POST' && req.url === '/api/gateways/register') {
+        const body = await readJson(req);
+        const gateway = store.registerGateway(body.gatewayId, {
+          host: body.host || body.localIp,
+          port: body.port
+        });
+        return json(res, 200, {
+          ok: true,
+          gateway: {
+            id: gateway.id,
+            gatewayUrl: gateway.gatewayUrl,
+            status: gateway.status,
+            lastSeenAt: gateway.lastSeenAt
+          }
+        });
       }
       if (req.method === 'GET' && req.url === '/api/dashboard') {
         return json(res, 200, {
@@ -46,7 +77,7 @@ function createApp() {
         return json(res, 200, { request: await service.approveWhatsAppReply(requestId) });
       }
       if (req.method === 'POST' && req.url === '/api/timeouts/run') {
-        return json(res, 200, { timedOut: service.timeoutWaitingRequests() });
+        return json(res, 200, { timedOut: await service.timeoutWaitingRequests() });
       }
       return json(res, 404, { error: 'Not found' });
     } catch (error) {
