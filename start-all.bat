@@ -50,6 +50,18 @@ if not defined LAN_IP set "LAN_IP=YOUR_PC_IP"
 
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\ensure-firewall-3000.ps1" >nul 2>&1
 
+:: Kill any process already on port 3000 (old backend, hung server, etc.)
+for /f "tokens=5" %%p in ('netstat -ano 2^>nul ^| findstr ":3000 "') do (
+  if not "%%p"=="0" (
+    echo  Stopping old server on port 3000 (PID %%p^)...
+    taskkill /PID %%p /F >nul 2>&1
+  )
+)
+:: Also close any leftover SMS Backend / Telegram Bridge windows from a previous run
+taskkill /FI "WINDOWTITLE eq SMS Backend" /F >nul 2>&1
+taskkill /FI "WINDOWTITLE eq Telegram Bridge" /F >nul 2>&1
+timeout /t 1 /nobreak >nul
+
 echo  Backend URL (phone):     http://%LAN_IP%:3000
 echo  Dashboard (browser):     http://localhost:3000
 echo.
@@ -57,15 +69,15 @@ echo  Both backend and Telegram bridge will start in separate windows.
 echo  Close this window or press Ctrl+C to stop everything.
 echo.
 
-:: Start backend in a new window (auto-restarts on crash)
-start "SMS Backend" cmd /k "title SMS Backend && :loop && node src/server.js && timeout /t 3 /nobreak >nul && goto loop"
+:: Start backend in a new window (auto-restarts on crash via run-backend.bat)
+start "SMS Backend" cmd /c "scripts\run-backend.bat"
 
 :: Wait for backend to be ready before starting the bridge
 echo  Waiting for backend to start...
 timeout /t 4 /nobreak >nul
 
-:: Start Telegram bridge in a new window (auto-restarts on crash)
-start "Telegram Bridge" cmd /k "title Telegram Bridge && :loop && node telegram-bridge/start.js && echo [bridge crashed - restarting in 5s] && timeout /t 5 /nobreak >nul && goto loop"
+:: Start Telegram bridge in a new window (auto-restarts on crash via run-bridge.bat)
+start "Telegram Bridge" cmd /c "scripts\run-bridge.bat"
 
 echo  Both processes started in separate windows.
 echo  Watch those windows for logs.
