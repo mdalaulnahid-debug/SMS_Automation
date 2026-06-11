@@ -4,11 +4,74 @@ Start with `progress_tracker.md` for the latest session handoff, test results, a
 
 ---
 
+## Home PC — New Machine Setup (READ THIS FIRST)
+
+> The system is fully working end-to-end (E2E passed 2026-06-11).
+> Two config files are gitignored and must be created manually on every new machine.
+> Everything else is automated.
+
+### Step 1 — Pull latest code
+```bat
+git pull
+npm install
+```
+
+### Step 2 — Create the two gitignored config files
+
+```bat
+copy config\telegram.example.json config\telegram.json
+copy config\gateways.example.json config\gateways.json
+```
+
+Then edit `config\telegram.json` and fill in:
+- `"botToken"` — from BotFather (the real token is in the office PC's `config/telegram.json`)
+- `"groupChatId"` — `-5291489718` (Test group)
+- `"testDestination"` — `"01936759367"` (test reply phone)
+- `"autoApprove"` — `true`
+- `"authorizedUsers"` — `"8914564310"` for Addl SP Barishal
+
+Then edit `config\gateways.json` and make sure `trustedSenders` for GP includes:
+- `"01936759367"` and `"+8801936759367"`
+
+> Tip: if you have access to the office PC, just copy those two files directly via USB or cloud.
+
+### Step 3 — Start everything
+```bat
+start-all.bat
+```
+This kills any old server on port 3000, starts backend + Telegram bridge in separate windows with auto-restart.
+
+### Step 4 — Connect Android app
+- Open Samsung Galaxy A55 → SMS Gateway app
+- Settings → Backend URL: `http://<HOME_PC_IP>:3000`
+  - Find home PC IP: run `ipconfig` and look for Wi-Fi IPv4 (e.g. `192.168.x.x`)
+  - Or the app will auto-discover it on the same Wi-Fi subnet
+- Select SIM: Slot 0 (GP)
+- Tap **Start Service** → status should show "Backend: connected"
+
+### Step 5 — Test the full loop
+```
+Send in Telegram group:  LRL 01724761972
+```
+Expected:
+1. Bot replies in-thread: "✅ Request received — sending to GP..."
+2. SMS arrives at `01936759367`
+3. Reply from `01936759367`
+4. Bot posts reply in-thread, tags officer
+
+### If phone and PC are on different networks (mobile data)
+```bat
+node src/server.js --tunnel
+```
+Copy the printed public URL → paste into Android app Settings → Backend URL.
+
+---
+
 ## Home PC — First Actions (Next Session)
 
-- [ ] `git pull`
-- [ ] Create `config/telegram.json` (copy from example, fill in bot token + group ID + officer IDs)
-- [ ] Create `config/gateways.json` (copy from example, add `01936759367` to trustedSenders, set testDestination)
+- [ ] `git pull` + `npm install`
+- [ ] Create `config/telegram.json` (see setup above)
+- [ ] Create `config/gateways.json` (see setup above)
 - [ ] Run `start-all.bat`
 - [ ] Open Android app → Start Service → confirm "Backend: connected"
 - [ ] Send test in Telegram group: `LRL 01724761972`
