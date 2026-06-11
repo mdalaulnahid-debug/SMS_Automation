@@ -174,8 +174,9 @@ class GatewayForegroundService : Service() {
                 val localIp = NetworkUtils.getLocalIp(this@GatewayForegroundService)
                 val gatewayId = Prefs.getGatewayId(this@GatewayForegroundService)
                 val backendUrl = Prefs.getBackendUrl(this@GatewayForegroundService)
+                val gatewaySecret = Prefs.getApiKey(this@GatewayForegroundService)
                 if (localIp.isNotBlank() && backendUrl.isNotBlank()) {
-                    BackendClient.registerGateway(backendUrl, gatewayId, localIp, port)
+                    BackendClient.registerGateway(backendUrl, gatewayId, localIp, port, gatewaySecret)
                 }
 
                 mainHandler.post {

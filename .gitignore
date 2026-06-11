@@ -9,3 +9,6 @@ data/*.db-shm
 npm-debug.log*
 android-gateway/local.properties
 android-gateway/app/local.properties
+android-gateway/keystore.properties
+*.keystore
+*.jks

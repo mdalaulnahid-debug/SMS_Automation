@@ -214,20 +214,30 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun discoverAndCheckBackend() {
-        binding.tvBackendHealth.text = "Backend: searching on Wi-Fi..."
+        val savedUrl = Prefs.getBackendUrl(this).trim()
+        binding.tvBackendHealth.text = "Backend: connecting…"
         binding.tvBackendHealth.setTextColor(getColor(R.color.text_secondary))
 
         lifecycleScope.launch {
-            val phoneIp = NetworkUtils.getLocalIp(this@MainActivity)
-            var backendUrl = Prefs.getBackendUrl(this@MainActivity).trim()
-
             val connected = withContext(Dispatchers.IO) {
-                if (backendUrl.isNotBlank() && BackendClient.checkHealth(backendUrl)) {
-                    return@withContext backendUrl
+                val phoneIp = NetworkUtils.getLocalIp(this@MainActivity)
+
+                // 1. LAN auto-discovery — fastest when phone and PC are on the same network.
+                //    Skip if phone has no Wi-Fi IP (on mobile data).
+                if (phoneIp.isNotBlank()) {
+                    val lanUrl = BackendDiscovery.discoverBackendUrl(phoneIp, savedUrl.takeIf { it.isLanUrl() })
+                    if (lanUrl != null) {
+                        Prefs.setBackendUrl(this@MainActivity, lanUrl)
+                        return@withContext lanUrl
+                    }
                 }
-                BackendDiscovery.discoverBackendUrl(phoneIp, backendUrl)?.also {
-                    Prefs.setBackendUrl(this@MainActivity, it)
+
+                // 2. Fallback: try the manually saved URL (ngrok / domain / different subnet).
+                if (savedUrl.isNotBlank() && BackendClient.checkHealth(savedUrl)) {
+                    return@withContext savedUrl
                 }
+
+                null
             }
 
             if (connected != null) {
@@ -235,11 +245,16 @@ class MainActivity : AppCompatActivity() {
                 binding.tvBackendUrl.text = connected
                 binding.tvBackendHealth.setTextColor(getColor(R.color.success))
             } else {
-                binding.tvBackendHealth.text = "Backend: not found — run start-backend.bat on PC"
+                binding.tvBackendHealth.text =
+                    if (savedUrl.isNotBlank()) "Backend: not reachable — check URL or start backend on PC"
+                    else "Backend: not found — start backend on PC, or set internet URL in Settings"
                 binding.tvBackendHealth.setTextColor(getColor(R.color.danger))
             }
         }
     }
+
+    private fun String.isLanUrl(): Boolean =
+        matches(Regex("https?://(192\\.168|10\\.|172\\.(1[6-9]|2[0-9]|3[01]))\\..*"))
 
     private fun copyLocalIp() {
         val ip = getLocalIp()
@@ -333,7 +348,8 @@ class MainActivity : AppCompatActivity() {
         val needed = mutableListOf(
             Manifest.permission.SEND_SMS,
             Manifest.permission.RECEIVE_SMS,
-            Manifest.permission.READ_SMS
+            Manifest.permission.READ_SMS,
+            Manifest.permission.READ_PHONE_STATE
         )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             needed.add(Manifest.permission.POST_NOTIFICATIONS)

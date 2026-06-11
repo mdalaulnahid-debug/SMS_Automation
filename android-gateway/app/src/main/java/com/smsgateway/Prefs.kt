@@ -62,4 +62,11 @@ object Prefs {
 
     fun setLastTestTarget(context: Context, value: String) =
         prefs(context).edit().putString("last_test_target", value).apply()
+
+    // -1 means "use system default SIM for SMS"
+    fun getPreferredSubId(context: Context): Int =
+        prefs(context).getInt("preferred_sub_id", -1)
+
+    fun setPreferredSubId(context: Context, value: Int) =
+        prefs(context).edit().putInt("preferred_sub_id", value).apply()
 }

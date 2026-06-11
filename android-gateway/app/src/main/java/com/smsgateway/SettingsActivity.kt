@@ -9,6 +9,9 @@ import com.smsgateway.databinding.ActivitySettingsBinding
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
 
+    // Parallel list of subIds matching the SIM spinner entries; -1 = system default
+    private var simSubIds: List<Int> = listOf(-1)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySettingsBinding.inflate(layoutInflater)
@@ -18,17 +21,42 @@ class SettingsActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         val gatewayIds = arrayOf("GP_PHONE_01", "ROBI_PHONE_01", "BANGLALINK_PHONE_01")
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, gatewayIds)
-        binding.spinnerGatewayId.adapter = adapter
+        binding.spinnerGatewayId.adapter =
+            ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, gatewayIds)
 
+        setupSimSpinner()
         loadSettings(gatewayIds)
         binding.btnSave.setOnClickListener { saveSettings() }
     }
 
+    private fun setupSimSpinner() {
+        val sims = SmsSender.listSims(this)
+        if (sims.isEmpty()) {
+            // No READ_PHONE_STATE permission yet or single-SIM — show a placeholder
+            simSubIds = listOf(-1)
+            binding.spinnerSim.adapter = ArrayAdapter(
+                this, android.R.layout.simple_spinner_dropdown_item,
+                arrayOf("Default SIM")
+            )
+            binding.tvSimHint.text = "SIM info unavailable (grant READ_PHONE_STATE)"
+        } else {
+            simSubIds = listOf(-1) + sims.map { it.first }
+            val labels = listOf("Default SIM") + sims.map { (_, name, slot) -> "SIM ${slot + 1}: $name" }
+            binding.spinnerSim.adapter = ArrayAdapter(
+                this, android.R.layout.simple_spinner_dropdown_item, labels
+            )
+            binding.tvSimHint.text = "Select which SIM sends operator SMS"
+        }
+    }
+
     private fun loadSettings(gatewayIds: Array<String>) {
         val currentId = Prefs.getGatewayId(this)
-        val idx = gatewayIds.indexOf(currentId).coerceAtLeast(0)
-        binding.spinnerGatewayId.setSelection(idx)
+        binding.spinnerGatewayId.setSelection(gatewayIds.indexOf(currentId).coerceAtLeast(0))
+
+        val savedSubId = Prefs.getPreferredSubId(this)
+        val simIdx = simSubIds.indexOf(savedSubId).coerceAtLeast(0)
+        binding.spinnerSim.setSelection(simIdx)
+
         binding.etBackendUrl.setText(Prefs.getBackendUrl(this))
         binding.etApiKey.setText(Prefs.getApiKey(this))
         binding.etPort.setText(Prefs.getHttpPort(this).toString())
@@ -43,11 +71,13 @@ class SettingsActivity : AppCompatActivity() {
         val apiKey = binding.etApiKey.text.toString().trim()
         val port = binding.etPort.text.toString().trim().toIntOrNull()
 
-        // Backend URL can be blank — the app auto-discovers the PC on the same Wi-Fi.
         if (port == null || port !in 1024..65535) {
             Toast.makeText(this, "Port must be between 1024 and 65535", Toast.LENGTH_SHORT).show()
             return
         }
+
+        val selectedSimIdx = binding.spinnerSim.selectedItemPosition.coerceIn(0, simSubIds.lastIndex)
+        Prefs.setPreferredSubId(this, simSubIds[selectedSimIdx])
 
         Prefs.setGatewayId(this, gatewayId)
         Prefs.setBackendUrl(this, backendUrl)

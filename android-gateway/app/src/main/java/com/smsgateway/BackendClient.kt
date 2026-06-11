@@ -63,7 +63,8 @@ object BackendClient {
         backendUrl: String,
         gatewayId: String,
         localIp: String,
-        port: Int
+        port: Int,
+        gatewaySecret: String = ""
     ): Boolean {
         val base = backendUrl.trim().trimEnd('/')
         if (base.isBlank() || localIp.isBlank()) return false
@@ -76,12 +77,13 @@ object BackendClient {
         }.toString()
 
         return try {
-            val response = client.newCall(
-                Request.Builder()
-                    .url("$base/api/gateways/register")
-                    .post(payload.toRequestBody(JSON))
-                    .build()
-            ).execute()
+            val builder = Request.Builder()
+                .url("$base/api/gateways/register")
+                .post(payload.toRequestBody(JSON))
+            if (gatewaySecret.isNotBlank()) {
+                builder.header("x-gateway-secret", gatewaySecret)
+            }
+            val response = client.newCall(builder.build()).execute()
             response.use { r ->
                 if (!r.isSuccessful) {
                     Log.w(TAG, "Gateway register failed: HTTP ${r.code}")

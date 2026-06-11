@@ -1,7 +1,18 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
+}
+
+// Release signing is loaded from a gitignored keystore.properties (never hardcoded). If it is
+// absent (e.g. a dev machine without the production keystore), the build falls back to debug
+// signing so the project still compiles and installs anywhere.
+val keystorePropsFile = rootProject.file("keystore.properties")
+val hasReleaseKeystore = keystorePropsFile.exists()
+val keystoreProps = Properties().apply {
+    if (hasReleaseKeystore) keystorePropsFile.inputStream().use { load(it) }
 }
 
 android {
@@ -12,16 +23,18 @@ android {
         applicationId = "com.smsgateway"
         minSdk = 26
         targetSdk = 34
-        versionCode = 8
-        versionName = "1.2.1"
+        versionCode = 9
+        versionName = "1.3.0"
     }
 
     signingConfigs {
-        create("release") {
-            storeFile = file("C:\\BuildTools\\smsgateway.keystore")
-            storePassword = "smsgateway123"
-            keyAlias = "smsgateway"
-            keyPassword = "smsgateway123"
+        if (hasReleaseKeystore) {
+            create("release") {
+                storeFile = file(keystoreProps.getProperty("storeFile"))
+                storePassword = keystoreProps.getProperty("storePassword")
+                keyAlias = keystoreProps.getProperty("keyAlias")
+                keyPassword = keystoreProps.getProperty("keyPassword")
+            }
         }
     }
 
@@ -30,11 +43,14 @@ android {
             isMinifyEnabled = false
             isShrinkResources = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            signingConfig = signingConfigs.getByName("release")
+            // Use the real release key when available; otherwise debug-sign so the build still works.
+            signingConfig = if (hasReleaseKeystore) {
+                signingConfigs.getByName("release")
+            } else {
+                signingConfigs.getByName("debug")
+            }
         }
-        debug {
-            signingConfig = signingConfigs.getByName("release")
-        }
+        // debug uses the auto-generated debug keystore (default) — no config needed.
     }
 
     buildFeatures {

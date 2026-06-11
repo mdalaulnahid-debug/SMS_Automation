@@ -23,6 +23,18 @@ class HttpServer(private val context: Context, port: Int) : NanoHTTPD("0.0.0.0",
             )
         }
 
+        // Reject unsigned sends: the gateway is an SMS relay on the operator SIM, so anyone who can
+        // reach it could otherwise send SMS. When a shared secret is configured the caller must
+        // present it (Authorization: Bearer <secret> or X-Gateway-Secret). Blank = dev mode (open).
+        val expectedSecret = Prefs.getApiKey(context)
+        if (expectedSecret.isNotBlank() && !secretMatches(session, expectedSecret)) {
+            Log.w(TAG, "Rejected /send-sms: missing or invalid gateway secret")
+            return newFixedLengthResponse(
+                Response.Status.UNAUTHORIZED, "application/json",
+                JSONObject().put("ok", false).put("error", "Unauthorized").toString()
+            )
+        }
+
         return try {
             val files = HashMap<String, String>()
             session.parseBody(files)
@@ -40,7 +52,7 @@ class HttpServer(private val context: Context, port: Int) : NanoHTTPD("0.0.0.0",
 
             Log.d(TAG, "send-sms → to=$to operator=$operator requestId=$requestId msg=${message.take(40)}")
 
-            val localId = SmsSender.send(context, to, message)
+            val localId = SmsSender.send(context, to, message, requestId, operator)
 
             CoroutineScope(Dispatchers.IO).launch {
                 val db = AppDatabase.get(context)
@@ -68,6 +80,19 @@ class HttpServer(private val context: Context, port: Int) : NanoHTTPD("0.0.0.0",
             Log.e(TAG, "Error in /send-sms: ${e.message}", e)
             jsonError(e.message ?: "Internal error")
         }
+    }
+
+    // Accept the secret via Authorization: Bearer <secret> or the X-Gateway-Secret header.
+    // NanoHTTPD lowercases header names.
+    private fun secretMatches(session: IHTTPSession, expected: String): Boolean {
+        val headers = session.headers
+        val bearer = (headers["authorization"] ?: "")
+            .trim()
+            .removePrefix("Bearer ")
+            .removePrefix("bearer ")
+            .trim()
+        val presented = (headers["x-gateway-secret"]?.trim()).takeUnless { it.isNullOrBlank() } ?: bearer
+        return presented == expected
     }
 
     private fun jsonError(msg: String): Response {
