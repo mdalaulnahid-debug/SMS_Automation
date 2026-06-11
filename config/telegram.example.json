@@ -1,0 +1,12 @@
+{
+  "botToken": "PASTE_BOTFATHER_TOKEN_HERE",
+  "groupChatId": "-1001234567890",
+  "backendUrl": "http://localhost:3000",
+  "adminApiKey": "MUST_MATCH_config/auth.json_adminApiKey",
+  "pollPostIntervalMs": 3000,
+  "ackOnIntake": false,
+  "replyToUnauthorized": true,
+  "authorizedUsers": {
+    "777888999": { "name": "Officer Rahim", "allowedOperators": ["GP", "ROBI", "BANGLALINK"] }
+  }
+}

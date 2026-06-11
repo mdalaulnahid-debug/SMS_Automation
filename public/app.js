@@ -1,7 +1,33 @@
 'use strict';
 
-async function postJson(url, payload) {
+// Admin API key handling: stored in localStorage, sent as x-api-key on every API call.
+// If the backend has no key configured (dev mode) requests still succeed without one.
+function authHeaders() {
+  const key = localStorage.getItem('adminApiKey');
+  return key ? { 'x-api-key': key } : {};
+}
+
+function promptForKey() {
+  const key = window.prompt('Admin API key (set in config/auth.json):', localStorage.getItem('adminApiKey') || '');
+  if (key !== null) localStorage.setItem('adminApiKey', key.trim());
+  return localStorage.getItem('adminApiKey');
+}
+
+// fetch wrapper that injects the key and, on 401, prompts once and retries.
+async function apiFetch(url, options = {}, retried = false) {
   const response = await fetch(url, {
+    ...options,
+    headers: { ...(options.headers || {}), ...authHeaders() }
+  });
+  if (response.status === 401 && !retried) {
+    promptForKey();
+    return apiFetch(url, options, true);
+  }
+  return response;
+}
+
+async function postJson(url, payload) {
+  const response = await apiFetch(url, {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify(payload)
@@ -14,7 +40,7 @@ async function postJson(url, payload) {
 }
 
 async function refresh() {
-  const response = await fetch('/api/dashboard');
+  const response = await apiFetch('/api/dashboard');
   const data = await response.json();
   renderGateways(data.gateways);
   renderQueues(data.queues);

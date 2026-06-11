@@ -1,0 +1,5 @@
+{
+  "adminApiKey": "CHANGE_ME_LONG_RANDOM_STRING",
+  "requireGatewayAuth": false,
+  "denyUnknownRequesters": false
+}

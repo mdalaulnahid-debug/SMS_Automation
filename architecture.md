@@ -83,9 +83,9 @@ Snapshot view of gateways, requests, outbox/inbox, drafts, audit log; approve ac
 
 `users`, `operator_gateways`, `requests`, `sms_outbox`, `sms_inbox`, `whatsapp_replies`, `audit_logs`.
 
-### Target addition: per-operator dispatches
+### Per-operator dispatches (implemented, Phase 1)
 
-A fan-out request (e.g. `NID-MS`) currently shares **one** status across three operators, which conflates states (one operator replied, another timed out). Target model splits this:
+A fan-out request (e.g. `NID-MS`) previously shared **one** status across three operators, which conflated states (one operator replied, another timed out). This is now split into one dispatch row per target operator (`src/persistence.js`, `request_dispatches`):
 
 ```sql
 CREATE TABLE request_dispatches (
@@ -103,7 +103,7 @@ CREATE TABLE request_dispatches (
 );
 ```
 
-Request-level status becomes **derived**: `NEEDS_MANUAL_REVIEW` when every dispatch is terminal (`REPLY_RECEIVED`/`TIMEOUT`/`FAILED`) and at least one reply arrived; `TIMEOUT` only when all dispatches timed out. Timeouts must be computed from the dispatch's `sent_at`, **not** the request `created_at` (a request that waited in queue must still get a full reply window).
+Request-level status is **derived**: `NEEDS_MANUAL_REVIEW` when every dispatch is terminal (`REPLY_RECEIVED`/`TIMEOUT`/`FAILED`) and at least one reply arrived; `TIMEOUT` only when all dispatches timed out; `FAILED` otherwise. Timeouts are computed per-dispatch from the linked outbox `sent_at`, **not** the request `created_at` (a request that waited in queue still gets a full reply window). See `_finalizeIfTerminal` and `timeoutWaitingRequests` in `service.js`. Fan-out finalization produces one combined draft via `formatCombinedReply`.
 
 ## 6. Request Lifecycle
 
@@ -160,13 +160,14 @@ WhatsApp posting stays **manual** (copy from dashboard) until an official, polic
 
 ## 11. Security Model
 
-| Boundary | Current | Target |
-|----------|---------|--------|
-| Dashboard / backend API | None | Admin login or API key; role-based actions |
-| Phone → backend webhook | Trusted-sender filter only | Shared secret header (per-gateway key); reject unsigned posts |
-| Backend → phone `/send-sms` | Optional `apiKey` (currently dropped by config loading — see plan P0) | Required per-phone key |
-| Requester authorization | `users.allowedOperators` (currently reset to all on every submit — see plan P0) | Persistent roles/permissions, deny-by-default for new WhatsApp IDs |
-| Audit | Append-only in-memory log | Persistent, append-only, exportable |
+| Boundary | Implementation (Phase 2) |
+|----------|--------------------------|
+| Dashboard / backend API | Admin API key (`x-api-key` / Bearer); empty key = dev mode. `src/auth.js`, `config/auth.json` |
+| Phone → backend webhook + registration | Per-gateway shared secret (`x-gateway-secret`); unsigned posts rejected. `requireGatewayAuth` strict mode |
+| Backend → phone `/send-sms` | `Authorization: Bearer <apiKey>` sent per gateway (phone-side rejection = Android TODO) |
+| Requester authorization | Persistent `users.allowedOperators` + roles; `denyUnknownRequesters` deny-by-default; DISABLED users blocked; admin user management API |
+| Audit | Persistent, append-only, **SHA-256 hash-chained** (tamper-evident); `GET /api/audit/verify`, CSV export |
+| Secret exposure | Gateway `secret`/`apiKey` stripped from dashboard snapshot |
 
 Invariants (from `vision.md`):
 

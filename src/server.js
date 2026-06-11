@@ -21,6 +21,14 @@ http.createServer(app.handle).listen(port, host, () => {
   console.log(`SMS/WhatsApp automation server listening on http://${host}:${port}`);
   console.log(`Open dashboard at http://localhost:${port}`);
 
+  // Resume any requests that were queued (not yet dispatched) before a restart.
+  app
+    .recover()
+    .then((results) => {
+      if (results.length) console.log(`Recovery dispatched ${results.length} queued request(s)`);
+    })
+    .catch((error) => console.error(`Recovery failed: ${error.message}`));
+
   setInterval(() => {
     app.service
       .timeoutWaitingRequests()

@@ -362,6 +362,123 @@ test('configured gateway receives clean hardbound SMS command over HTTP', async 
   }
 });
 
+test('fan-out with two replies and one timeout finalizes to manual review (not timeout)', async () => {
+  const { store, service } = createHarness();
+  const submitted = await service.submitWhatsAppRequest({
+    whatsappGroupId: 'operations',
+    requesterName: 'Officer Rahim',
+    requesterWhatsappId: '8801700000000',
+    text: 'MS-NID 01712345678'
+  });
+  const requestId = submitted.request.requestId;
+
+  // GP and ROBI reply; Banglalink stays silent.
+  service.receiveSmsWebhook({ gatewayId: 'GP_PHONE_01', from: '12345', body: 'NID 111 GP' });
+  service.receiveSmsWebhook({ gatewayId: 'ROBI_PHONE_01', from: '12345', body: 'NID 222 ROBI' });
+  assert.equal(store.getRequest(requestId).status, STATUSES.WAITING_OPERATOR_REPLY);
+
+  // Age the Banglalink send past the reply window so only ITS dispatch times out.
+  const blOutbox = store.smsOutbox.find((row) => row.gatewayId === 'BANGLALINK_PHONE_01');
+  blOutbox.sentAt = new Date(Date.now() - 6 * 60 * 1000).toISOString();
+
+  const finalized = await service.timeoutWaitingRequests();
+  const request = store.getRequest(requestId);
+
+  // Derived status: at least one reply arrived, so the request is reviewable — NOT a blanket timeout.
+  assert.equal(request.status, STATUSES.NEEDS_MANUAL_REVIEW);
+  assert.equal(finalized.length, 1);
+
+  const dispatchStatus = (op) => request.dispatches.find((d) => d.operator === op).status;
+  assert.equal(dispatchStatus('GP'), 'REPLY_RECEIVED');
+  assert.equal(dispatchStatus('ROBI'), 'REPLY_RECEIVED');
+  assert.equal(dispatchStatus('BANGLALINK'), 'TIMEOUT');
+
+  // One combined draft with per-operator sections (replies + the timed-out operator marked).
+  const drafts = store.listWhatsAppReplies().filter((r) => r.requestId === requestId);
+  assert.equal(drafts.length, 1);
+  assert.match(drafts[0].replyText, /GP:/);
+  assert.match(drafts[0].replyText, /NID 111 GP/);
+  assert.match(drafts[0].replyText, /Banglalink: no reply \(timed out\)/);
+});
+
+test('fan-out with no replies times out as a whole', async () => {
+  const { store, service } = createHarness();
+  const submitted = await service.submitWhatsAppRequest({
+    whatsappGroupId: 'operations',
+    requesterName: 'Officer Rahim',
+    requesterWhatsappId: '8801700000000',
+    text: 'MS-NID 01712345678'
+  });
+  for (const row of store.smsOutbox) {
+    row.sentAt = new Date(Date.now() - 6 * 60 * 1000).toISOString();
+  }
+  const finalized = await service.timeoutWaitingRequests();
+  assert.equal(finalized.length, 1);
+  assert.equal(store.getRequest(submitted.request.requestId).status, STATUSES.TIMEOUT);
+});
+
+test('telegram-channel request carries chat + source message metadata to the draft', async () => {
+  const { store, service } = createHarness();
+  const submitted = await service.submitWhatsAppRequest({
+    channel: 'telegram',
+    chatId: '-1001234567890',
+    sourceMessageId: 42,
+    requesterName: 'Officer Rahim',
+    requesterWhatsappId: '777888999',
+    text: 'LRL 01712345678'
+  });
+
+  assert.equal(submitted.request.channel, 'telegram');
+  assert.equal(submitted.request.chatId, '-1001234567890');
+  assert.equal(submitted.request.sourceMessageId, 42);
+
+  service.receiveSmsWebhook({ gatewayId: 'GP_PHONE_01', from: '12345', body: 'LRL cell location' });
+
+  const draft = store.listWhatsAppReplies({ status: 'DRAFT' }).at(-1);
+  assert.equal(draft.channel, 'telegram');
+  assert.equal(draft.chatId, '-1001234567890');
+  assert.equal(draft.sourceMessageId, 42);
+  assert.equal(draft.requesterId, '777888999');
+});
+
+test('automated-channel approval defers posting and bridge confirmation completes it', async () => {
+  const { store, service } = createHarness();
+  const submitted = await service.submitWhatsAppRequest({
+    channel: 'telegram',
+    chatId: '-1001234567890',
+    sourceMessageId: 42,
+    requesterName: 'Officer Rahim',
+    requesterWhatsappId: '777888999',
+    text: 'LRL 01712345678'
+  });
+  service.receiveSmsWebhook({ gatewayId: 'GP_PHONE_01', from: '12345', body: 'LRL cell location' });
+
+  // Approval does NOT complete the request for automated channels — it queues for the bridge.
+  await service.approveWhatsAppReply(submitted.request.requestId);
+  assert.equal(store.getRequest(submitted.request.requestId).status, STATUSES.NEEDS_MANUAL_REVIEW);
+  const queued = store.listWhatsAppReplies({ status: 'APPROVED_FOR_POST' });
+  assert.equal(queued.length, 1);
+
+  // Bridge confirms it posted → request completes.
+  const completed = await service.markReplyPosted(queued[0].id, { postedMessageId: 100 });
+  assert.equal(completed.status, STATUSES.COMPLETED);
+  assert.equal(store.getWhatsAppReply(queued[0].id).sentStatus, 'POSTED');
+  assert.equal(store.getWhatsAppReply(queued[0].id).postedMessageId, 100);
+});
+
+test('manual-channel approval still completes in one step', async () => {
+  const { service } = createHarness();
+  const submitted = await service.submitWhatsAppRequest({
+    requesterName: 'Officer Rahim',
+    requesterWhatsappId: '8801700000000',
+    text: 'LRL 01712345678'
+  });
+  service.receiveSmsWebhook({ gatewayId: 'GP_PHONE_01', from: '12345', body: 'LRL cell location' });
+
+  const completed = await service.approveWhatsAppReply(submitted.request.requestId);
+  assert.equal(completed.status, STATUSES.COMPLETED);
+});
+
 test('registers phone gateway URL dynamically at runtime', () => {
   const { store } = createHarness({
     GP: { gatewayUrl: '', trustedSenders: ['12345'] }

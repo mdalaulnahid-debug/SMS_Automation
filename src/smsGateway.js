@@ -39,6 +39,11 @@ class SmsGatewayClient {
       sendResult
     });
 
+    this.store.setDispatchSent(request.requestId, operatorKey, {
+      outboxId: outbox.id,
+      ok: sendResult.ok
+    });
+
     this.queue.markDispatched(request.requestId, operatorKey);
 
     if (!sendResult.ok) {

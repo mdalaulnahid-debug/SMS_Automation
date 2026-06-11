@@ -3,18 +3,21 @@
     "gatewayUrl": "",
     "sendPath": "/send-sms",
     "apiKey": "",
+    "secret": "",
     "trustedSenders": ["12345", "01700000001", "01800000002"]
   },
   "ROBI": {
     "gatewayUrl": "",
     "sendPath": "/send-sms",
     "apiKey": "",
+    "secret": "",
     "trustedSenders": ["12345", "01700000001", "01800000002"]
   },
   "BANGLALINK": {
     "gatewayUrl": "",
     "sendPath": "/send-sms",
     "apiKey": "",
+    "secret": "",
     "trustedSenders": ["12345", "01700000001", "01800000002"]
   }
 }

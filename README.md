@@ -166,8 +166,17 @@ For pre-launch testing with a phone you control instead of operator shortcode `1
 | POST | `/api/gateways/register` | Phone registers `{ gatewayId, host, port }` → updates `gatewayUrl` in memory |
 | POST | `/api/requests` | Submit request (`text`, `whatsappGroupId`, `requesterWhatsappId`, `requesterName`, optional `testDestination`) |
 | POST | `/api/sms/inbound` | Inbound SMS webhook from phone |
-| POST | `/api/whatsapp-replies/:id/approve` | Approve draft (marks POSTED in backend; does not send to WhatsApp) |
+| POST | `/api/whatsapp-replies/:id/approve` | Approve draft (manual → POSTED; automated channel → APPROVED_FOR_POST) |
+| POST | `/api/whatsapp-replies/:id/posted` | Bridge confirms a draft was posted → completes request |
+| GET | `/api/users` · POST | List / upsert authorized requesters (admin) |
+| POST | `/api/users/:id/status` | Enable/disable a requester (admin) |
+| GET | `/api/audit/verify` | Verify the audit hash chain (admin) |
+| GET | `/api/audit/export` | Download the audit log as CSV (admin) |
 | POST | `/api/timeouts/run` | Mark stale requests as timeout (also runs automatically every 60s) |
+
+**Auth (Phase 2):** admin endpoints need `x-api-key` (or `Authorization: Bearer`) matching
+`config/auth.json` → `adminApiKey`; `/api/sms/inbound` and `/api/gateways/register` need the
+per-gateway `x-gateway-secret`. Empty `adminApiKey` = dev mode (auth off). Public: `/api/health`.
 
 Phone gateway contract: `docs/PHONE_GATEWAY_CONTRACT.md`
 
@@ -188,7 +197,8 @@ SMS_Automation/
 │   ├── app.js                   # Routes
 │   ├── service.js               # Business logic
 │   ├── smsGateway.js            # Outbound HTTP to phones
-│   ├── store.js                 # In-memory data (not persistent yet)
+│   ├── store.js                 # Data store (in-memory working set, SQLite write-through)
+│   ├── persistence.js           # SQLite persistence (node:sqlite); load on boot, write-through
 │   ├── network.js               # LAN IP helpers
 │   ├── parser.js                # Request parsing
 │   └── replyAnalyzer.js         # Reply matching
@@ -246,10 +256,15 @@ npm run organize:training  # → Training Data/Organized/
 
 ## Current Limitations
 
-- Backend storage is **in-memory** — restart loses all data; phone must re-register gateway
+- ~~Backend storage is in-memory~~ **Persistent** via SQLite (`data/automation.db`, `node:sqlite`,
+  WAL). Restart restores requests, drafts, audit log, queues, and registered gateway URLs;
+  in-flight requests keep waiting. See `src/persistence.js` and `docs/telegram-bridge.md`.
 - Reply analysis uses keyword/pattern matching, not structured field extractors yet
-- **No real WhatsApp integration** — manual copy/paste from dashboard during MVP
-- No authentication on backend API
+- **No real WhatsApp integration** — manual copy/paste from dashboard (Telegram bridge is the
+  automation path; see `docs/telegram-bridge.md`)
+- Backend API auth exists (Phase 2): admin API key + per-gateway secrets + deny-by-default users +
+  hash-chained audit log. Set `config/auth.json`; empty key = dev mode. Phone-side rejection of
+  unsigned `/send-sms` is still an Android TODO.
 - Play Protect may warn on sideload — use signed release APK, tap Install anyway
 - Office/home LAN IPs change — use auto-discovery or `start-backend.bat` printed IP
 

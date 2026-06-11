@@ -74,6 +74,23 @@ const STATUSES = Object.freeze({
   NEEDS_MANUAL_REVIEW: 'NEEDS_MANUAL_REVIEW'
 });
 
+// Per-operator dispatch lifecycle for fan-out requests (architecture.md §5). Request-level
+// status is derived from these: NEEDS_MANUAL_REVIEW once all dispatches are terminal and at
+// least one reply arrived; TIMEOUT only when every dispatch timed out.
+const DISPATCH_STATUSES = Object.freeze({
+  QUEUED: 'QUEUED',
+  WAITING_REPLY: 'WAITING_REPLY',
+  REPLY_RECEIVED: 'REPLY_RECEIVED',
+  TIMEOUT: 'TIMEOUT',
+  FAILED: 'FAILED'
+});
+
+const TERMINAL_DISPATCH_STATUSES = Object.freeze([
+  DISPATCH_STATUSES.REPLY_RECEIVED,
+  DISPATCH_STATUSES.TIMEOUT,
+  DISPATCH_STATUSES.FAILED
+]);
+
 const STATUS_TRANSITIONS = Object.freeze({
   [STATUSES.RECEIVED]: [STATUSES.VALIDATED, STATUSES.FAILED],
   [STATUSES.VALIDATED]: [STATUSES.QUEUED, STATUSES.FAILED],
@@ -169,6 +186,8 @@ module.exports = {
   REQUEST_TYPES,
   REQUEST_DEFINITIONS,
   STATUSES,
+  DISPATCH_STATUSES,
+  TERMINAL_DISPATCH_STATUSES,
   STATUS_TRANSITIONS,
   normalizeOperator,
   normalizePhoneNumber,

@@ -61,6 +61,28 @@ class OperatorQueue {
     };
   }
 
+  // Rebuild the in-memory waiting lists after a restart from persisted state. Requests still
+  // in QUEUED (validated but not yet sent for a given operator) are re-queued in FIFO order;
+  // WAITING_OPERATOR_REPLY requests are not re-queued — activePending() recognizes them as
+  // in-flight from the restored outbox, so they keep their slot and original reply window.
+  rebuild() {
+    for (const operatorKey of this.queues.keys()) this.queues.set(operatorKey, []);
+    const queued = this.store
+      .listRequests()
+      .filter((request) => request.status === STATUSES.QUEUED)
+      .sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+    for (const request of queued) {
+      for (const operatorKey of request.targetOperators || [request.operator]) {
+        const alreadySent = this.store.smsOutbox.find(
+          (row) => row.requestId === request.requestId && row.operator === operatorKey
+        );
+        if (!alreadySent && this.queues.has(operatorKey)) {
+          this.queues.get(operatorKey).push(request.requestId);
+        }
+      }
+    }
+  }
+
   snapshot() {
     return Object.keys(OPERATORS).map((operator) => this.describe(operator));
   }

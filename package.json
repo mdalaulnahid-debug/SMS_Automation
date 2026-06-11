@@ -6,6 +6,7 @@
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",
+    "start:telegram": "node telegram-bridge/start.js",
     "import:training": "node scripts/importTrainingData.js",
     "organize:training": "node scripts/reorganizeTrainingData.js",
     "test": "node --test"

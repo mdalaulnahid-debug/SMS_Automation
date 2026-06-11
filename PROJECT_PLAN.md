@@ -32,25 +32,57 @@ Defects found in code review; all are small, none require redesign.
 
 ---
 
-## Phase 1 — Persistence
+## Phase 1 — Persistence  *(DONE)*
 
-- Replace in-memory `AutomationStore` with SQLite (`better-sqlite3`), starting from `db/schema.sql`
-- Add `request_dispatches` table (per-operator status for fan-out requests — see `architecture.md` §5) and derive request status from dispatches
-- Restore request-ID sequence and pending queues from DB on startup; recover in-flight requests safely (anything WAITING at boot keeps waiting, with its original reply window)
-- Keep the store interface stable so `service.js`/`queue.js` change minimally; run the existing test suite against the SQLite store
+- [x] Persist `AutomationStore` to SQLite via Node's built-in `node:sqlite` (zero native deps,
+  not `better-sqlite3`). Write-through pattern: in-memory stays the live working set, every
+  mutation write-throughs to disk, boot restores from disk. See `src/persistence.js`.
+- [x] Restore request-ID sequence and per-operator waiting queues on startup; in-flight WAITING
+  requests keep waiting with their original reply window and can still match their reply after a
+  restart (`queue.rebuild()` + `app.recover()`).
+- [x] Store interface kept stable — `service.js`/`queue.js`/`smsGateway.js` minimally changed;
+  full suite runs against both in-memory (no `dbPath`) and SQLite.
+- [x] `request_dispatches` table (per-operator status — architecture.md §5). One dispatch per
+  target operator; request status is **derived** from dispatches: NEEDS_MANUAL_REVIEW once all
+  dispatches terminal and ≥1 replied; TIMEOUT only when all timed out. Timeouts are per-dispatch,
+  computed from each operator's own send time. Fan-out produces ONE combined draft (per-operator
+  sections; timed-out/failed operators marked).
+- Covered by `test/persistence.test.js` (restart recovery incl. dispatches, sequence continuity,
+  durable audit log) and `test/workflow.test.js` (fan-out 2-reply/1-timeout → review; all-timeout → TIMEOUT).
 
-**Exit criteria:** backend restart loses nothing; fan-out request with one operator timing out and two replying produces a correct combined state.
+DB lives at `data/automation.db` (override with `DB_PATH`; gitignored). WAL journal mode.
+
+**Exit criteria:** ~~backend restart loses nothing~~ **MET** (in-flight request + dispatches survive
+restart and still match their reply); ~~fan-out with one operator timing out and two replying
+produces a correct combined state~~ **MET** (derived NEEDS_MANUAL_REVIEW + combined draft).
 
 ---
 
-## Phase 2 — Security and access control
+## Phase 2 — Security and access control  *(DONE, backend)*
 
-- Shared-secret auth: per-gateway key on phone→backend webhook **and** backend→phone `/send-sms` (phone rejects unsigned sends; backend rejects unsigned webhooks)
-- Admin authentication on dashboard/API (single admin login or API key is enough at this scale)
-- Real user management: deny-by-default for unknown WhatsApp IDs, roles, per-operator permissions, enable/disable users from dashboard (depends on fix 0.2)
-- Persistent append-only audit log with export (CSV/Excel)
+- [x] **Admin API key** protects dashboard + admin API (`x-api-key` or `Authorization: Bearer`).
+  Empty key = dev mode (auth off) for tests/local; set `adminApiKey` in `config/auth.json` (or
+  `ADMIN_API_KEY`) for production. Dashboard prompts for the key and stores it. See `src/auth.js`.
+- [x] **Per-gateway shared secret** on phone→backend webhook (`/api/sms/inbound`) and registration
+  (`/api/gateways/register`): backend rejects unsigned posts (`x-gateway-secret`). Backend→phone
+  `/send-sms` already sends `Authorization: Bearer <apiKey>` (phone-side enforcement is Android work).
+  `requireGatewayAuth` strict mode rejects gateways with no configured secret.
+- [x] **Deny-by-default users**: `denyUnknownRequesters` rejects unknown requesters with a clear
+  message; DISABLED users always rejected. Admin user management: `GET/POST /api/users`,
+  `POST /api/users/:id/status`, per-operator `allowedOperators`, roles. Secrets/apiKeys never
+  leak in the dashboard snapshot.
+- [x] **Tamper-evident audit log**: append-only, SHA-256 **hash-chained** (each row hashes the
+  previous hash + its canonical content). `GET /api/audit/verify` detects edits/deletions;
+  `GET /api/audit/export` returns CSV incl. the hash columns for case records.
 
-**Exit criteria:** an unauthenticated LAN device can neither inject inbound SMS nor trigger sends; unknown requesters are rejected with a clear message.
+Covered by `test/security.test.js` (10 tests: admin gate, gateway-secret gate, deny-unknown,
+disabled user, strict mode, no-secret-leak, hash-chain verify/tamper/delete, CSV export).
+
+Config: `config/auth.json` (gitignored; example in `config/auth.example.json`); gateway `secret`
+in `config/gateways.json`. Remaining: phone-side rejection of unsigned `/send-sms` (Android).
+
+**Exit criteria:** ~~an unauthenticated LAN device can neither inject inbound SMS nor trigger
+sends~~ **MET**; ~~unknown requesters are rejected with a clear message~~ **MET**.
 
 ---
 
@@ -66,17 +98,33 @@ Defects found in code review; all are small, none require redesign.
 
 ---
 
-## Phase 4 — WhatsApp integration
+## Phase 4 — Group channel integration (Telegram)
 
-Keep manual posting until this phase. Then, in order of preference:
+**Decision (2026-06-11):** the automation channel is **Telegram**, not WhatsApp. The official
+WhatsApp Cloud API does not support group read/post, and unofficial WhatsApp Web automation is
+rejected (ban risk + fragility). Telegram's Bot API officially supports group message read,
+threaded reply, and user mention — with no companion phone and no ban risk.
 
-1. **Official WhatsApp Business Platform** — evaluate eligibility for group messaging with your number setup; if available, automate intake (parse group messages) and posting (tagged replies) through the official API
-2. **Semi-automated** — dashboard "Copy for WhatsApp" formatting (already close), plus a notification when a draft is approved so posting is one paste
-3. Unofficial WhatsApp Web automation: **rejected** — ban risk and fragility are unacceptable for this workflow
+Built (channel-agnostic backend + bridge scaffold, behind unit tests):
 
-Whatever the mechanism: requester tag, group identity, and manual-review gate are preserved.
+1. **Backend metadata plumbing** — requests/drafts carry `channel`, `chatId`, `sourceMessageId`,
+   requester id; data model is channel-agnostic (`manual` keeps dashboard copy/paste).
+2. **Two-step posting for automated channels** — Approve marks draft `APPROVED_FOR_POST` (request
+   stays `NEEDS_MANUAL_REVIEW`); the bridge posts, then `POST /api/whatsapp-replies/:id/posted`
+   completes the request. An unsent reply never looks completed and is retried.
+3. **Telegram bridge** (`telegram-bridge/`, separate process) — long-poll intake (authorize
+   deny-by-default → submit) + posting loop (threaded reply + real `text_mention` tag). Zero deps.
+   See `docs/telegram-bridge.md`.
 
-**Exit criteria:** request intake no longer requires retyping; replies reach the group with the original requester tagged; review gate still enforced.
+Remaining for production:
+- Live bot setup (BotFather token, privacy mode off / admin, authorizedUsers by Telegram id)
+- End-to-end test on a real group + gateway phone
+- Optional: combined fan-out draft posting; optional auto-approve on HIGH confidence
+
+Invariants preserved: requester tag, source chat identity, and manual-review gate.
+
+**Exit criteria:** request intake no longer requires retyping; replies reach the group threaded
+to the original request with the requester tagged; review gate still enforced.
 
 ---
 

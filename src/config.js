@@ -20,14 +20,42 @@ function loadGatewayConfig() {
         gatewayUrl: trimTrailingSlash(config.gatewayUrl),
         sendPath: config.sendPath || '/send-sms',
         apiKey: config.apiKey || '',
+        // Shared secret the phone must present on inbound webhook / registration (machine identity).
+        secret: config.secret || '',
         trustedSenders: config.trustedSenders || []
       }
     ])
   );
 }
 
+// Security config: admin API key (protects dashboard/admin API) plus strict-mode toggles.
+// Empty adminApiKey = auth disabled (dev/test); set it in production. Env vars win over the file.
+function loadAuthConfig() {
+  const configPath = process.env.SMS_AUTH_CONFIG || join(__dirname, '..', 'config', 'auth.json');
+  let file = {};
+  if (existsSync(configPath)) {
+    try {
+      file = JSON.parse(readFileSync(configPath, 'utf8'));
+    } catch (error) {
+      throw new Error(`Invalid config/auth.json: ${error.message}`);
+    }
+  }
+  const truthy = (v) => v === true || v === 'true' || v === '1';
+  return {
+    adminApiKey: process.env.ADMIN_API_KEY || file.adminApiKey || '',
+    requireGatewayAuth:
+      process.env.REQUIRE_GATEWAY_AUTH !== undefined
+        ? truthy(process.env.REQUIRE_GATEWAY_AUTH)
+        : Boolean(file.requireGatewayAuth),
+    denyUnknownRequesters:
+      process.env.DENY_UNKNOWN_REQUESTERS !== undefined
+        ? truthy(process.env.DENY_UNKNOWN_REQUESTERS)
+        : Boolean(file.denyUnknownRequesters)
+  };
+}
+
 function trimTrailingSlash(value) {
   return String(value || '').replace(/\/+$/, '');
 }
 
-module.exports = { loadGatewayConfig };
+module.exports = { loadGatewayConfig, loadAuthConfig };
