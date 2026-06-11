@@ -47,7 +47,10 @@ function planIntake(message, config) {
       sourceMessageId: message.message_id,
       requesterName: authorized.name || message.from.first_name || `user_${fromId}`,
       requesterWhatsappId: fromId,
-      text
+      text,
+      // testDestination overrides the operator shortcode — useful for end-to-end testing
+      // without real operator push-pull numbers. Set in config/telegram.json.
+      ...(config.testDestination ? { testDestination: config.testDestination } : {})
     },
     replyToMessageId: message.message_id
   };

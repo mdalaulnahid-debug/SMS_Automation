@@ -9,6 +9,9 @@
   "ackOnIntake": true,
   "replyToUnauthorized": true,
 
+  "_comment_testDestination": "Remove this field in production. When set, ALL requests go to this number instead of the real operator shortcode.",
+  "testDestination": "",
+
   "authorizedUsers": {
     "777888999": { "name": "Officer Rahim", "allowedOperators": ["GP", "ROBI", "BANGLALINK"] },
     "111222333": { "name": "Officer Karim", "allowedOperators": ["GP"] }
