@@ -6,7 +6,7 @@ const { AutomationStore } = require('./store');
 const { OperatorQueue } = require('./queue');
 const { SmsGatewayClient } = require('./smsGateway');
 const { AutomationService } = require('./service');
-const { loadGatewayConfig, loadAuthConfig } = require('./config');
+const { loadGatewayConfig, loadAuthConfig, loadTelegramConfig } = require('./config');
 const { isAdmin, isValidGateway } = require('./auth');
 const { getBackendUrls, getLanAddresses, getPreferredLanIp } = require('./network');
 
@@ -20,11 +20,14 @@ function createApp(options = {}) {
   const store = new AutomationStore(gatewayConfig, dbPath ? { dbPath } : {});
   const queue = new OperatorQueue(store);
   const smsGateway = new SmsGatewayClient(store, queue);
+  const telegramConfig = options.telegramConfig || loadTelegramConfig();
+  const autoApproveChannels = telegramConfig.autoApprove ? ['telegram'] : [];
   const service = new AutomationService({
     store,
     queue,
     smsGateway,
-    denyUnknownRequesters: authConfig.denyUnknownRequesters
+    denyUnknownRequesters: authConfig.denyUnknownRequesters,
+    autoApproveChannels
   });
 
   // Restore the per-operator waiting lists from any persisted QUEUED requests.

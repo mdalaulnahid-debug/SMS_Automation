@@ -54,8 +54,20 @@ function loadAuthConfig() {
   };
 }
 
+// Optional Telegram config — only loaded to read autoApprove setting into the service.
+// The full Telegram config is used by the bridge process, not the backend.
+function loadTelegramConfig() {
+  const configPath = process.env.SMS_TELEGRAM_CONFIG || join(__dirname, '..', 'config', 'telegram.json');
+  if (!existsSync(configPath)) return {};
+  try {
+    return JSON.parse(readFileSync(configPath, 'utf8'));
+  } catch {
+    return {};
+  }
+}
+
 function trimTrailingSlash(value) {
   return String(value || '').replace(/\/+$/, '');
 }
 
-module.exports = { loadGatewayConfig, loadAuthConfig };
+module.exports = { loadGatewayConfig, loadAuthConfig, loadTelegramConfig };

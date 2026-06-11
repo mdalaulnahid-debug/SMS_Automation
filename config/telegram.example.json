@@ -4,9 +4,13 @@
   "backendUrl": "http://localhost:3000",
   "adminApiKey": "MUST_MATCH_config/auth.json_adminApiKey",
   "pollPostIntervalMs": 3000,
-  "ackOnIntake": false,
+
+  "autoApprove": true,
+  "ackOnIntake": true,
   "replyToUnauthorized": true,
+
   "authorizedUsers": {
-    "777888999": { "name": "Officer Rahim", "allowedOperators": ["GP", "ROBI", "BANGLALINK"] }
+    "777888999": { "name": "Officer Rahim", "allowedOperators": ["GP", "ROBI", "BANGLALINK"] },
+    "111222333": { "name": "Officer Karim", "allowedOperators": ["GP"] }
   }
 }

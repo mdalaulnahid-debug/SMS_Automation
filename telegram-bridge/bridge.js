@@ -89,9 +89,10 @@ async function handleIntake(message, { config, backend, telegram, log = () => {}
 
   log(`intake: accepted ${result.request.requestId} (${plan.request.text})`);
   if (config.ackOnIntake) {
+    const operators = (result.request.targetOperators || []).join(', ') || 'operator';
     await telegram.sendMessage({
       chatId: config.groupChatId,
-      text: `Received — request ${result.request.requestId} is being processed.`,
+      text: `✅ Request received — sending to ${operators}. Reply will be posted here when received.`,
       replyToMessageId: plan.replyToMessageId
     });
   }

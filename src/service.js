@@ -7,13 +7,15 @@ const { analyzeOperatorReply } = require('./replyAnalyzer');
 const DEFAULT_REPLY_WINDOW_MS = 5 * 60 * 1000;
 
 class AutomationService {
-  constructor({ store, queue, smsGateway, replyWindowMs = DEFAULT_REPLY_WINDOW_MS, denyUnknownRequesters = false }) {
+  constructor({ store, queue, smsGateway, replyWindowMs = DEFAULT_REPLY_WINDOW_MS, denyUnknownRequesters = false, autoApproveChannels = [] }) {
     this.store = store;
     this.queue = queue;
     this.smsGateway = smsGateway;
     this.replyWindowMs = replyWindowMs;
-    // Deny-by-default: when on, only known ACTIVE users may submit (admin provisions them).
     this.denyUnknownRequesters = denyUnknownRequesters;
+    // Channels whose replies are auto-approved (skips manual review gate).
+    // e.g. ['telegram'] — the reply goes straight to APPROVED_FOR_POST.
+    this.autoApproveChannels = autoApproveChannels;
   }
 
   async submitWhatsAppRequest(input) {
@@ -187,16 +189,23 @@ class AutomationService {
       }
       this.store.updateRequestStatus(requestId, STATUSES.NEEDS_MANUAL_REVIEW);
       const request = this.store.getRequest(requestId);
+      const autoApprove = request.channel && this.autoApproveChannels.includes(request.channel);
       const reply = this.store.addWhatsAppReply({
         requestId,
         replyText: formatCombinedReply(request, this.store),
-        sentStatus: 'DRAFT',
+        sentStatus: autoApprove ? 'APPROVED_FOR_POST' : 'DRAFT',
         channel: request.channel,
         chatId: request.chatId,
         sourceMessageId: request.sourceMessageId,
         requesterName: request.requesterName,
         requesterId: request.requesterWhatsappId
       });
+      if (autoApprove) {
+        this.store.audit('system', 'WHATSAPP_REPLY_AUTO_APPROVED', requestId, {
+          replyId: reply.id,
+          channel: request.channel
+        });
+      }
       return { finalized: true, request, reply };
     }
 
