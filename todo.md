@@ -67,15 +67,15 @@ Copy the printed public URL → paste into Android app Settings → Backend URL.
 
 ---
 
-## Home PC — First Actions (Next Session)
+## Home PC — Status (2026-06-12)
 
-- [ ] `git pull` + `npm install`
-- [ ] Create `config/telegram.json` (see setup above)
-- [ ] Create `config/gateways.json` (see setup above)
-- [ ] Run `start-all.bat`
-- [ ] Open Android app → Start Service → confirm "Backend: connected"
-- [ ] Send test in Telegram group: `LRL 01724761972`
-- [ ] Confirm bot acks, SMS arrives at `01936759367`, reply posts back in Telegram
+- [x] `git pull` + `npm install`
+- [x] Create `config/telegram.json` — done (botToken, groupChatId, autoApprove, authorizedUsers empty)
+- [x] Create `config/gateways.json` — done (GP gatewayUrl `http://192.168.0.172:8080`)
+- [x] Run `start-all.bat` — tested, loop working
+- [x] Android app installed via `adb install` — new UI with hero status, stats, collapsible details
+- [x] Full loop tested: Telegram → backend → SMS → reply → Telegram
+- [ ] Re-enter Android app settings after reinstall (Gateway ID, Backend URL, SIM)
 
 ---
 
@@ -99,7 +99,9 @@ Copy the printed public URL → paste into Android app Settings → Backend URL.
 
 ## Backend — Reply Matching
 
-- [ ] **Training data pipeline** — when a reply is matched (even by time window), save its keywords to `data/reply-patterns.json` automatically for future improvements
+- [x] **Training data import** — 144 xlsx samples imported to `data/reply-patterns.json` (LRL:42, LCL:62, MS-NID:22, IMEI-MS:11, NID-MS:7)
+- [x] **Payload-in-reply matching** — `payloadInReply()` finds phone/NID/IMEI in operator reply body
+- [ ] **Auto-save training data** — when a reply is matched, save its keywords to `data/reply-patterns.json` automatically
 - [ ] **Request type detection from reply** — detect reply type from content and match to pending requests of that type
 
 ---
@@ -139,8 +141,8 @@ Copy the printed public URL → paste into Android app Settings → Backend URL.
 
 ## Training Data
 
-- [ ] Add real operator replies as training samples in `Training Data/` Excel files
-- [ ] Run `npm run import:training` after every update
+- [x] Add real operator replies as training samples in `Training Data/` Excel files (144 rows imported)
+- [x] Run `npm run import:training` — generates `data/reply-patterns.json`
 - [ ] Add real GP LRL reply from the E2E test as reference sample
 - [ ] Add Robi and Banglalink reply samples when available
 
@@ -185,3 +187,12 @@ Copy the printed public URL → paste into Android app Settings → Backend URL.
 - [x] Telegram timeout/failure notifications (in-thread with requester mention)
 - [x] Removed "Review confidence" line from combined draft
 - [x] 54/54 backend tests pass
+- [x] Non-blocking concurrent dispatch (removed one-active-per-operator queue blocking)
+- [x] Payload-in-reply matching (`payloadInReply()` with phone normalization)
+- [x] Training data imported (144 xlsx samples → reply-patterns.json)
+- [x] Group-membership Telegram authorization (empty authorizedUsers = any member)
+- [x] Timeout re-notification fix (seed notifiedSet on bridge restart)
+- [x] Request ID removed from Telegram replies
+- [x] Android app UI redesign (hero status, stats counters, collapsible details, branded icon)
+- [x] Test Request moved from main screen to Settings
+- [x] Home PC configured and tested (config files, adb install)

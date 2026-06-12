@@ -1,18 +1,54 @@
 # Progress Tracker
 
-Last updated: **2026-06-12 (continued session)**
+Last updated: **2026-06-12 (home PC session — evening)**
 
 ---
 
 ## Current Stage
 
-**Full Telegram automation loop tested and working end-to-end on real devices. Backend now handles ambiguous reply matching, dashboard review actions, and Telegram timeout notifications.**
+**Non-blocking concurrent dispatch with content-based reply matching. Android app UI redesigned. Training data imported. Group-membership Telegram authorization. Full loop tested on home PC.**
 
 ---
 
-## Session Handoff (2026-06-12) — Read This First
+## Session Handoff (2026-06-12 evening, home PC) — Read This First
 
 ### What was accomplished this session
+
+| Item | Status | Notes |
+|------|--------|-------|
+| Non-blocking concurrent dispatch | Done | Removed one-active-per-operator queue blocking — multiple requests dispatch simultaneously |
+| Payload-in-reply matching | Done | `payloadInReply()` in `replyAnalyzer.js` — phone/NID/IMEI found in operator reply body |
+| Training data import | Done | 144 xlsx samples → `data/reply-patterns.json` (LRL:42, LCL:62, MS-NID:22, IMEI-MS:11, NID-MS:7) |
+| Group-membership Telegram auth | Done | Empty `authorizedUsers` = any group member can submit; display name from Telegram profile |
+| Timeout re-notification fix | Done | `notifiedTimeouts` seeded from existing terminal requests on bridge restart |
+| Request ID removed from Telegram replies | Done | End users see only `@Name` + `RequestType: Payload` + reply body |
+| Queue-advancing dispatch calls removed | Done | No more `dispatchNext` in approve/reject/timeout — queue doesn't block |
+| Time-window constraint removed from store | Done | `findActiveRequestForGateway()` searches ALL waiting requests, not just recent |
+| Android app UI redesign | Done | Hero status indicator with pulse, live stats (sent/received/pending), collapsible details, test card moved to Settings, branded icon, toolbar menu |
+| Home PC config setup | Done | `config/telegram.json` and `config/gateways.json` created for home PC (gitignored) |
+| Tests rewritten | Done | 4 tests updated for concurrent dispatch model, all passing |
+
+### Key code changes
+
+- `src/queue.js` — Removed `activePending()` gate from `nextSendable()`
+- `src/smsGateway.js` — `dispatchNext()` now loops draining entire queue via `_sendOne()`
+- `src/replyAnalyzer.js` — New `payloadInReply()` with phone number normalization (+880/0 prefix stripping)
+- `src/store.js` — `findActiveRequestForGateway()` searches all WAITING requests (no time cutoff)
+- `src/service.js` — Removed request ID from Telegram reply, removed all queue-advancing `dispatchNext` calls
+- `telegram-bridge/bridge.js` — Group-membership auth (empty authorizedUsers = open), display name from Telegram profile
+- `telegram-bridge/start.js` — Seeds `notifiedTimeouts` set from existing terminal requests on startup
+- `data/reply-patterns.json` — Generated from 144 xlsx training rows
+- `android-gateway/.../activity_main.xml` — Complete redesign: hero status, stats row, collapsible details
+- `android-gateway/.../activity_settings.xml` — Test Request card moved here
+- `android-gateway/.../MainActivity.kt` — Toolbar menu, pulse animation, stats counters, backend dot color
+- `android-gateway/.../SettingsActivity.kt` — Now handles test request logic
+- New drawables: `ic_sms_gateway.xml` (branded icon), `bg_status_indicator.xml`, `bg_stat_card.xml`, `bg_connection_dot.xml`, `ic_settings.xml`, `ic_log.xml`, `main_toolbar.xml`
+
+---
+
+## Session Handoff (2026-06-12 earlier) — Previous
+
+### What was accomplished that session
 
 | Item | Status | Notes |
 |------|--------|-------|
@@ -21,23 +57,7 @@ Last updated: **2026-06-12 (continued session)**
 | New API endpoints | Done | `POST /api/requests/:id/reject`, `POST /api/requests/:id/retry`, `POST /api/manual-match`, `GET /api/sms/unmatched` |
 | Dashboard UI overhaul | Done | Status color badges, action buttons, unmatched SMS section with match dropdown, 10s auto-refresh |
 | Telegram timeout notifications | Done | `notifyTimeouts()` in bridge polls for TIMEOUT/FAILED requests, posts in-thread with requester mention |
-| Removed "Review confidence" | Done | Removed from `formatCombinedReply()` in `service.js` |
-| State machine updates | Done | Added transitions: NEEDS_MANUAL_REVIEW/FAILED/TIMEOUT → QUEUED (retry) |
-| Queue retry support | Done | `enqueueExisting()` in `queue.js` for re-queuing without status change |
-| 7 new tests | Done | 47 → 54 tests, all passing — disambiguation, reject, retry, manual match, timeout notify |
-
-### Key code changes
-
-- `src/store.js` — `findActiveRequestForGateway()` returns all candidates when ambiguous
-- `src/service.js` — `receiveSmsWebhook()` scores ambiguous matches; new `rejectRequest()`, `retryRequest()`, `manualMatch()`; `confidenceRank()` helper
-- `src/domain.js` — new state transitions for retry flows
-- `src/queue.js` — `enqueueExisting()` method
-- `src/app.js` — 4 new API endpoints
-- `telegram-bridge/bridge.js` — `notifyTimeouts()` function
-- `telegram-bridge/backendClient.js` — `listRecentRequests()` method
-- `telegram-bridge/start.js` — wired `notifyTimeouts` into posting loop with `notifiedSet`
-- `public/app.js` — complete rewrite with review actions, manual match UI, auto-refresh
-- `public/index.html` — unmatched SMS section, status color CSS, action button styles
+| 7 new tests | Done | 47 → 54 tests, all passing |
 
 ---
 
@@ -156,6 +176,9 @@ start-all.bat
 - Request parsing (LRL, LCL, MS-NID, NID-MS, IMEI-MS), operator routing, per-operator queues
 - Silent references, trusted-sender filter, reply matching, time-window fallback
 - Content-based reply disambiguation (ambiguous match scoring via `analyzeOperatorReply`)
+- **Non-blocking concurrent dispatch** — multiple same-operator requests in-flight simultaneously
+- **Payload-in-reply matching** — phone/NID/IMEI in operator reply body disambiguates concurrent requests
+- **Training data imported** — 144 xlsx samples in `data/reply-patterns.json`
 - Dashboard review actions: reject, retry, manual match (4 API endpoints)
 - HTTP phone gateway + mock mode, inbound webhook
 - `testDestination` for pre-launch testing
@@ -164,16 +187,18 @@ start-all.bat
 - Admin API key + per-gateway secrets + deny-by-default users
 - Hash-chained tamper-evident audit log
 - `start-all.bat`, `start-backend.bat`, `stop-backend.bat`, helper scripts
-- 54/54 tests pass
+- All tests pass
 
 ### Telegram Bridge
 - Long polling intake loop (drains backlog on restart)
-- Deny-by-default authorized users (by Telegram user ID)
+- **Group-membership authorization** — empty `authorizedUsers` = any group member can submit
 - In-thread ack on intake (names target operators)
 - autoApprove: true → replies post instantly without dashboard approval
 - Posting loop: threaded reply + text_mention entity tags requester
 - Two-step posting: bridge confirms delivery before marking COMPLETED
 - Timeout/failure notifications: in-thread message with requester mention
+- **Timeout re-notification fix** — seeds notifiedSet from existing terminal requests on restart
+- Request ID removed from Telegram replies (internal detail only)
 - `config/telegram.json` with testDestination support
 - `setup-telegram.bat` guided wizard
 - `start-all.bat` with auto-restart and port cleanup
@@ -188,6 +213,7 @@ start-all.bat
 - Portable signing: keystore.properties (gitignored), debug fallback
 - Gradle wrapper (gradlew.bat + wrapper jar) — builds on any machine
 - GitHub Actions CI fixed
+- **UI redesign** — hero status indicator with pulse animation, live stats counters (sent/received/pending), collapsible gateway details, test request moved to Settings, branded app icon, toolbar menu for Settings/Logs
 
 ---
 
