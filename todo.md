@@ -97,9 +97,8 @@ Copy the printed public URL → paste into Android app Settings → Backend URL.
 
 ---
 
-## Backend — Reply Matching (High Priority)
+## Backend — Reply Matching
 
-- [ ] **Content-based disambiguation** — when multiple requests are pending for the same operator, use `analyzeOperatorReply()` confidence scores to pick the best match instead of returning `null`
 - [ ] **Training data pipeline** — when a reply is matched (even by time window), save its keywords to `data/reply-patterns.json` automatically for future improvements
 - [ ] **Request type detection from reply** — detect reply type from content and match to pending requests of that type
 
@@ -109,9 +108,7 @@ Copy the printed public URL → paste into Android app Settings → Backend URL.
 
 ### High Priority
 - [ ] **Retry failed gateway sends** — exponential backoff when phone HTTP returns error
-- [ ] **Manual review actions** on dashboard — reject, retry, edit-before-approve
 - [ ] **Gateway health dashboard** — show online/offline, last-seen, stale queue alert
-- [ ] Remove `Review confidence` line from combined draft (no extractors planned)
 
 ### Medium Priority
 - [ ] **Phone health checks** — dashboard shows gateway online/offline + last registered time
@@ -124,7 +121,6 @@ Copy the printed public URL → paste into Android app Settings → Backend URL.
 ## Telegram Bridge
 
 - [ ] **Operator-specific routing** — allow officer to specify operator in message (e.g. `LRL 017xxx GP`) to target a single operator instead of all
-- [ ] **Timeout notification** — when all dispatches time out, post "No reply received" in-thread to Telegram
 - [ ] **Error notification** — if backend is unreachable, bot posts an error in-thread
 
 ---
@@ -183,3 +179,9 @@ Copy the printed public URL → paste into Android app Settings → Backend URL.
 - [x] GitHub Actions CI fixed
 - [x] Full Telegram E2E test PASSED (2026-06-11)
 - [x] 47/47 backend tests pass
+- [x] Content-based reply disambiguation (ambiguous matches scored by `analyzeOperatorReply`)
+- [x] Dashboard review actions — reject, retry, manual match (4 new API endpoints)
+- [x] Dashboard UI overhaul — status colors, action buttons, unmatched SMS section, 10s auto-refresh
+- [x] Telegram timeout/failure notifications (in-thread with requester mention)
+- [x] Removed "Review confidence" line from combined draft
+- [x] 54/54 backend tests pass

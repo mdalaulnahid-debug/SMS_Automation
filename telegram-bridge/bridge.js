@@ -25,9 +25,13 @@ function planIntake(message, config) {
     return { action: 'ignore', reason: 'wrong chat' };
   }
 
-  const authorized = config.authorizedUsers && config.authorizedUsers[fromId];
-  if (!authorized) {
-    // Deny-by-default: never submit requests from unknown users.
+  // If authorizedUsers is configured, only listed users can submit.
+  // If not configured (or empty), any group member can submit — group membership is the gate.
+  const authorizedUsers = config.authorizedUsers || {};
+  const hasAllowList = Object.keys(authorizedUsers).length > 0;
+  const authorized = authorizedUsers[fromId];
+
+  if (hasAllowList && !authorized) {
     return {
       action: 'unauthorized',
       reason: 'sender not in authorizedUsers',
@@ -39,17 +43,21 @@ function planIntake(message, config) {
     };
   }
 
+  const firstName = message.from.first_name || '';
+  const lastName = message.from.last_name || '';
+  const displayName = authorized?.name
+    || [firstName, lastName].filter(Boolean).join(' ')
+    || `user_${fromId}`;
+
   return {
     action: 'submit',
     request: {
       channel: 'telegram',
       chatId,
       sourceMessageId: message.message_id,
-      requesterName: authorized.name || message.from.first_name || `user_${fromId}`,
+      requesterName: displayName,
       requesterWhatsappId: fromId,
       text,
-      // testDestination overrides the operator shortcode — useful for end-to-end testing
-      // without real operator push-pull numbers. Set in config/telegram.json.
       ...(config.testDestination ? { testDestination: config.testDestination } : {})
     },
     replyToMessageId: message.message_id
@@ -127,4 +135,40 @@ async function postApprovedReplies({ backend, telegram, log = () => {} }) {
   return posted;
 }
 
-module.exports = { buildMention, planIntake, handleIntake, postApprovedReplies };
+// Notify the group when requests time out or fail without any reply.
+// Tracks which request IDs have been notified to avoid repeats.
+async function notifyTimeouts({ backend, telegram, notifiedSet, log = () => {} }) {
+  const requests = await backend.listRecentRequests();
+  const posted = [];
+  for (const request of requests) {
+    if (request.channel !== 'telegram') continue;
+    if (!['TIMEOUT', 'FAILED'].includes(request.status)) continue;
+    if (notifiedSet.has(request.requestId)) continue;
+
+    const statusLabel = request.status === 'TIMEOUT' ? 'timed out (no reply received)' : 'failed';
+    const text = [
+      `@${request.requesterName}`,
+      `Request ${request.requestId} (${request.requestType} ${request.payload}) ${statusLabel}.`,
+      request.failedReason || '',
+      'Contact the administrator if this request should be retried.'
+    ].filter(Boolean).join('\n');
+
+    try {
+      const mention = buildMention(text, request.requesterWhatsappId);
+      await telegram.sendThreadedReply({
+        chatId: request.chatId,
+        text,
+        replyToMessageId: request.sourceMessageId,
+        mention
+      });
+      notifiedSet.add(request.requestId);
+      posted.push(request.requestId);
+      log(`timeout-notify: ${request.requestId} (${request.status})`);
+    } catch (error) {
+      log(`timeout-notify: FAILED ${request.requestId} — ${error.message}`);
+    }
+  }
+  return posted;
+}
+
+module.exports = { buildMention, planIntake, handleIntake, postApprovedReplies, notifyTimeouts };

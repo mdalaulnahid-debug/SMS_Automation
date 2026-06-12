@@ -1,20 +1,49 @@
 # Progress Tracker
 
-Last updated: **2026-06-11 (office session)**
+Last updated: **2026-06-12 (continued session)**
 
 ---
 
 ## Current Stage
 
-**Full Telegram automation loop tested and working end-to-end on real devices.**
-
-Officer sends a request in the Telegram group → bot acknowledges → gateway phone sends SMS to test number → reply received → bot posts reply back in-thread tagging the officer. Fully automated, no manual steps.
+**Full Telegram automation loop tested and working end-to-end on real devices. Backend now handles ambiguous reply matching, dashboard review actions, and Telegram timeout notifications.**
 
 ---
 
-## Session Handoff (2026-06-11 office) — Read This First
+## Session Handoff (2026-06-12) — Read This First
 
 ### What was accomplished this session
+
+| Item | Status | Notes |
+|------|--------|-------|
+| Content-based reply disambiguation | Done | `store.js` returns `{ ambiguous: true, candidates }` when multiple pending; `service.js` scores with `analyzeOperatorReply()` and `confidenceRank()` |
+| Dashboard review actions | Done | Reject (→ FAILED), Retry (→ re-queue + re-dispatch), Manual match (link unmatched inbox to waiting request) |
+| New API endpoints | Done | `POST /api/requests/:id/reject`, `POST /api/requests/:id/retry`, `POST /api/manual-match`, `GET /api/sms/unmatched` |
+| Dashboard UI overhaul | Done | Status color badges, action buttons, unmatched SMS section with match dropdown, 10s auto-refresh |
+| Telegram timeout notifications | Done | `notifyTimeouts()` in bridge polls for TIMEOUT/FAILED requests, posts in-thread with requester mention |
+| Removed "Review confidence" | Done | Removed from `formatCombinedReply()` in `service.js` |
+| State machine updates | Done | Added transitions: NEEDS_MANUAL_REVIEW/FAILED/TIMEOUT → QUEUED (retry) |
+| Queue retry support | Done | `enqueueExisting()` in `queue.js` for re-queuing without status change |
+| 7 new tests | Done | 47 → 54 tests, all passing — disambiguation, reject, retry, manual match, timeout notify |
+
+### Key code changes
+
+- `src/store.js` — `findActiveRequestForGateway()` returns all candidates when ambiguous
+- `src/service.js` — `receiveSmsWebhook()` scores ambiguous matches; new `rejectRequest()`, `retryRequest()`, `manualMatch()`; `confidenceRank()` helper
+- `src/domain.js` — new state transitions for retry flows
+- `src/queue.js` — `enqueueExisting()` method
+- `src/app.js` — 4 new API endpoints
+- `telegram-bridge/bridge.js` — `notifyTimeouts()` function
+- `telegram-bridge/backendClient.js` — `listRecentRequests()` method
+- `telegram-bridge/start.js` — wired `notifyTimeouts` into posting loop with `notifiedSet`
+- `public/app.js` — complete rewrite with review actions, manual match UI, auto-refresh
+- `public/index.html` — unmatched SMS section, status color CSS, action button styles
+
+---
+
+## Session Handoff (2026-06-11 office) — Previous
+
+### What was accomplished that session
 
 | Item | Status | Notes |
 |------|--------|-------|
@@ -106,9 +135,9 @@ start-all.bat
 - Backend still shows `SENT` before carrier confirms. Full fix is Wave 3.
 
 ### 3. Reply matching with multiple in-flight requests
-- Current matching: silent reference (best) → time window fallback.
-- If 2+ requests are pending for same operator simultaneously, time-window match returns `null`.
-- **Fix planned:** content-based disambiguation using `replyAnalyzer.js` confidence scores.
+- Matching chain: silent reference → time window → **content-based disambiguation** → manual review.
+- If 2+ requests are pending for same operator, `analyzeOperatorReply()` scores each candidate.
+- Highest unique score wins; tied/unknown scores fall to manual review (dashboard or `POST /api/manual-match`).
 
 ### 4. ROBI and BANGLALINK gateways
 - No physical phones assigned yet — status is `MOCK`.
@@ -126,6 +155,8 @@ start-all.bat
 ### Backend
 - Request parsing (LRL, LCL, MS-NID, NID-MS, IMEI-MS), operator routing, per-operator queues
 - Silent references, trusted-sender filter, reply matching, time-window fallback
+- Content-based reply disambiguation (ambiguous match scoring via `analyzeOperatorReply`)
+- Dashboard review actions: reject, retry, manual match (4 API endpoints)
 - HTTP phone gateway + mock mode, inbound webhook
 - `testDestination` for pre-launch testing
 - SQLite persistence (write-through, boot-restore, WAL mode)
@@ -133,7 +164,7 @@ start-all.bat
 - Admin API key + per-gateway secrets + deny-by-default users
 - Hash-chained tamper-evident audit log
 - `start-all.bat`, `start-backend.bat`, `stop-backend.bat`, helper scripts
-- 47/47 tests pass
+- 54/54 tests pass
 
 ### Telegram Bridge
 - Long polling intake loop (drains backlog on restart)
@@ -142,6 +173,7 @@ start-all.bat
 - autoApprove: true → replies post instantly without dashboard approval
 - Posting loop: threaded reply + text_mention entity tags requester
 - Two-step posting: bridge confirms delivery before marking COMPLETED
+- Timeout/failure notifications: in-thread message with requester mention
 - `config/telegram.json` with testDestination support
 - `setup-telegram.bat` guided wizard
 - `start-all.bat` with auto-restart and port cleanup
@@ -162,9 +194,10 @@ start-all.bat
 ## Next Milestone
 
 1. **Wave 3 Android** — SMS delivery callbacks BroadcastReceiver, report SENT/FAILED/DELIVERED to backend
-2. **Content-based reply matching** — use replyAnalyzer confidence to disambiguate multiple in-flight requests
-3. **Training data pipeline** — save real operator replies to `data/reply-patterns.json` automatically
-4. **Second gateway phone** (Robi/Banglalink) when hardware available
-5. **Production config** — remove testDestination, add real operator shortcodes to trustedSenders
+2. **Retry failed gateway sends** — exponential backoff when phone HTTP returns error
+3. **Gateway health dashboard** — online/offline, last-seen, stale queue alert
+4. **Training data pipeline** — save real operator replies to `data/reply-patterns.json` automatically
+5. **Second gateway phone** (Robi/Banglalink) when hardware available
+6. **Production config** — remove testDestination, add real operator shortcodes to trustedSenders
 
 See `todo.md` for full task list.

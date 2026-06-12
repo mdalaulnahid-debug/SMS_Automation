@@ -27,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:padding="@dimen/screen_padding"
+        android:paddingBottom="24dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -35,260 +35,206 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Status card -->
-            <com.google.android.material.card.MaterialCardView
+            <!-- ════════ HERO STATUS SECTION ════════ -->
+            <LinearLayout
+                android:id="@+id/heroSection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/section_gap"
-                app:cardBackgroundColor="@color/bg_card"
-                app:cardCornerRadius="@dimen/card_radius"
-                app:cardElevation="0dp"
-                app:strokeColor="@color/divider"
-                app:strokeWidth="1dp">
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingTop="32dp"
+                android:paddingBottom="24dp"
+                android:background="@color/bg_surface">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <!-- Status indicator ring -->
+                <FrameLayout
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_gravity="center_horizontal">
+
+                    <!-- Glow ring (changes color with state) -->
+                    <View
+                        android:id="@+id/statusGlow"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:background="@drawable/bg_status_indicator"
+                        android:backgroundTint="@color/status_stopped_glow" />
+
+                    <!-- Inner circle with icon -->
+                    <FrameLayout
+                        android:layout_width="96dp"
+                        android:layout_height="96dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_status_indicator"
+                        android:backgroundTint="@color/bg_card">
+
+                        <ImageView
+                            android:id="@+id/statusIcon"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_sms_gateway"
+                            android:contentDescription="Gateway status" />
+                    </FrameLayout>
+                </FrameLayout>
+
+                <!-- Status text -->
+                <TextView
+                    android:id="@+id/tvServiceStatus"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="@dimen/card_padding">
+                    android:layout_marginTop="16dp"
+                    android:text="STOPPED"
+                    android:textColor="@color/danger"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.1" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
+                <!-- Backend connection state -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="6dp">
 
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Gateway Status"
-                            android:textAppearance="@style/TextAppearance.SmsGateway.CardTitle" />
-
-                        <TextView
-                            android:id="@+id/tvServiceStatus"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_status_chip"
-                            android:paddingHorizontal="12dp"
-                            android:paddingVertical="6dp"
-                            android:text="STOPPED"
-                            android:textColor="@color/danger"
-                            android:textSize="12sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
+                    <View
+                        android:id="@+id/backendDot"
+                        android:layout_width="8dp"
+                        android:layout_height="8dp"
+                        android:background="@drawable/bg_connection_dot" />
 
                     <TextView
                         android:id="@+id/tvBackendHealth"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginStart="6dp"
                         android:text="Backend: checking..."
                         android:textColor="@color/text_secondary"
                         android:textSize="13sp" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginVertical="14dp"
-                        android:background="@color/divider" />
-
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:orientation="horizontal" android:layout_marginBottom="8dp">
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                            android:layout_weight="1" android:text="Gateway ID"
-                            android:textColor="@color/text_muted" android:textSize="13sp" />
-                        <TextView android:id="@+id/tvGatewayId" android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" android:fontFamily="monospace"
-                            android:text="—" android:textColor="@color/text_primary" android:textSize="13sp" />
-                    </LinearLayout>
-
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:orientation="horizontal" android:layout_marginBottom="8dp">
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                            android:layout_weight="1" android:text="HTTP Port"
-                            android:textColor="@color/text_muted" android:textSize="13sp" />
-                        <TextView android:id="@+id/tvPort" android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" android:fontFamily="monospace"
-                            android:text=":8080" android:textColor="@color/text_primary" android:textSize="13sp" />
-                    </LinearLayout>
-
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:orientation="horizontal" android:layout_marginBottom="8dp">
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                            android:layout_weight="1" android:text="Local IP"
-                            android:textColor="@color/text_muted" android:textSize="13sp" />
-                        <TextView android:id="@+id/tvLocalIp" android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" android:fontFamily="monospace"
-                            android:text="—" android:textColor="@color/text_primary" android:textSize="13sp" />
-                    </LinearLayout>
-
-                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                        android:orientation="horizontal" android:layout_marginBottom="8dp">
-                        <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                            android:layout_weight="1" android:text="Backend"
-                            android:textColor="@color/text_muted" android:textSize="13sp" />
-                        <TextView android:id="@+id/tvBackendUrl" android:layout_width="wrap_content"
-                            android:layout_height="wrap_content" android:fontFamily="monospace"
-                            android:text="—" android:textColor="@color/text_primary" android:textSize="13sp" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:orientation="horizontal">
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnCopyIp"
-                            style="@style/Widget.SmsGateway.Button.Outlined"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
-                            android:layout_weight="1"
-                            android:text="Copy IP" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnToggleService"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1.4"
-                            android:text="Start Service" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:orientation="horizontal">
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnSettings"
-                            style="@style/Widget.SmsGateway.Button.Outlined"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginEnd="8dp"
-                            android:layout_weight="1"
-                            android:text="Settings" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnLogs"
-                            style="@style/Widget.SmsGateway.Button.Outlined"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Activity Log" />
-                    </LinearLayout>
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
 
-            <!-- Test request card -->
-            <com.google.android.material.card.MaterialCardView
+                <!-- Big toggle button -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnToggleService"
+                    android:layout_width="220dp"
+                    android:layout_height="56dp"
+                    android:layout_marginTop="20dp"
+                    android:text="Start Service"
+                    android:textSize="16sp"
+                    app:cornerRadius="28dp" />
+            </LinearLayout>
+
+            <!-- ════════ LIVE STATS ROW ════════ -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/section_gap"
-                app:cardBackgroundColor="@color/bg_card"
-                app:cardCornerRadius="@dimen/card_radius"
-                app:cardElevation="0dp"
-                app:strokeColor="@color/accent_muted"
-                app:strokeWidth="1dp">
+                android:orientation="horizontal"
+                android:paddingHorizontal="@dimen/screen_padding"
+                android:paddingTop="20dp"
+                android:paddingBottom="4dp"
+                android:baselineAligned="false">
 
+                <!-- Sent Today -->
                 <LinearLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="6dp"
+                    android:background="@drawable/bg_stat_card"
+                    android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="@dimen/card_padding">
+                    android:padding="14dp">
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:id="@+id/tvStatSent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Test Request"
-                        android:textAppearance="@style/TextAppearance.SmsGateway.CardTitle" />
+                        android:text="0"
+                        android:textColor="@color/accent"
+                        android:textSize="28sp"
+                        android:textStyle="bold" />
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:layout_marginBottom="14dp"
-                        android:text="Send a test operator SMS to your target number. When that number replies manually, the gateway forwards the reply to the backend."
-                        android:textColor="@color/text_secondary"
-                        android:textSize="13sp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="6dp"
-                        android:text="Request Type"
-                        android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel" />
-
-                    <Spinner
-                        android:id="@+id/spinnerRequestType"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:layout_marginBottom="12dp"
-                        android:background="@drawable/bg_card_elevated"
-                        android:paddingHorizontal="8dp" />
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Payload (MSISDN / NID / IMEI)"
-                        android:layout_marginBottom="12dp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etPayload"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="phone"
-                            android:singleLine="true"
-                            android:textColor="@color/text_primary" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Target number (who receives SMS and replies)"
-                        android:layout_marginBottom="8dp">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etTargetNumber"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="phone"
-                            android:singleLine="true"
-                            android:textColor="@color/text_primary" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="14dp"
-                        android:text="Add this target number to trustedSenders in config/gateways.json on the backend."
-                        android:textColor="@color/warning"
-                        android:textSize="12sp" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnSendTest"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Send Test Request" />
-
-                    <TextView
-                        android:id="@+id/tvTestPreview"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:fontFamily="monospace"
-                        android:text="Preview: LRL 017XXXXXXXX"
-                        android:textColor="@color/text_muted"
-                        android:textSize="12sp" />
+                        android:layout_marginTop="2dp"
+                        android:text="Sent"
+                        android:textColor="@color/stat_label"
+                        android:textSize="11sp"
+                        android:textAllCaps="true"
+                        android:letterSpacing="0.08" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
 
-            <!-- Recent activity -->
+                <!-- Received -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginHorizontal="6dp"
+                    android:background="@drawable/bg_stat_card"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <TextView
+                        android:id="@+id/tvStatReceived"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/success"
+                        android:textSize="28sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Received"
+                        android:textColor="@color/stat_label"
+                        android:textSize="11sp"
+                        android:textAllCaps="true"
+                        android:letterSpacing="0.08" />
+                </LinearLayout>
+
+                <!-- Pending -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/bg_stat_card"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <TextView
+                        android:id="@+id/tvStatPending"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/warning"
+                        android:textSize="28sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Pending"
+                        android:textColor="@color/stat_label"
+                        android:textSize="11sp"
+                        android:textAllCaps="true"
+                        android:letterSpacing="0.08" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- ════════ RECENT ACTIVITY ════════ -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/screen_padding"
+                android:layout_marginTop="@dimen/section_gap"
                 app:cardBackgroundColor="@color/bg_card"
                 app:cardCornerRadius="@dimen/card_radius"
                 app:cardElevation="0dp"
@@ -336,26 +282,112 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:layout_marginBottom="12dp"
                         android:fontFamily="monospace"
                         android:text="—"
                         android:textColor="@color/text_secondary"
                         android:textSize="13sp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
-                    <TextView
+            <!-- ════════ GATEWAY DETAILS (collapsible) ════════ -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/screen_padding"
+                android:layout_marginTop="@dimen/section_gap"
+                app:cardBackgroundColor="@color/bg_card"
+                app:cardCornerRadius="@dimen/card_radius"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/divider"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/card_padding">
+
+                    <!-- Header row (tap to expand/collapse) -->
+                    <LinearLayout
+                        android:id="@+id/detailsHeader"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Pending retries"
-                        android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/tvRetryCount"
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Gateway Details"
+                            android:textAppearance="@style/TextAppearance.SmsGateway.CardTitle" />
+
+                        <ImageView
+                            android:id="@+id/detailsChevron"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:rotation="0"
+                            android:src="@android:drawable/arrow_down_float"
+                            android:contentDescription="Toggle details" />
+                    </LinearLayout>
+
+                    <!-- Expandable details body -->
+                    <LinearLayout
+                        android:id="@+id/detailsBody"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="None"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="13sp" />
+                        android:orientation="vertical"
+                        android:visibility="gone"
+                        android:layout_marginTop="14dp">
+
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:orientation="horizontal" android:layout_marginBottom="8dp">
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                                android:layout_weight="1" android:text="Gateway ID"
+                                android:textColor="@color/text_muted" android:textSize="13sp" />
+                            <TextView android:id="@+id/tvGatewayId" android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" android:fontFamily="monospace"
+                                android:text="—" android:textColor="@color/text_primary" android:textSize="13sp" />
+                        </LinearLayout>
+
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:orientation="horizontal" android:layout_marginBottom="8dp">
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                                android:layout_weight="1" android:text="HTTP Port"
+                                android:textColor="@color/text_muted" android:textSize="13sp" />
+                            <TextView android:id="@+id/tvPort" android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" android:fontFamily="monospace"
+                                android:text=":8080" android:textColor="@color/text_primary" android:textSize="13sp" />
+                        </LinearLayout>
+
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:orientation="horizontal" android:layout_marginBottom="8dp">
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                                android:layout_weight="1" android:text="Local IP"
+                                android:textColor="@color/text_muted" android:textSize="13sp" />
+                            <TextView android:id="@+id/tvLocalIp" android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" android:fontFamily="monospace"
+                                android:text="—" android:textColor="@color/text_primary" android:textSize="13sp" />
+                        </LinearLayout>
+
+                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:orientation="horizontal" android:layout_marginBottom="8dp">
+                            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
+                                android:layout_weight="1" android:text="Backend"
+                                android:textColor="@color/text_muted" android:textSize="13sp" />
+                            <TextView android:id="@+id/tvBackendUrl" android:layout_width="wrap_content"
+                                android:layout_height="wrap_content" android:fontFamily="monospace"
+                                android:text="—" android:textColor="@color/text_primary" android:textSize="13sp" />
+                        </LinearLayout>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnCopyIp"
+                            style="@style/Widget.SmsGateway.Button.Outlined"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="Copy IP Address" />
+                    </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

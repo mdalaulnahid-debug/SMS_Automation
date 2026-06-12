@@ -112,15 +112,40 @@ class AutomationService {
       };
     }
 
-    const matchedRequest = this.store.findActiveRequestForGateway(
+    const matchResult = this.store.findActiveRequestForGateway(
       input.gatewayId,
       input.from,
       this.replyWindowMs,
       input.body
     );
-    const analysis = matchedRequest
-      ? analyzeOperatorReply({ request: matchedRequest, messageBody: input.body })
-      : null;
+
+    let matchedRequest = null;
+    let analysis = null;
+
+    if (matchResult && matchResult.ambiguous) {
+      // Multiple pending requests on this gateway — score each with the reply analyzer
+      // and pick the best match. If none score above UNKNOWN or there's a tie, fall through
+      // to manual review (matchedRequest stays null).
+      const scored = matchResult.candidates.map((request) => {
+        const a = analyzeOperatorReply({ request, messageBody: input.body });
+        return { request, analysis: a, score: confidenceRank(a.confidence) };
+      });
+      scored.sort((a, b) => b.score - a.score);
+      if (scored[0].score > 0 && (scored.length < 2 || scored[0].score > scored[1].score)) {
+        matchedRequest = scored[0].request;
+        analysis = scored[0].analysis;
+      } else {
+        this.store.audit('system', 'SMS_REPLY_AMBIGUOUS', null, {
+          gatewayId: input.gatewayId,
+          senderNumber: input.from,
+          candidateCount: scored.length,
+          scores: scored.map((s) => ({ requestId: s.request.requestId, confidence: s.analysis.confidence }))
+        });
+      }
+    } else if (matchResult && !matchResult.ambiguous) {
+      matchedRequest = matchResult;
+      analysis = analyzeOperatorReply({ request: matchedRequest, messageBody: input.body });
+    }
 
     const inbox = this.store.addSmsInbox({
       gatewayId: input.gatewayId,
@@ -248,7 +273,6 @@ class AutomationService {
     });
     this.store.updateRequestStatus(requestId, STATUSES.WHATSAPP_REPLY_POSTED);
     const completed = this.store.updateRequestStatus(requestId, STATUSES.COMPLETED);
-    await Promise.all(request.targetOperators.map((operator) => this.smsGateway.dispatchNext(operator)));
     return completed;
   }
 
@@ -260,7 +284,6 @@ class AutomationService {
     if (reply.sentStatus !== 'APPROVED_FOR_POST') {
       throw new Error(`Reply ${replyId} is not approved for posting (status ${reply.sentStatus}).`);
     }
-    const request = this.store.getRequest(reply.requestId);
     this.store.updateWhatsAppReply(reply.id, {
       sentStatus: 'POSTED',
       postedMessageId: postedMessageId || null,
@@ -273,8 +296,74 @@ class AutomationService {
       channel: reply.channel,
       postedMessageId: postedMessageId || null
     });
-    await Promise.all(request.targetOperators.map((operator) => this.smsGateway.dispatchNext(operator)));
     return completed;
+  }
+
+  async rejectRequest(requestId, { reason } = {}) {
+    const request = this.store.getRequest(requestId);
+    if (request.status !== STATUSES.NEEDS_MANUAL_REVIEW) {
+      throw new Error(`Request ${requestId} is not in NEEDS_MANUAL_REVIEW (current: ${request.status}).`);
+    }
+    const failed = this.store.updateRequestStatus(requestId, STATUSES.FAILED, {
+      failedReason: reason || 'Rejected by reviewer.'
+    });
+    this.store.audit('admin', 'REQUEST_REJECTED', requestId, { reason });
+    return failed;
+  }
+
+  async retryRequest(requestId) {
+    const request = this.store.getRequest(requestId);
+    if (request.status !== STATUSES.NEEDS_MANUAL_REVIEW && request.status !== STATUSES.FAILED && request.status !== STATUSES.TIMEOUT) {
+      throw new Error(`Request ${requestId} cannot be retried (current: ${request.status}).`);
+    }
+    // Reset dispatches to QUEUED so they re-enter the per-operator pipeline.
+    for (const dispatch of request.dispatches || []) {
+      if (TERMINAL_DISPATCH_STATUSES.includes(dispatch.status)) {
+        dispatch.status = DISPATCH_STATUSES.QUEUED;
+        dispatch.outboxId = null;
+        dispatch.inboxId = null;
+        dispatch.sentAt = null;
+        dispatch.repliedAt = null;
+        if (this.store.persistence) this.store.persistence.upsertDispatch(dispatch);
+      }
+    }
+    request.receivedOperators = [];
+    request.completedAt = null;
+    request.failedReason = null;
+    this.store.updateRequestStatus(requestId, STATUSES.QUEUED);
+    this.store.audit('admin', 'REQUEST_RETRIED', requestId);
+    this.queue.enqueueExisting(request);
+    await Promise.all(request.targetOperators.map((op) => this.smsGateway.dispatchNext(op)));
+    return this.store.getRequest(requestId);
+  }
+
+  manualMatch(inboxId, requestId) {
+    const inbox = this.store.smsInbox.find((row) => row.id === inboxId);
+    if (!inbox) throw new Error(`Inbox entry not found: ${inboxId}`);
+    const request = this.store.getRequest(requestId);
+    if (request.status !== STATUSES.WAITING_OPERATOR_REPLY) {
+      throw new Error(`Request ${requestId} is not waiting for a reply (current: ${request.status}).`);
+    }
+
+    inbox.matchedRequestId = requestId;
+    const analysis = analyzeOperatorReply({ request, messageBody: inbox.messageBody });
+    inbox.analysis = analysis;
+    if (this.store.persistence) this.store.persistence.insertInbox(inbox);
+
+    const operatorKey = this.store.operatorForGateway(inbox.gatewayId);
+    if (operatorKey) {
+      this.store.markOperatorReplyReceived(requestId, operatorKey);
+      this.store.markDispatchReplied(requestId, operatorKey, { inboxId: inbox.id });
+    }
+
+    this.store.audit('admin', 'MANUAL_MATCH', requestId, { inboxId, operator: operatorKey });
+
+    const outcome = this._finalizeIfTerminal(requestId);
+    return {
+      ok: true,
+      request: outcome.request,
+      whatsappReply: outcome.reply
+    };
   }
 
   // Time out each waiting dispatch independently from ITS OWN send time (not the request's),
@@ -305,11 +394,6 @@ class AutomationService {
       if (outcome.finalized) finalized.push(outcome.request);
     }
 
-    const operatorsToDispatch = new Set(finalized.flatMap((request) => request.targetOperators));
-    await Promise.all(
-      [...operatorsToDispatch].map((operator) => this.smsGateway.dispatchNext(operator))
-    );
-
     return finalized;
   }
 
@@ -329,9 +413,7 @@ class AutomationService {
 function formatCombinedReply(request, store) {
   const lines = [
     `@${request.requesterName}`,
-    `Reply for Request ID: ${request.requestId}`,
-    `Request Type: ${request.requestType}`,
-    `Request: ${request.payload}`,
+    `${request.requestType}: ${request.payload}`,
     ''
   ];
 
@@ -339,10 +421,8 @@ function formatCombinedReply(request, store) {
     const name = OPERATORS[dispatch.operator]?.name || dispatch.operator;
     if (dispatch.status === DISPATCH_STATUSES.REPLY_RECEIVED) {
       const inbox = store.smsInbox.find((row) => row.id === dispatch.inboxId);
-      const confidence = inbox?.analysis?.confidence || 'UNKNOWN';
       lines.push(`— ${name}:`);
       lines.push(inbox?.messageBody || '(reply captured)');
-      lines.push(`  Review confidence: ${confidence}`);
     } else if (dispatch.status === DISPATCH_STATUSES.TIMEOUT) {
       lines.push(`— ${name}: no reply (timed out)`);
     } else if (dispatch.status === DISPATCH_STATUSES.FAILED) {
@@ -355,6 +435,11 @@ function formatCombinedReply(request, store) {
   lines.push('');
   lines.push(`Processed at: ${new Date().toLocaleString('en-GB', { timeZone: 'Asia/Dhaka' })}`);
   return lines.join('\n');
+}
+
+const CONFIDENCE_RANKS = { HIGH: 3, MEDIUM: 2, LOW: 1, UNKNOWN: 0 };
+function confidenceRank(confidence) {
+  return CONFIDENCE_RANKS[confidence] || 0;
 }
 
 module.exports = {

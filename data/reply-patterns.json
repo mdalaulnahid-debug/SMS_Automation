@@ -1,9 +1,47 @@
 {
-  "generatedAt": "2026-06-10T15:30:03.276Z",
-  "sourceRoot": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation",
+  "generatedAt": "2026-06-12T16:16:51.491Z",
+  "sourceRoot": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation",
+  "summary": {
+    "totalExamples": 144,
+    "blankReplies": 3,
+    "byRequestType": {
+      "IMEI-MS": 11,
+      "LCL": 62,
+      "LRL": 42,
+      "MS-NID": 22,
+      "NID-MS": 7
+    },
+    "byOperator": {
+      "GP": 59,
+      "ROBI": 30,
+      "BANGLALINK": 27,
+      "UNKNOWN": 28
+    },
+    "byRequestTypeAndOperator": {
+      "IMEI-MS:GP": 4,
+      "IMEI-MS:ROBI": 4,
+      "IMEI-MS:BANGLALINK": 3,
+      "LCL:GP": 30,
+      "LCL:ROBI": 9,
+      "LCL:BANGLALINK": 9,
+      "LRL:BANGLALINK": 11,
+      "LCL:UNKNOWN": 14,
+      "LRL:GP": 15,
+      "LRL:ROBI": 14,
+      "LRL:UNKNOWN": 2,
+      "MS-NID:GP": 9,
+      "MS-NID:ROBI": 2,
+      "MS-NID:BANGLALINK": 1,
+      "MS-NID:UNKNOWN": 10,
+      "NID-MS:ROBI": 1,
+      "NID-MS:BANGLALINK": 3,
+      "NID-MS:GP": 1,
+      "NID-MS:UNKNOWN": 2
+    }
+  },
   "examples": [
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS\\1. GP\\GP_IMEI_MS.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS\\1. GP\\GP_IMEI_MS.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 2,
       "fileName": "GP_IMEI_MS.xlsx",
@@ -18,7 +56,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS\\1. GP\\GP_IMEI_MS.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS\\1. GP\\GP_IMEI_MS.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 3,
       "fileName": "GP_IMEI_MS.xlsx",
@@ -33,7 +71,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS\\1. GP\\GP_IMEI_MS.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS\\1. GP\\GP_IMEI_MS.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 4,
       "fileName": "GP_IMEI_MS.xlsx",
@@ -48,7 +86,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS\\1. GP\\GP_IMEI_MS.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS\\1. GP\\GP_IMEI_MS.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 5,
       "fileName": "GP_IMEI_MS.xlsx",
@@ -63,7 +101,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS\\2. Robi\\Robi_IMEI_MS.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS\\2. Robi\\Robi_IMEI_MS.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 2,
       "fileName": "Robi_IMEI_MS.xlsx",
@@ -78,7 +116,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS\\2. Robi\\Robi_IMEI_MS.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS\\2. Robi\\Robi_IMEI_MS.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 3,
       "fileName": "Robi_IMEI_MS.xlsx",
@@ -93,7 +131,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS\\2. Robi\\Robi_IMEI_MS.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS\\2. Robi\\Robi_IMEI_MS.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 4,
       "fileName": "Robi_IMEI_MS.xlsx",
@@ -108,7 +146,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS\\2. Robi\\Robi_IMEI_MS.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS\\2. Robi\\Robi_IMEI_MS.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 5,
       "fileName": "Robi_IMEI_MS.xlsx",
@@ -123,7 +161,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS\\3. Banglalink\\Banglalink_IMEI_MS.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS\\3. Banglalink\\Banglalink_IMEI_MS.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 2,
       "fileName": "Banglalink_IMEI_MS.xlsx",
@@ -138,7 +176,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS\\3. Banglalink\\Banglalink_IMEI_MS.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS\\3. Banglalink\\Banglalink_IMEI_MS.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 3,
       "fileName": "Banglalink_IMEI_MS.xlsx",
@@ -153,7 +191,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS\\3. Banglalink\\Banglalink_IMEI_MS.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS\\3. Banglalink\\Banglalink_IMEI_MS.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 4,
       "fileName": "Banglalink_IMEI_MS.xlsx",
@@ -168,7 +206,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL\\1. GP\\GP_LCL.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL\\1. GP\\GP_LCL.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 2,
       "fileName": "GP_LCL.xlsx",
@@ -183,7 +221,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL\\1. GP\\GP_LCL.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL\\1. GP\\GP_LCL.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 3,
       "fileName": "GP_LCL.xlsx",
@@ -198,7 +236,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL\\1. GP\\GP_LCL.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL\\1. GP\\GP_LCL.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 4,
       "fileName": "GP_LCL.xlsx",
@@ -213,7 +251,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL\\1. GP\\GP_LCL.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL\\1. GP\\GP_LCL.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 5,
       "fileName": "GP_LCL.xlsx",
@@ -228,7 +266,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL\\1. GP\\GP_LCL.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL\\1. GP\\GP_LCL.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 6,
       "fileName": "GP_LCL.xlsx",
@@ -243,7 +281,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL\\1. GP\\GP_LCL.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL\\1. GP\\GP_LCL.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 7,
       "fileName": "GP_LCL.xlsx",
@@ -258,7 +296,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL\\2. Robi\\Robi_LCL.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL\\2. Robi\\Robi_LCL.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 2,
       "fileName": "Robi_LCL.xlsx",
@@ -273,7 +311,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL\\2. Robi\\Robi_LCL.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL\\2. Robi\\Robi_LCL.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 3,
       "fileName": "Robi_LCL.xlsx",
@@ -288,7 +326,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL\\2. Robi\\Robi_LCL.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL\\2. Robi\\Robi_LCL.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 4,
       "fileName": "Robi_LCL.xlsx",
@@ -303,7 +341,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL\\2. Robi\\Robi_LCL.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL\\2. Robi\\Robi_LCL.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 5,
       "fileName": "Robi_LCL.xlsx",
@@ -318,7 +356,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL\\3. Banglalink\\Banglalink_LCL.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL\\3. Banglalink\\Banglalink_LCL.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 2,
       "fileName": "Banglalink_LCL.xlsx",
@@ -333,7 +371,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL\\3. Banglalink\\Banglalink_LCL.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL\\3. Banglalink\\Banglalink_LCL.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 3,
       "fileName": "Banglalink_LCL.xlsx",
@@ -348,7 +386,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL\\3. Banglalink\\Banglalink_LCL.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL\\3. Banglalink\\Banglalink_LCL.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 4,
       "fileName": "Banglalink_LCL.xlsx",
@@ -363,7 +401,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL\\3. Banglalink\\Banglalink_LCL.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL\\3. Banglalink\\Banglalink_LCL.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 5,
       "fileName": "Banglalink_LCL.xlsx",
@@ -378,7 +416,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL\\3. Banglalink\\Banglalink_LCL.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL\\3. Banglalink\\Banglalink_LCL.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 6,
       "fileName": "Banglalink_LCL.xlsx",
@@ -393,7 +431,727 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL\\1. GP\\GP_LRL.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 2,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "ROBI",
+      "requestText": "LCL 01617610134",
+      "replyText": "MSISDN: 8801617610134, MSISDN B Party: 8801723599495, Last Call location: Ward No 24, BARISAL SADAR KOTWALI, Barisal, LAC ID: 8005, Cell ID: 28196, Lat_Long: 22.66143, 90.3495, Date_time: 20260607205630, IMEI: 860068048764800, IMSI: 470075012337288 [Robi] | RADIO LOCATION: Ward No-24, Barisal Sadar (kotwali), Barisal, LAC ID: 8005, CELL ID: 28196, LAT, LONG: 22.66143, 90.3495, MS STATUS: Attached, LAST ACTION TIME: 2026-06-07 21:37:12 [Robi]",
+      "raw": {
+        "SL No": "1",
+        "Request": "LCL 01617610134",
+        "Reply": "MSISDN: 8801617610134, MSISDN B Party: 8801723599495, Last Call location: Ward No 24, BARISAL SADAR KOTWALI, Barisal, LAC ID: 8005, Cell ID: 28196, Lat_Long: 22.66143, 90.3495, Date_time: 20260607205630, IMEI: 860068048764800, IMSI: 470075012337288 [Robi] | RADIO LOCATION: Ward No-24, Barisal Sadar (kotwali), Barisal, LAC ID: 8005, CELL ID: 28196, LAT, LONG: 22.66143, 90.3495, MS STATUS: Attached, LAST ACTION TIME: 2026-06-07 21:37:12 [Robi]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 3,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "GP",
+      "requestText": "LCL 01724034442",
+      "replyText": "8801724034442, GP 2560MB, SMSMT, 06/06/2026 10:09:30, [48231 29700639], NALCHITY, JHALOKATHI, IMEI: 352931900461140, IMSI: 470010499560912 [GP] | No RL Info Found of 1724034442 [GP]",
+      "raw": {
+        "SL No": "2",
+        "Request": "LCL 01724034442",
+        "Reply": "8801724034442, GP 2560MB, SMSMT, 06/06/2026 10:09:30, [48231 29700639], NALCHITY, JHALOKATHI, IMEI: 352931900461140, IMSI: 470010499560912 [GP] | No RL Info Found of 1724034442 [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 4,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "GP",
+      "requestText": "LCL 01316178945",
+      "replyText": "8801316178945 / 8801323428959, MTC, 07/06/2026 19:49:15, [23093 53640], PASCHIM CHAR DAPDAPIA, DAPDAPIA, NALCHITY, JHALOKATI, IMEI: 868236085902400, IMSI: 470010491153713 [GP] | MSISDN: 8801316178945, LastActiveDateTime: 2026-06-07 22:30:50, LACID: 48261, CellID: 35855137, Latitude: 22.658194, Longitude: 90.344889, Address: 13, PARARA ROAD, P.S. KOTOWALI, DIST. BARISAL, CS Status: Idle [GP]",
+      "raw": {
+        "SL No": "3",
+        "Request": "LCL 01316178945",
+        "Reply": "8801316178945 / 8801323428959, MTC, 07/06/2026 19:49:15, [23093 53640], PASCHIM CHAR DAPDAPIA, DAPDAPIA, NALCHITY, JHALOKATI, IMEI: 868236085902400, IMSI: 470010491153713 [GP] | MSISDN: 8801316178945, LastActiveDateTime: 2026-06-07 22:30:50, LACID: 48261, CellID: 35855137, Latitude: 22.658194, Longitude: 90.344889, Address: 13, PARARA ROAD, P.S. KOTOWALI, DIST. BARISAL, CS Status: Idle [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 5,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "GP",
+      "requestText": "LCL 01779398037",
+      "replyText": "8801779398037, 4750, SMSMT, 07/06/2026 23:25:34, [56312 25735199], HOLDING NO. 54/1, FAKIRAPUL, DHAKA, IMEI: 359127131839920, IMSI: 470010441603444 [GP] | MSISDN: 8801779398037, LastActiveDateTime: 2026-06-07 23:35:36, LACID: 56312, CellID: 25850635, Latitude: 23.735361, Longitude: 90.416222, Address: 38, NAYAPALTAN, DHAKA-1000, CS Status: Idle [GP]",
+      "raw": {
+        "SL No": "4",
+        "Request": "LCL 01779398037",
+        "Reply": "8801779398037, 4750, SMSMT, 07/06/2026 23:25:34, [56312 25735199], HOLDING NO. 54/1, FAKIRAPUL, DHAKA, IMEI: 359127131839920, IMSI: 470010441603444 [GP] | MSISDN: 8801779398037, LastActiveDateTime: 2026-06-07 23:35:36, LACID: 56312, CellID: 25850635, Latitude: 23.735361, Longitude: 90.416222, Address: 38, NAYAPALTAN, DHAKA-1000, CS Status: Idle [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 6,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "GP",
+      "requestText": "LCL 01312123075",
+      "replyText": "8801312123075 / 8801620479563, MTC, 07/06/2026 14:01:06, [27007 22290], VILL ANGARIA, P.O ANGARIA BONDOR, UNION 4 ANGARIA, P.S. DUMKI, PATUAKHALI, IMEI: 357146190845460, IMSI: 470010318024314 [GP]",
+      "raw": {
+        "SL No": "5",
+        "Request": "LCL 01312123075",
+        "Reply": "8801312123075 / 8801620479563, MTC, 07/06/2026 14:01:06, [27007 22290], VILL ANGARIA, P.O ANGARIA BONDOR, UNION 4 ANGARIA, P.S. DUMKI, PATUAKHALI, IMEI: 357146190845460, IMSI: 470010318024314 [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 7,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "ROBI",
+      "requestText": "LCL 01620479563",
+      "replyText": "MSISDN: 8801620479563, MSISDN B Party: 8801621603027, Last Call location: Vill Bhorpasha, PS Bakerganj, Barishal, LAC ID: 8005, Cell ID: 3610, Lat_Long: 22.5189, 90.343, Date_time: 20260608011153, IMEI: 354680100182050, IMSI: 470075028693785 [Robi]",
+      "raw": {
+        "SL No": "6",
+        "Request": "LCL 01620479563",
+        "Reply": "MSISDN: 8801620479563, MSISDN B Party: 8801621603027, Last Call location: Vill Bhorpasha, PS Bakerganj, Barishal, LAC ID: 8005, Cell ID: 3610, Lat_Long: 22.5189, 90.343, Date_time: 20260608011153, IMEI: 354680100182050, IMSI: 470075028693785 [Robi]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 8,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "GP",
+      "requestText": "LCL 01775494991",
+      "replyText": "8801775494991 / 8801755370218, MTC, 03/06/2026 15:18:11, [46361 28989246], VILL P.O DHAMURA, UNION SHOLOK, P.S UZIRPUR, DIST BARISAL, IMEI: 868126062531170, IMSI: 470010444160092 [GP]",
+      "raw": {
+        "SL No": "7",
+        "Request": "LCL 01775494991",
+        "Reply": "8801775494991 / 8801755370218, MTC, 03/06/2026 15:18:11, [46361 28989246], VILL P.O DHAMURA, UNION SHOLOK, P.S UZIRPUR, DIST BARISAL, IMEI: 868126062531170, IMSI: 470010444160092 [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 9,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "GP",
+      "requestText": "LCL 01333061009",
+      "replyText": "8801333061009, GP 35MIN, SMSMT, 03/06/2026 11:08:05, [46361 28989200], VILL P.O DHAMURA, UNION SHOLOK, P.S UZIRPUR, DIST BARISAL, IMEI: 868126062531160, IMSI: 470010426256901 [GP]",
+      "raw": {
+        "SL No": "8",
+        "Request": "LCL 01333061009",
+        "Reply": "8801333061009, GP 35MIN, SMSMT, 03/06/2026 11:08:05, [46361 28989200], VILL P.O DHAMURA, UNION SHOLOK, P.S UZIRPUR, DIST BARISAL, IMEI: 868126062531160, IMSI: 470010426256901 [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 10,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "",
+      "requestText": "LCL 01755370218",
+      "replyText": "(B-party of 01775494991 - included in batch reply above)",
+      "raw": {
+        "SL No": "9",
+        "Request": "LCL 01755370218",
+        "Reply": "(B-party of 01775494991 - included in batch reply above)"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 11,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "BANGLALINK",
+      "requestText": "LCL 01958395882",
+      "replyText": "MSISDN: 8801958395882, Datetime: 20260608104540, LAC ID: 673, Cell ID: 47113, Address: Vill: Omorpur, Post: Bhuiyarhat, PS: Charfashio, Dist: Bhola, BPARTY: 8801901900977, IMEI: 354388221566410, IMSI: 470039215027744, UsageType: SMSMT, NetworkType: 2G. - Banglalink",
+      "raw": {
+        "SL No": "10",
+        "Request": "LCL 01958395882",
+        "Reply": "MSISDN: 8801958395882, Datetime: 20260608104540, LAC ID: 673, Cell ID: 47113, Address: Vill: Omorpur, Post: Bhuiyarhat, PS: Charfashio, Dist: Bhola, BPARTY: 8801901900977, IMEI: 354388221566410, IMSI: 470039215027744, UsageType: SMSMT, NetworkType: 2G. - Banglalink"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 12,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "BANGLALINK",
+      "requestText": "LCL 01931270994",
+      "replyText": "MSISDN: 8801931270994, Datetime: 20260607122312, LAC ID: 6030, Cell ID: 15425873, Address: Barothi Bazar, Gaurnadi, Barisal, BPARTY: 880424c204468616, IMEI: 350789590248680, IMSI: 470039926367303, UsageType: SMSMT, NetworkType: 4G. - Banglalink",
+      "raw": {
+        "SL No": "11",
+        "Request": "LCL 01931270994",
+        "Reply": "MSISDN: 8801931270994, Datetime: 20260607122312, LAC ID: 6030, Cell ID: 15425873, Address: Barothi Bazar, Gaurnadi, Barisal, BPARTY: 880424c204468616, IMEI: 350789590248680, IMSI: 470039926367303, UsageType: SMSMT, NetworkType: 4G. - Banglalink"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 13,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "",
+      "requestText": "LCL 01567847825",
+      "replyText": "(No reply visible in loaded messages)",
+      "raw": {
+        "SL No": "12",
+        "Request": "LCL 01567847825",
+        "Reply": "(No reply visible in loaded messages)"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 14,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "ROBI",
+      "requestText": "LCL 01811426571",
+      "replyText": "MSISDN: 8801811426571, MSISDN B Party: 4A686F74706F744C6F61, Last Call location: Ward No 46 Part, Hazaribagh, Dhaka, LAC ID: 407, Cell ID: 46478, Lat_Long: 23.75, 90.3448, Date_time: 20260608140235, IMEI: 351207980537560, IMSI: 470022557928135 [Robi]",
+      "raw": {
+        "SL No": "13",
+        "Request": "LCL 01811426571",
+        "Reply": "MSISDN: 8801811426571, MSISDN B Party: 4A686F74706F744C6F61, Last Call location: Ward No 46 Part, Hazaribagh, Dhaka, LAC ID: 407, Cell ID: 46478, Lat_Long: 23.75, 90.3448, Date_time: 20260608140235, IMEI: 351207980537560, IMSI: 470022557928135 [Robi]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 15,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "GP",
+      "requestText": "LCL 01730911057",
+      "replyText": "8801730911057, GP 45MIN, SMSMT, 08/06/2026 13:27:23, [21034 42832], NEAR BASILA GARDEN CITY PLAY GROUND, MOHAMMADPUR, IMEI: 351207980537570, IMSI: 470010314611892 [GP]",
+      "raw": {
+        "SL No": "14",
+        "Request": "LCL 01730911057",
+        "Reply": "8801730911057, GP 45MIN, SMSMT, 08/06/2026 13:27:23, [21034 42832], NEAR BASILA GARDEN CITY PLAY GROUND, MOHAMMADPUR, IMEI: 351207980537570, IMSI: 470010314611892 [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 16,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "GP",
+      "requestText": "LCL 01750193604",
+      "replyText": "8801750193604 / 8801337510464, MTC, 04/06/2026 16:33:43, [23022 50587], RAMNAGAR, MAHESHPUR, BAKORGANJ, BARISAL, IMEI: 865455059456460, IMSI: 470010513871161 [GP]",
+      "raw": {
+        "SL No": "15",
+        "Request": "LCL 01750193604",
+        "Reply": "8801750193604 / 8801337510464, MTC, 04/06/2026 16:33:43, [23022 50587], RAMNAGAR, MAHESHPUR, BAKORGANJ, BARISAL, IMEI: 865455059456460, IMSI: 470010513871161 [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 17,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "",
+      "requestText": "LCL 01862303409",
+      "replyText": "(Part of Mahendigang batch - reply not separately visible)",
+      "raw": {
+        "SL No": "16",
+        "Request": "LCL 01862303409",
+        "Reply": "(Part of Mahendigang batch - reply not separately visible)"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 18,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "ROBI",
+      "requestText": "LCL 01612268083",
+      "replyText": "MSISDN: 8801612268083, MSISDN B Party: 8801903311869, Last Call location: Kashipur, Narayanganj Sadar, Narayanganj, LAC ID: 30024, Cell ID: 7842, Lat_Long: 23.60738, 90.491606, Date_time: 20260607012317, IMEI: 351600344667680, IMSI: 470075031845935 [Robi]",
+      "raw": {
+        "SL No": "17",
+        "Request": "LCL 01612268083",
+        "Reply": "MSISDN: 8801612268083, MSISDN B Party: 8801903311869, Last Call location: Kashipur, Narayanganj Sadar, Narayanganj, LAC ID: 30024, Cell ID: 7842, Lat_Long: 23.60738, 90.491606, Date_time: 20260607012317, IMEI: 351600344667680, IMSI: 470075031845935 [Robi]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 19,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "GP",
+      "requestText": "LCL 01719698577",
+      "replyText": "8801719698577 / 8801732454040, MOC, 08/06/2026 12:26:22, [48251 35844643], ANEX BHABAN, BARISAL CITY CORPORATION, BIBIRPUKUR, BARISAL SADAR, BARISAL, IMEI: 868477051245710, IMSI: 470010494597953 [GP]",
+      "raw": {
+        "SL No": "18",
+        "Request": "LCL 01719698577",
+        "Reply": "8801719698577 / 8801732454040, MOC, 08/06/2026 12:26:22, [48251 35844643], ANEX BHABAN, BARISAL CITY CORPORATION, BIBIRPUKUR, BARISAL SADAR, BARISAL, IMEI: 868477051245710, IMSI: 470010494597953 [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 20,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "BANGLALINK",
+      "requestText": "LCL 01919904263",
+      "replyText": "MN: 01919904263 No Radio Location Found. - Banglalink | MSISDN: 8801919904263, Datetime: 20260605152339, LAC ID: 680, Cell ID: 46521, Address: Vill: Hayatsar, PO: Churamon, PS: Kawnia, Dist: Barisal, IMEI: 864434060146480, IMSI: 470039934828149, NetworkType: 2G. - Banglalink",
+      "raw": {
+        "SL No": "19",
+        "Request": "LCL 01919904263",
+        "Reply": "MN: 01919904263 No Radio Location Found. - Banglalink | MSISDN: 8801919904263, Datetime: 20260605152339, LAC ID: 680, Cell ID: 46521, Address: Vill: Hayatsar, PO: Churamon, PS: Kawnia, Dist: Barisal, IMEI: 864434060146480, IMSI: 470039934828149, NetworkType: 2G. - Banglalink"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 21,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "GP",
+      "requestText": "LCL 01315607014",
+      "replyText": "8801315607014 / 8801717167974, MTC, 09/06/2026 00:13:20, [21037 46256], 182/1, EAST TEJTURI BAZAR, TEJGAON, DHAKA, IMSI: 470010459858472 [GP]",
+      "raw": {
+        "SL No": "20",
+        "Request": "LCL 01315607014",
+        "Reply": "8801315607014 / 8801717167974, MTC, 09/06/2026 00:13:20, [21037 46256], 182/1, EAST TEJTURI BAZAR, TEJGAON, DHAKA, IMSI: 470010459858472 [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 22,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "GP",
+      "requestText": "LCL 01760675453",
+      "replyText": "Sorry No records found against this number 1760675453 [GP]",
+      "raw": {
+        "SL No": "21",
+        "Request": "LCL 01760675453",
+        "Reply": "Sorry No records found against this number 1760675453 [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 23,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "GP",
+      "requestText": "LCL 01758696171",
+      "replyText": "8801758696171, 4750, SMSMT, 22/04/2026 17:47:00, [46501 28984589], KOLCHORI SHAMRAI, CHANPUR, MAHENDIGANJ, BARISAL, IMEI: 353522649744610, IMSI: 470010632925146 [GP]",
+      "raw": {
+        "SL No": "22",
+        "Request": "LCL 01758696171",
+        "Reply": "8801758696171, 4750, SMSMT, 22/04/2026 17:47:00, [46501 28984589], KOLCHORI SHAMRAI, CHANPUR, MAHENDIGANJ, BARISAL, IMEI: 353522649744610, IMSI: 470010632925146 [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 24,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "GP",
+      "requestText": "LCL 01310648009",
+      "replyText": "Sorry No records found against this number 1310648009 [GP]",
+      "raw": {
+        "SL No": "23",
+        "Request": "LCL 01310648009",
+        "Reply": "Sorry No records found against this number 1310648009 [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 25,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "GP",
+      "requestText": "LCL 01721305809",
+      "replyText": "Sorry No records found against this number 1721305809 [GP]",
+      "raw": {
+        "SL No": "24",
+        "Request": "LCL 01721305809",
+        "Reply": "Sorry No records found against this number 1721305809 [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 26,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "",
+      "requestText": "LCL 01741989106",
+      "replyText": "(LCL 01711989106 - reply not visible)",
+      "raw": {
+        "SL No": "25",
+        "Request": "LCL 01741989106",
+        "Reply": "(LCL 01711989106 - reply not visible)"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 27,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "",
+      "requestText": "LCL 01863308890",
+      "replyText": "(Reply not visible for this request)",
+      "raw": {
+        "SL No": "26",
+        "Request": "LCL 01863308890",
+        "Reply": "(Reply not visible for this request)"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 28,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "GP",
+      "requestText": "LCL 01345636569",
+      "replyText": "8801345636569 / 8801610656389, MTC, 09/06/2026 13:29:03, [25049 11311], ADAMJEE ROAD (IQBAL GROUP OF INDUSTRIES), P.S: SHIDDHIRGANJ, NARAYANGANJ, IMEI: 861407080007970, IMSI: 470010507001900 [GP]",
+      "raw": {
+        "SL No": "27",
+        "Request": "LCL 01345636569",
+        "Reply": "8801345636569 / 8801610656389, MTC, 09/06/2026 13:29:03, [25049 11311], ADAMJEE ROAD (IQBAL GROUP OF INDUSTRIES), P.S: SHIDDHIRGANJ, NARAYANGANJ, IMEI: 861407080007970, IMSI: 470010507001900 [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 29,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "GP",
+      "requestText": "LCL 01715116016",
+      "replyText": "8801715116016 / 8801798460306, MTC, 09/06/2026 23:50:36, [23047 13696], 108/102 NATUN BAZAR, BARISHAL, BARISHAL SADAR, BARISAL, IMEI: 860366069821140, IMSI: 470010553967042 [GP] | MSISDN: 8801715116016, LastActiveDateTime: 2026-06-10 00:23:42, LACID: 46331, CellID: 35873311, Latitude: 22.805417, Longitude: 90.309056, Address: FACULTY OF ANIMAL SCIENCE AND VETERINARY MEDICINE BUILDING, RAHOMOTPUR, BABUGANJ, BARISAL, CS Status: Idle [GP]",
+      "raw": {
+        "SL No": "28",
+        "Request": "LCL 01715116016",
+        "Reply": "8801715116016 / 8801798460306, MTC, 09/06/2026 23:50:36, [23047 13696], 108/102 NATUN BAZAR, BARISHAL, BARISHAL SADAR, BARISAL, IMEI: 860366069821140, IMSI: 470010553967042 [GP] | MSISDN: 8801715116016, LastActiveDateTime: 2026-06-10 00:23:42, LACID: 46331, CellID: 35873311, Latitude: 22.805417, Longitude: 90.309056, Address: FACULTY OF ANIMAL SCIENCE AND VETERINARY MEDICINE BUILDING, RAHOMOTPUR, BABUGANJ, BARISAL, CS Status: Idle [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 30,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "BANGLALINK",
+      "requestText": "LCL 01911152692",
+      "replyText": "MSISDN: 8801911152692, Datetime: 20260609104730, LAC ID: 680, Cell ID: 60282, Address: Vill - Kandihar, Thana - Banaripara, District - Barisal, BPARTY: 880624B617368, IMEI: 354496311003140, IMSI: 470037400048620, UsageType: SMSMT, NetworkType: 2G. - Banglalink",
+      "raw": {
+        "SL No": "29",
+        "Request": "LCL 01911152692",
+        "Reply": "MSISDN: 8801911152692, Datetime: 20260609104730, LAC ID: 680, Cell ID: 60282, Address: Vill - Kandihar, Thana - Banaripara, District - Barisal, BPARTY: 880624B617368, IMEI: 354496311003140, IMSI: 470037400048620, UsageType: SMSMT, NetworkType: 2G. - Banglalink"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 31,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "GP",
+      "requestText": "LCL 01711207942",
+      "replyText": "8801711207942, MyGP, SMSMT, 09/06/2026 10:47:36, [46341 29604875], BANORIPARA, BARISAL, IMEI: 354496311038860, IMSI: 470010440738577 [GP]",
+      "raw": {
+        "SL No": "30",
+        "Request": "LCL 01711207942",
+        "Reply": "8801711207942, MyGP, SMSMT, 09/06/2026 10:47:36, [46341 29604875], BANORIPARA, BARISAL, IMEI: 354496311038860, IMSI: 470010440738577 [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 32,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "ROBI",
+      "requestText": "LCL 01631371920",
+      "replyText": "MSISDN: 8801631371920, MSISDN B Party: Airtel, Last Call location: vill Tetla, P O Tetla, Banaripara, Barishal, LAC ID: 820043, Cell ID: 75, Lat_Long: 22.81357, 90.08629, Date_time: 20260605072416, IMEI: 862410074377150, IMSI: 470075005033851 [Robi]",
+      "raw": {
+        "SL No": "31",
+        "Request": "LCL 01631371920",
+        "Reply": "MSISDN: 8801631371920, MSISDN B Party: Airtel, Last Call location: vill Tetla, P O Tetla, Banaripara, Barishal, LAC ID: 820043, Cell ID: 75, Lat_Long: 22.81357, 90.08629, Date_time: 20260605072416, IMEI: 862410074377150, IMSI: 470075005033851 [Robi]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 33,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "GP",
+      "requestText": "LCL 01711351928",
+      "replyText": "8801711351928, Navana Land, SMSMT, 10/06/2026 10:15:20, [62411 40979232], MUNICIPAL HOLDING NO. 59/B/1, ROY J. C. GUHA ROAD, KRISHTOPUR, P.S MYMENSINGH SADAR, MYMENSINGH, IMEI: 862365044189750, IMSI: 470010513636040 [GP]",
+      "raw": {
+        "SL No": "32",
+        "Request": "LCL 01711351928",
+        "Reply": "8801711351928, Navana Land, SMSMT, 10/06/2026 10:15:20, [62411 40979232], MUNICIPAL HOLDING NO. 59/B/1, ROY J. C. GUHA ROAD, KRISHTOPUR, P.S MYMENSINGH SADAR, MYMENSINGH, IMEI: 862365044189750, IMSI: 470010513636040 [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 34,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "",
+      "requestText": "LCL 01863308890",
+      "replyText": "(Reply not visible for this request)",
+      "raw": {
+        "SL No": "33",
+        "Request": "LCL 01863308890",
+        "Reply": "(Reply not visible for this request)"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 35,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "",
+      "requestText": "LCL 01888002490",
+      "replyText": "(Split from multi-number request LCL 01888002490 01333821028 - reply not separately shown)",
+      "raw": {
+        "SL No": "34",
+        "Request": "LCL 01888002490",
+        "Reply": "(Split from multi-number request LCL 01888002490 01333821028 - reply not separately shown)"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 36,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "",
+      "requestText": "LCL 01333821028",
+      "replyText": "(Split from multi-number request LCL 01888002490 01333821028 - reply not separately shown)",
+      "raw": {
+        "SL No": "35",
+        "Request": "LCL 01333821028",
+        "Reply": "(Split from multi-number request LCL 01888002490 01333821028 - reply not separately shown)"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 37,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "BANGLALINK",
+      "requestText": "LCL 01937344944",
+      "replyText": "MSISDN: 8801937344944, Datetime: 20260608111805, LAC ID: 461, Cell ID: 41753, Address: House No: 105/22k, Thana Road, PS: Sonadanga, Dist: Khulna, BPARTY: 8801938773957, IMEI: 359498701015280, IMSI: 470039946221263, UsageType: MTC, NetworkType: 2G. - Banglalink",
+      "raw": {
+        "SL No": "36",
+        "Request": "LCL 01937344944",
+        "Reply": "MSISDN: 8801937344944, Datetime: 20260608111805, LAC ID: 461, Cell ID: 41753, Address: House No: 105/22k, Thana Road, PS: Sonadanga, Dist: Khulna, BPARTY: 8801938773957, IMEI: 359498701015280, IMSI: 470039946221263, UsageType: MTC, NetworkType: 2G. - Banglalink"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 38,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "",
+      "requestText": "LCL 01623766981",
+      "replyText": "(No reply visible for this request)",
+      "raw": {
+        "SL No": "37",
+        "Request": "LCL 01623766981",
+        "Reply": "(No reply visible for this request)"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 39,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "GP",
+      "requestText": "LCL 01720542190",
+      "replyText": "8801720542190 / 8801725927837, MOC, 10/06/2026 09:48:00, [23126 50574], VILL KADIRABAD, P.O KADIRABAD, UNION LATA, P.S MAHENDIGANJ, BARISAL, IMEI: 344685625789860, IMSI: 470010383180005 [GP]",
+      "raw": {
+        "SL No": "38",
+        "Request": "LCL 01720542190",
+        "Reply": "8801720542190 / 8801725927837, MOC, 10/06/2026 09:48:00, [23126 50574], VILL KADIRABAD, P.O KADIRABAD, UNION LATA, P.S MAHENDIGANJ, BARISAL, IMEI: 344685625789860, IMSI: 470010383180005 [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 40,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "GP",
+      "requestText": "LCL 01703520704",
+      "replyText": "8801703520704, GP, SMSMT, 09/06/2026 18:13:41, [46301 28995871], VILL-GABIKHOLA, P.O-GARURIA, P/S-BAKERGONJ, BARISAL, IMEI: 866446059282170, IMSI: 470010491639968 [GP]",
+      "raw": {
+        "SL No": "39",
+        "Request": "LCL 01703520704",
+        "Reply": "8801703520704, GP, SMSMT, 09/06/2026 18:13:41, [46301 28995871], VILL-GABIKHOLA, P.O-GARURIA, P/S-BAKERGONJ, BARISAL, IMEI: 866446059282170, IMSI: 470010491639968 [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 41,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "",
+      "requestText": "LCL 01602-389949",
+      "replyText": "(No reply visible for this request)",
+      "raw": {
+        "SL No": "40",
+        "Request": "LCL 01602-389949",
+        "Reply": "(No reply visible for this request)"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 42,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "GP",
+      "requestText": "LCL 01719182914",
+      "replyText": "8801719182914 / 8801789360756, MTC, 09/06/2026 23:10:54, [23126 29095], PATTANI BHANGAR CHAR, GUABARIA, HIZLA, BARISHAL, IMSI: 470010352788437 [GP]",
+      "raw": {
+        "SL No": "41",
+        "Request": "LCL 01719182914",
+        "Reply": "8801719182914 / 8801789360756, MTC, 09/06/2026 23:10:54, [23126 29095], PATTANI BHANGAR CHAR, GUABARIA, HIZLA, BARISHAL, IMSI: 470010352788437 [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 43,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "GP",
+      "requestText": "LCL 01345636569",
+      "replyText": "8801345636569 / 8801610656389, MTC, 09/06/2026 13:29:03, [25049 11311], ADAMJEE ROAD (IQBAL GROUP OF INDUSTRIES), P.S: SHIDDHIRGANJ, NARAYANGANJ, IMEI: 861407080007970, IMSI: 470010507001900 [GP]",
+      "raw": {
+        "SL No": "42",
+        "Request": "LCL 01345636569",
+        "Reply": "8801345636569 / 8801610656389, MTC, 09/06/2026 13:29:03, [25049 11311], ADAMJEE ROAD (IQBAL GROUP OF INDUSTRIES), P.S: SHIDDHIRGANJ, NARAYANGANJ, IMEI: 861407080007970, IMSI: 470010507001900 [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 44,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "",
+      "requestText": "LCL 01757265392",
+      "replyText": "(Split from 5-number batch: LCL 01757265392 01844468499 01768233922 01736373112 01757232333 - system returned batch reply for these numbers)",
+      "raw": {
+        "SL No": "43",
+        "Request": "LCL 01757265392",
+        "Reply": "(Split from 5-number batch: LCL 01757265392 01844468499 01768233922 01736373112 01757232333 - system returned batch reply for these numbers)"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 45,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "",
+      "requestText": "LCL 01844468499",
+      "replyText": "(Split from 5-number batch - see above)",
+      "raw": {
+        "SL No": "44",
+        "Request": "LCL 01844468499",
+        "Reply": "(Split from 5-number batch - see above)"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 46,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "",
+      "requestText": "LCL 01768233922",
+      "replyText": "(Split from 5-number batch - see above)",
+      "raw": {
+        "SL No": "45",
+        "Request": "LCL 01768233922",
+        "Reply": "(Split from 5-number batch - see above)"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 47,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "",
+      "requestText": "LCL 01736373112",
+      "replyText": "(Split from 5-number batch - see above)",
+      "raw": {
+        "SL No": "46",
+        "Request": "LCL 01736373112",
+        "Reply": "(Split from 5-number batch - see above)"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 48,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "GP",
+      "requestText": "LCL 01757232333",
+      "replyText": "8801724761972 / 8801325397520, MTC, 10/06/2026 21:58:49, [22049 50739], MOUZA-BANARIPARA, SADAR ROAD, 3 NO WORD, BANARIPARA, BARISHAL, IMEI: 350419993156990, IMSI: 470010081907258 [GP]",
+      "raw": {
+        "SL No": "47",
+        "Request": "LCL 01757232333",
+        "Reply": "8801724761972 / 8801325397520, MTC, 10/06/2026 21:58:49, [22049 50739], MOUZA-BANARIPARA, SADAR ROAD, 3 NO WORD, BANARIPARA, BARISHAL, IMEI: 350419993156990, IMSI: 470010081907258 [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+      "sourceSheet": "LCL",
+      "sourceRow": 49,
+      "fileName": "LCL.xlsx",
+      "requestType": "LCL",
+      "operator": "GP",
+      "requestText": "LCL 01319472535",
+      "replyText": "MSISDN: 8801319472535, LastActiveDateTime: 2026-06-10 12:31:29, LACID: 23066, CellID: 22578, Latitude: 23.371472, Longitude: 90.034444, Address: VILL.- RASHIBPURA, MALIGRAM BAZAR, MOUZA-MALIGRAM, VANGA, FARIDPUR, CS Status: Idle, Volte Status: N/A [GP] | 8801319472535, GP, SMSMT, 10/06/2026 12:31:17, [48271 28698401], VILL: PULIA, P.O: CHANDRA BAZAR, UNION: CHANDRA, P.S: BHANGA, FARIDPUR, IMEI: 357726270741110, IMSI: 470010402936218 [GP]",
+      "raw": {
+        "SL No": "48",
+        "Request": "LCL 01319472535",
+        "Reply": "MSISDN: 8801319472535, LastActiveDateTime: 2026-06-10 12:31:29, LACID: 23066, CellID: 22578, Latitude: 23.371472, Longitude: 90.034444, Address: VILL.- RASHIBPURA, MALIGRAM BAZAR, MOUZA-MALIGRAM, VANGA, FARIDPUR, CS Status: Idle, Volte Status: N/A [GP] | 8801319472535, GP, SMSMT, 10/06/2026 12:31:17, [48271 28698401], VILL: PULIA, P.O: CHANDRA BAZAR, UNION: CHANDRA, P.S: BHANGA, FARIDPUR, IMEI: 357726270741110, IMSI: 470010402936218 [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL\\1. GP\\GP_LRL.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 3,
       "fileName": "GP_LRL.xlsx",
@@ -408,7 +1166,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL\\1. GP\\GP_LRL.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL\\1. GP\\GP_LRL.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 4,
       "fileName": "GP_LRL.xlsx",
@@ -423,7 +1181,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL\\1. GP\\GP_LRL.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL\\1. GP\\GP_LRL.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 5,
       "fileName": "GP_LRL.xlsx",
@@ -438,7 +1196,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL\\1. GP\\GP_LRL.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL\\1. GP\\GP_LRL.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 6,
       "fileName": "GP_LRL.xlsx",
@@ -453,7 +1211,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL\\1. GP\\GP_LRL.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL\\1. GP\\GP_LRL.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 7,
       "fileName": "GP_LRL.xlsx",
@@ -468,7 +1226,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL\\1. GP\\GP_LRL.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL\\1. GP\\GP_LRL.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 8,
       "fileName": "GP_LRL.xlsx",
@@ -483,7 +1241,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL\\2. Robi\\Robi_LRL.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL\\2. Robi\\Robi_LRL.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 2,
       "fileName": "Robi_LRL.xlsx",
@@ -498,7 +1256,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL\\2. Robi\\Robi_LRL.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL\\2. Robi\\Robi_LRL.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 3,
       "fileName": "Robi_LRL.xlsx",
@@ -513,7 +1271,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL\\2. Robi\\Robi_LRL.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL\\2. Robi\\Robi_LRL.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 4,
       "fileName": "Robi_LRL.xlsx",
@@ -528,7 +1286,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL\\3. Banglalink\\Banglalink_LRL.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL\\3. Banglalink\\Banglalink_LRL.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 2,
       "fileName": "Banglalink_LRL.xlsx",
@@ -543,7 +1301,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL\\3. Banglalink\\Banglalink_LRL.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL\\3. Banglalink\\Banglalink_LRL.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 3,
       "fileName": "Banglalink_LRL.xlsx",
@@ -558,7 +1316,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL\\3. Banglalink\\Banglalink_LRL.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL\\3. Banglalink\\Banglalink_LRL.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 4,
       "fileName": "Banglalink_LRL.xlsx",
@@ -573,7 +1331,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL\\3. Banglalink\\Banglalink_LRL.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL\\3. Banglalink\\Banglalink_LRL.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 5,
       "fileName": "Banglalink_LRL.xlsx",
@@ -588,7 +1346,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL\\3. Banglalink\\Banglalink_LRL.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL\\3. Banglalink\\Banglalink_LRL.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 6,
       "fileName": "Banglalink_LRL.xlsx",
@@ -603,7 +1361,412 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID\\1. GP\\GP_MS_NID.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 2,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "BANGLALINK",
+      "requestText": "LRL 01947237994",
+      "replyText": "MSISDN: 8801947237994, Datetime: 20260607213918, LAC ID: 678, Cell ID: 64853, Address: East Rupatoli, 24 no. Ward, P.S: Kotowali, Barisal Sadar, Barisal, BPARTY: 88042616E676C616, IMEI: 860067073634400, IMSI: 470039948287002, UsageType: SMSMT, NetworkType: 2G. - Banglalink | MN: 8801947237994, LAC/eNodeB_ID: 678, Cell Name: BAR_W0486_3 (Cell ID: 64853), Status: Attached, LRA: 2026-06-07 21:50:51+06:00, Add: East Rupatoli 24 no. Ward P.S: Kotowali Barisal Sadar Barisal, Lat: 22.661409, Long: 90.349411 - Banglalink",
+      "raw": {
+        "SL No": "1",
+        "Request": "LRL 01947237994",
+        "Reply": "MSISDN: 8801947237994, Datetime: 20260607213918, LAC ID: 678, Cell ID: 64853, Address: East Rupatoli, 24 no. Ward, P.S: Kotowali, Barisal Sadar, Barisal, BPARTY: 88042616E676C616, IMEI: 860067073634400, IMSI: 470039948287002, UsageType: SMSMT, NetworkType: 2G. - Banglalink | MN: 8801947237994, LAC/eNodeB_ID: 678, Cell Name: BAR_W0486_3 (Cell ID: 64853), Status: Attached, LRA: 2026-06-07 21:50:51+06:00, Add: East Rupatoli 24 no. Ward P.S: Kotowali Barisal Sadar Barisal, Lat: 22.661409, Long: 90.349411 - Banglalink"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 3,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "ROBI",
+      "requestText": "LRL 01617610134",
+      "replyText": "MSISDN: 8801617610134, MSISDN B Party: 8801723599495, Last Call location: Ward No 24, BARISAL SADAR KOTWALI, Barisal, LAC ID: 8005, Cell ID: 28196, Lat_Long: 22.66143, 90.3495, Date_time: 20260607205630, IMEI: 860068048764800, IMSI: 470075012337288 [Robi] | RADIO LOCATION: Ward No-24, Barisal Sadar (kotwali), Barisal, LAC ID: 8005, CELL ID: 28196, LAT, LONG: 22.66143, 90.3495, MS STATUS: Attached, LAST ACTION TIME: 2026-06-07 21:37:12 [Robi]",
+      "raw": {
+        "SL No": "2",
+        "Request": "LRL 01617610134",
+        "Reply": "MSISDN: 8801617610134, MSISDN B Party: 8801723599495, Last Call location: Ward No 24, BARISAL SADAR KOTWALI, Barisal, LAC ID: 8005, Cell ID: 28196, Lat_Long: 22.66143, 90.3495, Date_time: 20260607205630, IMEI: 860068048764800, IMSI: 470075012337288 [Robi] | RADIO LOCATION: Ward No-24, Barisal Sadar (kotwali), Barisal, LAC ID: 8005, CELL ID: 28196, LAT, LONG: 22.66143, 90.3495, MS STATUS: Attached, LAST ACTION TIME: 2026-06-07 21:37:12 [Robi]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 4,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "GP",
+      "requestText": "LRL 01316178945",
+      "replyText": "8801316178945 / 8801323428959, MTC, 07/06/2026 19:49:15, [23093 53640], PASCHIM CHAR DAPDAPIA, DAPDAPIA, NALCHITY, JHALOKATI, IMEI: 868236085902400, IMSI: 470010491153713 [GP] | MSISDN: 8801316178945, LastActiveDateTime: 2026-06-07 22:30:50, LACID: 48261, CellID: 35855137, Latitude: 22.658194, Longitude: 90.344889, Address: 13, PARARA ROAD, P.S. KOTOWALI, DIST. BARISAL, CS Status: Idle [GP]",
+      "raw": {
+        "SL No": "3",
+        "Request": "LRL 01316178945",
+        "Reply": "8801316178945 / 8801323428959, MTC, 07/06/2026 19:49:15, [23093 53640], PASCHIM CHAR DAPDAPIA, DAPDAPIA, NALCHITY, JHALOKATI, IMEI: 868236085902400, IMSI: 470010491153713 [GP] | MSISDN: 8801316178945, LastActiveDateTime: 2026-06-07 22:30:50, LACID: 48261, CellID: 35855137, Latitude: 22.658194, Longitude: 90.344889, Address: 13, PARARA ROAD, P.S. KOTOWALI, DIST. BARISAL, CS Status: Idle [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 5,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "GP",
+      "requestText": "LRL 01779398037",
+      "replyText": "8801779398037, 4750, SMSMT, 07/06/2026 23:25:34, [56312 25735199], HOLDING NO. 54/1, FAKIRAPUL, DHAKA, IMEI: 359127131839920, IMSI: 470010441603444 [GP] | MSISDN: 8801779398037, LastActiveDateTime: 2026-06-07 23:35:36, LACID: 56312, CellID: 25850635, Latitude: 23.735361, Longitude: 90.416222, Address: 38, NAYAPALTAN, DHAKA-1000, CS Status: Idle [GP]",
+      "raw": {
+        "SL No": "4",
+        "Request": "LRL 01779398037",
+        "Reply": "8801779398037, 4750, SMSMT, 07/06/2026 23:25:34, [56312 25735199], HOLDING NO. 54/1, FAKIRAPUL, DHAKA, IMEI: 359127131839920, IMSI: 470010441603444 [GP] | MSISDN: 8801779398037, LastActiveDateTime: 2026-06-07 23:35:36, LACID: 56312, CellID: 25850635, Latitude: 23.735361, Longitude: 90.416222, Address: 38, NAYAPALTAN, DHAKA-1000, CS Status: Idle [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 6,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "GP",
+      "requestText": "LRL 01724034442",
+      "replyText": "No RL Info Found of 1724034442 [GP]",
+      "raw": {
+        "SL No": "5",
+        "Request": "LRL 01724034442",
+        "Reply": "No RL Info Found of 1724034442 [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 7,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "ROBI",
+      "requestText": "LRL 01868577041",
+      "replyText": "MSISDN: 8801868577041, RADIO LOCATION: Kashipur, Barisal Sadar (kotwali), Barisal, Barisal, LAC ID: 8006, CELL ID: 28105, LAT, LONG: 22.73461111, 90.33791667, MS STATUS: Attached, LAST ACTION TIME: 2026-06-08 07:50:46 [Robi]",
+      "raw": {
+        "SL No": "6",
+        "Request": "LRL 01868577041",
+        "Reply": "MSISDN: 8801868577041, RADIO LOCATION: Kashipur, Barisal Sadar (kotwali), Barisal, Barisal, LAC ID: 8006, CELL ID: 28105, LAT, LONG: 22.73461111, 90.33791667, MS STATUS: Attached, LAST ACTION TIME: 2026-06-08 07:50:46 [Robi]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 8,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "GP",
+      "requestText": "LRL 01322350825",
+      "replyText": "MSISDN: 8801322350825, LastActiveDateTime: 2026-06-08 13:34:43, LACID: 56382, CellID: 25739297, Latitude: 23.725278, Longitude: 90.411111, Address: 5, BANGABANDHU AVENUE, DHAKA-100, CS Status: Idle, Volte Status: not in VoLTE network [GP]",
+      "raw": {
+        "SL No": "7",
+        "Request": "LRL 01322350825",
+        "Reply": "MSISDN: 8801322350825, LastActiveDateTime: 2026-06-08 13:34:43, LACID: 56382, CellID: 25739297, Latitude: 23.725278, Longitude: 90.411111, Address: 5, BANGABANDHU AVENUE, DHAKA-100, CS Status: Idle, Volte Status: not in VoLTE network [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 9,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "BANGLALINK",
+      "requestText": "LRL 01919904263",
+      "replyText": "MN: 01919904263 No Radio Location Found. - Banglalink | MSISDN: 8801919904263, Datetime: 20260605152339, LAC ID: 680, Cell ID: 46521, Address: Vill: Hayatsar, PO: Churamon, PS: Kawnia, Dist: Barisal, BPARTY: 8804D79424C20417, IMEI: 864434060146480, IMSI: 470039934828149, UsageType: SMSMT, NetworkType: 2G. - Banglalink",
+      "raw": {
+        "SL No": "8",
+        "Request": "LRL 01919904263",
+        "Reply": "MN: 01919904263 No Radio Location Found. - Banglalink | MSISDN: 8801919904263, Datetime: 20260605152339, LAC ID: 680, Cell ID: 46521, Address: Vill: Hayatsar, PO: Churamon, PS: Kawnia, Dist: Barisal, BPARTY: 8804D79424C20417, IMEI: 864434060146480, IMSI: 470039934828149, UsageType: SMSMT, NetworkType: 2G. - Banglalink"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 10,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "ROBI",
+      "requestText": "LRL 01612196151",
+      "replyText": "MSISDN: 8801612196151, RADIO LOCATION: (no specific location), MS STATUS: Attached, LAST ACTION TIME: 2026-06-08 15:15:55 [Robi]",
+      "raw": {
+        "SL No": "9",
+        "Request": "LRL 01612196151",
+        "Reply": "MSISDN: 8801612196151, RADIO LOCATION: (no specific location), MS STATUS: Attached, LAST ACTION TIME: 2026-06-08 15:15:55 [Robi]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 11,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "ROBI",
+      "requestText": "LRL 01816906726",
+      "replyText": "MSISDN: 8801816906726, RADIO LOCATION: Number is out of network. LAST ATTACHED DATE & TIME: 2026-06-08 15:30:01 [Robi]",
+      "raw": {
+        "SL No": "10",
+        "Request": "LRL 01816906726",
+        "Reply": "MSISDN: 8801816906726, RADIO LOCATION: Number is out of network. LAST ATTACHED DATE & TIME: 2026-06-08 15:30:01 [Robi]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 12,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "GP",
+      "requestText": "LRL 01785251167",
+      "replyText": "8801785251167, GP Info, SMSMT, 09/06/2026 13:01:08, [46051 28701471], RAJAPUR BAZAR, RAJAPUR BAZAR, RAJAPUR, JHALOKATHI, IMEI: 353000330191940, IMSI: 470010457776282 [GP] | MSISDN: 8801785251167, LastActiveDateTime: 2026-06-08 18:26:20, LACID: 46051, CellID: 28701471, Latitude: 22.570722, Longitude: 90.139278, Address: RAJAPUR BAZAR, RAJAPUR BAZAR, RAJAPUR, JHALOKATHI, CS Status: Idle [GP]",
+      "raw": {
+        "SL No": "11",
+        "Request": "LRL 01785251167",
+        "Reply": "8801785251167, GP Info, SMSMT, 09/06/2026 13:01:08, [46051 28701471], RAJAPUR BAZAR, RAJAPUR BAZAR, RAJAPUR, JHALOKATHI, IMEI: 353000330191940, IMSI: 470010457776282 [GP] | MSISDN: 8801785251167, LastActiveDateTime: 2026-06-08 18:26:20, LACID: 46051, CellID: 28701471, Latitude: 22.570722, Longitude: 90.139278, Address: RAJAPUR BAZAR, RAJAPUR BAZAR, RAJAPUR, JHALOKATHI, CS Status: Idle [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 13,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "BANGLALINK",
+      "requestText": "LRL 01941295521",
+      "replyText": "MSISDN: 8801941295521, Datetime: 20260608172039, LAC ID: 680, Cell ID: 63091, Address: Ayar bazar, Syedkathi, Banaripara, Barisal, BPARTY: 8801979415850, IMEI: 861675072375840, IMSI: 470039907908432, UsageType: SMSMT, NetworkType: 2G. - Banglalink",
+      "raw": {
+        "SL No": "12",
+        "Request": "LRL 01941295521",
+        "Reply": "MSISDN: 8801941295521, Datetime: 20260608172039, LAC ID: 680, Cell ID: 63091, Address: Ayar bazar, Syedkathi, Banaripara, Barisal, BPARTY: 8801979415850, IMEI: 861675072375840, IMSI: 470039907908432, UsageType: SMSMT, NetworkType: 2G. - Banglalink"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 14,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "GP",
+      "requestText": "LRL 01302981818",
+      "replyText": "MSISDN: 8801302981818, LastActiveDateTime: 2026-06-08 18:47:30, LACID: 23102, CellID: 41905, Latitude: 22.752528, Longitude: 89.686667, Address: LAL CHONDROPUR, GABKHALI, FAKIRHAT, BAGERHAT, CS Status: Idle, Volte Status: N/A [GP]",
+      "raw": {
+        "SL No": "13",
+        "Request": "LRL 01302981818",
+        "Reply": "MSISDN: 8801302981818, LastActiveDateTime: 2026-06-08 18:47:30, LACID: 23102, CellID: 41905, Latitude: 22.752528, Longitude: 89.686667, Address: LAL CHONDROPUR, GABKHALI, FAKIRHAT, BAGERHAT, CS Status: Idle, Volte Status: N/A [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 15,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "ROBI",
+      "requestText": "LRL 01838880159",
+      "replyText": "MSISDN: 8801838880159, RADIO LOCATION: Number is out of network. LAST ATTACHED DATE & TIME: 2026-06-09 19:08:58 [Robi]",
+      "raw": {
+        "SL No": "14",
+        "Request": "LRL 01838880159",
+        "Reply": "MSISDN: 8801838880159, RADIO LOCATION: Number is out of network. LAST ATTACHED DATE & TIME: 2026-06-09 19:08:58 [Robi]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 16,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "ROBI",
+      "requestText": "LRL 01872664308",
+      "replyText": "MSISDN: 8801872664308, RADIO LOCATION: Number is out of network. LAST ATTACHED DATE & TIME: 2026-06-08 22:38:51 [Robi]",
+      "raw": {
+        "SL No": "15",
+        "Request": "LRL 01872664308",
+        "Reply": "MSISDN: 8801872664308, RADIO LOCATION: Number is out of network. LAST ATTACHED DATE & TIME: 2026-06-08 22:38:51 [Robi]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 17,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "ROBI",
+      "requestText": "LRL 01648051331",
+      "replyText": "MSISDN: 8801648051331, RADIO LOCATION: Ward No-40 (Part), Mohammadpur, Dhaka, Dhaka, LAC ID: 108, CELL ID: 21724, LAT, LONG: 23.754868, 90.381101, MS STATUS: Attached, LAST ACTION TIME: 2026-06-09 22:00:58 [Robi]",
+      "raw": {
+        "SL No": "16",
+        "Request": "LRL 01648051331",
+        "Reply": "MSISDN: 8801648051331, RADIO LOCATION: Ward No-40 (Part), Mohammadpur, Dhaka, Dhaka, LAC ID: 108, CELL ID: 21724, LAT, LONG: 23.754868, 90.381101, MS STATUS: Attached, LAST ACTION TIME: 2026-06-09 22:00:58 [Robi]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 18,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "ROBI",
+      "requestText": "LRL 01642348522",
+      "replyText": "MSISDN: 8801642348522, RADIO LOCATION: Sarikal, Gaurnadi, Barisal, Barisal, LAC ID: 8004, CELL ID: 28037, LAT, LONG: 22.89985817, 90.30252928, MS STATUS: Attached, LAST ACTION TIME: 2026-06-09 22:59:24 [Robi]",
+      "raw": {
+        "SL No": "17",
+        "Request": "LRL 01642348522",
+        "Reply": "MSISDN: 8801642348522, RADIO LOCATION: Sarikal, Gaurnadi, Barisal, Barisal, LAC ID: 8004, CELL ID: 28037, LAT, LONG: 22.89985817, 90.30252928, MS STATUS: Attached, LAST ACTION TIME: 2026-06-09 22:59:24 [Robi]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 19,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "ROBI",
+      "requestText": "LRL 01642348522",
+      "replyText": "MSISDN: 8801642348522, RADIO LOCATION: Sarikal, Gaurnadi, Barisal, Barisal, LAC ID: 8004, CELL ID: 28037, LAT, LONG: 22.89985817, 90.30252928, MS STATUS: Attached, LAST ACTION TIME: 2026-06-09 19:36:32 [Robi]",
+      "raw": {
+        "SL No": "18",
+        "Request": "LRL 01642348522",
+        "Reply": "MSISDN: 8801642348522, RADIO LOCATION: Sarikal, Gaurnadi, Barisal, Barisal, LAC ID: 8004, CELL ID: 28037, LAT, LONG: 22.89985817, 90.30252928, MS STATUS: Attached, LAST ACTION TIME: 2026-06-09 19:36:32 [Robi]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 20,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "GP",
+      "requestText": "LRL 01739204760",
+      "replyText": "MSISDN: 8801739204760, LastActiveDateTime: 2026-06-09 21:35:03, LACID: 48251, CellID: 29773089, Latitude: 22.7178, Longitude: 90.3671, Address: SHER-E-BANGLA ROAD, KASHIPUR, CHOHUTPUR, BARISAL SADAR, BARISAL, CS Status: Idle, Volte Status: not in VoLTE network [GP] | 8801739204760, GP Info, SMSMT, 09/06/2026 19:30:37, [48251 29773129], SHER-E-BANGLA ROAD, KASHIPUR, CHOHUTPUR, BARISAL SADAR, BARISAL, IMEI: 868126062531170, IMSI: 470010394505884 [GP]",
+      "raw": {
+        "SL No": "19",
+        "Request": "LRL 01739204760",
+        "Reply": "MSISDN: 8801739204760, LastActiveDateTime: 2026-06-09 21:35:03, LACID: 48251, CellID: 29773089, Latitude: 22.7178, Longitude: 90.3671, Address: SHER-E-BANGLA ROAD, KASHIPUR, CHOHUTPUR, BARISAL SADAR, BARISAL, CS Status: Idle, Volte Status: not in VoLTE network [GP] | 8801739204760, GP Info, SMSMT, 09/06/2026 19:30:37, [48251 29773129], SHER-E-BANGLA ROAD, KASHIPUR, CHOHUTPUR, BARISAL SADAR, BARISAL, IMEI: 868126062531170, IMSI: 470010394505884 [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 21,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "",
+      "requestText": "LRL 01815251167",
+      "replyText": "(Reply included with LRL 01785251167 batch)",
+      "raw": {
+        "SL No": "20",
+        "Request": "LRL 01815251167",
+        "Reply": "(Reply included with LRL 01785251167 batch)"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 22,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "ROBI",
+      "requestText": "LRL 01631371920",
+      "replyText": "MSISDN: 8801631371920, RADIO LOCATION: Number is not in use. [Robi]",
+      "raw": {
+        "SL No": "21",
+        "Request": "LRL 01631371920",
+        "Reply": "MSISDN: 8801631371920, RADIO LOCATION: Number is not in use. [Robi]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 23,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "ROBI",
+      "requestText": "LRL 01881971315",
+      "replyText": "MSISDN: 8801881971315, RADIO LOCATION: Number is not in use. [Robi]",
+      "raw": {
+        "SL No": "22",
+        "Request": "LRL 01881971315",
+        "Reply": "MSISDN: 8801881971315, RADIO LOCATION: Number is not in use. [Robi]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 24,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "GP",
+      "requestText": "LRL 01319472535",
+      "replyText": "8801319472535 / 8801737374588, MOC, 08/06/2026 23:24:03, [23123 20926], VILL SOUTH DHUASHAR, P.O. DHUASAR, UNION 5 BALIGRAM, P.S. KALKINI, MADARIPUR, IMEI: 357726270741110, IMSI: 470010402936218 [GP]",
+      "raw": {
+        "SL No": "23",
+        "Request": "LRL 01319472535",
+        "Reply": "8801319472535 / 8801737374588, MOC, 08/06/2026 23:24:03, [23123 20926], VILL SOUTH DHUASHAR, P.O. DHUASAR, UNION 5 BALIGRAM, P.S. KALKINI, MADARIPUR, IMEI: 357726270741110, IMSI: 470010402936218 [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 25,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "BANGLALINK",
+      "requestText": "LRL 01937344944",
+      "replyText": "MN: 01937344944 No Radio Location Found. - Banglalink",
+      "raw": {
+        "SL No": "24",
+        "Request": "LRL 01937344944",
+        "Reply": "MN: 01937344944 No Radio Location Found. - Banglalink"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 26,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "GP",
+      "requestText": "LRL 01327655002",
+      "replyText": "MSISDN: 8801327655002, LastActiveDateTime: 2026-06-10 18:32:49, LACID: 46181, CellID: 29713183, Latitude: 22.45909, Longitude: 89.83815, Address: SARALIA, MORRELGANJ, MORRELGANJ, BAGERHAT, CS Status: Idle, Volte Status: not in VoLTE network [GP]",
+      "raw": {
+        "SL No": "25",
+        "Request": "LRL 01327655002",
+        "Reply": "MSISDN: 8801327655002, LastActiveDateTime: 2026-06-10 18:32:49, LACID: 46181, CellID: 29713183, Latitude: 22.45909, Longitude: 89.83815, Address: SARALIA, MORRELGANJ, MORRELGANJ, BAGERHAT, CS Status: Idle, Volte Status: not in VoLTE network [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 27,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "BANGLALINK",
+      "requestText": "LRL 01403710124",
+      "replyText": "MN: 8801403710124, LAC/eNodeB_ID: 11619, Cell Name: DHK_L1619_221 (Cell ID: 221), Status: Attached, LRA: 2026-06-10 22:07:04+06:00, Add: Md. Anwar Karim Bhuiya Vill-Bhali P.O-Bhulta P.S-Rupganj Narayanganj, Lat: 23.78632, Long: 90.55426 - Banglalink | MSISDN: 8801403710124 Task failed to execute. No data returned. - Banglalink",
+      "raw": {
+        "SL No": "26",
+        "Request": "LRL 01403710124",
+        "Reply": "MN: 8801403710124, LAC/eNodeB_ID: 11619, Cell Name: DHK_L1619_221 (Cell ID: 221), Status: Attached, LRA: 2026-06-10 22:07:04+06:00, Add: Md. Anwar Karim Bhuiya Vill-Bhali P.O-Bhulta P.S-Rupganj Narayanganj, Lat: 23.78632, Long: 90.55426 - Banglalink | MSISDN: 8801403710124 Task failed to execute. No data returned. - Banglalink"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 28,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "",
+      "requestText": "LRL 01865686408",
+      "replyText": "(New request - reply not yet visible)",
+      "raw": {
+        "SL No": "27",
+        "Request": "LRL 01865686408",
+        "Reply": "(New request - reply not yet visible)"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID\\1. GP\\GP_MS_NID.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 2,
       "fileName": "GP_MS_NID.xlsx",
@@ -618,7 +1781,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID\\1. GP\\GP_MS_NID.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID\\1. GP\\GP_MS_NID.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 3,
       "fileName": "GP_MS_NID.xlsx",
@@ -633,7 +1796,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID\\1. GP\\GP_MS_NID.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID\\1. GP\\GP_MS_NID.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 4,
       "fileName": "GP_MS_NID.xlsx",
@@ -648,7 +1811,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID\\2. Robi\\Robi_MS_NID.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID\\2. Robi\\Robi_MS_NID.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 2,
       "fileName": "Robi_MS_NID.xlsx",
@@ -663,7 +1826,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID\\3. Banglalink\\Banglalink_MS_NID.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID\\3. Banglalink\\Banglalink_MS_NID.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 2,
       "fileName": "Banglalink_MS_NID.xlsx",
@@ -678,22 +1841,262 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\NID-MS\\1. GP\\GP_NID_MS.xlsx",
-      "sourceSheet": "Sheet1",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
       "sourceRow": 2,
-      "fileName": "GP_NID_MS.xlsx",
-      "requestType": "NID-MS",
-      "operator": "GP",
-      "requestText": "LRL 01327655002",
-      "replyText": "MSISDN: 8801327655002\r\nLastActiveDateTime: 2026-06-10 18:32:49 06:00\r\nLACID: 46181\r\nCellID: 29713183\r\nLatitude: 22.45909\r\nLongitude: 89.83815\r\nAddress: SARALIA,MORRELGANJ,MORRELGANJ,BAGERHAT\r\nCS Status: Idle\r\nVolte Status: not in VoLTE network [GP]",
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "ROBI",
+      "requestText": "MS-NID 01612196151",
+      "replyText": "MSISDN: 8801612196151, NID: 7305979036, DoB: 02/05/1972 [Robi]",
       "raw": {
-        "1": "2",
-        "Request": "LRL 01327655002",
-        "Reply": "MSISDN: 8801327655002\r\nLastActiveDateTime: 2026-06-10 18:32:49 06:00\r\nLACID: 46181\r\nCellID: 29713183\r\nLatitude: 22.45909\r\nLongitude: 89.83815\r\nAddress: SARALIA,MORRELGANJ,MORRELGANJ,BAGERHAT\r\nCS Status: Idle\r\nVolte Status: not in VoLTE network [GP]"
+        "SL No": "1",
+        "Request": "MS-NID 01612196151",
+        "Reply": "MSISDN: 8801612196151, NID: 7305979036, DoB: 02/05/1972 [Robi]"
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\NID-MS\\2. Robi\\Robi_NID_MS.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
+      "sourceRow": 3,
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "",
+      "requestText": "MS-NID 09638065277",
+      "replyText": "(Reply not visible - possibly searched as 09638065278)",
+      "raw": {
+        "SL No": "2",
+        "Request": "MS-NID 09638065277",
+        "Reply": "(Reply not visible - possibly searched as 09638065278)"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
+      "sourceRow": 4,
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "",
+      "requestText": "MS-NID 09638065278",
+      "replyText": "(No reply visible in loaded messages)",
+      "raw": {
+        "SL No": "3",
+        "Request": "MS-NID 09638065278",
+        "Reply": "(No reply visible in loaded messages)"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
+      "sourceRow": 5,
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "",
+      "requestText": "MS-NID 09638065278",
+      "replyText": "(Searched again by Inspector Oc Banaripara at 15:19 - no visible reply)",
+      "raw": {
+        "SL No": "4",
+        "Request": "MS-NID 09638065278",
+        "Reply": "(Searched again by Inspector Oc Banaripara at 15:19 - no visible reply)"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
+      "sourceRow": 6,
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "GP",
+      "requestText": "MS-NID 01307468725",
+      "replyText": "MSISDN: 8801307468725, 0611073766793, 1958-03-12 [GP]",
+      "raw": {
+        "SL No": "5",
+        "Request": "MS-NID 01307468725",
+        "Reply": "MSISDN: 8801307468725, 0611073766793, 1958-03-12 [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
+      "sourceRow": 7,
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "",
+      "requestText": "MS-NID 01757265392",
+      "replyText": "(Split from 5-number batch: MS-NID 01757265392 01844468499 01768233922 01736373112 01757232333)",
+      "raw": {
+        "SL No": "6",
+        "Request": "MS-NID 01757265392",
+        "Reply": "(Split from 5-number batch: MS-NID 01757265392 01844468499 01768233922 01736373112 01757232333)"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
+      "sourceRow": 8,
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "",
+      "requestText": "MS-NID 01844468499",
+      "replyText": "(Split from 5-number batch - see above)",
+      "raw": {
+        "SL No": "7",
+        "Request": "MS-NID 01844468499",
+        "Reply": "(Split from 5-number batch - see above)"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
+      "sourceRow": 9,
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "",
+      "requestText": "MS-NID 01768233922",
+      "replyText": "(Split from 5-number batch - see above)",
+      "raw": {
+        "SL No": "8",
+        "Request": "MS-NID 01768233922",
+        "Reply": "(Split from 5-number batch - see above)"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
+      "sourceRow": 10,
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "",
+      "requestText": "MS-NID 01736373112",
+      "replyText": "(Split from 5-number batch - see above)",
+      "raw": {
+        "SL No": "9",
+        "Request": "MS-NID 01736373112",
+        "Reply": "(Split from 5-number batch - see above)"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
+      "sourceRow": 11,
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "",
+      "requestText": "MS-NID 01757232333",
+      "replyText": "(Split from 5-number batch - see above)",
+      "raw": {
+        "SL No": "10",
+        "Request": "MS-NID 01757232333",
+        "Reply": "(Split from 5-number batch - see above)"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
+      "sourceRow": 12,
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "GP",
+      "requestText": "MS-NID 01794702044",
+      "replyText": "MSISDN: 8801794702044, 0619452170146, 1970-11-09 [GP]",
+      "raw": {
+        "SL No": "11",
+        "Request": "MS-NID 01794702044",
+        "Reply": "MSISDN: 8801794702044, 0619452170146, 1970-11-09 [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
+      "sourceRow": 13,
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "GP",
+      "requestText": "MS-NID 01304277436",
+      "replyText": "MSISDN: 8801304277436, 0619442156020, 1985-03-02 [GP]",
+      "raw": {
+        "SL No": "12",
+        "Request": "MS-NID 01304277436",
+        "Reply": "MSISDN: 8801304277436, 0619442156020, 1985-03-02 [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
+      "sourceRow": 14,
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "",
+      "requestText": "MS-NID 01715679017",
+      "replyText": "MSISDN: 8801715679017 - Sorry No records found",
+      "raw": {
+        "SL No": "13",
+        "Request": "MS-NID 01715679017",
+        "Reply": "MSISDN: 8801715679017 - Sorry No records found"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
+      "sourceRow": 15,
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "GP",
+      "requestText": "MS-NID 01743739121",
+      "replyText": "MSISDN: 8801743739121, 0619452170225, 1972-12-21 [GP]",
+      "raw": {
+        "SL No": "14",
+        "Request": "MS-NID 01743739121",
+        "Reply": "MSISDN: 8801743739121, 0619452170225, 1972-12-21 [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
+      "sourceRow": 16,
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "GP",
+      "requestText": "MS-NID 01761606344",
+      "replyText": "MSISDN: 8801761606344, 5552667254, 1997-06-15 [GP]",
+      "raw": {
+        "SL No": "15",
+        "Request": "MS-NID 01761606344",
+        "Reply": "MSISDN: 8801761606344, 5552667254, 1997-06-15 [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
+      "sourceRow": 17,
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "",
+      "requestText": "MS-NID 01765769349",
+      "replyText": "(Reply not visible for this request from Inspector Oc Gournadi at 22:58)",
+      "raw": {
+        "SL No": "16",
+        "Request": "MS-NID 01765769349",
+        "Reply": "(Reply not visible for this request from Inspector Oc Gournadi at 22:58)"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
+      "sourceRow": 18,
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "GP",
+      "requestText": "MS-NID 01739204760",
+      "replyText": "MSISDN: 8801739204760, 9553747057, 1983-01-01 [GP]",
+      "raw": {
+        "SL No": "17",
+        "Request": "MS-NID 01739204760",
+        "Reply": "MSISDN: 8801739204760, 9553747057, 1983-01-01 [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\NID-MS\\2. Robi\\Robi_NID_MS.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 2,
       "fileName": "Robi_NID_MS.xlsx",
@@ -708,7 +2111,7 @@
       }
     },
     {
-      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\NID-MS\\3. Banglalink\\Banglalink_NID _MS.xlsx",
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\NID-MS\\3. Banglalink\\Banglalink_NID _MS.xlsx",
       "sourceSheet": "Sheet1",
       "sourceRow": 2,
       "fileName": "Banglalink_NID _MS.xlsx",
@@ -721,6 +2124,81 @@
         "Request": "LRL 01327655002",
         "Reply": "MSISDN: 8801327655002\r\nLastActiveDateTime: 2026-06-10 18:32:49 06:00\r\nLACID: 46181\r\nCellID: 29713183\r\nLatitude: 22.45909\r\nLongitude: 89.83815\r\nAddress: SARALIA,MORRELGANJ,MORRELGANJ,BAGERHAT\r\nCS Status: Idle\r\nVolte Status: not in VoLTE network [GP]"
       }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\NID-MS.xlsx",
+      "sourceSheet": "NID-MS",
+      "sourceRow": 2,
+      "fileName": "NID-MS.xlsx",
+      "requestType": "NID-MS",
+      "operator": "BANGLALINK",
+      "requestText": "NID-MS 867352054065220",
+      "replyText": "NID: 867352054065220, No data found [Robi] | \r\nNID 867352054065220 No data found - Banglalink | \r\nSorry No records found for NID: 867352054065220 [GP]",
+      "raw": {
+        "SL No": "1",
+        "Request": "NID-MS 867352054065220",
+        "Reply": "NID: 867352054065220, No data found [Robi] | \r\nNID 867352054065220 No data found - Banglalink | \r\nSorry No records found for NID: 867352054065220 [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\NID-MS.xlsx",
+      "sourceSheet": "NID-MS",
+      "sourceRow": 3,
+      "fileName": "NID-MS.xlsx",
+      "requestType": "NID-MS",
+      "operator": "GP",
+      "requestText": "NID-MS 01771792492",
+      "replyText": "Sorry No records found for NID: 01771792492 [GP]",
+      "raw": {
+        "SL No": "2",
+        "Request": "NID-MS 01771792492",
+        "Reply": "Sorry No records found for NID: 01771792492 [GP]"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\NID-MS.xlsx",
+      "sourceSheet": "NID-MS",
+      "sourceRow": 4,
+      "fileName": "NID-MS.xlsx",
+      "requestType": "NID-MS",
+      "operator": "BANGLALINK",
+      "requestText": "NID-MS 3323058754",
+      "replyText": "NID 3323058754 MSISDN: 8801947364653 - Banglalink",
+      "raw": {
+        "SL No": "3",
+        "Request": "NID-MS 3323058754",
+        "Reply": "NID 3323058754 MSISDN: 8801947364653 - Banglalink"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\NID-MS.xlsx",
+      "sourceSheet": "NID-MS",
+      "sourceRow": 5,
+      "fileName": "NID-MS.xlsx",
+      "requestType": "NID-MS",
+      "operator": "",
+      "requestText": "NID-MS 01962192026",
+      "replyText": "MSISDN: 8801962192026, NID: 75091841774, Date of Birth: 1983-01-01",
+      "raw": {
+        "SL No": "4",
+        "Request": "NID-MS 01962192026",
+        "Reply": "MSISDN: 8801962192026, NID: 75091841774, Date of Birth: 1983-01-01"
+      }
+    },
+    {
+      "sourceFile": "C:\\Users\\User\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\NID-MS.xlsx",
+      "sourceSheet": "NID-MS",
+      "sourceRow": 6,
+      "fileName": "NID-MS.xlsx",
+      "requestType": "NID-MS",
+      "operator": "",
+      "requestText": "NID-MS 01909535014",
+      "replyText": "1909535014 - National ID: 7198132167287144927, DOB: 22-AUG-1981",
+      "raw": {
+        "SL No": "5",
+        "Request": "NID-MS 01909535014",
+        "Reply": "1909535014 - National ID: 7198132167287144927, DOB: 22-AUG-1981"
+      }
     }
   ],
   "patterns": [
@@ -731,54 +2209,6 @@
         {
           "token": "imei",
           "count": 2
-        },
-        {
-          "token": "863351069471220",
-          "count": 2
-        },
-        {
-          "token": "354831731078820",
-          "count": 2
-        },
-        {
-          "token": "20260203",
-          "count": 1
-        },
-        {
-          "token": "20260407",
-          "count": 1
-        },
-        {
-          "token": "20260408",
-          "count": 1
-        },
-        {
-          "token": "20260608",
-          "count": 1
-        },
-        {
-          "token": "863351069471228",
-          "count": 1
-        },
-        {
-          "token": "8801721245400",
-          "count": 1
-        },
-        {
-          "token": "8801339815496",
-          "count": 1
-        },
-        {
-          "token": "357726270741110",
-          "count": 1
-        },
-        {
-          "token": "8801319472535",
-          "count": 1
-        },
-        {
-          "token": "8801307834008",
-          "count": 1
         }
       ]
     },
@@ -801,58 +2231,6 @@
         {
           "token": "robi",
           "count": 4
-        },
-        {
-          "token": "8801886775861",
-          "count": 2
-        },
-        {
-          "token": "863351069471236",
-          "count": 1
-        },
-        {
-          "token": "20260408200415",
-          "count": 1
-        },
-        {
-          "token": "863351069471228",
-          "count": 1
-        },
-        {
-          "token": "20260407122533",
-          "count": 1
-        },
-        {
-          "token": "353548751315426",
-          "count": 1
-        },
-        {
-          "token": "971562887098",
-          "count": 1
-        },
-        {
-          "token": "20260115174742",
-          "count": 1
-        },
-        {
-          "token": "8801806663389",
-          "count": 1
-        },
-        {
-          "token": "20250715104325",
-          "count": 1
-        },
-        {
-          "token": "354831731078820",
-          "count": 1
-        },
-        {
-          "token": "8801829476479",
-          "count": 1
-        },
-        {
-          "token": "20260330081501",
-          "count": 1
         }
       ]
     },
@@ -870,10 +2248,6 @@
         },
         {
           "token": "date",
-          "count": 2
-        },
-        {
-          "token": "8801408085998",
           "count": 2
         },
         {
@@ -883,14 +2257,6 @@
         {
           "token": "banglalink",
           "count": 2
-        },
-        {
-          "token": "863351069471228",
-          "count": 1
-        },
-        {
-          "token": "863351069471236",
-          "count": 1
         }
       ]
     },
@@ -899,124 +2265,124 @@
       "operator": "GP",
       "keywords": [
         {
-          "token": "2026",
-          "count": 6
+          "token": "imsi",
+          "count": 21
+        },
+        {
+          "token": "imei",
+          "count": 19
         },
         {
           "token": "barisal",
-          "count": 5
-        },
-        {
-          "token": "moc",
-          "count": 4
-        },
-        {
-          "token": "vill",
-          "count": 4
-        },
-        {
-          "token": "kadirabad",
-          "count": 4
-        },
-        {
-          "token": "union",
-          "count": 3
-        },
-        {
-          "token": "23126",
-          "count": 2
-        },
-        {
-          "token": "50574",
-          "count": 2
-        },
-        {
-          "token": "south",
-          "count": 2
-        },
-        {
-          "token": "barishal",
-          "count": 2
+          "count": 18
         },
         {
           "token": "smsmt",
-          "count": 2
+          "count": 11
         },
         {
-          "token": "garuria",
-          "count": 2
+          "token": "vill",
+          "count": 11
         },
         {
-          "token": "bakergonj",
-          "count": 2
+          "token": "mtc",
+          "count": 10
         },
         {
-          "token": "8801720542190",
-          "count": 2
+          "token": "union",
+          "count": 8
         },
         {
-          "token": "8801725927837",
-          "count": 2
+          "token": "moc",
+          "count": 6
         },
         {
-          "token": "lata",
-          "count": 2
+          "token": "barishal",
+          "count": 6
+        },
+        {
+          "token": "kadirabad",
+          "count": 6
+        },
+        {
+          "token": "bazar",
+          "count": 5
+        },
+        {
+          "token": "sadar",
+          "count": 5
+        },
+        {
+          "token": "road",
+          "count": 5
+        },
+        {
+          "token": "status",
+          "count": 5
         },
         {
           "token": "mahendiganj",
-          "count": 2
+          "count": 4
         },
         {
-          "token": "344685625789860",
-          "count": 2
+          "token": "found",
+          "count": 4
         },
         {
-          "token": "470010383180005",
-          "count": 2
+          "token": "msisdn",
+          "count": 4
         },
         {
-          "token": "20926",
-          "count": 1
+          "token": "lastactivedatetime",
+          "count": 4
         },
         {
-          "token": "23093",
-          "count": 1
+          "token": "lacid",
+          "count": 4
         },
         {
-          "token": "23123",
-          "count": 1
+          "token": "cellid",
+          "count": 4
         },
         {
-          "token": "27023",
-          "count": 1
+          "token": "latitude",
+          "count": 4
         },
         {
-          "token": "46301",
-          "count": 1
+          "token": "longitude",
+          "count": 4
         },
         {
-          "token": "46341",
-          "count": 1
+          "token": "address",
+          "count": 4
         },
         {
-          "token": "28995871",
-          "count": 1
+          "token": "idle",
+          "count": 4
         },
         {
-          "token": "29604875",
-          "count": 1
+          "token": "garuria",
+          "count": 3
         },
         {
-          "token": "8801713955330",
-          "count": 1
+          "token": "bakergonj",
+          "count": 3
         },
         {
-          "token": "8801777955779",
-          "count": 1
+          "token": "lata",
+          "count": 3
         },
         {
-          "token": "hridoy",
-          "count": 1
+          "token": "dist",
+          "count": 3
+        },
+        {
+          "token": "dhaka",
+          "count": 3
+        },
+        {
+          "token": "angaria",
+          "count": 3
         }
       ]
     },
@@ -1026,122 +2392,122 @@
       "keywords": [
         {
           "token": "msisdn",
-          "count": 7
+          "count": 17
         },
         {
           "token": "location",
-          "count": 4
-        },
-        {
-          "token": "party",
-          "count": 3
+          "count": 10
         },
         {
           "token": "last",
-          "count": 3
-        },
-        {
-          "token": "call",
-          "count": 3
+          "count": 9
         },
         {
           "token": "lac",
-          "count": 3
+          "count": 9
         },
         {
           "token": "cell",
-          "count": 3
+          "count": 9
         },
         {
           "token": "lat",
-          "count": 3
+          "count": 9
         },
         {
           "token": "long",
-          "count": 3
-        },
-        {
-          "token": "date",
-          "count": 3
+          "count": 9
         },
         {
           "token": "time",
-          "count": 3
-        },
-        {
-          "token": "imei",
-          "count": 3
-        },
-        {
-          "token": "imsi",
-          "count": 3
+          "count": 9
         },
         {
           "token": "robi",
-          "count": 3
+          "count": 9
+        },
+        {
+          "token": "party",
+          "count": 8
+        },
+        {
+          "token": "call",
+          "count": 8
+        },
+        {
+          "token": "date",
+          "count": 8
+        },
+        {
+          "token": "imei",
+          "count": 8
+        },
+        {
+          "token": "imsi",
+          "count": 8
         },
         {
           "token": "vill",
-          "count": 2
+          "count": 4
         },
         {
           "token": "barishal",
-          "count": 2
+          "count": 4
         },
         {
           "token": "tetla",
+          "count": 4
+        },
+        {
+          "token": "barisal",
+          "count": 4
+        },
+        {
+          "token": "ward",
+          "count": 3
+        },
+        {
+          "token": "sadar",
+          "count": 3
+        },
+        {
+          "token": "dhaka",
           "count": 2
         },
         {
-          "token": "4704",
-          "count": 1
+          "token": "radio",
+          "count": 2
         },
         {
-          "token": "7569",
-          "count": 1
+          "token": "airtel",
+          "count": 2
         },
         {
-          "token": "8006",
-          "count": 1
+          "token": "banaripara",
+          "count": 2
         },
         {
-          "token": "28294",
-          "count": 1
+          "token": "kotwali",
+          "count": 2
         },
         {
-          "token": "28964",
-          "count": 1
-        },
-        {
-          "token": "31392",
-          "count": 1
-        },
-        {
-          "token": "81357",
-          "count": 1
-        },
-        {
-          "token": "85056",
-          "count": 1
-        },
-        {
-          "token": "90124",
-          "count": 1
-        },
-        {
-          "token": "820043",
-          "count": 1
-        },
-        {
-          "token": "8801603827904",
-          "count": 1
-        },
-        {
-          "token": "88031323133",
-          "count": 1
+          "token": "narayanganj",
+          "count": 2
         },
         {
           "token": "biralia",
+          "count": 1
+        },
+        {
+          "token": "savar",
+          "count": 1
+        },
+        {
+          "token": "azimpur",
+          "count": 1
+        },
+        {
+          "token": "andarmanik",
           "count": 1
         }
       ]
@@ -1152,106 +2518,106 @@
       "keywords": [
         {
           "token": "cell",
-          "count": 5
-        },
-        {
-          "token": "lac",
-          "count": 4
+          "count": 10
         },
         {
           "token": "banglalink",
-          "count": 4
+          "count": 10
         },
         {
-          "token": "barisal",
-          "count": 4
+          "token": "lac",
+          "count": 9
         },
         {
           "token": "msisdn",
-          "count": 3
+          "count": 8
         },
         {
           "token": "datetime",
-          "count": 3
+          "count": 8
         },
         {
           "token": "address",
-          "count": 3
-        },
-        {
-          "token": "thana",
-          "count": 3
-        },
-        {
-          "token": "bparty",
-          "count": 3
+          "count": 8
         },
         {
           "token": "imei",
-          "count": 3
+          "count": 8
         },
         {
           "token": "imsi",
-          "count": 3
-        },
-        {
-          "token": "usagetype",
-          "count": 3
+          "count": 8
         },
         {
           "token": "networktype",
-          "count": 3
+          "count": 8
         },
         {
-          "token": "680",
-          "count": 2
+          "token": "bparty",
+          "count": 7
         },
         {
-          "token": "60282",
-          "count": 2
+          "token": "usagetype",
+          "count": 7
         },
         {
-          "token": "road",
-          "count": 2
+          "token": "barisal",
+          "count": 7
         },
         {
-          "token": "8801911152692",
-          "count": 2
-        },
-        {
-          "token": "20260609104730",
-          "count": 2
+          "token": "thana",
+          "count": 5
         },
         {
           "token": "vill",
-          "count": 2
-        },
-        {
-          "token": "kandihar",
-          "count": 2
-        },
-        {
-          "token": "banaripara",
-          "count": 2
-        },
-        {
-          "token": "district",
-          "count": 2
-        },
-        {
-          "token": "880624b617368",
-          "count": 2
-        },
-        {
-          "token": "354496311003140",
-          "count": 2
-        },
-        {
-          "token": "470037400048620",
-          "count": 2
+          "count": 5
         },
         {
           "token": "smsmt",
+          "count": 5
+        },
+        {
+          "token": "dist",
+          "count": 4
+        },
+        {
+          "token": "road",
+          "count": 3
+        },
+        {
+          "token": "kandihar",
+          "count": 3
+        },
+        {
+          "token": "banaripara",
+          "count": 3
+        },
+        {
+          "token": "district",
+          "count": 3
+        },
+        {
+          "token": "880624b617368",
+          "count": 3
+        },
+        {
+          "token": "house",
+          "count": 2
+        },
+        {
+          "token": "22k",
+          "count": 2
+        },
+        {
+          "token": "sonadanga",
+          "count": 2
+        },
+        {
+          "token": "khulna",
+          "count": 2
+        },
+        {
+          "token": "mtc",
           "count": 2
         },
         {
@@ -1263,11 +2629,11 @@
           "count": 2
         },
         {
-          "token": "105",
+          "token": "enodeb",
           "count": 1
         },
         {
-          "token": "461",
+          "token": "name",
           "count": 1
         }
       ]
@@ -1277,124 +2643,234 @@
       "operator": "BANGLALINK",
       "keywords": [
         {
-          "token": "cell",
-          "count": 6
+          "token": "banglalink",
+          "count": 14
         },
         {
-          "token": "banglalink",
-          "count": 6
+          "token": "cell",
+          "count": 13
         },
         {
           "token": "barisal",
-          "count": 5
+          "count": 11
         },
         {
           "token": "lac",
-          "count": 4
-        },
-        {
-          "token": "sadar",
-          "count": 3
-        },
-        {
-          "token": "678",
-          "count": 2
-        },
-        {
-          "token": "2026",
-          "count": 2
+          "count": 9
         },
         {
           "token": "msisdn",
-          "count": 2
+          "count": 6
         },
         {
           "token": "datetime",
-          "count": 2
+          "count": 5
         },
         {
           "token": "address",
-          "count": 2
+          "count": 5
+        },
+        {
+          "token": "sadar",
+          "count": 5
         },
         {
           "token": "bparty",
-          "count": 2
+          "count": 5
         },
         {
           "token": "imei",
-          "count": 2
+          "count": 5
         },
         {
           "token": "imsi",
-          "count": 2
+          "count": 5
         },
         {
           "token": "usagetype",
-          "count": 2
+          "count": 5
         },
         {
           "token": "smsmt",
-          "count": 2
+          "count": 5
         },
         {
           "token": "networktype",
-          "count": 2
+          "count": 5
         },
         {
           "token": "radio",
-          "count": 2
+          "count": 4
         },
         {
           "token": "location",
-          "count": 2
+          "count": 4
         },
         {
           "token": "found",
-          "count": 2
+          "count": 4
         },
         {
           "token": "enodeb",
-          "count": 2
+          "count": 4
         },
         {
           "token": "name",
-          "count": 2
-        },
-        {
-          "token": "bar",
-          "count": 2
+          "count": 4
         },
         {
           "token": "status",
-          "count": 2
+          "count": 4
         },
         {
           "token": "attached",
-          "count": 2
+          "count": 4
         },
         {
           "token": "lra",
-          "count": 2
+          "count": 4
         },
         {
           "token": "add",
-          "count": 2
-        },
-        {
-          "token": "barishal",
-          "count": 2
+          "count": 4
         },
         {
           "token": "lat",
-          "count": 2
+          "count": 4
         },
         {
           "token": "long",
+          "count": 4
+        },
+        {
+          "token": "east",
+          "count": 3
+        },
+        {
+          "token": "rupatoli",
+          "count": 3
+        },
+        {
+          "token": "ward",
+          "count": 3
+        },
+        {
+          "token": "kotowali",
+          "count": 3
+        },
+        {
+          "token": "bar",
+          "count": 3
+        }
+      ]
+    },
+    {
+      "requestType": "LCL",
+      "operator": "UNKNOWN",
+      "keywords": [
+        {
+          "token": "reply",
+          "count": 11
+        },
+        {
+          "token": "batch",
+          "count": 7
+        },
+        {
+          "token": "visible",
+          "count": 7
+        },
+        {
+          "token": "not",
+          "count": 6
+        },
+        {
+          "token": "request",
+          "count": 6
+        },
+        {
+          "token": "split",
+          "count": 6
+        },
+        {
+          "token": "from",
+          "count": 6
+        },
+        {
+          "token": "number",
+          "count": 6
+        },
+        {
+          "token": "for",
+          "count": 5
+        },
+        {
+          "token": "above",
+          "count": 4
+        },
+        {
+          "token": "lcl",
+          "count": 4
+        },
+        {
+          "token": "this",
+          "count": 4
+        },
+        {
+          "token": "separately",
+          "count": 3
+        },
+        {
+          "token": "see",
+          "count": 3
+        },
+        {
+          "token": "multi",
           "count": 2
         },
         {
-          "token": "bazar",
+          "token": "shown",
           "count": 2
+        },
+        {
+          "token": "party",
+          "count": 1
+        },
+        {
+          "token": "included",
+          "count": 1
+        },
+        {
+          "token": "loaded",
+          "count": 1
+        },
+        {
+          "token": "messages",
+          "count": 1
+        },
+        {
+          "token": "part",
+          "count": 1
+        },
+        {
+          "token": "mahendigang",
+          "count": 1
+        },
+        {
+          "token": "system",
+          "count": 1
+        },
+        {
+          "token": "returned",
+          "count": 1
+        },
+        {
+          "token": "these",
+          "count": 1
+        },
+        {
+          "token": "numbers",
+          "count": 1
         }
       ]
     },
@@ -1404,87 +2880,99 @@
       "keywords": [
         {
           "token": "status",
-          "count": 10
+          "count": 21
         },
         {
           "token": "volte",
-          "count": 8
+          "count": 15
         },
         {
           "token": "rajapur",
-          "count": 7
-        },
-        {
-          "token": "2026",
-          "count": 6
+          "count": 13
         },
         {
           "token": "msisdn",
-          "count": 5
+          "count": 12
         },
         {
           "token": "lastactivedatetime",
-          "count": 5
+          "count": 12
         },
         {
           "token": "lacid",
-          "count": 5
+          "count": 12
         },
         {
           "token": "cellid",
-          "count": 5
+          "count": 12
         },
         {
           "token": "latitude",
-          "count": 5
+          "count": 12
         },
         {
           "token": "longitude",
-          "count": 5
+          "count": 12
         },
         {
           "token": "address",
-          "count": 5
-        },
-        {
-          "token": "bazar",
-          "count": 5
+          "count": 12
         },
         {
           "token": "idle",
-          "count": 4
+          "count": 11
+        },
+        {
+          "token": "bazar",
+          "count": 9
+        },
+        {
+          "token": "barisal",
+          "count": 7
         },
         {
           "token": "not",
-          "count": 3
+          "count": 6
         },
         {
           "token": "network",
-          "count": 3
+          "count": 6
         },
         {
           "token": "jhalokathi",
-          "count": 3
+          "count": 5
         },
         {
-          "token": "46051",
-          "count": 2
+          "token": "imei",
+          "count": 5
         },
         {
-          "token": "139278",
-          "count": 2
+          "token": "imsi",
+          "count": 5
         },
         {
-          "token": "570722",
-          "count": 2
+          "token": "smsmt",
+          "count": 4
         },
         {
-          "token": "28701471",
-          "count": 2
+          "token": "dhaka",
+          "count": 4
         },
         {
           "token": "vill",
-          "count": 2
+          "count": 3
+        },
+        {
+          "token": "sadar",
+          "count": 3
+        },
+        {
+          "token": "road",
+          "count": 3
+        },
+        {
+          "token": "info",
+          "count": 3
         },
         {
           "token": "maligram",
@@ -1499,28 +2987,16 @@
           "count": 2
         },
         {
-          "token": "8801785251167",
+          "token": "holding",
           "count": 2
         },
         {
-          "token": "barisal",
+          "token": "fakirapul",
           "count": 2
         },
         {
-          "token": "4750",
-          "count": 1
-        },
-        {
-          "token": "23022",
-          "count": 1
-        },
-        {
-          "token": "23046",
-          "count": 1
-        },
-        {
-          "token": "48271",
-          "count": 1
+          "token": "dapdapia",
+          "count": 2
         }
       ]
     },
@@ -1529,158 +3005,180 @@
       "operator": "ROBI",
       "keywords": [
         {
-          "token": "msisdn",
-          "count": 3
-        },
-        {
-          "token": "radio",
-          "count": 3
-        },
-        {
           "token": "location",
-          "count": 3
+          "count": 16
+        },
+        {
+          "token": "msisdn",
+          "count": 15
         },
         {
           "token": "robi",
-          "count": 3
+          "count": 15
         },
         {
-          "token": "2026",
-          "count": 2
-        },
-        {
-          "token": "lac",
-          "count": 2
-        },
-        {
-          "token": "cell",
-          "count": 2
-        },
-        {
-          "token": "lat",
-          "count": 2
-        },
-        {
-          "token": "long",
-          "count": 2
-        },
-        {
-          "token": "status",
-          "count": 2
-        },
-        {
-          "token": "attached",
-          "count": 2
-        },
-        {
-          "token": "last",
-          "count": 2
-        },
-        {
-          "token": "action",
-          "count": 2
-        },
-        {
-          "token": "time",
-          "count": 2
+          "token": "radio",
+          "count": 14
         },
         {
           "token": "barisal",
-          "count": 2
+          "count": 13
         },
         {
-          "token": "8004",
-          "count": 1
+          "token": "last",
+          "count": 12
         },
         {
-          "token": "28037",
-          "count": 1
+          "token": "time",
+          "count": 12
         },
         {
-          "token": "30252928",
-          "count": 1
+          "token": "attached",
+          "count": 11
         },
         {
-          "token": "89985817",
-          "count": 1
+          "token": "lac",
+          "count": 8
         },
         {
-          "token": "8801612196151",
-          "count": 1
+          "token": "cell",
+          "count": 8
         },
         {
-          "token": "8801642348522",
-          "count": 1
+          "token": "lat",
+          "count": 8
         },
         {
-          "token": "sarikal",
-          "count": 1
+          "token": "long",
+          "count": 8
         },
         {
-          "token": "gaurnadi",
-          "count": 1
+          "token": "status",
+          "count": 8
         },
         {
-          "token": "8801631371920",
-          "count": 1
+          "token": "action",
+          "count": 8
         },
         {
           "token": "number",
-          "count": 1
+          "count": 6
         },
         {
-          "token": "not",
-          "count": 1
+          "token": "date",
+          "count": 4
         },
         {
-          "token": "use",
-          "count": 1
-        }
-      ]
-    },
-    {
-      "requestType": "MS-NID",
-      "operator": "GP",
-      "keywords": [
-        {
-          "token": "msisdn",
+          "token": "sarikal",
           "count": 3
         },
         {
-          "token": "1970",
+          "token": "gaurnadi",
+          "count": 3
+        },
+        {
+          "token": "not",
+          "count": 3
+        },
+        {
+          "token": "use",
+          "count": 3
+        },
+        {
+          "token": "ward",
+          "count": 3
+        },
+        {
+          "token": "sadar",
+          "count": 3
+        },
+        {
+          "token": "kotwali",
+          "count": 3
+        },
+        {
+          "token": "out",
+          "count": 3
+        },
+        {
+          "token": "network",
+          "count": 3
+        },
+        {
+          "token": "dhaka",
+          "count": 2
+        },
+        {
+          "token": "party",
           "count": 1
         },
         {
-          "token": "1995",
+          "token": "call",
           "count": 1
         },
         {
-          "token": "2002",
+          "token": "imei",
           "count": 1
         },
         {
-          "token": "1958454181",
+          "token": "imsi",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "requestType": "LRL",
+      "operator": "UNKNOWN",
+      "keywords": [
+        {
+          "token": "reply",
+          "count": 2
+        },
+        {
+          "token": "included",
           "count": 1
         },
         {
-          "token": "8801319472535",
+          "token": "with",
           "count": 1
         },
         {
-          "token": "0619452170146",
+          "token": "lrl",
           "count": 1
         },
         {
-          "token": "8801307647194",
+          "token": "batch",
           "count": 1
         },
         {
-          "token": "8801772066283",
+          "token": "new",
           "count": 1
         },
         {
-          "token": "8655967217",
+          "token": "request",
           "count": 1
+        },
+        {
+          "token": "not",
+          "count": 1
+        },
+        {
+          "token": "yet",
+          "count": 1
+        },
+        {
+          "token": "visible",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "requestType": "MS-NID",
+      "operator": "GP",
+      "keywords": [
+        {
+          "token": "msisdn",
+          "count": 9
         }
       ]
     },
@@ -1688,6 +3186,10 @@
       "requestType": "MS-NID",
       "operator": "ROBI",
       "keywords": [
+        {
+          "token": "msisdn",
+          "count": 2
+        },
         {
           "token": "morrelganj",
           "count": 2
@@ -1699,34 +3201,6 @@
         {
           "token": "volte",
           "count": 2
-        },
-        {
-          "token": "2026",
-          "count": 1
-        },
-        {
-          "token": "45909",
-          "count": 1
-        },
-        {
-          "token": "46181",
-          "count": 1
-        },
-        {
-          "token": "83815",
-          "count": 1
-        },
-        {
-          "token": "29713183",
-          "count": 1
-        },
-        {
-          "token": "msisdn",
-          "count": 1
-        },
-        {
-          "token": "8801327655002",
-          "count": 1
         },
         {
           "token": "lastactivedatetime",
@@ -1770,6 +3244,18 @@
         },
         {
           "token": "network",
+          "count": 1
+        },
+        {
+          "token": "nid",
+          "count": 1
+        },
+        {
+          "token": "dob",
+          "count": 1
+        },
+        {
+          "token": "robi",
           "count": 1
         }
       ]
@@ -1791,31 +3277,7 @@
           "count": 2
         },
         {
-          "token": "2026",
-          "count": 1
-        },
-        {
-          "token": "45909",
-          "count": 1
-        },
-        {
-          "token": "46181",
-          "count": 1
-        },
-        {
-          "token": "83815",
-          "count": 1
-        },
-        {
-          "token": "29713183",
-          "count": 1
-        },
-        {
           "token": "msisdn",
-          "count": 1
-        },
-        {
-          "token": "8801327655002",
           "count": 1
         },
         {
@@ -1860,6 +3322,276 @@
         },
         {
           "token": "network",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "requestType": "MS-NID",
+      "operator": "UNKNOWN",
+      "keywords": [
+        {
+          "token": "from",
+          "count": 6
+        },
+        {
+          "token": "split",
+          "count": 5
+        },
+        {
+          "token": "number",
+          "count": 5
+        },
+        {
+          "token": "batch",
+          "count": 5
+        },
+        {
+          "token": "reply",
+          "count": 4
+        },
+        {
+          "token": "visible",
+          "count": 4
+        },
+        {
+          "token": "see",
+          "count": 4
+        },
+        {
+          "token": "above",
+          "count": 4
+        },
+        {
+          "token": "not",
+          "count": 2
+        },
+        {
+          "token": "searched",
+          "count": 2
+        },
+        {
+          "token": "inspector",
+          "count": 2
+        },
+        {
+          "token": "possibly",
+          "count": 1
+        },
+        {
+          "token": "loaded",
+          "count": 1
+        },
+        {
+          "token": "messages",
+          "count": 1
+        },
+        {
+          "token": "again",
+          "count": 1
+        },
+        {
+          "token": "banaripara",
+          "count": 1
+        },
+        {
+          "token": "nid",
+          "count": 1
+        },
+        {
+          "token": "msisdn",
+          "count": 1
+        },
+        {
+          "token": "sorry",
+          "count": 1
+        },
+        {
+          "token": "records",
+          "count": 1
+        },
+        {
+          "token": "found",
+          "count": 1
+        },
+        {
+          "token": "for",
+          "count": 1
+        },
+        {
+          "token": "this",
+          "count": 1
+        },
+        {
+          "token": "request",
+          "count": 1
+        },
+        {
+          "token": "gournadi",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "requestType": "NID-MS",
+      "operator": "ROBI",
+      "keywords": [
+        {
+          "token": "morrelganj",
+          "count": 2
+        },
+        {
+          "token": "status",
+          "count": 2
+        },
+        {
+          "token": "volte",
+          "count": 2
+        },
+        {
+          "token": "msisdn",
+          "count": 1
+        },
+        {
+          "token": "lastactivedatetime",
+          "count": 1
+        },
+        {
+          "token": "lacid",
+          "count": 1
+        },
+        {
+          "token": "cellid",
+          "count": 1
+        },
+        {
+          "token": "latitude",
+          "count": 1
+        },
+        {
+          "token": "longitude",
+          "count": 1
+        },
+        {
+          "token": "address",
+          "count": 1
+        },
+        {
+          "token": "saralia",
+          "count": 1
+        },
+        {
+          "token": "bagerhat",
+          "count": 1
+        },
+        {
+          "token": "idle",
+          "count": 1
+        },
+        {
+          "token": "not",
+          "count": 1
+        },
+        {
+          "token": "network",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "requestType": "NID-MS",
+      "operator": "BANGLALINK",
+      "keywords": [
+        {
+          "token": "nid",
+          "count": 4
+        },
+        {
+          "token": "found",
+          "count": 3
+        },
+        {
+          "token": "msisdn",
+          "count": 2
+        },
+        {
+          "token": "morrelganj",
+          "count": 2
+        },
+        {
+          "token": "status",
+          "count": 2
+        },
+        {
+          "token": "volte",
+          "count": 2
+        },
+        {
+          "token": "data",
+          "count": 2
+        },
+        {
+          "token": "banglalink",
+          "count": 2
+        },
+        {
+          "token": "lastactivedatetime",
+          "count": 1
+        },
+        {
+          "token": "lacid",
+          "count": 1
+        },
+        {
+          "token": "cellid",
+          "count": 1
+        },
+        {
+          "token": "latitude",
+          "count": 1
+        },
+        {
+          "token": "longitude",
+          "count": 1
+        },
+        {
+          "token": "address",
+          "count": 1
+        },
+        {
+          "token": "saralia",
+          "count": 1
+        },
+        {
+          "token": "bagerhat",
+          "count": 1
+        },
+        {
+          "token": "idle",
+          "count": 1
+        },
+        {
+          "token": "not",
+          "count": 1
+        },
+        {
+          "token": "network",
+          "count": 1
+        },
+        {
+          "token": "robi",
+          "count": 1
+        },
+        {
+          "token": "sorry",
+          "count": 1
+        },
+        {
+          "token": "records",
+          "count": 1
+        },
+        {
+          "token": "for",
           "count": 1
         }
       ]
@@ -1869,267 +3601,57 @@
       "operator": "GP",
       "keywords": [
         {
-          "token": "morrelganj",
-          "count": 2
-        },
-        {
-          "token": "status",
-          "count": 2
-        },
-        {
-          "token": "volte",
-          "count": 2
-        },
-        {
-          "token": "2026",
+          "token": "sorry",
           "count": 1
         },
         {
-          "token": "45909",
+          "token": "records",
           "count": 1
         },
         {
-          "token": "46181",
+          "token": "found",
           "count": 1
         },
         {
-          "token": "83815",
+          "token": "for",
           "count": 1
         },
         {
-          "token": "29713183",
-          "count": 1
-        },
-        {
-          "token": "msisdn",
-          "count": 1
-        },
-        {
-          "token": "8801327655002",
-          "count": 1
-        },
-        {
-          "token": "lastactivedatetime",
-          "count": 1
-        },
-        {
-          "token": "lacid",
-          "count": 1
-        },
-        {
-          "token": "cellid",
-          "count": 1
-        },
-        {
-          "token": "latitude",
-          "count": 1
-        },
-        {
-          "token": "longitude",
-          "count": 1
-        },
-        {
-          "token": "address",
-          "count": 1
-        },
-        {
-          "token": "saralia",
-          "count": 1
-        },
-        {
-          "token": "bagerhat",
-          "count": 1
-        },
-        {
-          "token": "idle",
-          "count": 1
-        },
-        {
-          "token": "not",
-          "count": 1
-        },
-        {
-          "token": "network",
+          "token": "nid",
           "count": 1
         }
       ]
     },
     {
       "requestType": "NID-MS",
-      "operator": "ROBI",
+      "operator": "UNKNOWN",
       "keywords": [
-        {
-          "token": "morrelganj",
-          "count": 2
-        },
-        {
-          "token": "status",
-          "count": 2
-        },
-        {
-          "token": "volte",
-          "count": 2
-        },
-        {
-          "token": "2026",
-          "count": 1
-        },
-        {
-          "token": "45909",
-          "count": 1
-        },
-        {
-          "token": "46181",
-          "count": 1
-        },
-        {
-          "token": "83815",
-          "count": 1
-        },
-        {
-          "token": "29713183",
-          "count": 1
-        },
         {
           "token": "msisdn",
           "count": 1
         },
         {
-          "token": "8801327655002",
+          "token": "nid",
           "count": 1
         },
         {
-          "token": "lastactivedatetime",
+          "token": "date",
           "count": 1
         },
         {
-          "token": "lacid",
+          "token": "birth",
           "count": 1
         },
         {
-          "token": "cellid",
+          "token": "national",
           "count": 1
         },
         {
-          "token": "latitude",
+          "token": "dob",
           "count": 1
         },
         {
-          "token": "longitude",
-          "count": 1
-        },
-        {
-          "token": "address",
-          "count": 1
-        },
-        {
-          "token": "saralia",
-          "count": 1
-        },
-        {
-          "token": "bagerhat",
-          "count": 1
-        },
-        {
-          "token": "idle",
-          "count": 1
-        },
-        {
-          "token": "not",
-          "count": 1
-        },
-        {
-          "token": "network",
-          "count": 1
-        }
-      ]
-    },
-    {
-      "requestType": "NID-MS",
-      "operator": "BANGLALINK",
-      "keywords": [
-        {
-          "token": "morrelganj",
-          "count": 2
-        },
-        {
-          "token": "status",
-          "count": 2
-        },
-        {
-          "token": "volte",
-          "count": 2
-        },
-        {
-          "token": "2026",
-          "count": 1
-        },
-        {
-          "token": "45909",
-          "count": 1
-        },
-        {
-          "token": "46181",
-          "count": 1
-        },
-        {
-          "token": "83815",
-          "count": 1
-        },
-        {
-          "token": "29713183",
-          "count": 1
-        },
-        {
-          "token": "msisdn",
-          "count": 1
-        },
-        {
-          "token": "8801327655002",
-          "count": 1
-        },
-        {
-          "token": "lastactivedatetime",
-          "count": 1
-        },
-        {
-          "token": "lacid",
-          "count": 1
-        },
-        {
-          "token": "cellid",
-          "count": 1
-        },
-        {
-          "token": "latitude",
-          "count": 1
-        },
-        {
-          "token": "longitude",
-          "count": 1
-        },
-        {
-          "token": "address",
-          "count": 1
-        },
-        {
-          "token": "saralia",
-          "count": 1
-        },
-        {
-          "token": "bagerhat",
-          "count": 1
-        },
-        {
-          "token": "idle",
-          "count": 1
-        },
-        {
-          "token": "not",
-          "count": 1
-        },
-        {
-          "token": "network",
+          "token": "aug",
           "count": 1
         }
       ]

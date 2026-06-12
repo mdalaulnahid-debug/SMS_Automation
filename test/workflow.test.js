@@ -48,7 +48,7 @@ test('submits request, sends SMS, and waits for operator reply', async () => {
   assert.match(result.request.silentReference, /^SR/);
 });
 
-test('keeps second same-operator request queued while first is pending', async () => {
+test('dispatches multiple same-operator requests without blocking', async () => {
   const { store, service } = createHarness();
   await service.submitWhatsAppRequest({
     whatsappGroupId: 'operations',
@@ -63,9 +63,9 @@ test('keeps second same-operator request queued while first is pending', async (
     text: 'LRL 01798765432'
   });
 
-  assert.equal(store.smsOutbox.length, 1);
+  assert.equal(store.smsOutbox.length, 2);
   const second = store.listRequests().find((request) => request.requesterName === 'Officer Karim');
-  assert.equal(second.status, STATUSES.QUEUED);
+  assert.equal(second.status, STATUSES.WAITING_OPERATOR_REPLY);
 });
 
 test('matches operator reply and drafts tagged WhatsApp response', async () => {
@@ -87,7 +87,7 @@ test('matches operator reply and drafts tagged WhatsApp response', async () => {
   assert.equal(inbound.request.requestId, submitted.request.requestId);
   assert.equal(inbound.request.status, STATUSES.NEEDS_MANUAL_REVIEW);
   assert.match(inbound.whatsappReply.replyText, /@Officer Rahim/);
-  assert.match(inbound.whatsappReply.replyText, /REQ-/);
+  assert.match(inbound.whatsappReply.replyText, /LRL: 01712345678/);
 });
 
 test('manual approval completes request after reply review', async () => {
@@ -108,9 +108,9 @@ test('manual approval completes request after reply review', async () => {
   assert.equal(completed.status, STATUSES.COMPLETED);
 });
 
-test('approval dispatches next queued request for same operator', async () => {
+test('payload matching disambiguates concurrent same-operator requests', async () => {
   const { store, service } = createHarness();
-  const first = await service.submitWhatsAppRequest({
+  await service.submitWhatsAppRequest({
     whatsappGroupId: 'operations',
     requesterName: 'Officer Rahim',
     requesterWhatsappId: '8801700000000',
@@ -122,16 +122,18 @@ test('approval dispatches next queued request for same operator', async () => {
     requesterWhatsappId: '8801800000000',
     text: 'LRL 01798765432'
   });
-  service.receiveSmsWebhook({
-    gatewayId: 'GP_PHONE_01',
-    from: '12345',
-    body: 'LRL cell location'
-  });
-
-  await service.approveWhatsAppReply(first.request.requestId);
 
   assert.equal(store.smsOutbox.length, 2);
-  assert.equal(store.smsOutbox[1].messageBody, 'LRL 01798765432');
+
+  // Reply contains the second request's phone number — should match Officer Karim's request
+  const inbound = service.receiveSmsWebhook({
+    gatewayId: 'GP_PHONE_01',
+    from: '12345',
+    body: 'LRL location data for 01798765432: LAC 1234 Cell 5678'
+  });
+
+  assert.equal(inbound.ok, true);
+  assert.equal(inbound.request.requesterName, 'Officer Karim');
 });
 
 test('MS-NID request is sent to all operator gateways', async () => {
@@ -477,6 +479,234 @@ test('manual-channel approval still completes in one step', async () => {
 
   const completed = await service.approveWhatsAppReply(submitted.request.requestId);
   assert.equal(completed.status, STATUSES.COMPLETED);
+});
+
+test('disambiguates multiple pending requests by reply content analysis', async () => {
+  // Force two requests onto the same GP gateway simultaneously by manually creating them
+  // (normally the queue blocks the second, but we need to test the matching logic).
+  const { store, service } = createHarness();
+
+  // Create two requests on the GP gateway, both WAITING_OPERATOR_REPLY.
+  const req1Input = {
+    whatsappGroupId: 'operations',
+    requesterWhatsappId: '8801700000000',
+    requesterName: 'Officer Rahim',
+    operator: 'GP',
+    targetOperators: ['GP'],
+    requestType: 'LRL',
+    payload: '01712345678',
+    rawRequestText: 'LRL 01712345678'
+  };
+  const req2Input = {
+    whatsappGroupId: 'operations',
+    requesterWhatsappId: '8801800000000',
+    requesterName: 'Officer Karim',
+    operator: 'GP',
+    targetOperators: ['GP'],
+    requestType: 'MS-NID',
+    payload: '01712345678',
+    rawRequestText: 'MS-NID 01712345678'
+  };
+
+  const req1 = store.createRequest(req1Input);
+  store.updateRequestStatus(req1.requestId, STATUSES.VALIDATED);
+  store.updateRequestStatus(req1.requestId, STATUSES.QUEUED);
+  store.updateRequestStatus(req1.requestId, STATUSES.SMS_SENT);
+  store.updateRequestStatus(req1.requestId, STATUSES.WAITING_OPERATOR_REPLY);
+  store.addSmsOutbox({
+    requestId: req1.requestId, gatewayId: 'GP_PHONE_01', operator: 'GP',
+    silentReference: req1.silentReference, destinationNumber: '12345',
+    messageBody: 'LRL 01712345678', sentStatus: 'SENT'
+  });
+  store.setDispatchSent(req1.requestId, 'GP', { ok: true });
+
+  const req2 = store.createRequest(req2Input);
+  store.updateRequestStatus(req2.requestId, STATUSES.VALIDATED);
+  store.updateRequestStatus(req2.requestId, STATUSES.QUEUED);
+  store.updateRequestStatus(req2.requestId, STATUSES.SMS_SENT);
+  store.updateRequestStatus(req2.requestId, STATUSES.WAITING_OPERATOR_REPLY);
+  store.addSmsOutbox({
+    requestId: req2.requestId, gatewayId: 'GP_PHONE_01', operator: 'GP',
+    silentReference: req2.silentReference, destinationNumber: '12345',
+    messageBody: 'MS-NID 01712345678', sentStatus: 'SENT'
+  });
+  store.setDispatchSent(req2.requestId, 'GP', { ok: true });
+
+  // Reply with NID content — should match the MS-NID request, not LRL.
+  const result = service.receiveSmsWebhook({
+    gatewayId: 'GP_PHONE_01',
+    from: '12345',
+    body: 'NID: 1234567890, Name: Test Person, Father: Test Father'
+  });
+
+  assert.equal(result.ok, true);
+  assert.equal(result.request.requestId, req2.requestId);
+});
+
+test('ambiguous requests with equal scores fall to manual review', async () => {
+  const { store, service } = createHarness();
+
+  // Two LRL requests with the same type — reply analysis can't differentiate.
+  const req1 = store.createRequest({
+    whatsappGroupId: 'ops', requesterWhatsappId: '111', requesterName: 'A',
+    operator: 'GP', targetOperators: ['GP'], requestType: 'LRL',
+    payload: '01712345678', rawRequestText: 'LRL 01712345678'
+  });
+  store.updateRequestStatus(req1.requestId, STATUSES.VALIDATED);
+  store.updateRequestStatus(req1.requestId, STATUSES.QUEUED);
+  store.updateRequestStatus(req1.requestId, STATUSES.SMS_SENT);
+  store.updateRequestStatus(req1.requestId, STATUSES.WAITING_OPERATOR_REPLY);
+  store.addSmsOutbox({
+    requestId: req1.requestId, gatewayId: 'GP_PHONE_01', operator: 'GP',
+    silentReference: req1.silentReference, destinationNumber: '12345',
+    messageBody: 'LRL 01712345678', sentStatus: 'SENT'
+  });
+  store.setDispatchSent(req1.requestId, 'GP', { ok: true });
+
+  const req2 = store.createRequest({
+    whatsappGroupId: 'ops', requesterWhatsappId: '222', requesterName: 'B',
+    operator: 'GP', targetOperators: ['GP'], requestType: 'LRL',
+    payload: '01798765432', rawRequestText: 'LRL 01798765432'
+  });
+  store.updateRequestStatus(req2.requestId, STATUSES.VALIDATED);
+  store.updateRequestStatus(req2.requestId, STATUSES.QUEUED);
+  store.updateRequestStatus(req2.requestId, STATUSES.SMS_SENT);
+  store.updateRequestStatus(req2.requestId, STATUSES.WAITING_OPERATOR_REPLY);
+  store.addSmsOutbox({
+    requestId: req2.requestId, gatewayId: 'GP_PHONE_01', operator: 'GP',
+    silentReference: req2.silentReference, destinationNumber: '12345',
+    messageBody: 'LRL 01798765432', sentStatus: 'SENT'
+  });
+  store.setDispatchSent(req2.requestId, 'GP', { ok: true });
+
+  // Reply matches both equally — should go to manual review (unmatched).
+  const result = service.receiveSmsWebhook({
+    gatewayId: 'GP_PHONE_01',
+    from: '12345',
+    body: 'LRL cell location lat 23.7 lon 90.4'
+  });
+
+  assert.equal(result.ok, false);
+  assert.equal(result.needsManualReview, true);
+});
+
+test('reject moves request to FAILED and frees the operator queue', async () => {
+  const { store, service } = createHarness();
+  const submitted = await service.submitWhatsAppRequest({
+    whatsappGroupId: 'operations',
+    requesterName: 'Officer Rahim',
+    requesterWhatsappId: '8801700000000',
+    text: 'LRL 01712345678'
+  });
+  service.receiveSmsWebhook({ gatewayId: 'GP_PHONE_01', from: '12345', body: 'LRL cell location' });
+
+  // Queue a second request while the first is in review.
+  await service.submitWhatsAppRequest({
+    whatsappGroupId: 'operations',
+    requesterName: 'Officer Karim',
+    requesterWhatsappId: '8801800000000',
+    text: 'LRL 01798765432'
+  });
+
+  const rejected = await service.rejectRequest(submitted.request.requestId, { reason: 'Bad data' });
+  assert.equal(rejected.status, STATUSES.FAILED);
+  assert.equal(rejected.failedReason, 'Bad data');
+  // The second queued request should now be dispatched.
+  assert.equal(store.smsOutbox.length, 2);
+});
+
+test('retry re-queues a failed request and dispatches it', async () => {
+  const { store, service } = createHarness();
+  const submitted = await service.submitWhatsAppRequest({
+    whatsappGroupId: 'operations',
+    requesterName: 'Officer Rahim',
+    requesterWhatsappId: '8801700000000',
+    text: 'LRL 01712345678'
+  });
+  service.receiveSmsWebhook({ gatewayId: 'GP_PHONE_01', from: '12345', body: 'LRL cell location' });
+  await service.rejectRequest(submitted.request.requestId, { reason: 'Wrong reply' });
+  assert.equal(store.getRequest(submitted.request.requestId).status, STATUSES.FAILED);
+
+  const retried = await service.retryRequest(submitted.request.requestId);
+  assert.equal(retried.status, STATUSES.WAITING_OPERATOR_REPLY);
+  // A new outbox entry was created for the retry.
+  const gpOutbox = store.smsOutbox.filter((r) => r.gatewayId === 'GP_PHONE_01');
+  assert.equal(gpOutbox.length, 2);
+});
+
+test('retry re-queues a timed-out request', async () => {
+  const { store, service } = createHarness();
+  const submitted = await service.submitWhatsAppRequest({
+    whatsappGroupId: 'operations',
+    requesterName: 'Officer Rahim',
+    requesterWhatsappId: '8801700000000',
+    text: 'LRL 01712345678'
+  });
+  store.smsOutbox[0].sentAt = new Date(Date.now() - 6 * 60 * 1000).toISOString();
+  await service.timeoutWaitingRequests();
+  assert.equal(store.getRequest(submitted.request.requestId).status, STATUSES.TIMEOUT);
+
+  const retried = await service.retryRequest(submitted.request.requestId);
+  assert.equal(retried.status, STATUSES.WAITING_OPERATOR_REPLY);
+});
+
+test('manual match links an unmatched inbox to a waiting request', async () => {
+  const { store, service } = createHarness();
+  const submitted = await service.submitWhatsAppRequest({
+    whatsappGroupId: 'operations',
+    requesterName: 'Officer Rahim',
+    requesterWhatsappId: '8801700000000',
+    text: 'LRL 01712345678'
+  });
+
+  // Simulate an inbound SMS that didn't auto-match (unmatched).
+  const inbox = store.addSmsInbox({
+    gatewayId: 'GP_PHONE_01',
+    senderNumber: '12345',
+    messageBody: 'LRL cell lat 23.7 lon 90.4',
+    matchedRequestId: null,
+    receivedAt: new Date().toISOString()
+  });
+
+  const result = service.manualMatch(inbox.id, submitted.request.requestId);
+  assert.equal(result.ok, true);
+  assert.equal(result.request.status, STATUSES.NEEDS_MANUAL_REVIEW);
+  assert.ok(result.whatsappReply);
+});
+
+test('notifyTimeouts sends a Telegram message for timed-out requests', async () => {
+  const { notifyTimeouts, buildMention } = require('../telegram-bridge/bridge');
+  const sent = [];
+  const telegram = {
+    sendThreadedReply: async (opts) => { sent.push(opts); return { message_id: 999 }; }
+  };
+  const backend = {
+    listRecentRequests: async () => [
+      {
+        requestId: 'REQ-001', channel: 'telegram', status: 'TIMEOUT',
+        chatId: '-100', sourceMessageId: 42, requesterName: 'Rahim',
+        requesterWhatsappId: '111', requestType: 'LRL', payload: '017xxx',
+        failedReason: 'Operator reply timed out.'
+      },
+      {
+        requestId: 'REQ-002', channel: 'manual', status: 'TIMEOUT',
+        chatId: null, sourceMessageId: null, requesterName: 'Karim',
+        requesterWhatsappId: '222', requestType: 'LRL', payload: '018xxx'
+      }
+    ]
+  };
+  const notifiedSet = new Set();
+  const posted = await notifyTimeouts({ backend, telegram, notifiedSet });
+  // Only the telegram-channel request should be notified.
+  assert.equal(posted.length, 1);
+  assert.equal(posted[0], 'REQ-001');
+  assert.equal(sent.length, 1);
+  assert.match(sent[0].text, /timed out/);
+  assert.equal(sent[0].replyToMessageId, 42);
+
+  // Second call should not re-notify.
+  const posted2 = await notifyTimeouts({ backend, telegram, notifiedSet });
+  assert.equal(posted2.length, 0);
 });
 
 test('registers phone gateway URL dynamically at runtime', () => {

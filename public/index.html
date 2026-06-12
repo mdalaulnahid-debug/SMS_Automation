@@ -87,6 +87,68 @@
         font-size: 12px;
         font-weight: 700;
       }
+
+      .status-ok {
+        background: #dcfce7;
+        color: #166534;
+      }
+
+      .status-err {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+
+      .status-warn {
+        background: #fef3c7;
+        color: #92400e;
+      }
+
+      .error-text {
+        color: #dc2626;
+        font-size: 13px;
+      }
+
+      .actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 8px;
+      }
+
+      .actions button {
+        width: auto;
+        padding: 6px 14px;
+        font-size: 13px;
+      }
+
+      .btn-danger {
+        background: #dc2626;
+        border-color: #dc2626;
+      }
+
+      .btn-retry {
+        background: #f59e0b;
+        border-color: #f59e0b;
+      }
+
+      .btn-match {
+        width: auto !important;
+        padding: 6px 14px !important;
+        font-size: 13px;
+      }
+
+      .match-form {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin-top: 8px;
+      }
+
+      .match-form select {
+        flex: 1;
+        padding: 6px;
+        border-radius: 6px;
+        border: 1px solid #d1d5db;
+      }
     </style>
   </head>
   <body>
@@ -140,6 +202,12 @@
       <section>
         <h2>WhatsApp Reply Drafts</h2>
         <div id="replies"></div>
+      </section>
+
+      <section>
+        <h2>Unmatched Inbound SMS</h2>
+        <p>SMS received from trusted senders that did not match any pending request. Use manual match to link one to a waiting request.</p>
+        <div id="unmatched"></div>
       </section>
 
       <section>

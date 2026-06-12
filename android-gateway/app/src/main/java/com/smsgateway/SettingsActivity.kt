@@ -1,15 +1,23 @@
 package com.smsgateway
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.lifecycleScope
+import com.google.android.material.snackbar.Snackbar
 import com.smsgateway.databinding.ActivitySettingsBinding
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingsBinding
+    private val requestTypes = arrayOf("LRL", "LCL", "MS-NID", "NID-MS", "IMEI-MS")
 
-    // Parallel list of subIds matching the SIM spinner entries; -1 = system default
     private var simSubIds: List<Int> = listOf(-1)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,6 +33,7 @@ class SettingsActivity : AppCompatActivity() {
             ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, gatewayIds)
 
         setupSimSpinner()
+        setupTestRequest()
         loadSettings(gatewayIds)
         binding.btnSave.setOnClickListener { saveSettings() }
     }
@@ -32,7 +41,6 @@ class SettingsActivity : AppCompatActivity() {
     private fun setupSimSpinner() {
         val sims = SmsSender.listSims(this)
         if (sims.isEmpty()) {
-            // No READ_PHONE_STATE permission yet or single-SIM — show a placeholder
             simSubIds = listOf(-1)
             binding.spinnerSim.adapter = ArrayAdapter(
                 this, android.R.layout.simple_spinner_dropdown_item,
@@ -46,6 +54,100 @@ class SettingsActivity : AppCompatActivity() {
                 this, android.R.layout.simple_spinner_dropdown_item, labels
             )
             binding.tvSimHint.text = "Select which SIM sends operator SMS"
+        }
+    }
+
+    private fun setupTestRequest() {
+        binding.spinnerRequestType.adapter =
+            ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, requestTypes)
+        binding.spinnerRequestType.setSelection(0)
+
+        val watcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                updateTestPreview()
+            }
+            override fun afterTextChanged(s: Editable?) {}
+        }
+        binding.etPayload.addTextChangedListener(watcher)
+        binding.spinnerRequestType.onItemSelectedListener = object : android.widget.AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: View?, position: Int, id: Long) {
+                updateTestPreview()
+            }
+            override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
+        }
+
+        val lastTarget = Prefs.getLastTestTarget(this)
+        if (lastTarget.isNotBlank()) {
+            binding.etTargetNumber.setText(lastTarget)
+        }
+        updateTestPreview()
+
+        binding.btnSendTest.setOnClickListener { sendTestRequest() }
+    }
+
+    private fun updateTestPreview() {
+        val type = binding.spinnerRequestType.selectedItem?.toString() ?: "LRL"
+        val payload = binding.etPayload.text?.toString()?.trim().orEmpty()
+        binding.tvTestPreview.text = if (payload.isBlank()) {
+            "Preview: $type <payload>"
+        } else {
+            "Preview: $type $payload"
+        }
+    }
+
+    private fun sendTestRequest() {
+        if (!Prefs.isServiceEnabled(this)) {
+            Snackbar.make(binding.root, "Start the gateway service first.", Snackbar.LENGTH_LONG).show()
+            return
+        }
+
+        val type = binding.spinnerRequestType.selectedItem?.toString()?.trim().orEmpty()
+        val payload = binding.etPayload.text?.toString()?.trim().orEmpty()
+        val target = binding.etTargetNumber.text?.toString()?.trim().orEmpty()
+
+        if (payload.isBlank()) {
+            binding.etPayload.error = "Required"
+            return
+        }
+        if (target.isBlank()) {
+            binding.etTargetNumber.error = "Required"
+            return
+        }
+
+        val requestText = "$type $payload"
+        binding.btnSendTest.isEnabled = false
+        binding.btnSendTest.text = "Sending..."
+
+        lifecycleScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                BackendClient.submitTestRequest(
+                    backendUrl = Prefs.getBackendUrl(this@SettingsActivity),
+                    requestText = requestText,
+                    testDestination = target,
+                    whatsappGroupId = Prefs.getTestGroupId(this@SettingsActivity),
+                    requesterWhatsappId = Prefs.getTestRequesterId(this@SettingsActivity),
+                    requesterName = Prefs.getTestRequesterName(this@SettingsActivity)
+                )
+            }
+
+            binding.btnSendTest.isEnabled = true
+            binding.btnSendTest.text = "Send Test Request"
+
+            result.onSuccess { requestId ->
+                Prefs.setLastTestTarget(this@SettingsActivity, target)
+                Snackbar.make(
+                    binding.root,
+                    "Request $requestId sent to $target.",
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }.onFailure { error ->
+                Snackbar.make(
+                    binding.root,
+                    error.message ?: "Failed to send test request",
+                    Snackbar.LENGTH_LONG
+                ).show()
+            }
         }
     }
 

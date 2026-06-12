@@ -14,7 +14,7 @@ const { readFileSync } = require('node:fs');
 const { join } = require('node:path');
 const { TelegramClient } = require('./telegramClient');
 const { BackendClient } = require('./backendClient');
-const { handleIntake, postApprovedReplies } = require('./bridge');
+const { handleIntake, postApprovedReplies, notifyTimeouts } = require('./bridge');
 
 function loadConfig() {
   const path = join(__dirname, '..', 'config', 'telegram.json');
@@ -72,12 +72,28 @@ async function intakeLoop(config, telegram, backend) {
 
 async function postingLoop(config, telegram, backend) {
   const interval = config.pollPostIntervalMs || 3000;
+  // Seed with already-terminal requests so a restart doesn't re-notify old timeouts.
+  const notifiedTimeouts = new Set();
+  try {
+    const existing = await backend.listRecentRequests();
+    for (const r of existing) {
+      if (['TIMEOUT', 'FAILED'].includes(r.status)) notifiedTimeouts.add(r.requestId);
+    }
+    log(`posting loop: seeded ${notifiedTimeouts.size} already-notified timeout(s)`);
+  } catch (e) {
+    log(`posting loop: could not seed timeouts — ${e.message}`);
+  }
   log(`posting loop started (poll every ${interval}ms)`);
   for (;;) {
     try {
       await postApprovedReplies({ backend, telegram, log });
     } catch (error) {
       log(`postApprovedReplies error: ${error.message}`);
+    }
+    try {
+      await notifyTimeouts({ backend, telegram, notifiedSet: notifiedTimeouts, log });
+    } catch (error) {
+      log(`notifyTimeouts error: ${error.message}`);
     }
     await sleep(interval);
   }

@@ -36,6 +36,14 @@ class BackendClient {
     return data.whatsappReplies || [];
   }
 
+  async listRecentRequests() {
+    const res = await this.fetch(`${this.base}/api/dashboard`, {
+      headers: this.headers()
+    });
+    const data = await res.json();
+    return data.requests || [];
+  }
+
   async markReplyPosted(replyId, postedMessageId) {
     const res = await this.fetch(
       `${this.base}/api/whatsapp-replies/${encodeURIComponent(replyId)}/posted`,

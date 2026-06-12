@@ -15,4 +15,10 @@
     <color name="divider">#334155</color>
     <color name="chip_running_bg">#064E3B</color>
     <color name="chip_stopped_bg">#7F1D1D</color>
+
+    <color name="status_running_glow">#1A34D399</color>
+    <color name="status_stopped_glow">#1AF87171</color>
+    <color name="status_connecting_glow">#1AFBBF24</color>
+    <color name="stat_value">#E2E8F0</color>
+    <color name="stat_label">#64748B</color>
 </resources>

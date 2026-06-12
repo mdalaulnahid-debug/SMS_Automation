@@ -21,19 +21,35 @@ function analyzeOperatorReply({ request, messageBody }) {
     .filter((_, index) => expectedPatterns[index].test(body));
   const foundReference = extractSilentReference(body);
   const trainingMatch = matchTrainingPattern(request, body);
+  const payloadFound = payloadInReply(request.payload, body);
 
   return {
     requestType: request.requestType,
     referenceMatched: Boolean(foundReference && foundReference === request.silentReference),
     foundReference,
+    payloadMatched: payloadFound,
     patternMatched: matchedPatterns.length > 0 || trainingMatch.matched,
     matchedPatterns,
     trainingMatch,
     confidence: confidenceScore({
       referenceMatched: Boolean(foundReference && foundReference === request.silentReference),
+      payloadMatched: payloadFound,
       patternMatched: matchedPatterns.length > 0 || trainingMatch.matched
     })
   };
+}
+
+// Check if the request payload (phone number, NID, IMEI) appears in the reply body.
+// Normalizes phone numbers (strips leading 0/+880) so "01712345678" matches "8801712345678".
+function payloadInReply(payload, body) {
+  if (!payload || !body) return false;
+  const normalizedBody = body.replace(/[\s\-().]/g, '');
+  const normalizedPayload = String(payload).replace(/[\s\-().]/g, '');
+  if (normalizedBody.includes(normalizedPayload)) return true;
+  // Phone number variants: strip leading 0 or +880/880
+  const stripped = normalizedPayload.replace(/^(?:\+?880|0)/, '');
+  if (stripped.length >= 10 && normalizedBody.includes(stripped)) return true;
+  return false;
 }
 
 function matchTrainingPattern(request, body) {
@@ -64,9 +80,10 @@ function loadTrainingPatterns() {
   }
 }
 
-function confidenceScore({ referenceMatched, patternMatched }) {
-  if (referenceMatched && patternMatched) return 'HIGH';
-  if (referenceMatched) return 'MEDIUM';
+function confidenceScore({ referenceMatched, payloadMatched, patternMatched }) {
+  if (referenceMatched) return 'HIGH';
+  if (payloadMatched && patternMatched) return 'HIGH';
+  if (payloadMatched) return 'MEDIUM';
   if (patternMatched) return 'LOW';
   return 'UNKNOWN';
 }

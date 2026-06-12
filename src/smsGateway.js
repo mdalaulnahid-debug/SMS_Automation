@@ -9,9 +9,16 @@ class SmsGatewayClient {
   }
 
   async dispatchNext(operatorKey) {
-    const request = this.queue.nextSendable(operatorKey);
-    if (!request) return null;
+    const results = [];
+    let request;
+    while ((request = this.queue.nextSendable(operatorKey))) {
+      const result = await this._sendOne(request, operatorKey);
+      results.push(result);
+    }
+    return results.length ? results : null;
+  }
 
+  async _sendOne(request, operatorKey) {
     const operator = OPERATORS[operatorKey];
     const gateway = this.store.getGatewayByOperator(operatorKey);
     const messageBody = formatOperatorSms(request, operatorKey);

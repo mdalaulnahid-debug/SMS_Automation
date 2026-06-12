@@ -1,6 +1,8 @@
 package com.smsgateway
 
 import android.Manifest
+import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
 import android.content.BroadcastReceiver
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -10,10 +12,10 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
-import android.widget.ArrayAdapter
+import android.view.animation.AccelerateDecelerateInterpolator
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -27,14 +29,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
-    private val requestTypes = arrayOf("LRL", "LCL", "MS-NID", "NID-MS", "IMEI-MS")
     private var serviceToggleInFlight = false
+    private var pulseAnimator: ObjectAnimator? = null
 
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -67,39 +66,70 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.subtitle = "Operator bridge"
 
-        setupRequestTypeSpinner()
-        setupTestPreviewWatcher()
-        loadTestFields()
-
         binding.btnToggleService.setOnClickListener { toggleService() }
-        binding.btnSettings.setOnClickListener {
-            startActivity(Intent(this, SettingsActivity::class.java))
-        }
-        binding.btnLogs.setOnClickListener {
-            startActivity(Intent(this, LogActivity::class.java))
-        }
         binding.btnCopyIp.setOnClickListener { copyLocalIp() }
-        binding.btnSendTest.setOnClickListener { sendTestRequest() }
 
-        lifecycleScope.launch {
-            AppDatabase.get(this@MainActivity).logDao().getRecent().collectLatest { logs ->
-                val fmt = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
-                val sent = logs.firstOrNull { it.direction == "OUTBOUND" }
-                binding.tvLastSent.text = if (sent != null) {
-                    "${fmt.format(Date(sent.timestamp))}  →  ${sent.recipient}\n${sent.messageBody.take(80)}"
-                } else "—"
+        setupCollapsibleDetails()
+        observeActivityLog()
+        requestPermissions()
+    }
 
-                val received = logs.firstOrNull { it.direction == "INBOUND" }
-                binding.tvLastReceived.text = if (received != null) {
-                    "${fmt.format(Date(received.timestamp))}  ←  ${received.sender}\n${received.messageBody.take(80)}"
-                } else "—"
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.main_toolbar, menu)
+        return true
+    }
 
-                val retryCount = logs.count { it.status == "PENDING_RETRY" }
-                binding.tvRetryCount.text = if (retryCount > 0) "$retryCount pending" else "None"
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.action_settings -> {
+                startActivity(Intent(this, SettingsActivity::class.java))
+                true
+            }
+            R.id.action_logs -> {
+                startActivity(Intent(this, LogActivity::class.java))
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun setupCollapsibleDetails() {
+        binding.detailsHeader.setOnClickListener {
+            val body = binding.detailsBody
+            val chevron = binding.detailsChevron
+            if (body.visibility == View.GONE) {
+                body.visibility = View.VISIBLE
+                chevron.animate().rotation(180f).setDuration(200).start()
+            } else {
+                body.visibility = View.GONE
+                chevron.animate().rotation(0f).setDuration(200).start()
             }
         }
+    }
 
-        requestPermissions()
+    private fun observeActivityLog() {
+        lifecycleScope.launch {
+            AppDatabase.get(this@MainActivity).logDao().getRecent().collectLatest { logs ->
+                val sent = logs.filter { it.direction == "OUTBOUND" }
+                val received = logs.filter { it.direction == "INBOUND" }
+                val retryCount = logs.count { it.status == "PENDING_RETRY" }
+
+                binding.tvStatSent.text = sent.size.toString()
+                binding.tvStatReceived.text = received.size.toString()
+                binding.tvStatPending.text = retryCount.toString()
+
+                val fmt = java.text.SimpleDateFormat("HH:mm:ss", java.util.Locale.getDefault())
+                val lastSent = sent.firstOrNull()
+                binding.tvLastSent.text = if (lastSent != null) {
+                    "${fmt.format(java.util.Date(lastSent.timestamp))}  →  ${lastSent.recipient}\n${lastSent.messageBody.take(80)}"
+                } else "—"
+
+                val lastReceived = received.firstOrNull()
+                binding.tvLastReceived.text = if (lastReceived != null) {
+                    "${fmt.format(java.util.Date(lastReceived.timestamp))}  ←  ${lastReceived.sender}\n${lastReceived.messageBody.take(80)}"
+                } else "—"
+            }
+        }
     }
 
     override fun onResume() {
@@ -114,116 +144,19 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPause() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(serviceReceiver)
+        pulseAnimator?.cancel()
         super.onPause()
-    }
-
-    private fun setupRequestTypeSpinner() {
-        val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, requestTypes)
-        binding.spinnerRequestType.adapter = adapter
-        binding.spinnerRequestType.setSelection(0)
-    }
-
-    private fun setupTestPreviewWatcher() {
-        val watcher = object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                updateTestPreview()
-            }
-            override fun afterTextChanged(s: Editable?) {}
-        }
-        binding.etPayload.addTextChangedListener(watcher)
-        binding.spinnerRequestType.setOnItemSelectedListener(object : android.widget.AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: android.widget.AdapterView<*>?, view: View?, position: Int, id: Long) {
-                updateTestPreview()
-            }
-            override fun onNothingSelected(parent: android.widget.AdapterView<*>?) {}
-        })
-    }
-
-    private fun loadTestFields() {
-        val lastTarget = Prefs.getLastTestTarget(this)
-        if (lastTarget.isNotBlank()) {
-            binding.etTargetNumber.setText(lastTarget)
-        }
-        updateTestPreview()
-    }
-
-    private fun updateTestPreview() {
-        val type = binding.spinnerRequestType.selectedItem?.toString() ?: "LRL"
-        val payload = binding.etPayload.text?.toString()?.trim().orEmpty()
-        binding.tvTestPreview.text = if (payload.isBlank()) {
-            "Preview: $type <payload>"
-        } else {
-            "Preview: $type $payload"
-        }
-    }
-
-    private fun sendTestRequest() {
-        if (!Prefs.isServiceEnabled(this)) {
-            Snackbar.make(binding.root, "Start the gateway service first.", Snackbar.LENGTH_LONG).show()
-            return
-        }
-
-        val type = binding.spinnerRequestType.selectedItem?.toString()?.trim().orEmpty()
-        val payload = binding.etPayload.text?.toString()?.trim().orEmpty()
-        val target = binding.etTargetNumber.text?.toString()?.trim().orEmpty()
-
-        if (payload.isBlank()) {
-            binding.etPayload.error = "Required"
-            return
-        }
-        if (target.isBlank()) {
-            binding.etTargetNumber.error = "Required"
-            return
-        }
-
-        val requestText = "$type $payload"
-        binding.btnSendTest.isEnabled = false
-        binding.btnSendTest.text = "Sending..."
-
-        lifecycleScope.launch {
-            val result = withContext(Dispatchers.IO) {
-                BackendClient.submitTestRequest(
-                    backendUrl = Prefs.getBackendUrl(this@MainActivity),
-                    requestText = requestText,
-                    testDestination = target,
-                    whatsappGroupId = Prefs.getTestGroupId(this@MainActivity),
-                    requesterWhatsappId = Prefs.getTestRequesterId(this@MainActivity),
-                    requesterName = Prefs.getTestRequesterName(this@MainActivity)
-                )
-            }
-
-            binding.btnSendTest.isEnabled = true
-            binding.btnSendTest.text = "Send Test Request"
-
-            result.onSuccess { requestId ->
-                Prefs.setLastTestTarget(this@MainActivity, target)
-                Snackbar.make(
-                    binding.root,
-                    "Request $requestId sent to $target. Reply manually from that number.",
-                    Snackbar.LENGTH_LONG
-                ).show()
-            }.onFailure { error ->
-                Snackbar.make(
-                    binding.root,
-                    error.message ?: "Failed to send test request",
-                    Snackbar.LENGTH_LONG
-                ).show()
-            }
-        }
     }
 
     private fun discoverAndCheckBackend() {
         val savedUrl = Prefs.getBackendUrl(this).trim()
         binding.tvBackendHealth.text = "Backend: connecting…"
         binding.tvBackendHealth.setTextColor(getColor(R.color.text_secondary))
+        setBackendDotColor(R.color.warning)
 
         lifecycleScope.launch {
             val connected = withContext(Dispatchers.IO) {
                 val phoneIp = NetworkUtils.getLocalIp(this@MainActivity)
-
-                // 1. LAN auto-discovery — fastest when phone and PC are on the same network.
-                //    Skip if phone has no Wi-Fi IP (on mobile data).
                 if (phoneIp.isNotBlank()) {
                     val lanUrl = BackendDiscovery.discoverBackendUrl(phoneIp, savedUrl.takeIf { it.isLanUrl() })
                     if (lanUrl != null) {
@@ -231,12 +164,9 @@ class MainActivity : AppCompatActivity() {
                         return@withContext lanUrl
                     }
                 }
-
-                // 2. Fallback: try the manually saved URL (ngrok / domain / different subnet).
                 if (savedUrl.isNotBlank() && BackendClient.checkHealth(savedUrl)) {
                     return@withContext savedUrl
                 }
-
                 null
             }
 
@@ -244,13 +174,19 @@ class MainActivity : AppCompatActivity() {
                 binding.tvBackendHealth.text = "Backend: connected"
                 binding.tvBackendUrl.text = connected
                 binding.tvBackendHealth.setTextColor(getColor(R.color.success))
+                setBackendDotColor(R.color.success)
             } else {
                 binding.tvBackendHealth.text =
-                    if (savedUrl.isNotBlank()) "Backend: not reachable — check URL or start backend on PC"
-                    else "Backend: not found — start backend on PC, or set internet URL in Settings"
+                    if (savedUrl.isNotBlank()) "Backend: not reachable"
+                    else "Backend: not found"
                 binding.tvBackendHealth.setTextColor(getColor(R.color.danger))
+                setBackendDotColor(R.color.danger)
             }
         }
+    }
+
+    private fun setBackendDotColor(colorRes: Int) {
+        binding.backendDot.background.setTint(getColor(colorRes))
     }
 
     private fun String.isLanUrl(): Boolean =
@@ -264,7 +200,7 @@ class MainActivity : AppCompatActivity() {
         }
         val clipboard = getSystemService(ClipboardManager::class.java)
         clipboard.setPrimaryClip(ClipData.newPlainText("gateway_ip", ip))
-        Snackbar.make(binding.root, "Copied $ip — phone registers this with backend when service starts", Snackbar.LENGTH_LONG).show()
+        Snackbar.make(binding.root, "Copied $ip", Snackbar.LENGTH_SHORT).show()
     }
 
     private fun toggleService() {
@@ -299,7 +235,7 @@ class MainActivity : AppCompatActivity() {
 
         serviceToggleInFlight = true
         binding.btnToggleService.isEnabled = false
-        binding.btnToggleService.text = "Starting..."
+        binding.btnToggleService.text = "Starting…"
         try {
             ContextCompat.startForegroundService(this, intent)
         } catch (e: Exception) {
@@ -324,19 +260,55 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateUI() {
         val running = Prefs.isServiceEnabled(this)
+
         binding.tvServiceStatus.text = if (running) "RUNNING" else "STOPPED"
         binding.tvServiceStatus.setTextColor(getColor(if (running) R.color.success else R.color.danger))
+
+        if (running) {
+            binding.statusGlow.backgroundTintList =
+                android.content.res.ColorStateList.valueOf(getColor(R.color.status_running_glow))
+            startPulse()
+        } else {
+            binding.statusGlow.backgroundTintList =
+                android.content.res.ColorStateList.valueOf(getColor(R.color.status_stopped_glow))
+            stopPulse()
+        }
+
         binding.btnToggleService.isEnabled = !serviceToggleInFlight
         binding.btnToggleService.text = when {
-            serviceToggleInFlight && !running -> "Starting..."
+            serviceToggleInFlight && !running -> "Starting…"
             running -> "Stop Service"
             else -> "Start Service"
         }
+
         binding.tvGatewayId.text = Prefs.getGatewayId(this)
         binding.tvPort.text = ":${Prefs.getHttpPort(this)}"
         binding.tvBackendUrl.text = Prefs.getBackendUrl(this)
         binding.tvLocalIp.text = getLocalIp()
         supportActionBar?.subtitle = if (running) "Service active" else "Service stopped"
+    }
+
+    private fun startPulse() {
+        if (pulseAnimator?.isRunning == true) return
+        pulseAnimator = ObjectAnimator.ofPropertyValuesHolder(
+            binding.statusGlow,
+            PropertyValuesHolder.ofFloat("scaleX", 1f, 1.08f, 1f),
+            PropertyValuesHolder.ofFloat("scaleY", 1f, 1.08f, 1f),
+            PropertyValuesHolder.ofFloat("alpha", 0.7f, 1f, 0.7f)
+        ).apply {
+            duration = 2000
+            repeatCount = ObjectAnimator.INFINITE
+            interpolator = AccelerateDecelerateInterpolator()
+            start()
+        }
+    }
+
+    private fun stopPulse() {
+        pulseAnimator?.cancel()
+        pulseAnimator = null
+        binding.statusGlow.scaleX = 1f
+        binding.statusGlow.scaleY = 1f
+        binding.statusGlow.alpha = 1f
     }
 
     private fun getLocalIp(): String {

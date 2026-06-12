@@ -415,12 +415,13 @@ class AutomationStore {
       if (byReference) return byReference;
     }
 
-    const cutoff = Date.now() - windowMs;
+    // No queue blocking: multiple requests may be in-flight simultaneously.
+    // Find ALL waiting requests that were sent through this gateway from a matching sender.
     const pending = this.listRequests()
       .filter((request) => request.status === STATUSES.WAITING_OPERATOR_REPLY)
       .filter((request) => {
         const sent = this.getOutboxForGateway(request.requestId, gatewayId);
-        if (!sent || new Date(sent.sentAt).getTime() < cutoff) return false;
+        if (!sent) return false;
 
         const senderMatchesDestination =
           normalizePhoneNumber(sent.destinationNumber) === normalizePhoneNumber(senderNumber);
@@ -429,7 +430,9 @@ class AutomationStore {
         return senderMatchesDestination || senderIsTrustedOperator;
       });
 
-    return pending.length === 1 ? pending[0] : null;
+    if (pending.length === 1) return pending[0];
+    if (pending.length > 1) return { ambiguous: true, candidates: pending };
+    return null;
   }
 
   markOperatorReplyReceived(requestId, operatorKey) {

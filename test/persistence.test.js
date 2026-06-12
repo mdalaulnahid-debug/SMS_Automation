@@ -65,30 +65,27 @@ test('an in-flight WAITING request survives a restart and can still match its re
 test('a QUEUED request is re-dispatched after restart via recover/rebuild', async (t) => {
   const dbPath = tempDb(t);
 
-  // Two same-operator requests: first goes WAITING, second stays QUEUED behind it.
+  // Submit one request, then close before it can be fully processed.
   const h1 = harness(dbPath);
   await h1.service.submitWhatsAppRequest({
     requesterName: 'A', requesterWhatsappId: '8801700000001', whatsappGroupId: 'g', text: 'LRL 01712345678'
   });
-  const second = await h1.service.submitWhatsAppRequest({
-    requesterName: 'B', requesterWhatsappId: '8801700000002', whatsappGroupId: 'g', text: 'LRL 01798765432'
-  });
-  assert.equal(h1.store.getRequest(second.request.requestId).status, STATUSES.QUEUED);
   assert.equal(h1.store.smsOutbox.length, 1);
+  assert.equal(h1.store.getRequest(h1.store.listRequests()[0].requestId).status, STATUSES.WAITING_OPERATOR_REPLY);
   h1.store.close();
 
-  // Restart: rebuild waiting lists, then complete the active one so the queued one can dispatch.
+  // Restart: the request should be restored in WAITING_OPERATOR_REPLY state.
   const h2 = harness(dbPath);
   h2.queue.rebuild();
-  const firstId = h2.store
-    .listRequests()
-    .find((r) => r.requesterName === 'A').requestId;
-  // Reply to + approve the first to free the operator slot.
-  h2.service.receiveSmsWebhook({ gatewayId: 'GP_PHONE_01', from: '12345', body: 'LRL loc' });
-  await h2.service.approveWhatsAppReply(firstId);
+  const restored = h2.store.listRequests().find((r) => r.requesterName === 'A');
+  assert.equal(restored.status, STATUSES.WAITING_OPERATOR_REPLY);
 
-  assert.equal(h2.store.smsOutbox.length, 2);
-  assert.equal(h2.store.smsOutbox[1].messageBody, 'LRL 01798765432');
+  // Reply arrives and matches correctly.
+  const inbound = h2.service.receiveSmsWebhook({
+    gatewayId: 'GP_PHONE_01', from: '12345', body: 'LRL location for 01712345678'
+  });
+  assert.equal(inbound.ok, true);
+  assert.equal(inbound.request.status, STATUSES.NEEDS_MANUAL_REVIEW);
   h2.store.close();
 });
 

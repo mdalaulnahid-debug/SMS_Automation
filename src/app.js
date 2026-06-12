@@ -164,6 +164,31 @@ function createApp(options = {}) {
         }
         return json(res, 404, { error: 'Not found' });
       }
+      if (req.method === 'POST' && req.url.startsWith('/api/requests/') && req.url.endsWith('/reject')) {
+        if (!requireAdmin(req, res)) return undefined;
+        const requestId = decodeURIComponent(req.url.split('/').at(-2) || '');
+        const body = await readJson(req);
+        const request = await service.rejectRequest(requestId, { reason: body.reason });
+        return json(res, 200, { request });
+      }
+      if (req.method === 'POST' && req.url.startsWith('/api/requests/') && req.url.endsWith('/retry')) {
+        if (!requireAdmin(req, res)) return undefined;
+        const requestId = decodeURIComponent(req.url.split('/').at(-2) || '');
+        const request = await service.retryRequest(requestId);
+        return json(res, 200, { request });
+      }
+      if (req.method === 'POST' && req.url === '/api/manual-match') {
+        if (!requireAdmin(req, res)) return undefined;
+        const body = await readJson(req);
+        if (!body.inboxId || !body.requestId) return json(res, 400, { error: 'inboxId and requestId required.' });
+        const result = service.manualMatch(body.inboxId, body.requestId);
+        return json(res, 200, result);
+      }
+      if (req.method === 'GET' && req.url === '/api/sms/unmatched') {
+        if (!requireAdmin(req, res)) return undefined;
+        const unmatched = store.smsInbox.filter((row) => !row.matchedRequestId && !row.analysis?.ignored);
+        return json(res, 200, { unmatched });
+      }
       if (req.method === 'POST' && req.url === '/api/timeouts/run') {
         if (!requireAdmin(req, res)) return undefined;
         return json(res, 200, { timedOut: await service.timeoutWaitingRequests() });

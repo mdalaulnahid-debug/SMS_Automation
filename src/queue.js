@@ -20,10 +20,18 @@ class OperatorQueue {
     return targetOperators.map((operatorKey) => this.describe(operatorKey));
   }
 
+  enqueueExisting(request) {
+    const targetOperators = request.targetOperators || [request.operator];
+    targetOperators.forEach((operatorKey) => {
+      const queue = this.queues.get(operatorKey);
+      if (!queue) throw new Error(`No queue configured for operator: ${operatorKey}`);
+      if (!queue.includes(request.requestId)) queue.push(request.requestId);
+    });
+  }
+
   nextSendable(operatorKey) {
     const queue = this.queues.get(operatorKey);
     if (!queue || queue.length === 0) return null;
-    if (this.activePending(operatorKey)) return null;
     return this.store.getRequest(queue[0]);
   }
 
