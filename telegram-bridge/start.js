@@ -10,7 +10,7 @@
 // groupChatId, list authorizedUsers by numeric Telegram user id). Bot must have group
 // privacy OFF (BotFather) or be a group admin, or it won't see normal group messages.
 
-const { readFileSync } = require('node:fs');
+const { readFileSync, writeFileSync, existsSync } = require('node:fs');
 const { join } = require('node:path');
 const { TelegramClient } = require('./telegramClient');
 const { BackendClient } = require('./backendClient');
@@ -39,11 +39,33 @@ function loadConfig() {
 
 const log = (msg) => console.log(`[${new Date().toISOString()}] ${msg}`);
 
+const OFFSET_FILE = join(__dirname, '..', 'data', 'telegram-offset.json');
+
+function loadOffset() {
+  try {
+    if (existsSync(OFFSET_FILE)) {
+      return JSON.parse(readFileSync(OFFSET_FILE, 'utf8')).offset || undefined;
+    }
+  } catch { /* start fresh if file is corrupt */ }
+  return undefined;
+}
+
+function saveOffset(offset) {
+  try {
+    writeFileSync(OFFSET_FILE, JSON.stringify({ offset }), 'utf8');
+  } catch (e) {
+    log(`warn: could not save offset: ${e.message}`);
+  }
+}
+
 async function intakeLoop(config, telegram, backend) {
-  let offset;
-  log('intake loop started (long polling getUpdates)');
-  // Drain any backlog first so a restart does not replay old messages as new requests.
-  // We advance the offset past everything already queued without acting on it.
+  let offset = loadOffset();
+  if (offset !== undefined) {
+    log(`intake loop started — resuming from offset ${offset} (messages during downtime will be processed)`);
+  } else {
+    log('intake loop started — no saved offset, processing all pending messages');
+  }
+
   for (;;) {
     let updates;
     try {
@@ -55,6 +77,7 @@ async function intakeLoop(config, telegram, backend) {
     }
     for (const update of updates) {
       offset = update.update_id + 1;
+      saveOffset(offset);
       if (!update.message) continue;
       // Helpful during setup: surface the chat id of any group the bot is added to.
       if (String(update.message.chat?.id) !== String(config.groupChatId)) {
