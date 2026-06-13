@@ -82,6 +82,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.action_check_update -> {
+                android.widget.Toast.makeText(this, "Checking for updates…", android.widget.Toast.LENGTH_SHORT).show()
+                UpdateChecker.checkInBackground(this)
+                true
+            }
             R.id.action_admin -> {
                 startActivity(Intent(this, AdminActivity::class.java))
                 true

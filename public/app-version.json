@@ -1,5 +1,5 @@
 ﻿{
-    "versionCode":  14,
-    "versionName":  "1.8.0",
-    "releaseNotes":  "Admin panel: OTA publish from phone, gateway health dashboard"
+    "versionCode":  15,
+    "versionName":  "1.9.0",
+    "releaseNotes":  "Added Check for Update option in toolbar menu"
 }
