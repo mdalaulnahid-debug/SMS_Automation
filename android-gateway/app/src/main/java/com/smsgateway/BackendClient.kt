@@ -283,6 +283,72 @@ object BackendClient {
         }
     }
 
+    data class GatewayStatus(
+        val id: String,
+        val operator: String,
+        val operatorName: String,
+        val online: Boolean,
+        val lastSeenAt: String
+    )
+
+    fun fetchGatewayHealth(backendUrl: String, adminKey: String): List<GatewayStatus> {
+        val base = backendUrl.trim().trimEnd('/')
+        if (base.isBlank()) return emptyList()
+        return try {
+            val req = Request.Builder().url("$base/api/gateways").get()
+                .header("x-api-key", adminKey).build()
+            client.newCall(req).execute().use { r ->
+                if (!r.isSuccessful) return emptyList()
+                val arr = JSONObject(r.body?.string().orEmpty()).optJSONArray("gateways") ?: return emptyList()
+                (0 until arr.length()).map { i ->
+                    val g = arr.getJSONObject(i)
+                    GatewayStatus(
+                        id = g.optString("id"),
+                        operator = g.optString("operator"),
+                        operatorName = g.optString("operatorName"),
+                        online = g.optBoolean("online"),
+                        lastSeenAt = g.optString("lastSeenAt")
+                    )
+                }
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "fetchGatewayHealth failed: ${e.message}")
+            emptyList()
+        }
+    }
+
+    fun publishApk(
+        backendUrl: String,
+        adminKey: String,
+        apkBytes: ByteArray,
+        versionCode: Int,
+        versionName: String,
+        releaseNotes: String
+    ): Result<String> {
+        val base = backendUrl.trim().trimEnd('/')
+        if (base.isBlank()) return Result.failure(Exception("No backend URL"))
+        return try {
+            val body = apkBytes.toRequestBody("application/vnd.android.package-archive".toMediaType())
+            val req = Request.Builder()
+                .url("$base/api/app/publish-apk")
+                .post(body)
+                .header("x-api-key", adminKey)
+                .header("x-version-code", versionCode.toString())
+                .header("x-version-name", versionName)
+                .header("x-release-notes", releaseNotes)
+                .build()
+            client.newCall(req).execute().use { r ->
+                val rbody = r.body?.string().orEmpty()
+                if (!r.isSuccessful) {
+                    return Result.failure(Exception(parseError(rbody) ?: "HTTP ${r.code}"))
+                }
+                Result.success("v$versionName published — all phones will be notified.")
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
     private fun parseError(body: String): String? {
         if (body.isBlank()) return null
         return try {

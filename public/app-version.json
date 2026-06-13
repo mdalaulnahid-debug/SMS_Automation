@@ -1,5 +1,5 @@
 ﻿{
-    "versionCode":  13,
-    "versionName":  "1.7.0",
-    "releaseNotes":  "OTA update system, dual-SIM support, polling architecture"
+    "versionCode":  14,
+    "versionName":  "1.8.0",
+    "releaseNotes":  "Admin panel: OTA publish from phone, gateway health dashboard"
 }

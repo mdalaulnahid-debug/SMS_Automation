@@ -187,6 +187,7 @@ class SettingsActivity : AppCompatActivity() {
         binding.etTestGroupId.setText(Prefs.getTestGroupId(this))
         binding.etTestRequesterId.setText(Prefs.getTestRequesterId(this))
         binding.etTestRequesterName.setText(Prefs.getTestRequesterName(this))
+        binding.etAdminApiKey.setText(Prefs.getAdminApiKey(this))
     }
 
     private fun saveSettings() {
@@ -218,6 +219,7 @@ class SettingsActivity : AppCompatActivity() {
         Prefs.setTestGroupId(this, binding.etTestGroupId.text.toString().trim())
         Prefs.setTestRequesterId(this, binding.etTestRequesterId.text.toString().trim())
         Prefs.setTestRequesterName(this, binding.etTestRequesterName.text.toString().trim())
+        Prefs.setAdminApiKey(this, binding.etAdminApiKey.text.toString().trim())
 
         Toast.makeText(this, "Saved. Restart service to apply connection changes.", Toast.LENGTH_LONG).show()
         finish()

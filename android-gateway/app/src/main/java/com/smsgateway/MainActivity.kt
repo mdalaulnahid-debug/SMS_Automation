@@ -76,11 +76,16 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_toolbar, menu)
+        menu.findItem(R.id.action_admin)?.isVisible = Prefs.isAdminConfigured(this)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
+            R.id.action_admin -> {
+                startActivity(Intent(this, AdminActivity::class.java))
+                true
+            }
             R.id.action_settings -> {
                 startActivity(Intent(this, SettingsActivity::class.java))
                 true
@@ -134,6 +139,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        invalidateOptionsMenu()  // re-check admin key visibility
         LocalBroadcastManager.getInstance(this).registerReceiver(
             serviceReceiver,
             IntentFilter(ServiceEvents.ACTION_STATUS)

@@ -81,6 +81,27 @@ function createApp(options = {}) {
           });
         });
       }
+      if (req.method === 'POST' && req.url === '/api/app/publish-apk') {
+        if (!requireAdmin(req, res)) return undefined;
+        const vc = parseInt(req.headers['x-version-code'] || '0', 10);
+        const vn = req.headers['x-version-name'] || '';
+        const notes = req.headers['x-release-notes'] || vn;
+        if (!vc || !vn) return json(res, 400, { error: 'x-version-code and x-version-name headers required' });
+        const apkFile = join(__dirname, '..', 'public', 'gateway-app.apk');
+        const verFile = join(__dirname, '..', 'public', 'app-version.json');
+        await new Promise((resolve, reject) => {
+          const { createWriteStream } = require('node:fs');
+          const out = createWriteStream(apkFile);
+          req.pipe(out);
+          out.on('finish', resolve);
+          out.on('error', reject);
+          req.on('error', reject);
+        });
+        const versionJson = JSON.stringify({ versionCode: vc, versionName: vn, releaseNotes: notes }, null, 2);
+        await require('node:fs/promises').writeFile(verFile, versionJson, 'utf8');
+        store.audit('admin', 'APP_UPDATE_PUBLISHED', null, { versionCode: vc, versionName: vn });
+        return json(res, 200, { ok: true, versionCode: vc, versionName: vn });
+      }
       if (req.method === 'GET' && req.url === '/api/app/apk') {
         if (!requireAdmin(req, res) && !isValidGatewayHeader(req, store, authConfig)) return undefined;
         const apkFile = join(__dirname, '..', 'public', 'gateway-app.apk');

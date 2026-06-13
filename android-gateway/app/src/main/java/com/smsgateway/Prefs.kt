@@ -83,6 +83,15 @@ object Prefs {
     fun setSecondarySubId(context: Context, value: Int) =
         prefs(context).edit().putInt("secondary_sub_id", value).apply()
 
+    // Admin API key — when set, unlocks the admin panel on this device.
+    fun getAdminApiKey(context: Context): String =
+        prefs(context).getString("admin_api_key", "") ?: ""
+
+    fun setAdminApiKey(context: Context, value: String) =
+        prefs(context).edit().putString("admin_api_key", value).apply()
+
+    fun isAdminConfigured(context: Context): Boolean = getAdminApiKey(context).isNotBlank()
+
     /** Returns list of (gatewayId, subId) for every configured gateway on this phone. */
     fun configuredGateways(context: Context): List<Pair<String, Int>> {
         val list = mutableListOf(getGatewayId(context) to getPreferredSubId(context))
