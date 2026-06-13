@@ -120,6 +120,37 @@ function createApp(options = {}) {
         const result = service.receiveSmsWebhook(body);
         return json(res, result.ok ? 200 : 202, result);
       }
+      if (req.method === 'GET' && req.url.startsWith('/api/gateway/jobs')) {
+        const gatewayId = new URL(req.url, 'http://x').searchParams.get('gatewayId');
+        if (!isAdmin(req, authConfig) && !isValidGateway(req, gatewayId, store, authConfig)) {
+          return json(res, 401, { error: 'Invalid or missing gateway secret.' });
+        }
+        if (!gatewayId) return json(res, 400, { error: 'gatewayId required' });
+        // Update last-seen so health dashboard shows ONLINE
+        store.registerGatewayHeartbeat(gatewayId);
+        const jobs = store.claimPendingJobs(gatewayId).map((row) => ({
+          outboxId: row.id,
+          to: row.destinationNumber,
+          message: row.messageBody,
+          requestId: row.requestId,
+          operator: row.operator
+        }));
+        return json(res, 200, { jobs });
+      }
+      if (req.method === 'POST' && req.url.startsWith('/api/gateway/jobs/') && req.url.endsWith('/ack')) {
+        const outboxId = req.url.split('/')[4];
+        const body = await readJson(req);
+        if (!isAdmin(req, authConfig) && !isValidGateway(req, body.gatewayId, store, authConfig)) {
+          return json(res, 401, { error: 'Invalid or missing gateway secret.' });
+        }
+        const job = store.ackOutboxJob(outboxId, {
+          ok: body.ok,
+          error: body.error,
+          providerMessageId: body.providerMessageId
+        });
+        if (!job) return json(res, 404, { error: 'Job not found' });
+        return json(res, 200, { ok: true, sentStatus: job.sentStatus });
+      }
       if (req.method === 'POST' && req.url === '/api/sms/delivery') {
         const body = await readJson(req);
         if (!isAdmin(req, authConfig) && !isValidGateway(req, body.gatewayId, store, authConfig)) {

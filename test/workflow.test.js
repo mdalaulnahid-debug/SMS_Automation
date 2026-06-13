@@ -224,34 +224,20 @@ test('ignores junk SMS from untrusted sender before analysis', async () => {
   assert.equal(store.getRequest(submitted.request.requestId).status, STATUSES.WAITING_OPERATOR_REPLY);
 });
 
-test('gateway config apiKey is sent as x-gateway-secret header', async () => {
-  const originalFetch = global.fetch;
-  const calls = [];
-  global.fetch = async (url, options) => {
-    calls.push({ url, options });
-    return { ok: true, status: 200, text: async () => '{"ok":true}' };
-  };
-
-  try {
-    const { service } = createHarness({
-      GP: {
-        gatewayUrl: 'http://phone-gp.local:8080',
-        sendPath: '/send-sms',
-        apiKey: 'secret-token',
-        trustedSenders: ['12345']
-      }
-    });
-    await service.submitWhatsAppRequest({
-      whatsappGroupId: 'operations',
-      requesterName: 'Officer Rahim',
-      requesterWhatsappId: '8801700000000',
-      text: 'LRL 01712345678'
-    });
-
-    assert.equal(calls[0].options.headers['x-gateway-secret'], 'secret-token');
-  } finally {
-    global.fetch = originalFetch;
-  }
+test('SMS job is queued as PENDING_PICKUP for phone to poll', async () => {
+  const { store, service } = createHarness({
+    GP: { gatewayUrl: 'http://phone-gp.local:8080', trustedSenders: ['12345'] }
+  });
+  await service.submitWhatsAppRequest({
+    whatsappGroupId: 'operations',
+    requesterName: 'Officer Rahim',
+    requesterWhatsappId: '8801700000000',
+    text: 'LRL 01712345678'
+  });
+  const jobs = store.claimPendingJobs('GP_PHONE_01');
+  assert.equal(jobs.length, 1);
+  assert.equal(jobs[0].destinationNumber, store.getGatewayByOperator('GP').shortcode);
+  assert.match(jobs[0].messageBody, /01712345678/);
 });
 
 test('requester authorization is preserved and enforced', async () => {
@@ -329,39 +315,26 @@ test('request IDs stay unique across store restarts', () => {
   assert.notEqual(id1, id2);
 });
 
-test('configured gateway receives clean hardbound SMS command over HTTP', async () => {
-  const originalFetch = global.fetch;
-  const calls = [];
-  global.fetch = async (url, options) => {
-    calls.push({ url, options });
-    return {
-      ok: true,
-      status: 200,
-      text: async () => '{"ok":true}'
-    };
-  };
+test('phone polling claims job and ack updates outbox status', async () => {
+  const { store, service } = createHarness({
+    GP: { trustedSenders: ['12345'] }
+  });
+  await service.submitWhatsAppRequest({
+    whatsappGroupId: 'operations',
+    requesterName: 'Officer Rahim',
+    requesterWhatsappId: '8801700000000',
+    text: 'LRL 01712345678'
+  });
 
-  try {
-    const { service } = createHarness({
-      GP: {
-        gatewayUrl: 'http://phone-gp.local:8080',
-        sendPath: '/send-sms',
-        trustedSenders: ['12345']
-      }
-    });
-    await service.submitWhatsAppRequest({
-      whatsappGroupId: 'operations',
-      requesterName: 'Officer Rahim',
-      requesterWhatsappId: '8801700000000',
-      text: 'LRL 01712345678'
-    });
+  // Simulate phone poll
+  const jobs = store.claimPendingJobs('GP_PHONE_01');
+  assert.equal(jobs.length, 1);
+  assert.equal(jobs[0].sentStatus, 'CLAIMED');
 
-    assert.equal(calls.length, 1);
-    assert.equal(calls[0].url, 'http://phone-gp.local:8080/send-sms');
-    assert.equal(JSON.parse(calls[0].options.body).message, 'LRL 01712345678');
-  } finally {
-    global.fetch = originalFetch;
-  }
+  // Simulate phone ack
+  const acked = store.ackOutboxJob(jobs[0].id, { ok: true, providerMessageId: 'sms_123' });
+  assert.equal(acked.sentStatus, 'SENT');
+  assert.equal(acked.sendResult.mode, 'poll');
 });
 
 test('fan-out with two replies and one timeout finalizes to manual review (not timeout)', async () => {

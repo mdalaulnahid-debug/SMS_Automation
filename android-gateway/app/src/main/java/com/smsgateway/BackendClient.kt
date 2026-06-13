@@ -175,6 +175,75 @@ object BackendClient {
         }
     }
 
+    data class PendingJob(
+        val outboxId: String,
+        val to: String,
+        val message: String,
+        val requestId: String,
+        val operator: String
+    )
+
+    fun fetchAndClaimJobs(
+        backendUrl: String,
+        gatewayId: String,
+        gatewaySecret: String = ""
+    ): List<PendingJob> {
+        val base = backendUrl.trim().trimEnd('/')
+        if (base.isBlank()) return emptyList()
+        return try {
+            val builder = Request.Builder()
+                .url("$base/api/gateway/jobs?gatewayId=${gatewayId}")
+                .get()
+            if (gatewaySecret.isNotBlank()) builder.header("x-gateway-secret", gatewaySecret)
+            client.newCall(builder.build()).execute().use { r ->
+                if (!r.isSuccessful) return emptyList()
+                val json = JSONObject(r.body?.string().orEmpty())
+                val arr = json.optJSONArray("jobs") ?: return emptyList()
+                (0 until arr.length()).map { i ->
+                    val j = arr.getJSONObject(i)
+                    PendingJob(
+                        outboxId = j.getString("outboxId"),
+                        to = j.getString("to"),
+                        message = j.getString("message"),
+                        requestId = j.optString("requestId"),
+                        operator = j.optString("operator")
+                    )
+                }
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "fetchAndClaimJobs failed: ${e.message}")
+            emptyList()
+        }
+    }
+
+    fun ackJob(
+        backendUrl: String,
+        gatewayId: String,
+        outboxId: String,
+        ok: Boolean,
+        error: String? = null,
+        gatewaySecret: String = ""
+    ) {
+        val base = backendUrl.trim().trimEnd('/')
+        if (base.isBlank()) return
+        val payload = JSONObject().apply {
+            put("gatewayId", gatewayId)
+            put("ok", ok)
+            if (error != null) put("error", error)
+        }.toString()
+        try {
+            val builder = Request.Builder()
+                .url("$base/api/gateway/jobs/$outboxId/ack")
+                .post(payload.toRequestBody(JSON))
+            if (gatewaySecret.isNotBlank()) builder.header("x-gateway-secret", gatewaySecret)
+            client.newCall(builder.build()).execute().use { r ->
+                Log.d(TAG, "Ack $outboxId ok=$ok → HTTP ${r.code}")
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "ackJob failed: ${e.message}")
+        }
+    }
+
     private fun parseError(body: String): String? {
         if (body.isBlank()) return null
         return try {

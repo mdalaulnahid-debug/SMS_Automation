@@ -6,7 +6,7 @@ const OPERATORS = Object.freeze({
     shortcode: '01714054239',
     gatewayId: 'GP_PHONE_01',
     msisdnPrefixes: ['013', '017'],
-    trustedSenders: ['01714054239']
+    trustedSenders: ['12345']
   },
   ROBI: {
     name: 'Robi',

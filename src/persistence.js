@@ -204,6 +204,12 @@ class Persistence {
       );
   }
 
+  updateOutboxStatus(outboxId, status, sendResult) {
+    this.db
+      .prepare('UPDATE sms_outbox SET sent_status = ?, send_result = ? WHERE id = ?')
+      .run(status, j(sendResult), outboxId);
+  }
+
   insertOutbox(row) {
     this.db
       .prepare(

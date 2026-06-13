@@ -70,6 +70,9 @@ class GatewayForegroundService : Service() {
 
     private val mainHandler = Handler(Looper.getMainLooper())
 
+    @Volatile private var pollActive = false
+    private var pollThread: Thread? = null
+
 
 
     override fun onCreate() {
@@ -178,6 +181,8 @@ class GatewayForegroundService : Service() {
                 if (localIp.isNotBlank() && backendUrl.isNotBlank()) {
                     BackendClient.registerGateway(backendUrl, gatewayId, localIp, port, gatewaySecret)
                 }
+
+                startPollLoop()
 
                 mainHandler.post {
 
@@ -309,7 +314,44 @@ class GatewayForegroundService : Service() {
 
 
 
+    private fun startPollLoop() {
+        if (pollActive) return
+        pollActive = true
+        pollThread = Thread({
+            Log.d(TAG, "Poll loop started")
+            while (pollActive) {
+                try {
+                    val backendUrl = Prefs.getBackendUrl(this)
+                    val gatewayId = Prefs.getGatewayId(this)
+                    val secret = Prefs.getApiKey(this)
+                    if (backendUrl.isNotBlank()) {
+                        val jobs = BackendClient.fetchAndClaimJobs(backendUrl, gatewayId, secret)
+                        for (job in jobs) {
+                            try {
+                                SmsSender.send(this, job.to, job.message, job.requestId, job.operator)
+                                BackendClient.ackJob(backendUrl, gatewayId, job.outboxId, ok = true, gatewaySecret = secret)
+                                Log.d(TAG, "Poll: sent ${job.outboxId} to ${job.to}")
+                            } catch (e: Exception) {
+                                Log.e(TAG, "Poll: send failed for ${job.outboxId}: ${e.message}")
+                                BackendClient.ackJob(backendUrl, gatewayId, job.outboxId, ok = false, error = e.message, gatewaySecret = secret)
+                            }
+                        }
+                    }
+                } catch (e: Exception) {
+                    Log.w(TAG, "Poll loop error: ${e.message}")
+                }
+                try { Thread.sleep(3_000) } catch (_: InterruptedException) { break }
+            }
+            Log.d(TAG, "Poll loop stopped")
+        }, "gateway-poll").also { it.isDaemon = true }
+        pollThread?.start()
+    }
+
     private fun stopGateway(removeForeground: Boolean) {
+
+        pollActive = false
+        pollThread?.interrupt()
+        pollThread = null
 
         httpStarting.set(false)
 

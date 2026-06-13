@@ -348,6 +348,38 @@ class AutomationStore {
     return Array.from(this.gateways.values());
   }
 
+  // Atomically claim all PENDING_PICKUP jobs for a gateway and return them.
+  claimPendingJobs(gatewayId) {
+    const jobs = this.smsOutbox.filter(
+      (row) => row.gatewayId === gatewayId && row.sentStatus === 'PENDING_PICKUP'
+    );
+    jobs.forEach((job) => {
+      job.sentStatus = 'CLAIMED';
+      if (this.persistence) this.persistence.updateOutboxStatus(job.id, 'CLAIMED', null);
+    });
+    return jobs;
+  }
+
+  // Phone reports result for a claimed job.
+  ackOutboxJob(outboxId, { ok, error, providerMessageId } = {}) {
+    const job = this.smsOutbox.find((row) => row.id === outboxId);
+    if (!job) return null;
+    job.sentStatus = ok ? 'SENT' : 'FAILED';
+    job.sendResult = { ok, error: error || null, providerMessageId: providerMessageId || null, mode: 'poll' };
+    if (this.persistence) this.persistence.updateOutboxStatus(outboxId, job.sentStatus, job.sendResult);
+    this.audit('sms-gateway', ok ? 'SMS_SENT_CONFIRMED' : 'SMS_SEND_FAILED', job.requestId, {
+      outboxId, gatewayId: job.gatewayId, error: error || null
+    });
+    return job;
+  }
+
+  registerGatewayHeartbeat(gatewayId) {
+    const gateway = this.gateways.get(gatewayId);
+    if (!gateway) return;
+    gateway.lastSeenAt = nowIso();
+    if (this.persistence) this.persistence.upsertGateway(gateway);
+  }
+
   registerGateway(gatewayId, input = {}) {
     const gateway = this.gateways.get(gatewayId);
     if (!gateway) throw new Error(`Gateway not configured: ${gatewayId}`);
@@ -400,7 +432,7 @@ class AutomationStore {
 
   getOutboxForGateway(requestId, gatewayId) {
     return this.smsOutbox.find((row) => {
-      return row.requestId === requestId && row.gatewayId === gatewayId && row.sentStatus === 'SENT';
+      return row.requestId === requestId && row.gatewayId === gatewayId && row.sentStatus !== 'FAILED';
     });
   }
 
