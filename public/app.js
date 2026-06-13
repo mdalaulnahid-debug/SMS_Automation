@@ -37,13 +37,15 @@ async function postJson(url, payload) {
 }
 
 async function refresh() {
-  const [dashRes, unmatchedRes] = await Promise.all([
+  const [dashRes, unmatchedRes, gatewayRes] = await Promise.all([
     apiFetch('/api/dashboard'),
-    apiFetch('/api/sms/unmatched')
+    apiFetch('/api/sms/unmatched'),
+    apiFetch('/api/gateways')
   ]);
   const data = await dashRes.json();
   const unmatchedData = await unmatchedRes.json();
-  renderGateways(data.gateways);
+  const gatewayData = gatewayRes.ok ? await gatewayRes.json() : { gateways: data.gateways };
+  renderGateways(gatewayData.gateways);
   renderQueues(data.queues);
   renderRequests(data.requests);
   renderOutbox(data.smsOutbox);
@@ -54,19 +56,31 @@ async function refresh() {
 
 function renderGateways(gateways) {
   document.querySelector('#gateways').innerHTML = gateways
-    .map(
-      (gw) => `
-        <div class="card">
-          <strong>${gw.operatorName}</strong>
-          <p>${gw.id}</p>
-          <span class="status">${gw.status}</span>
-          <p>Gateway URL: ${gw.gatewayUrl || 'Mock mode'}</p>
-          <p>Trusted senders: ${(gw.trustedSenders || []).join(', ') || 'None'}</p>
-          <p>Last seen: ${gw.lastSeenAt || 'never'}</p>
-        </div>
-      `
-    )
+    .map((gw) => {
+      const online = gw.online;
+      const dot = online ? '🟢' : (gw.status === 'MOCK' ? '⚫' : '🔴');
+      const statusLabel = gw.status === 'MOCK' ? 'MOCK' : (online ? 'ONLINE' : 'OFFLINE');
+      const statusColor = online ? '#16a34a' : (gw.status === 'MOCK' ? '#6b7280' : '#dc2626');
+      const lastSeen = gw.lastSeenAt ? relativeTime(gw.lastSeenAt) : 'never';
+      return `
+        <div class="card" style="border-left: 4px solid ${statusColor}">
+          <strong>${dot} ${gw.operatorName}</strong>
+          <span class="status" style="background:${statusColor}">${statusLabel}</span>
+          <p style="font-size:12px;color:#6b7280">${gw.id}</p>
+          <p>URL: ${gw.gatewayUrl || '<em>Mock — no phone configured</em>'}</p>
+          <p>Last seen: <strong>${lastSeen}</strong></p>
+          <p style="font-size:12px;color:#6b7280">Trusted senders: ${(gw.trustedSenders || []).join(', ') || 'None'}</p>
+        </div>`;
+    })
     .join('');
+}
+
+function relativeTime(iso) {
+  const diffMs = Date.now() - new Date(iso).getTime();
+  if (diffMs < 60000) return `${Math.floor(diffMs / 1000)}s ago`;
+  if (diffMs < 3600000) return `${Math.floor(diffMs / 60000)}m ago`;
+  if (diffMs < 86400000) return `${Math.floor(diffMs / 3600000)}h ago`;
+  return new Date(iso).toLocaleString();
 }
 
 function renderOutbox(rows) {

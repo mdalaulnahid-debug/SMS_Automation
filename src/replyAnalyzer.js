@@ -1,6 +1,6 @@
 'use strict';
 
-const { existsSync, readFileSync } = require('node:fs');
+const { existsSync, readFileSync, writeFileSync } = require('node:fs');
 const { join } = require('node:path');
 const { REQUEST_TYPES } = require('./domain');
 const { extractSilentReference } = require('./store');
@@ -88,8 +88,53 @@ function confidenceScore({ referenceMatched, payloadMatched, patternMatched }) {
   return 'UNKNOWN';
 }
 
+// Tokenise a reply body into meaningful words (≥4 chars, non-numeric).
+function tokenizeReply(body) {
+  return body
+    .toLowerCase()
+    .replace(/[^a-z0-9\s]/g, ' ')
+    .split(/\s+/)
+    .filter((t) => t.length >= 4 && !/^\d+$/.test(t));
+}
+
+/**
+ * Save new keywords from a matched reply into data/reply-patterns.json.
+ * Increments counts for existing tokens; adds new ones.
+ * No-ops silently on any I/O error so a bad write never breaks the main flow.
+ */
+function saveMatchedReplyKeywords(requestType, operator, messageBody) {
+  const filePath = join(__dirname, '..', 'data', 'reply-patterns.json');
+  try {
+    const training = loadTrainingPatterns();
+    const tokens = tokenizeReply(messageBody);
+    if (!tokens.length) return;
+
+    let group = training.patterns.find(
+      (p) => p.requestType === requestType && p.operator === operator
+    );
+    if (!group) {
+      group = { requestType, operator, keywords: [] };
+      training.patterns.push(group);
+    }
+
+    for (const token of tokens) {
+      const existing = group.keywords.find((k) => k.token === token);
+      if (existing) {
+        existing.count += 1;
+      } else {
+        group.keywords.push({ token, count: 1 });
+      }
+    }
+
+    writeFileSync(filePath, JSON.stringify(training, null, 2), 'utf8');
+  } catch {
+    // never throw — training auto-save must not affect core flow
+  }
+}
+
 module.exports = {
   REPLY_PATTERNS,
   analyzeOperatorReply,
-  matchTrainingPattern
+  matchTrainingPattern,
+  saveMatchedReplyKeywords
 };

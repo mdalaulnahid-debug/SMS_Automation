@@ -224,7 +224,7 @@ test('ignores junk SMS from untrusted sender before analysis', async () => {
   assert.equal(store.getRequest(submitted.request.requestId).status, STATUSES.WAITING_OPERATOR_REPLY);
 });
 
-test('gateway config apiKey is sent as Authorization header', async () => {
+test('gateway config apiKey is sent as x-gateway-secret header', async () => {
   const originalFetch = global.fetch;
   const calls = [];
   global.fetch = async (url, options) => {
@@ -248,7 +248,7 @@ test('gateway config apiKey is sent as Authorization header', async () => {
       text: 'LRL 01712345678'
     });
 
-    assert.equal(calls[0].options.headers.authorization, 'Bearer secret-token');
+    assert.equal(calls[0].options.headers['x-gateway-secret'], 'secret-token');
   } finally {
     global.fetch = originalFetch;
   }

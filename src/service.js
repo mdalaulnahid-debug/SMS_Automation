@@ -2,7 +2,7 @@
 
 const { OPERATORS, STATUSES, DISPATCH_STATUSES, TERMINAL_DISPATCH_STATUSES } = require('./domain');
 const { parseRequestText, INVALID_FORMAT_MESSAGE } = require('./parser');
-const { analyzeOperatorReply } = require('./replyAnalyzer');
+const { analyzeOperatorReply, saveMatchedReplyKeywords } = require('./replyAnalyzer');
 
 const DEFAULT_REPLY_WINDOW_MS = 5 * 60 * 1000;
 
@@ -170,6 +170,8 @@ class AutomationService {
     if (operatorKey) {
       this.store.markOperatorReplyReceived(matchedRequest.requestId, operatorKey);
       this.store.markDispatchReplied(matchedRequest.requestId, operatorKey, { inboxId: inbox.id });
+      // Auto-save reply keywords to training data for future matching improvement
+      saveMatchedReplyKeywords(matchedRequest.requestType, operatorKey, input.body);
     }
 
     // Request status is derived from per-operator dispatches: only finalize (NEEDS_MANUAL_REVIEW

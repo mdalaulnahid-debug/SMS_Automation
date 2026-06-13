@@ -66,6 +66,17 @@ function createApp(options = {}) {
           backendUrls: getBackendUrls(port)
         });
       }
+      if (req.method === 'GET' && req.url === '/api/gateways') {
+        if (!requireAdmin(req, res)) return undefined;
+        const ONLINE_THRESHOLD_MS = 5 * 60 * 1000; // 5 min
+        const now = Date.now();
+        const gateways = store.listGateways().map((gw) => {
+          const lastSeenMs = gw.lastSeenAt ? new Date(gw.lastSeenAt).getTime() : 0;
+          const online = gw.status === 'CONFIGURED' && now - lastSeenMs < ONLINE_THRESHOLD_MS;
+          return { ...gw, online };
+        });
+        return json(res, 200, { gateways });
+      }
       if (req.method === 'POST' && req.url === '/api/gateways/register') {
         const body = await readJson(req);
         if (!isAdmin(req, authConfig) && !isValidGateway(req, body.gatewayId, store, authConfig)) {

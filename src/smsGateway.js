@@ -93,34 +93,39 @@ class SmsGatewayClient {
     }
 
     const url = `${gateway.gatewayUrl}${gateway.sendPath}`;
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          'content-type': 'application/json',
-          ...(gateway.apiKey ? { authorization: `Bearer ${gateway.apiKey}` } : {})
-        },
-        body: JSON.stringify({
-          to: payload.to,
-          message: payload.message,
-          requestId: payload.requestId,
-          operator: payload.operator
-        })
-      });
-      const responseText = await response.text();
-      return {
-        ok: response.ok,
-        mode: 'http',
-        status: response.status,
-        response: responseText
-      };
-    } catch (error) {
-      return {
-        ok: false,
-        mode: 'http',
-        error: error.message
-      };
+    const body = JSON.stringify({
+      to: payload.to,
+      message: payload.message,
+      requestId: payload.requestId,
+      operator: payload.operator
+    });
+    const headers = {
+      'content-type': 'application/json',
+      ...(gateway.apiKey ? { 'x-gateway-secret': gateway.apiKey } : {})
+    };
+
+    const MAX_ATTEMPTS = 3;
+    const BASE_DELAY_MS = 2000;
+
+    for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+      try {
+        const response = await fetch(url, { method: 'POST', headers, body });
+        const responseText = await response.text();
+        if (response.ok) {
+          return { ok: true, mode: 'http', status: response.status, response: responseText, attempt };
+        }
+        // 4xx = permanent failure (bad request / auth) — don't retry
+        if (response.status >= 400 && response.status < 500) {
+          return { ok: false, mode: 'http', status: response.status, response: responseText, attempt };
+        }
+        // 5xx — retry after backoff
+        if (attempt < MAX_ATTEMPTS) await delay(BASE_DELAY_MS * attempt);
+      } catch (error) {
+        if (attempt < MAX_ATTEMPTS) await delay(BASE_DELAY_MS * attempt);
+        else return { ok: false, mode: 'http', error: error.message, attempt };
+      }
     }
+    return { ok: false, mode: 'http', error: 'Max retries exceeded', attempt: MAX_ATTEMPTS };
   }
 
   async dispatchAll() {
@@ -131,6 +136,10 @@ class SmsGatewayClient {
     }
     return results;
   }
+}
+
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 module.exports = { SmsGatewayClient };

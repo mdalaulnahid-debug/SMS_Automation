@@ -344,6 +344,10 @@ class AutomationStore {
     return Array.from(this.requests.values()).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   }
 
+  listGateways() {
+    return Array.from(this.gateways.values());
+  }
+
   registerGateway(gatewayId, input = {}) {
     const gateway = this.gateways.get(gatewayId);
     if (!gateway) throw new Error(`Gateway not configured: ${gatewayId}`);
