@@ -19,6 +19,9 @@ interface LogDao {
     @Query("UPDATE log_entries SET status = :status, errorDetail = :detail WHERE id = :id")
     suspend fun updateStatus(id: Long, status: String, detail: String? = null)
 
+    @Query("UPDATE log_entries SET status = :status, errorDetail = :detail WHERE localId = :localId")
+    suspend fun updateStatusByLocalId(localId: String, status: String, detail: String? = null)
+
     @Query("SELECT * FROM log_entries WHERE direction = 'OUTBOUND' ORDER BY timestamp DESC LIMIT 1")
     suspend fun getLastSent(): LogEntry?
 

@@ -142,6 +142,39 @@ object BackendClient {
         }
     }
 
+    fun postDeliveryStatus(
+        backendUrl: String,
+        gatewayId: String,
+        localId: String,
+        requestId: String,
+        operator: String,
+        event: String,       // "SENT" | "DELIVERED" | "FAILED"
+        resultCode: Int,
+        gatewaySecret: String = ""
+    ) {
+        val base = backendUrl.trim().trimEnd('/')
+        if (base.isBlank()) return
+        val payload = JSONObject().apply {
+            put("gatewayId", gatewayId)
+            put("localId", localId)
+            put("requestId", requestId)
+            put("operator", operator)
+            put("event", event)
+            put("resultCode", resultCode)
+        }.toString()
+        try {
+            val builder = Request.Builder()
+                .url("$base/api/sms/delivery")
+                .post(payload.toRequestBody(JSON))
+            if (gatewaySecret.isNotBlank()) builder.header("x-gateway-secret", gatewaySecret)
+            client.newCall(builder.build()).execute().use { r ->
+                Log.d(TAG, "Delivery status $event/$localId → HTTP ${r.code}")
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "postDeliveryStatus failed: ${e.message}")
+        }
+    }
+
     private fun parseError(body: String): String? {
         if (body.isBlank()) return null
         return try {

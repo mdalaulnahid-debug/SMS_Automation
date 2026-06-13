@@ -109,6 +109,18 @@ function createApp(options = {}) {
         const result = service.receiveSmsWebhook(body);
         return json(res, result.ok ? 200 : 202, result);
       }
+      if (req.method === 'POST' && req.url === '/api/sms/delivery') {
+        const body = await readJson(req);
+        if (!isAdmin(req, authConfig) && !isValidGateway(req, body.gatewayId, store, authConfig)) {
+          return json(res, 401, { error: 'Invalid or missing gateway secret.' });
+        }
+        // { gatewayId, localId, requestId, operator, event, resultCode }
+        const { gatewayId, localId, requestId, operator, event, resultCode } = body;
+        store.audit('gateway', 'SMS_DELIVERY_STATUS', {
+          gatewayId, localId, requestId, operator, event, resultCode
+        });
+        return json(res, 200, { ok: true });
+      }
       if (req.method === 'GET' && req.url === '/api/users') {
         if (!requireAdmin(req, res)) return undefined;
         return json(res, 200, { users: store.listUsers() });

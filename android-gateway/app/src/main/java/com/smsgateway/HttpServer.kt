@@ -52,6 +52,7 @@ class HttpServer(private val context: Context, port: Int) : NanoHTTPD("0.0.0.0",
 
             Log.d(TAG, "send-sms → to=$to operator=$operator requestId=$requestId msg=${message.take(40)}")
 
+            val subId = Prefs.getPreferredSubId(context)
             val localId = SmsSender.send(context, to, message, requestId, operator)
 
             CoroutineScope(Dispatchers.IO).launch {
@@ -64,7 +65,9 @@ class HttpServer(private val context: Context, port: Int) : NanoHTTPD("0.0.0.0",
                         messageBody = message,
                         requestId = requestId.ifBlank { null },
                         operator = operator.ifBlank { null },
-                        status = "OK"
+                        status = "QUEUED_TO_CARRIER",
+                        localId = localId,
+                        subId = subId
                     )
                 )
                 db.logDao().pruneOld()

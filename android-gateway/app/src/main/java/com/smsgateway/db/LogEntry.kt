@@ -15,8 +15,12 @@ data class LogEntry(
     val messageBody: String,
     val requestId: String? = null,
     val operator: String? = null,
-    /** OK | FAILED | PENDING_RETRY */
+    /** OK | QUEUED_TO_CARRIER | DELIVERED | FAILED | PENDING_RETRY */
     val status: String,
     val errorDetail: String? = null,
-    val timestamp: Long = System.currentTimeMillis()
+    val timestamp: Long = System.currentTimeMillis(),
+    /** Provider message ID returned by SmsSender (links delivery callbacks to this row) */
+    val localId: String? = null,
+    /** SubscriptionManager subId of the SIM used to send; -1 = system default */
+    val subId: Int = -1
 )

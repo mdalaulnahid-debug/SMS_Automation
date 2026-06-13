@@ -80,6 +80,16 @@
             </intent-filter>
         </receiver>
 
+        <!-- Receives PendingIntent callbacks from SmsManager for sent/delivered status -->
+        <receiver
+            android:name=".SmsStatusReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.smsgateway.SMS_SENT" />
+                <action android:name="com.smsgateway.SMS_DELIVERED" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>
