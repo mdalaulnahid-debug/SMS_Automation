@@ -175,6 +175,45 @@ object BackendClient {
         }
     }
 
+    data class AppVersion(val versionCode: Int, val versionName: String, val releaseNotes: String)
+
+    fun fetchAppVersion(backendUrl: String): AppVersion? {
+        val base = backendUrl.trim().trimEnd('/')
+        if (base.isBlank()) return null
+        return try {
+            client.newCall(Request.Builder().url("$base/api/app/version").get().build()).execute().use { r ->
+                if (!r.isSuccessful) return null
+                val json = JSONObject(r.body?.string().orEmpty())
+                AppVersion(
+                    versionCode = json.optInt("versionCode", 0),
+                    versionName = json.optString("versionName"),
+                    releaseNotes = json.optString("releaseNotes")
+                )
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "fetchAppVersion failed: ${e.message}")
+            null
+        }
+    }
+
+    fun downloadApk(backendUrl: String, gatewaySecret: String, dest: java.io.File): Boolean {
+        val base = backendUrl.trim().trimEnd('/')
+        if (base.isBlank()) return false
+        return try {
+            val builder = Request.Builder().url("$base/api/app/apk").get()
+            if (gatewaySecret.isNotBlank()) builder.header("x-gateway-secret", gatewaySecret)
+            client.newCall(builder.build()).execute().use { r ->
+                if (!r.isSuccessful) return false
+                val body = r.body ?: return false
+                dest.outputStream().use { out -> body.byteStream().copyTo(out) }
+                true
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "downloadApk failed: ${e.message}")
+            false
+        }
+    }
+
     data class PendingJob(
         val outboxId: String,
         val to: String,

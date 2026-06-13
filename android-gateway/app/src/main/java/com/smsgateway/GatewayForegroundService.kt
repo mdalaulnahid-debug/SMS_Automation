@@ -55,6 +55,7 @@ class GatewayForegroundService : Service() {
         private const val NOTIFICATION_ID = 1
 
         const val ACTION_STOP = "com.smsgateway.ACTION_STOP"
+        const val ACTION_DOWNLOAD_UPDATE = "com.smsgateway.ACTION_DOWNLOAD_UPDATE"
 
     }
 
@@ -81,6 +82,8 @@ class GatewayForegroundService : Service() {
 
         createNotificationChannel()
 
+        UpdateChecker.createNotificationChannel(this)
+
     }
 
 
@@ -94,6 +97,14 @@ class GatewayForegroundService : Service() {
             stopGateway(removeForeground = true)
 
             stopSelf()
+
+            return START_NOT_STICKY
+
+        }
+
+        if (intent?.action == ACTION_DOWNLOAD_UPDATE) {
+
+            Thread({ UpdateInstaller.downloadAndInstall(this) }, "apk-download").start()
 
             return START_NOT_STICKY
 
@@ -184,6 +195,8 @@ class GatewayForegroundService : Service() {
                 }
 
                 startPollLoop()
+
+                UpdateChecker.checkInBackground(this@GatewayForegroundService)
 
                 mainHandler.post {
 

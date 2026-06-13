@@ -1,6 +1,7 @@
 'use strict';
 
-const { readFile } = require('node:fs/promises');
+const { readFile, stat, createReadStream } = require('node:fs');
+const { readFile: readFileAsync } = require('node:fs/promises');
 const { join } = require('node:path');
 const { AutomationStore } = require('./store');
 const { OperatorQueue } = require('./queue');
@@ -64,6 +65,36 @@ function createApp(options = {}) {
           preferredLanIp,
           lanAddresses: lanAddresses.map((entry) => entry.address),
           backendUrls: getBackendUrls(port)
+        });
+      }
+      if (req.method === 'GET' && req.url === '/api/app/version') {
+        // No auth — phones need to check this even before they've registered.
+        const versionFile = join(__dirname, '..', 'public', 'app-version.json');
+        return new Promise((resolve) => {
+          readFile(versionFile, 'utf8', (err, data) => {
+            if (err) return resolve(json(res, 404, { error: 'No app version published yet.' }));
+            try {
+              resolve(json(res, 200, JSON.parse(data)));
+            } catch {
+              resolve(json(res, 500, { error: 'Corrupt app-version.json' }));
+            }
+          });
+        });
+      }
+      if (req.method === 'GET' && req.url === '/api/app/apk') {
+        if (!requireAdmin(req, res) && !isValidGatewayHeader(req, store, authConfig)) return undefined;
+        const apkFile = join(__dirname, '..', 'public', 'gateway-app.apk');
+        return new Promise((resolve) => {
+          stat(apkFile, (err, s) => {
+            if (err) return resolve(json(res, 404, { error: 'APK not published yet. Run scripts/publish-apk.ps1.' }));
+            res.writeHead(200, {
+              'content-type': 'application/vnd.android.package-archive',
+              'content-length': s.size,
+              'content-disposition': 'attachment; filename="gateway-app.apk"'
+            });
+            createReadStream(apkFile).pipe(res);
+            resolve();
+          });
         });
       }
       if (req.method === 'GET' && req.url === '/api/gateways') {
@@ -256,8 +287,15 @@ function createApp(options = {}) {
   return { handle, store, queue, smsGateway, service, recover };
 }
 
+// APK download: accept any registered gateway's secret (not tied to a specific gatewayId).
+function isValidGatewayHeader(req, store, authConfig) {
+  const secret = req.headers['x-gateway-secret'] || '';
+  if (!secret) return false;
+  return store.listGateways().some((gw) => gw.secret && gw.secret === secret);
+}
+
 async function serveFile(res, fileName, contentType) {
-  const content = await readFile(join(__dirname, '..', 'public', fileName), 'utf8');
+  const content = await readFileAsync(join(__dirname, '..', 'public', fileName), 'utf8');
   res.writeHead(200, { 'content-type': contentType });
   res.end(content);
 }

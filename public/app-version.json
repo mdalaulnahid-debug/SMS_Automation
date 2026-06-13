@@ -1,0 +1,5 @@
+﻿{
+    "versionCode":  13,
+    "versionName":  "1.7.0",
+    "releaseNotes":  "OTA update system, dual-SIM support, polling architecture"
+}
