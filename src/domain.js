@@ -3,10 +3,10 @@
 const OPERATORS = Object.freeze({
   GP: {
     name: 'GP',
-    shortcode: '12345',
+    shortcode: '01714054239',
     gatewayId: 'GP_PHONE_01',
     msisdnPrefixes: ['013', '017'],
-    trustedSenders: ['12345']
+    trustedSenders: ['01714054239']
   },
   ROBI: {
     name: 'Robi',
