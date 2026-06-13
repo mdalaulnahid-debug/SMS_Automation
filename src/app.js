@@ -47,6 +47,22 @@ function createApp(options = {}) {
 
   async function handle(req, res) {
     try {
+      if (req.method === 'GET' && req.url === '/setup') {
+        // Only available when no admin key is configured yet.
+        if (authConfig.adminApiKey) return json(res, 403, { error: 'Already configured. Use the existing admin key.' });
+        return serveFile(res, 'setup.html', 'text/html; charset=utf-8');
+      }
+      if (req.method === 'POST' && req.url === '/setup') {
+        if (authConfig.adminApiKey) return json(res, 403, { error: 'Already configured.' });
+        const body = await readJson(req);
+        const key = String(body.adminApiKey || '').trim();
+        if (key.length < 8) return json(res, 400, { error: 'Password must be at least 8 characters.' });
+        const configPath = require('node:path').join(__dirname, '..', 'config', 'auth.json');
+        const newConfig = { adminApiKey: key, requireGatewayAuth: false, denyUnknownRequesters: false };
+        await require('node:fs/promises').writeFile(configPath, JSON.stringify(newConfig, null, 2), 'utf8');
+        authConfig.adminApiKey = key; // apply immediately without restart
+        return json(res, 200, { ok: true });
+      }
       if (req.method === 'GET' && req.url === '/') {
         return serveFile(res, 'index.html', 'text/html; charset=utf-8');
       }

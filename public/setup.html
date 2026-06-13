@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gateway Setup</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0B1220;
+      font-family: system-ui, sans-serif;
+      color: #F8FAFC;
+    }
+    .card {
+      background: #1F2937;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 36px;
+      width: 100%;
+      max-width: 420px;
+    }
+    h1 { font-size: 20px; margin-bottom: 6px; }
+    .subtitle { color: #94A3B8; font-size: 13px; margin-bottom: 28px; }
+    label { display: block; font-size: 13px; color: #94A3B8; margin-bottom: 6px; }
+    input[type=password], input[type=text] {
+      width: 100%;
+      padding: 10px 12px;
+      background: #243041;
+      border: 1px solid #334155;
+      border-radius: 8px;
+      color: #F8FAFC;
+      font-size: 15px;
+      margin-bottom: 18px;
+      outline: none;
+    }
+    input:focus { border-color: #38BDF8; }
+    .hint { font-size: 12px; color: #64748B; margin-top: -14px; margin-bottom: 18px; }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #0EA5E9;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:hover { background: #38BDF8; }
+    button:disabled { background: #334155; cursor: not-allowed; }
+    .msg { margin-top: 16px; font-size: 13px; text-align: center; }
+    .msg.ok { color: #34D399; }
+    .msg.err { color: #F87171; }
+    .toggle { font-size: 12px; color: #38BDF8; cursor: pointer; margin-left: 8px; user-select: none; }
+  </style>
+</head>
+<body>
+<div class="card">
+  <h1>Gateway Setup</h1>
+  <p class="subtitle">Create your admin password. You will enter this in the app on the admin phone.</p>
+
+  <label>
+    Admin Password
+    <span class="toggle" onclick="toggleVis('pw')">show</span>
+  </label>
+  <input type="password" id="pw" placeholder="Min 8 characters" />
+
+  <label>
+    Confirm Password
+    <span class="toggle" onclick="toggleVis('pw2')">show</span>
+  </label>
+  <input type="password" id="pw2" placeholder="Repeat password" />
+  <p class="hint">Use something memorable but hard to guess. Save it — you will need it in the app.</p>
+
+  <button id="btn" onclick="save()">Save &amp; Activate</button>
+  <p class="msg" id="msg"></p>
+</div>
+
+<script>
+  function toggleVis(id) {
+    const el = document.getElementById(id);
+    el.type = el.type === 'password' ? 'text' : 'password';
+  }
+
+  async function save() {
+    const pw  = document.getElementById('pw').value;
+    const pw2 = document.getElementById('pw2').value;
+    const msg = document.getElementById('msg');
+    const btn = document.getElementById('btn');
+
+    msg.className = 'msg';
+    if (pw.length < 8)      { msg.className='msg err'; msg.textContent='Password must be at least 8 characters.'; return; }
+    if (pw !== pw2)          { msg.className='msg err'; msg.textContent='Passwords do not match.'; return; }
+
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+
+    const res = await fetch('/setup', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ adminApiKey: pw })
+    });
+    const data = await res.json();
+
+    btn.disabled = false;
+    btn.textContent = 'Save & Activate';
+
+    if (res.ok) {
+      msg.className = 'msg ok';
+      msg.textContent = '✓ Saved. Restart the backend, then enter this password in the app under Settings → Admin API Key.';
+      btn.disabled = true;
+    } else {
+      msg.className = 'msg err';
+      msg.textContent = data.error || 'Failed to save.';
+    }
+  }
+</script>
+</body>
+</html>
