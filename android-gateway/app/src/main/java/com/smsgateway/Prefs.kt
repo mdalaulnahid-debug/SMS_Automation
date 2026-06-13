@@ -69,4 +69,25 @@ object Prefs {
 
     fun setPreferredSubId(context: Context, value: Int) =
         prefs(context).edit().putInt("preferred_sub_id", value).apply()
+
+    // Secondary gateway for dual-SIM phones (empty = not configured).
+    fun getSecondaryGatewayId(context: Context): String =
+        prefs(context).getString("secondary_gateway_id", "") ?: ""
+
+    fun setSecondaryGatewayId(context: Context, value: String) =
+        prefs(context).edit().putString("secondary_gateway_id", value).apply()
+
+    fun getSecondarySubId(context: Context): Int =
+        prefs(context).getInt("secondary_sub_id", -1)
+
+    fun setSecondarySubId(context: Context, value: Int) =
+        prefs(context).edit().putInt("secondary_sub_id", value).apply()
+
+    /** Returns list of (gatewayId, subId) for every configured gateway on this phone. */
+    fun configuredGateways(context: Context): List<Pair<String, Int>> {
+        val list = mutableListOf(getGatewayId(context) to getPreferredSubId(context))
+        val secondary = getSecondaryGatewayId(context)
+        if (secondary.isNotBlank()) list.add(secondary to getSecondarySubId(context))
+        return list
+    }
 }

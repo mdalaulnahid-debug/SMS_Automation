@@ -10,17 +10,17 @@ const OPERATORS = Object.freeze({
   },
   ROBI: {
     name: 'Robi',
-    shortcode: '12345',
+    shortcode: '01833122144',
     gatewayId: 'ROBI_PHONE_01',
     msisdnPrefixes: ['016', '018'],
-    trustedSenders: ['12345']
+    trustedSenders: ['12345']   // overridden by config/gateways.json in production
   },
   BANGLALINK: {
     name: 'Banglalink',
-    shortcode: '12345',
+    shortcode: '01924400990',
     gatewayId: 'BANGLALINK_PHONE_01',
     msisdnPrefixes: ['014', '019'],
-    trustedSenders: ['12345']
+    trustedSenders: ['12345']   // overridden by config/gateways.json in production
   }
 });
 

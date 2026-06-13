@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.snackbar.Snackbar
@@ -19,6 +20,7 @@ class SettingsActivity : AppCompatActivity() {
     private val requestTypes = arrayOf("LRL", "LCL", "MS-NID", "NID-MS", "IMEI-MS")
 
     private var simSubIds: List<Int> = listOf(-1)
+    private val gatewayIds = arrayOf("(none)", "GP_PHONE_01", "ROBI_PHONE_01", "BANGLALINK_PHONE_01")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,13 +30,16 @@ class SettingsActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val gatewayIds = arrayOf("GP_PHONE_01", "ROBI_PHONE_01", "BANGLALINK_PHONE_01")
+        val primaryIds = arrayOf("GP_PHONE_01", "ROBI_PHONE_01", "BANGLALINK_PHONE_01")
         binding.spinnerGatewayId.adapter =
+            ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, primaryIds)
+
+        binding.spinnerSecondaryGatewayId.adapter =
             ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, gatewayIds)
 
         setupSimSpinner()
         setupTestRequest()
-        loadSettings(gatewayIds)
+        loadSettings(primaryIds)
         binding.btnSave.setOnClickListener { saveSettings() }
     }
 
@@ -47,6 +52,7 @@ class SettingsActivity : AppCompatActivity() {
                 arrayOf("Default SIM")
             )
             binding.tvSimHint.text = "SIM info unavailable (grant READ_PHONE_STATE)"
+            binding.cardSecondaryGateway.isVisible = false
         } else {
             simSubIds = listOf(-1) + sims.map { it.first }
             val labels = listOf("Default SIM") + sims.map { (_, name, slot) -> "SIM ${slot + 1}: $name" }
@@ -54,6 +60,15 @@ class SettingsActivity : AppCompatActivity() {
                 this, android.R.layout.simple_spinner_dropdown_item, labels
             )
             binding.tvSimHint.text = "Select which SIM sends operator SMS"
+            // Show secondary gateway card only when there are 2+ SIMs
+            if (sims.size >= 2) {
+                binding.cardSecondaryGateway.isVisible = true
+                binding.spinnerSecondarySim.adapter = ArrayAdapter(
+                    this, android.R.layout.simple_spinner_dropdown_item, labels
+                )
+            } else {
+                binding.cardSecondaryGateway.isVisible = false
+            }
         }
     }
 
@@ -151,13 +166,20 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadSettings(gatewayIds: Array<String>) {
+    private fun loadSettings(primaryIds: Array<String>) {
         val currentId = Prefs.getGatewayId(this)
-        binding.spinnerGatewayId.setSelection(gatewayIds.indexOf(currentId).coerceAtLeast(0))
+        binding.spinnerGatewayId.setSelection(primaryIds.indexOf(currentId).coerceAtLeast(0))
 
         val savedSubId = Prefs.getPreferredSubId(this)
         val simIdx = simSubIds.indexOf(savedSubId).coerceAtLeast(0)
         binding.spinnerSim.setSelection(simIdx)
+
+        // Secondary gateway
+        val secondaryId = Prefs.getSecondaryGatewayId(this)
+        val secGwIdx = gatewayIds.indexOf(secondaryId).coerceAtLeast(0)
+        binding.spinnerSecondaryGatewayId.setSelection(secGwIdx)
+        val secSubId = Prefs.getSecondarySubId(this)
+        binding.spinnerSecondarySim.setSelection(simSubIds.indexOf(secSubId).coerceAtLeast(0))
 
         binding.etBackendUrl.setText(Prefs.getBackendUrl(this))
         binding.etApiKey.setText(Prefs.getApiKey(this))
@@ -180,6 +202,14 @@ class SettingsActivity : AppCompatActivity() {
 
         val selectedSimIdx = binding.spinnerSim.selectedItemPosition.coerceIn(0, simSubIds.lastIndex)
         Prefs.setPreferredSubId(this, simSubIds[selectedSimIdx])
+
+        // Secondary gateway (only save when the card is visible)
+        if (binding.cardSecondaryGateway.isVisible) {
+            val secGwId = binding.spinnerSecondaryGatewayId.selectedItem?.toString().orEmpty()
+            Prefs.setSecondaryGatewayId(this, if (secGwId == "(none)") "" else secGwId)
+            val secSimIdx = binding.spinnerSecondarySim.selectedItemPosition.coerceIn(0, simSubIds.lastIndex)
+            Prefs.setSecondarySubId(this, simSubIds[secSimIdx])
+        }
 
         Prefs.setGatewayId(this, gatewayId)
         Prefs.setBackendUrl(this, backendUrl)

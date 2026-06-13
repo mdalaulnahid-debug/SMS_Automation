@@ -175,18 +175,19 @@ class GatewayForegroundService : Service() {
                 Prefs.setServiceEnabled(this@GatewayForegroundService, true)
 
                 val localIp = NetworkUtils.getLocalIp(this@GatewayForegroundService)
-                val gatewayId = Prefs.getGatewayId(this@GatewayForegroundService)
                 val backendUrl = Prefs.getBackendUrl(this@GatewayForegroundService)
                 val gatewaySecret = Prefs.getApiKey(this@GatewayForegroundService)
                 if (localIp.isNotBlank() && backendUrl.isNotBlank()) {
-                    BackendClient.registerGateway(backendUrl, gatewayId, localIp, port, gatewaySecret)
+                    for ((gwId, _) in Prefs.configuredGateways(this@GatewayForegroundService)) {
+                        BackendClient.registerGateway(backendUrl, gwId, localIp, port, gatewaySecret)
+                    }
                 }
 
                 startPollLoop()
 
                 mainHandler.post {
 
-                    updateNotification("Listening on :$port | $gatewayId")
+                    updateNotification("Listening on :$port | ${Prefs.getGatewayId(this@GatewayForegroundService)}")
 
                     ServiceEvents.sendRunning(this@GatewayForegroundService)
 
@@ -322,18 +323,19 @@ class GatewayForegroundService : Service() {
             while (pollActive) {
                 try {
                     val backendUrl = Prefs.getBackendUrl(this)
-                    val gatewayId = Prefs.getGatewayId(this)
                     val secret = Prefs.getApiKey(this)
                     if (backendUrl.isNotBlank()) {
-                        val jobs = BackendClient.fetchAndClaimJobs(backendUrl, gatewayId, secret)
-                        for (job in jobs) {
-                            try {
-                                SmsSender.send(this, job.to, job.message, job.requestId, job.operator)
-                                BackendClient.ackJob(backendUrl, gatewayId, job.outboxId, ok = true, gatewaySecret = secret)
-                                Log.d(TAG, "Poll: sent ${job.outboxId} to ${job.to}")
-                            } catch (e: Exception) {
-                                Log.e(TAG, "Poll: send failed for ${job.outboxId}: ${e.message}")
-                                BackendClient.ackJob(backendUrl, gatewayId, job.outboxId, ok = false, error = e.message, gatewaySecret = secret)
+                        for ((gwId, subId) in Prefs.configuredGateways(this)) {
+                            val jobs = BackendClient.fetchAndClaimJobs(backendUrl, gwId, secret)
+                            for (job in jobs) {
+                                try {
+                                    SmsSender.send(this, job.to, job.message, job.requestId, job.operator, subId)
+                                    BackendClient.ackJob(backendUrl, gwId, job.outboxId, ok = true, gatewaySecret = secret)
+                                    Log.d(TAG, "Poll[$gwId]: sent ${job.outboxId} to ${job.to}")
+                                } catch (e: Exception) {
+                                    Log.e(TAG, "Poll[$gwId]: send failed for ${job.outboxId}: ${e.message}")
+                                    BackendClient.ackJob(backendUrl, gwId, job.outboxId, ok = false, error = e.message, gatewaySecret = secret)
+                                }
                             }
                         }
                     }

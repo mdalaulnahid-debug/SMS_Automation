@@ -237,6 +237,70 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- Secondary gateway card — shown only when 2+ SIMs detected -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardSecondaryGateway"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/section_gap"
+                android:visibility="gone"
+                app:cardBackgroundColor="@color/bg_card"
+                app:cardCornerRadius="@dimen/card_radius"
+                app:strokeColor="@color/divider"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/card_padding">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Second SIM (Dual-SIM Phone)"
+                        android:textAppearance="@style/TextAppearance.SmsGateway.CardTitle"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Leave Gateway ID blank to disable the second gateway."
+                        android:textColor="@color/text_secondary"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="12dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Secondary Gateway ID"
+                        android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel"
+                        android:layout_marginBottom="6dp" />
+
+                    <Spinner
+                        android:id="@+id/spinnerSecondaryGatewayId"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:background="@drawable/bg_card_elevated"
+                        android:paddingHorizontal="8dp"
+                        android:layout_marginBottom="12dp" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Secondary SIM"
+                        android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel"
+                        android:layout_marginBottom="6dp" />
+
+                    <Spinner
+                        android:id="@+id/spinnerSecondarySim"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:background="@drawable/bg_card_elevated"
+                        android:paddingHorizontal="8dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSave"
                 android:layout_width="match_parent"

@@ -22,9 +22,10 @@ object SmsSender {
         to: String,
         message: String,
         requestId: String = "",
-        operator: String = ""
+        operator: String = "",
+        subId: Int = -1
     ): String {
-        val subId = Prefs.getPreferredSubId(context)
+        val subId = subId.takeIf { it != -1 } ?: Prefs.getPreferredSubId(context)
         val smsManager: SmsManager = resolveSmsManager(context, subId)
 
         val localId = "sms_${System.currentTimeMillis()}"
