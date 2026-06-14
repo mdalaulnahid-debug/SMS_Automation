@@ -3,10 +3,14 @@ package com.smsgateway
 import android.Manifest
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.PowerManager
+import android.provider.Settings
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.smsgateway.databinding.ActivityPermissionsBinding
@@ -49,8 +53,21 @@ class PermissionsActivity : AppCompatActivity() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Re-check after user returns from battery settings
+        if (allPermissionsGranted() && isBatteryOptimized()) {
+            // Still not exempted — dialog will show again next time they tap Grant
+        }
+    }
+
     private fun allPermissionsGranted() = requiredPermissions().all {
         ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun isBatteryOptimized(): Boolean {
+        val pm = getSystemService(PowerManager::class.java)
+        return !pm.isIgnoringBatteryOptimizations(packageName)
     }
 
     private fun requiredPermissions(): Array<String> {
@@ -67,8 +84,35 @@ class PermissionsActivity : AppCompatActivity() {
     }
 
     private fun proceed() {
-        startActivity(Intent(this, MainActivity::class.java))
-        finish()
+        if (isBatteryOptimized()) {
+            showBatteryOptimizationDialog()
+        } else {
+            startActivity(Intent(this, MainActivity::class.java))
+            finish()
+        }
+    }
+
+    private fun showBatteryOptimizationDialog() {
+        AlertDialog.Builder(this)
+            .setTitle("Disable Battery Optimization")
+            .setMessage(
+                "Samsung and other phones kill background apps to save battery.\n\n" +
+                "Without this exemption, the gateway service will stop when the screen is off " +
+                "and miss incoming SMS replies.\n\n" +
+                "Tap \"Allow\" on the next screen to keep the gateway always running."
+            )
+            .setCancelable(false)
+            .setPositiveButton("Open Settings") { _, _ ->
+                val intent = Intent(Settings.ACTION_REQUEST_IGNORE_BATTERY_OPTIMIZATIONS).apply {
+                    data = Uri.parse("package:$packageName")
+                }
+                startActivity(intent)
+            }
+            .setNegativeButton("Skip (not recommended)") { _, _ ->
+                startActivity(Intent(this, MainActivity::class.java))
+                finish()
+            }
+            .show()
     }
 
     private fun friendlyName(permission: String) = when (permission) {
