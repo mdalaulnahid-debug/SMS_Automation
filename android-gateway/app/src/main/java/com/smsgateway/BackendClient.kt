@@ -196,12 +196,13 @@ object BackendClient {
         }
     }
 
-    fun downloadApk(backendUrl: String, gatewaySecret: String, dest: java.io.File): Boolean {
+    fun downloadApk(backendUrl: String, adminKey: String, gatewaySecret: String, dest: java.io.File): Boolean {
         val base = backendUrl.trim().trimEnd('/')
         if (base.isBlank()) return false
         return try {
             val builder = Request.Builder().url("$base/api/app/apk").get()
-            if (gatewaySecret.isNotBlank()) builder.header("x-gateway-secret", gatewaySecret)
+            if (adminKey.isNotBlank()) builder.header("x-api-key", adminKey)
+            else if (gatewaySecret.isNotBlank()) builder.header("x-gateway-secret", gatewaySecret)
             client.newCall(builder.build()).execute().use { r ->
                 if (!r.isSuccessful) return false
                 val body = r.body ?: return false

@@ -18,7 +18,8 @@ object UpdateInstaller {
      */
     fun downloadAndInstall(context: Context) {
         val backendUrl = Prefs.getBackendUrl(context)
-        val secret = Prefs.getApiKey(context)
+        val adminKey = Prefs.getAdminApiKey(context)
+        val gatewaySecret = Prefs.getApiKey(context)
         if (backendUrl.isBlank()) {
             Log.w(TAG, "No backend URL configured")
             return
@@ -27,12 +28,15 @@ object UpdateInstaller {
         UpdateChecker.showDownloadProgress(context, 0)
 
         val apkFile = File(context.getExternalFilesDir(null), "gateway-update.apk")
-        val ok = BackendClient.downloadApk(backendUrl, secret, apkFile)
+        val ok = BackendClient.downloadApk(backendUrl, adminKey, gatewaySecret, apkFile)
 
         UpdateChecker.cancelDownloadNotification(context)
 
         if (!ok || !apkFile.exists() || apkFile.length() == 0L) {
             Log.e(TAG, "APK download failed")
+            android.os.Handler(context.mainLooper).post {
+                android.widget.Toast.makeText(context, "Update download failed — check backend connection", android.widget.Toast.LENGTH_LONG).show()
+            }
             return
         }
 
@@ -45,6 +49,13 @@ object UpdateInstaller {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             if (!context.packageManager.canRequestPackageInstalls()) {
                 Log.w(TAG, "REQUEST_INSTALL_PACKAGES not granted — directing to settings")
+                android.os.Handler(context.mainLooper).post {
+                    android.widget.Toast.makeText(
+                        context,
+                        "Allow 'Install unknown apps' for SMS Gateway in the next screen",
+                        android.widget.Toast.LENGTH_LONG
+                    ).show()
+                }
                 val intent = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES).apply {
                     data = Uri.parse("package:${context.packageName}")
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK
