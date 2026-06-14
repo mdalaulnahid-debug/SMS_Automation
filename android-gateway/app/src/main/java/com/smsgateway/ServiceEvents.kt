@@ -8,6 +8,7 @@ object ServiceEvents {
     const val ACTION_STATUS = "com.smsgateway.SERVICE_STATUS"
     const val EXTRA_RUNNING = "running"
     const val EXTRA_ERROR = "error"
+    const val EXTRA_NO_INTERNET = "no_internet"
 
     fun sendRunning(context: Context) {
         broadcast(context, running = true, error = null)
@@ -19,6 +20,22 @@ object ServiceEvents {
 
     fun sendError(context: Context, message: String) {
         broadcast(context, running = false, error = message)
+    }
+
+    fun sendNoInternet(context: Context) {
+        val intent = Intent(ACTION_STATUS).apply {
+            putExtra(EXTRA_RUNNING, true)
+            putExtra(EXTRA_NO_INTERNET, true)
+        }
+        LocalBroadcastManager.getInstance(context.applicationContext).sendBroadcast(intent)
+    }
+
+    fun sendInternetRestored(context: Context) {
+        val intent = Intent(ACTION_STATUS).apply {
+            putExtra(EXTRA_RUNNING, true)
+            putExtra(EXTRA_NO_INTERNET, false)
+        }
+        LocalBroadcastManager.getInstance(context.applicationContext).sendBroadcast(intent)
     }
 
     private fun broadcast(context: Context, running: Boolean, error: String?) {

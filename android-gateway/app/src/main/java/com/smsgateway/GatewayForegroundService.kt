@@ -20,6 +20,14 @@ import android.content.pm.PackageManager
 
 import android.content.pm.ServiceInfo
 
+import android.net.ConnectivityManager
+
+import android.net.Network
+
+import android.net.NetworkCapabilities
+
+import android.net.NetworkRequest
+
 import android.os.Build
 
 import android.os.Handler
@@ -73,6 +81,9 @@ class GatewayForegroundService : Service() {
 
     @Volatile private var pollActive = false
     private var pollThread: Thread? = null
+
+    private var networkCallback: ConnectivityManager.NetworkCallback? = null
+    @Volatile private var hasInternet = true
 
 
 
@@ -195,6 +206,8 @@ class GatewayForegroundService : Service() {
                 }
 
                 startPollLoop()
+
+                registerNetworkMonitor()
 
                 UpdateChecker.checkInBackground(this@GatewayForegroundService)
 
@@ -362,11 +375,44 @@ class GatewayForegroundService : Service() {
         pollThread?.start()
     }
 
+    private fun registerNetworkMonitor() {
+        val cm = getSystemService(ConnectivityManager::class.java) ?: return
+        val request = NetworkRequest.Builder()
+            .addCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
+            .build()
+        val cb = object : ConnectivityManager.NetworkCallback() {
+            override fun onAvailable(network: Network) {
+                if (!hasInternet) {
+                    hasInternet = true
+                    mainHandler.post {
+                        updateNotification("Polling backend | ${Prefs.getGatewayId(this@GatewayForegroundService)}")
+                        ServiceEvents.sendInternetRestored(this@GatewayForegroundService)
+                    }
+                }
+            }
+            override fun onLost(network: Network) {
+                hasInternet = false
+                mainHandler.post {
+                    updateNotification("No internet — polling paused")
+                    ServiceEvents.sendNoInternet(this@GatewayForegroundService)
+                }
+            }
+        }
+        cm.registerNetworkCallback(request, cb)
+        networkCallback = cb
+    }
+
     private fun stopGateway(removeForeground: Boolean) {
 
         pollActive = false
         pollThread?.interrupt()
         pollThread = null
+
+        networkCallback?.let {
+            try { getSystemService(ConnectivityManager::class.java)?.unregisterNetworkCallback(it) }
+            catch (_: Exception) {}
+        }
+        networkCallback = null
 
         httpStarting.set(false)
 

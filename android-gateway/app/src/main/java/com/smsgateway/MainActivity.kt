@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private var serviceToggleInFlight = false
     private var pulseAnimator: ObjectAnimator? = null
+    private var noInternetSnackbar: Snackbar? = null
 
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -44,6 +45,23 @@ class MainActivity : AppCompatActivity() {
             if (intent?.action != ServiceEvents.ACTION_STATUS) return
             if (isFinishing || isDestroyed) return
             serviceToggleInFlight = false
+
+            if (intent.hasExtra(ServiceEvents.EXTRA_NO_INTERNET)) {
+                val noInternet = intent.getBooleanExtra(ServiceEvents.EXTRA_NO_INTERNET, false)
+                if (noInternet) {
+                    noInternetSnackbar = Snackbar.make(
+                        binding.root,
+                        "No internet — polling paused",
+                        Snackbar.LENGTH_INDEFINITE
+                    ).also { it.show() }
+                } else {
+                    noInternetSnackbar?.dismiss()
+                    noInternetSnackbar = null
+                    Snackbar.make(binding.root, "Internet restored — polling resumed", Snackbar.LENGTH_SHORT).show()
+                }
+                return
+            }
+
             val error = intent.getStringExtra(ServiceEvents.EXTRA_ERROR)
             if (!error.isNullOrBlank()) {
                 Snackbar.make(binding.root, error, Snackbar.LENGTH_LONG).show()
