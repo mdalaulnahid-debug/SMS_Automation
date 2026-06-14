@@ -8,6 +8,8 @@
 
     <!-- SIM / subscription management (needed to list SIMs and pick sending SIM) -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <!-- Read actual SIM phone number (API 30+) -->
+    <uses-permission android:name="android.permission.READ_PHONE_NUMBERS" />
 
     <!-- Network -->
     <uses-permission android:name="android.permission.INTERNET" />

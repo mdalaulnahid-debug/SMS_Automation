@@ -45,7 +45,7 @@ const REQUEST_DEFINITIONS = Object.freeze({
   },
   [REQUEST_TYPES.MS_NID]: {
     label: 'mobile number to NID',
-    target: 'ALL_OPERATORS',
+    target: 'RELEVANT_OPERATOR',
     payload: 'MSISDN'
   },
   [REQUEST_TYPES.NID_MS]: {

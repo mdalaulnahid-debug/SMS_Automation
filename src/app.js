@@ -152,7 +152,8 @@ function createApp(options = {}) {
         }
         const gateway = store.registerGateway(body.gatewayId, {
           host: body.host || body.localIp,
-          port: body.port
+          port: body.port,
+          phoneNumber: body.phoneNumber || ''
         });
         return json(res, 200, {
           ok: true,

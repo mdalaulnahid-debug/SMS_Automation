@@ -395,6 +395,7 @@ class AutomationStore {
     gateway.status = 'CONFIGURED';
     gateway.lastSeenAt = nowIso();
     gateway.registeredAt = nowIso();
+    if (input.phoneNumber) gateway.phoneNumber = String(input.phoneNumber).trim();
     if (this.persistence) this.persistence.upsertGateway(gateway);
     return gateway;
   }

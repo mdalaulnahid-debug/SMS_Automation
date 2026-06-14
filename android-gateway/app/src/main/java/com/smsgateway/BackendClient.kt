@@ -64,7 +64,8 @@ object BackendClient {
         gatewayId: String,
         localIp: String,
         port: Int,
-        gatewaySecret: String = ""
+        gatewaySecret: String = "",
+        phoneNumber: String = ""
     ): Boolean {
         val base = backendUrl.trim().trimEnd('/')
         if (base.isBlank() || localIp.isBlank()) return false
@@ -74,6 +75,7 @@ object BackendClient {
             put("host", localIp)
             put("localIp", localIp)
             put("port", port)
+            if (phoneNumber.isNotBlank()) put("phoneNumber", phoneNumber)
         }.toString()
 
         return try {
@@ -289,7 +291,8 @@ object BackendClient {
         val operator: String,
         val operatorName: String,
         val online: Boolean,
-        val lastSeenAt: String
+        val lastSeenAt: String,
+        val phoneNumber: String = ""
     )
 
     fun fetchGatewayHealth(backendUrl: String, adminKey: String): List<GatewayStatus> {
@@ -308,7 +311,8 @@ object BackendClient {
                         operator = g.optString("operator"),
                         operatorName = g.optString("operatorName"),
                         online = g.optBoolean("online"),
-                        lastSeenAt = g.optString("lastSeenAt")
+                        lastSeenAt = g.optString("lastSeenAt"),
+                        phoneNumber = g.optString("phoneNumber")
                     )
                 }
             }

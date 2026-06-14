@@ -200,8 +200,10 @@ class GatewayForegroundService : Service() {
                 val backendUrl = Prefs.getBackendUrl(this@GatewayForegroundService)
                 val gatewaySecret = Prefs.getApiKey(this@GatewayForegroundService)
                 if (localIp.isNotBlank() && backendUrl.isNotBlank()) {
-                    for ((gwId, _) in Prefs.configuredGateways(this@GatewayForegroundService)) {
-                        BackendClient.registerGateway(backendUrl, gwId, localIp, port, gatewaySecret)
+                    val sm = getSystemService(android.telephony.SubscriptionManager::class.java)
+                    for ((gwId, subId) in Prefs.configuredGateways(this@GatewayForegroundService)) {
+                        val phoneNumber = readSimPhoneNumber(sm, subId)
+                        BackendClient.registerGateway(backendUrl, gwId, localIp, port, gatewaySecret, phoneNumber)
                     }
                 }
 
@@ -548,6 +550,27 @@ class GatewayForegroundService : Service() {
 
             ?.notify(NOTIFICATION_ID, buildNotification(text))
 
+    }
+
+    private fun readSimPhoneNumber(sm: android.telephony.SubscriptionManager?, subId: Int): String {
+        if (sm == null || subId < 0) return ""
+        return try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_NUMBERS)
+                    == PackageManager.PERMISSION_GRANTED) {
+                    sm.getPhoneNumber(subId).orEmpty()
+                } else ""
+            } else {
+                @Suppress("DEPRECATION")
+                sm.activeSubscriptionInfoList
+                    ?.find { it.subscriptionId == subId }
+                    ?.number
+                    .orEmpty()
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "Could not read phone number for subId=$subId: ${e.message}")
+            ""
+        }
     }
 
 }
