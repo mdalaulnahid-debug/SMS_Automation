@@ -119,7 +119,7 @@ function createApp(options = {}) {
         return json(res, 200, { ok: true, versionCode: vc, versionName: vn });
       }
       if (req.method === 'GET' && req.url === '/api/app/apk') {
-        if (!requireAdmin(req, res) && !isValidGatewayHeader(req, store, authConfig)) return undefined;
+        // No auth required — phones need the APK before they have credentials configured
         const apkFile = join(__dirname, '..', 'public', 'gateway-app.apk');
         return new Promise((resolve) => {
           stat(apkFile, (err, s) => {
