@@ -43,20 +43,37 @@ object UpdateChecker {
         } catch (_: PackageManager.NameNotFoundException) { "?" }
     }
 
-    /** Call once per service start (runs in background thread). */
-    fun checkInBackground(context: Context) {
+    /** Call once per service start (runs in background thread). Set showResult=true when triggered manually. */
+    fun checkInBackground(context: Context, showResult: Boolean = false) {
         Thread({
             val backendUrl = Prefs.getBackendUrl(context)
-            if (backendUrl.isBlank()) return@Thread
+            if (backendUrl.isBlank()) {
+                if (showResult) toast(context, "No backend URL configured")
+                return@Thread
+            }
             try {
-                val remote = BackendClient.fetchAppVersion(backendUrl) ?: return@Thread
-                if (remote.versionCode <= currentVersionCode(context)) return@Thread
+                val remote = BackendClient.fetchAppVersion(backendUrl)
+                if (remote == null) {
+                    if (showResult) toast(context, "Could not reach backend")
+                    return@Thread
+                }
+                if (remote.versionCode <= currentVersionCode(context)) {
+                    if (showResult) toast(context, "You're up to date (v${currentVersionName(context)})")
+                    return@Thread
+                }
                 Log.i(TAG, "Update available: ${remote.versionName} (current ${currentVersionName(context)})")
                 showUpdateNotification(context, remote)
             } catch (e: Exception) {
                 Log.w(TAG, "Update check failed: ${e.message}")
+                if (showResult) toast(context, "Update check failed: ${e.message}")
             }
         }, "update-check").start()
+    }
+
+    private fun toast(context: Context, msg: String) {
+        android.os.Handler(context.mainLooper).post {
+            android.widget.Toast.makeText(context, msg, android.widget.Toast.LENGTH_LONG).show()
+        }
     }
 
     private fun showUpdateNotification(context: Context, version: BackendClient.AppVersion) {

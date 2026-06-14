@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity() {
         return when (item.itemId) {
             R.id.action_check_update -> {
                 android.widget.Toast.makeText(this, "Checking for updates…", android.widget.Toast.LENGTH_SHORT).show()
-                UpdateChecker.checkInBackground(this)
+                UpdateChecker.checkInBackground(this, showResult = true)
                 true
             }
             R.id.action_admin -> {
