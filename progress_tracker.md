@@ -1,6 +1,6 @@
 # Progress Tracker
 
-Last updated: **2026-06-14 (office PC — all three operators confirmed)**
+Last updated: **2026-06-15 — Late reply fix deployed; multi-operator live posting planned**
 
 ---
 
@@ -8,41 +8,44 @@ Last updated: **2026-06-14 (office PC — all three operators confirmed)**
 
 **ALL THREE OPERATORS WORKING END-TO-END. GP, Banglalink, Robi confirmed on VPS. System is fully operational.**
 
+Deploy is now one command from Git Bash: `bash scripts/deploy.sh` (passwordless via SSH key).
+
 ---
 
-## Session Handoff (2026-06-13 evening) — Read This First
+## Session Handoff (2026-06-15) — Read This First
 
 ### What was accomplished this session
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Telegram offset persistence | Done | Bridge saves offset to `data/telegram-offset.json` — messages not lost on restart |
-| Admin API key via /setup page | Done | Web form at `/setup` sets key in `config/auth.json` |
-| Dual-SIM support | Done | One phone handles GP (SIM 2) + Banglalink (SIM 1) as two gateways |
-| OTA update system | Done | Backend serves APK + version; phones update over internet; A55 publishes from Admin Panel |
-| VPS deployment | Done | Vultr Singapore `45.77.240.195` — backend + bridge run permanently via PM2 |
-| Telegram group ID fix | Done | Group upgraded to supergroup when bot became admin — ID changed to `-1004316326579` |
-| Inbound SMS gateway routing fix | Done | SmsReceiver now reads SIM subId from intent to route GP replies to GP_PHONE_01 (not primary) |
-| GP E2E test | **PASSED** | Full loop: Telegram → VPS → GP phone → operator SMS → reply → Telegram |
-| Banglalink E2E test | **PASSED** | Same loop via SIM 1 on dual-SIM phone |
+| Android app v2.3.0 | Done | Real SIM phone number sent on registration; shown in admin gateway cards |
+| SSH key auth on VPS | Done | `~/.ssh/id_ed25519` copied — `bash scripts/deploy.sh` runs without password |
+| One-command deploy script | Done | `scripts/deploy.sh` — scp all src + config files, restart PM2 |
+| MS-NID routing fix | Done | Was ALL_OPERATORS; now RELEVANT_OPERATOR (prefix-based: 017→GP, 018→Robi, etc.) |
+| Telegram open-group auth | Done | `authorizedUsers: {}` — any group member can submit, not just whitelisted IDs |
+| Late reply matching | Done | `findActiveRequestForGateway` now searches NEEDS_MANUAL_REVIEW requests (6h window) |
+| Late reply re-posting | Done | If reply arrives after request finalized, existing draft updated and re-approved for post |
+| Admin app UI redesign | Done | Stat hero row (ONLINE/OFFLINE/TOTAL), operator initial circles, dark theme |
+| SIM switcher redesign | Done | Two-line stacked layout, cyan (SIM 1) / amethyst (SIM 2) color identity |
+| Web dashboard dark theme | Done | Navy theme matching Android app |
+| Robi phone updated | Done | v2.3.0 installed via ADB |
 
 ### Key bugs fixed this session
 
 | Bug | Fix |
 |-----|-----|
-| Multiple bridge instances (409 Conflict) | Closed start-all.bat auto-restart loop; kill all node processes before starting |
-| Bridge using old empty adminApiKey (silent 401) | Updated config/telegram.json with real key before restarting |
-| Phone polling wrong IP (192.168.0.102 = itself) | Fixed backend_url in SharedPrefs via ADB sed |
-| AP isolation on office WiFi (phone↔PC blocked) | Moved backend to VPS — phones connect over internet |
-| node:sqlite missing on Node 20 | Upgraded VPS to Node.js 22 |
-| GP reply posted as BANGLALINK_PHONE_01 gatewayId | SmsReceiver reads incomingSubId from intent, matches to configuredGateways() |
+| MS-NID sent to all 3 operators | Changed domain.js target to RELEVANT_OPERATOR |
+| Telegram: non-whitelisted users rejected | Cleared authorizedUsers — group membership is the gate |
+| VPS git pull blocked by no credentials | Deploy script uses scp directly — no git on VPS needed |
+| Late operator replies dropped as unmatched | Extended search to NEEDS_MANUAL_REVIEW + re-approve draft |
+| `config/telegram.json` broken by nano edit | Rewrote cleanly with `cat > file << EOF` |
 
 ### Current app versions
 
 | Version | Code | Notes |
 |---------|------|-------|
-| v2.0.2 | 18 | Current — battery optimization exemption (Samsung kill fix), published to VPS OTA |
-| v2.0.1 | 17 | dual-SIM inbound routing fix |
+| v2.3.0 | 41 | Current — SIM phone number in registration + admin card |
+| v2.2.7-beta | 40 | Previous |
 
 ---
 
@@ -54,7 +57,7 @@ Last updated: **2026-06-14 (office PC — all three operators confirmed)**
 | Telegram bridge | `45.77.240.195` | PM2 `sms-bridge` on same VPS |
 | Gateway phone | Samsung (dual-SIM) | SIM 1 = Banglalink, SIM 2 = GP |
 | Admin phone | Samsung A55 | Admin Panel, OTA publish |
-| Robi phone | Not set up | Pending hardware |
+| Robi phone | Samsung (f0c7c672) | v2.3.0 installed, Robi SIM confirmed |
 
 ### VPS credentials
 
@@ -62,36 +65,22 @@ See `config/vps.md` (gitignored).
 
 ---
 
-## How to Start (VPS — always on, no action needed)
-
-The backend and bridge run permanently on the VPS via PM2. To check status:
+## How to Deploy (One Command)
 
 ```bash
-ssh root@45.77.240.195
-pm2 status
-pm2 logs sms-backend --lines 50
-pm2 logs sms-bridge --lines 50
+bash scripts/deploy.sh
 ```
 
-To restart after a code update:
-
-```bash
-ssh root@45.77.240.195
-cd /opt/sms-backend
-git pull
-npm install
-pm2 restart all
-```
+Copies `src/`, `telegram-bridge/`, and `config/telegram.json` directly via SCP, then restarts PM2. No git credentials needed on the VPS.
 
 ---
 
 ## How to Update the Android App
 
 1. Make code changes on PC
-2. Build: `scripts\publish-apk.ps1` (or run gradlew assembleRelease manually)
-3. Publish to VPS: script uploads to `/api/app/publish-apk`
-4. On each phone: **⋮ menu → Check for Update** (or it auto-checks on service start)
-5. For USB-connected phones: `adb install -r app-release.apk`
+2. Build release APK: `cd android-gateway && .\gradlew assembleRelease`
+3. Install via USB: `adb -s <device-id> install -r app/build/outputs/apk/release/app-release.apk`
+4. Or publish OTA via Admin Panel on A55 → gateway phones auto-update
 
 ---
 
@@ -99,25 +88,19 @@ pm2 restart all
 
 ### 1. Telegram group chat ID changes when bot becomes admin
 - Making bot admin upgrades group to supergroup — chat ID changes
-- Update `groupChatId` in `config/telegram.json` on VPS and restart bridge
-- Old ID: `-5291489718` → New ID: `-1004316326579`
+- Update `groupChatId` in `config/telegram.json` and run `bash scripts/deploy.sh`
 
-### 2. Multiple bridge instances cause 409 Conflict
-- `start-all.bat` has auto-restart loop — closing one bridge spawns another
-- Always close the "Telegram Bridge" CMD window entirely, not just Ctrl+C
-- Kill all: `Get-WmiObject Win32_Process | Where-Object { $_.CommandLine -match 'telegram' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force }`
+### 2. SIM phone number often blank in Bangladesh
+- Carriers don't provision phone number into SIM chip — `SubscriptionInfo.number` returns empty
+- Admin card shows number when available; hidden when blank (no UI breakage)
 
-### 3. SmsReceiver dual-SIM routing
-- Fixed in v2.0.1: reads `android.telephony.extra.SUBSCRIPTION_INDEX` from SMS intent
-- Falls back to primary gateway if subId not available
+### 3. MS-NID for unknown prefix (e.g. Teletalk 010x)
+- `operatorForMsisdn` returns null — request fails validation with a clear error message
+- Teletalk not in domain.js OPERATORS — add when needed
 
-### 4. Robi gateway
-- Status: MOCK (no hardware yet)
-- When Robi phone available: install app, set gateway ID = `ROBI_PHONE_01`, backend URL = VPS
-
-### 5. SSH to VPS requires password
-- Credentials in `config/vps.md` (gitignored)
-- Consider adding SSH key for passwordless access
+### 4. VPS deploy: config/telegram.json is gitignored
+- `scripts/deploy.sh` handles this by SCP-copying it directly
+- Do NOT edit telegram.json on VPS manually unless necessary — deploy script will overwrite it
 
 ---
 
@@ -132,39 +115,37 @@ pm2 restart all
 - Dashboard review actions (reject, retry, manual match)
 - SQLite persistence (WAL, boot-restore)
 - Admin API key, gateway secrets, audit chain
-- OTA update endpoints (`/api/app/version`, `/api/app/apk`, `/api/app/publish-apk`)
-- Admin panel endpoints, gateway health
+- OTA update endpoints
 - `/setup` web page for first-time admin key creation
-- **VPS deployment — PM2, Node 22, UFW firewall**
-- **Telegram offset persistence — no messages lost on restart**
+- VPS deployment — PM2, Node 22, UFW firewall
+- Telegram offset persistence
+- **MS-NID: routes to single operator by MSISDN prefix**
+- **Late reply matching: 6-hour window for NEEDS_MANUAL_REVIEW requests**
+- **Late reply re-posting: updates existing draft instead of dropping reply**
+- **Gateway registration stores SIM phone number**
 
 ### Telegram Bridge
 - Long polling, intake loop, posting loop
 - Threaded replies, text_mention tags
 - autoApprove, timeout notifications
-- Group-membership authorization
-- **Offset saved to disk — resumes after downtime without losing messages**
-- **Admin API key wired — bridge authenticates with backend**
+- **Open-group auth: any group member can submit**
 
 ### Android Gateway App
 - NanoHTTPD, SMS send/receive, webhook, WorkManager retry, Room DB
 - Foreground service, boot receiver, permissions flow
-- SIM picker, dual-SIM support (two gateways on one phone)
-- OTA update checker + installer (UpdateChecker, UpdateInstaller)
+- SIM picker, dual-SIM support
+- OTA update checker + installer
 - Admin Panel (AdminActivity) — gateway health, publish APK
 - Settings: secondary gateway, admin API key, SIM assignment
-- Main toolbar: Admin Panel (admin only), Check for Update
-- **v2.0.1: SmsReceiver routes inbound SMS to correct gateway via subId**
-- **v2.0.2: Battery optimization exemption — prompts user to exempt app on first launch; Samsung won't kill service**
-- **Backend URL fixed on all phones to VPS IP**
+- **v2.3.0: SIM phone number read and sent to backend; shown in admin card**
+- **Admin app dark theme redesign: stat hero row, operator circles**
+- **SIM switcher: two-line stacked, cyan/amethyst color identity**
+- **Web dashboard: dark navy theme**
 
 ---
 
 ## Next Milestone
 
-1. **Robi phone** — set up when hardware available (no code changes needed)
-2. **SSH key auth on VPS** — avoid password every time
-3. **Battery optimization exemption** on gateway phones (Samsung kills background services)
-4. **Nightly DB backup** on VPS — cron job to copy `data/automation.db`
-
-See `todo.md` for full task list.
+1. **Multi-operator live posting** — NID-MS and IMEI-MS post to Telegram immediately on first reply, then edit the message as more operators reply (see `todo.md`)
+2. **Nightly DB backup on VPS** — cron job
+3. **compileSdk/targetSdk bump** to 35
