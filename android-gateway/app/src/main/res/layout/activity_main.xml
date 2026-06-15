@@ -17,9 +17,9 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/bg_surface"
-            app:title="SMS Gateway"
+            app:title="SMS GATEWAY"
             app:titleTextColor="@color/text_primary"
-            app:subtitleTextColor="@color/text_secondary" />
+            app:subtitleTextColor="@color/accent" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -27,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:paddingBottom="24dp"
+        android:paddingBottom="32dp"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
@@ -35,107 +35,216 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- ════════ HERO STATUS SECTION ════════ -->
+            <!-- ══ HERO ══ -->
             <LinearLayout
-                android:id="@+id/heroSection"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/bg_hero_gradient"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
-                android:paddingTop="32dp"
-                android:paddingBottom="24dp"
-                android:background="@color/bg_surface">
+                android:paddingTop="52dp"
+                android:paddingBottom="44dp">
 
-                <!-- Status indicator ring -->
+                <!-- Status ring -->
                 <FrameLayout
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
+                    android:layout_width="164dp"
+                    android:layout_height="164dp"
                     android:layout_gravity="center_horizontal">
 
-                    <!-- Glow ring (changes color with state) -->
                     <View
                         android:id="@+id/statusGlow"
-                        android:layout_width="120dp"
-                        android:layout_height="120dp"
+                        android:layout_width="164dp"
+                        android:layout_height="164dp"
                         android:background="@drawable/bg_status_indicator"
                         android:backgroundTint="@color/status_stopped_glow" />
 
-                    <!-- Inner circle with icon -->
                     <FrameLayout
-                        android:layout_width="96dp"
-                        android:layout_height="96dp"
+                        android:layout_width="128dp"
+                        android:layout_height="128dp"
                         android:layout_gravity="center"
                         android:background="@drawable/bg_status_indicator"
                         android:backgroundTint="@color/bg_card">
 
                         <ImageView
                             android:id="@+id/statusIcon"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
+                            android:layout_width="56dp"
+                            android:layout_height="56dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_sms_gateway"
                             android:contentDescription="Gateway status" />
                     </FrameLayout>
                 </FrameLayout>
 
-                <!-- Status text -->
+                <!-- Status label -->
                 <TextView
                     android:id="@+id/tvServiceStatus"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="22dp"
                     android:text="STOPPED"
                     android:textColor="@color/danger"
-                    android:textSize="22sp"
+                    android:textSize="28sp"
                     android:textStyle="bold"
-                    android:letterSpacing="0.1" />
+                    android:letterSpacing="0.14" />
 
-                <!-- Backend connection state -->
+                <!-- Gateway ID pill -->
+                <TextView
+                    android:id="@+id/tvGatewayId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/bg_card_elevated"
+                    android:paddingHorizontal="14dp"
+                    android:paddingVertical="5dp"
+                    android:text="GP_PHONE_01"
+                    android:textAppearance="@style/TextAppearance.SmsGateway.GatewayId" />
+
+                <!-- Backend dot -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:layout_marginTop="6dp">
+                    android:layout_marginTop="14dp">
 
                     <View
                         android:id="@+id/backendDot"
-                        android:layout_width="8dp"
-                        android:layout_height="8dp"
+                        android:layout_width="7dp"
+                        android:layout_height="7dp"
                         android:background="@drawable/bg_connection_dot" />
 
                     <TextView
                         android:id="@+id/tvBackendHealth"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="6dp"
+                        android:layout_marginStart="7dp"
                         android:text="Backend: checking..."
                         android:textColor="@color/text_secondary"
                         android:textSize="13sp" />
                 </LinearLayout>
 
-                <!-- Big toggle button -->
+                <!-- Start / Stop -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnToggleService"
-                    android:layout_width="220dp"
+                    style="@style/Widget.SmsGateway.Button.Hero"
+                    android:layout_width="240dp"
                     android:layout_height="56dp"
-                    android:layout_marginTop="20dp"
-                    android:text="Start Service"
-                    android:textSize="16sp"
-                    app:cornerRadius="28dp" />
+                    android:layout_marginTop="24dp"
+                    android:text="Start Service" />
+
+                <!-- Polling indicator — shown only when running -->
+                <TextView
+                    android:id="@+id/tvPollingStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="● Polling VPS · 3s interval"
+                    android:textColor="@color/success"
+                    android:textSize="12sp"
+                    android:letterSpacing="0.04"
+                    android:visibility="gone" />
+
             </LinearLayout>
 
-            <!-- ════════ LIVE STATS ROW ════════ -->
+            <!-- ══ SIM SWITCHER (dual-SIM phones only) ══ -->
+            <LinearLayout
+                android:id="@+id/simSwitcher"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="16dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="8dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:id="@+id/btnSim1"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="6dp"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:paddingTop="13dp"
+                    android:paddingBottom="13dp"
+                    android:background="@drawable/bg_sim1_active"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <TextView
+                        android:id="@+id/tvSim1Slot"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="SIM 1"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.14"
+                        android:fontFamily="sans-serif-medium"
+                        android:textColor="@color/bg_primary" />
+
+                    <TextView
+                        android:id="@+id/tvSim1Name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="SIM 1"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.01"
+                        android:fontFamily="sans-serif"
+                        android:textColor="@color/bg_primary" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/btnSim2"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:paddingTop="13dp"
+                    android:paddingBottom="13dp"
+                    android:background="@drawable/bg_sim2_inactive"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <TextView
+                        android:id="@+id/tvSim2Slot"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="SIM 2"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.14"
+                        android:fontFamily="sans-serif-medium"
+                        android:textColor="@color/sim2_color" />
+
+                    <TextView
+                        android:id="@+id/tvSim2Name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="SIM 2"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.01"
+                        android:fontFamily="sans-serif"
+                        android:textColor="@color/text_secondary" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- ══ STATS ROW ══ -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingHorizontal="@dimen/screen_padding"
+                android:paddingHorizontal="16dp"
                 android:paddingTop="20dp"
                 android:paddingBottom="4dp"
                 android:baselineAligned="false">
 
-                <!-- Sent Today -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -144,7 +253,7 @@
                     android:background="@drawable/bg_stat_card"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="14dp">
+                    android:paddingVertical="20dp">
 
                     <TextView
                         android:id="@+id/tvStatSent"
@@ -152,21 +261,19 @@
                         android:layout_height="wrap_content"
                         android:text="0"
                         android:textColor="@color/accent"
-                        android:textSize="28sp"
-                        android:textStyle="bold" />
+                        android:textAppearance="@style/TextAppearance.SmsGateway.StatNumber" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:text="Sent"
+                        android:layout_marginTop="4dp"
+                        android:text="SENT"
                         android:textColor="@color/stat_label"
-                        android:textSize="11sp"
-                        android:textAllCaps="true"
-                        android:letterSpacing="0.08" />
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.12" />
                 </LinearLayout>
 
-                <!-- Received -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -175,7 +282,7 @@
                     android:background="@drawable/bg_stat_card"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="14dp">
+                    android:paddingVertical="20dp">
 
                     <TextView
                         android:id="@+id/tvStatReceived"
@@ -183,21 +290,19 @@
                         android:layout_height="wrap_content"
                         android:text="0"
                         android:textColor="@color/success"
-                        android:textSize="28sp"
-                        android:textStyle="bold" />
+                        android:textAppearance="@style/TextAppearance.SmsGateway.StatNumber" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:text="Received"
+                        android:layout_marginTop="4dp"
+                        android:text="RECEIVED"
                         android:textColor="@color/stat_label"
-                        android:textSize="11sp"
-                        android:textAllCaps="true"
-                        android:letterSpacing="0.08" />
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.12" />
                 </LinearLayout>
 
-                <!-- Pending -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -206,7 +311,7 @@
                     android:background="@drawable/bg_stat_card"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="14dp">
+                    android:paddingVertical="20dp">
 
                     <TextView
                         android:id="@+id/tvStatPending"
@@ -214,29 +319,28 @@
                         android:layout_height="wrap_content"
                         android:text="0"
                         android:textColor="@color/warning"
-                        android:textSize="28sp"
-                        android:textStyle="bold" />
+                        android:textAppearance="@style/TextAppearance.SmsGateway.StatNumber" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:text="Pending"
+                        android:layout_marginTop="4dp"
+                        android:text="PENDING"
                         android:textColor="@color/stat_label"
-                        android:textSize="11sp"
-                        android:textAllCaps="true"
-                        android:letterSpacing="0.08" />
+                        android:textSize="10sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.12" />
                 </LinearLayout>
             </LinearLayout>
 
-            <!-- ════════ RECENT ACTIVITY ════════ -->
+            <!-- ══ LAST ACTIVITY ══ -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/screen_padding"
-                android:layout_marginTop="@dimen/section_gap"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
                 app:cardBackgroundColor="@color/bg_card"
-                app:cardCornerRadius="@dimen/card_radius"
+                app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
                 app:strokeColor="@color/divider"
                 app:strokeWidth="1dp">
@@ -245,149 +349,88 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="@dimen/card_padding">
+                    android:padding="18dp">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp"
-                        android:text="Recent Activity"
-                        android:textAppearance="@style/TextAppearance.SmsGateway.CardTitle" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Last sent"
+                        android:layout_marginBottom="16dp"
+                        android:text="LAST ACTIVITY"
                         android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="4dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="↑ "
+                            android:textColor="@color/accent"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="OUTBOUND"
+                            android:textColor="@color/text_muted"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.1" />
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/tvLastSent"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="12dp"
+                        android:layout_marginBottom="16dp"
                         android:fontFamily="monospace"
                         android:text="—"
                         android:textColor="@color/text_secondary"
                         android:textSize="13sp" />
 
-                    <TextView
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="@color/divider"
+                        android:layout_marginBottom="14dp" />
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Last received"
-                        android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel" />
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="4dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="↓ "
+                            android:textColor="@color/success"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="INBOUND"
+                            android:textColor="@color/text_muted"
+                            android:textSize="10sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.1" />
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/tvLastReceived"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
                         android:fontFamily="monospace"
                         android:text="—"
                         android:textColor="@color/text_secondary"
                         android:textSize="13sp" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
 
-            <!-- ════════ GATEWAY DETAILS (collapsible) ════════ -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/screen_padding"
-                android:layout_marginTop="@dimen/section_gap"
-                app:cardBackgroundColor="@color/bg_card"
-                app:cardCornerRadius="@dimen/card_radius"
-                app:cardElevation="0dp"
-                app:strokeColor="@color/divider"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="@dimen/card_padding">
-
-                    <!-- Header row (tap to expand/collapse) -->
-                    <LinearLayout
-                        android:id="@+id/detailsHeader"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Gateway Details"
-                            android:textAppearance="@style/TextAppearance.SmsGateway.CardTitle" />
-
-                        <ImageView
-                            android:id="@+id/detailsChevron"
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
-                            android:rotation="0"
-                            android:src="@android:drawable/arrow_down_float"
-                            android:contentDescription="Toggle details" />
-                    </LinearLayout>
-
-                    <!-- Expandable details body -->
-                    <LinearLayout
-                        android:id="@+id/detailsBody"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        android:visibility="gone"
-                        android:layout_marginTop="14dp">
-
-                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                            android:orientation="horizontal" android:layout_marginBottom="8dp">
-                            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                                android:layout_weight="1" android:text="Gateway ID"
-                                android:textColor="@color/text_muted" android:textSize="13sp" />
-                            <TextView android:id="@+id/tvGatewayId" android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" android:fontFamily="monospace"
-                                android:text="—" android:textColor="@color/text_primary" android:textSize="13sp" />
-                        </LinearLayout>
-
-                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                            android:orientation="horizontal" android:layout_marginBottom="8dp">
-                            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                                android:layout_weight="1" android:text="HTTP Port"
-                                android:textColor="@color/text_muted" android:textSize="13sp" />
-                            <TextView android:id="@+id/tvPort" android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" android:fontFamily="monospace"
-                                android:text=":8080" android:textColor="@color/text_primary" android:textSize="13sp" />
-                        </LinearLayout>
-
-                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                            android:orientation="horizontal" android:layout_marginBottom="8dp">
-                            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                                android:layout_weight="1" android:text="Local IP"
-                                android:textColor="@color/text_muted" android:textSize="13sp" />
-                            <TextView android:id="@+id/tvLocalIp" android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" android:fontFamily="monospace"
-                                android:text="—" android:textColor="@color/text_primary" android:textSize="13sp" />
-                        </LinearLayout>
-
-                        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
-                            android:orientation="horizontal" android:layout_marginBottom="8dp">
-                            <TextView android:layout_width="0dp" android:layout_height="wrap_content"
-                                android:layout_weight="1" android:text="Backend"
-                                android:textColor="@color/text_muted" android:textSize="13sp" />
-                            <TextView android:id="@+id/tvBackendUrl" android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" android:fontFamily="monospace"
-                                android:text="—" android:textColor="@color/text_primary" android:textSize="13sp" />
-                        </LinearLayout>
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnCopyIp"
-                            style="@style/Widget.SmsGateway.Button.Outlined"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:text="Copy IP Address" />
-                    </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

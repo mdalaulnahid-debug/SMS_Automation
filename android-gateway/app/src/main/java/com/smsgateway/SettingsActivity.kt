@@ -3,6 +3,8 @@ package com.smsgateway
 import android.os.Bundle
 import android.text.InputType
 import android.view.Gravity
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.FrameLayout
@@ -32,11 +34,80 @@ class SettingsActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        if (Prefs.hasPinSet(this)) {
-            showPinGate()
-        } else {
-            initSettings()
+        initGeneralSettings()
+        setupAdminLock()
+    }
+
+    // ── General settings (no PIN required) ────────────────────────────────────
+
+    private fun initGeneralSettings() {
+        val themeLabels = arrayOf("Follow System", "Dark", "Light")
+        binding.spinnerTheme.adapter =
+            ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, themeLabels)
+
+        val savedThemeIdx = when (Prefs.getThemeMode(this)) {
+            "dark"  -> 1
+            "light" -> 2
+            else    -> 0
         }
+        binding.spinnerTheme.setSelection(savedThemeIdx)
+        binding.spinnerTheme.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                val mode = when (position) { 1 -> "dark"; 2 -> "light"; else -> "auto" }
+                Prefs.setThemeMode(this@SettingsActivity, mode)
+                GatewayApplication.applyTheme(this@SettingsActivity)
+            }
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
+
+        val version = try { packageManager.getPackageInfo(packageName, 0).versionName } catch (_: Exception) { "—" }
+        binding.tvAboutVersion.text = "v$version"
+        binding.tvAboutVersionInline.text = "v$version"
+        binding.tvAboutGatewayId.text = Prefs.getGatewayId(this)
+
+        binding.btnCheckUpdate.setOnClickListener {
+            Toast.makeText(this, "Checking for updates…", Toast.LENGTH_SHORT).show()
+            UpdateChecker.checkInBackground(this, showResult = true)
+        }
+
+        binding.btnToggleAbout.setOnClickListener {
+            val expanded = binding.layoutAboutContent.isVisible
+            binding.layoutAboutContent.visibility = if (expanded) View.GONE else View.VISIBLE
+            binding.tvAboutChevron.text = if (expanded) "▼" else "▲"
+        }
+
+        binding.btnToggleHelp.setOnClickListener {
+            val expanded = binding.layoutHelpContent.isVisible
+            binding.layoutHelpContent.visibility = if (expanded) View.GONE else View.VISIBLE
+            binding.tvHelpChevron.text = if (expanded) "▼" else "▲"
+        }
+    }
+
+    // ── Admin setup lock row ───────────────────────────────────────────────────
+
+    private fun setupAdminLock() {
+        refreshAdminLockRow()
+        binding.cardAdminLock.setOnClickListener {
+            if (binding.layoutAdminContent.isVisible) {
+                binding.layoutAdminContent.visibility = View.GONE
+                refreshAdminLockRow()
+            } else if (Prefs.hasPinSet(this)) {
+                showPinGate()
+            } else {
+                unlockAdminSection()
+            }
+        }
+    }
+
+    private fun refreshAdminLockRow() {
+        val unlocked = binding.layoutAdminContent.isVisible
+        binding.tvAdminLockIcon.text = if (unlocked) "⚙️" else "🔒"
+        binding.tvAdminLockHint.text = if (unlocked)
+            "Tap to collapse gateway settings"
+        else if (Prefs.hasPinSet(this))
+            "Tap to unlock — enter PIN to configure gateway & backend"
+        else
+            "Tap to configure gateway ID, backend URL & SIM"
     }
 
     private fun showPinGate() {
@@ -54,12 +125,12 @@ class SettingsActivity : AppCompatActivity() {
 
         var attempts = 0
         val dialog = AlertDialog.Builder(this)
-            .setTitle("Settings Locked")
-            .setMessage("Enter your PIN to access settings.")
+            .setTitle("Admin Setup")
+            .setMessage("Enter your PIN to access gateway configuration.")
             .setView(frame)
-            .setCancelable(false)
+            .setCancelable(true)
             .setPositiveButton("Unlock", null)
-            .setNegativeButton("Cancel") { _, _ -> finish() }
+            .setNegativeButton("Cancel", null)
             .create()
 
         dialog.setOnShowListener {
@@ -67,14 +138,13 @@ class SettingsActivity : AppCompatActivity() {
                 val entered = input.text.toString()
                 if (Prefs.verifyPin(this, entered)) {
                     dialog.dismiss()
-                    initSettings()
+                    unlockAdminSection()
                 } else {
                     attempts++
                     input.text.clear()
                     if (attempts >= 5) {
                         dialog.dismiss()
                         Toast.makeText(this, "Too many wrong attempts.", Toast.LENGTH_LONG).show()
-                        finish()
                     } else {
                         input.error = "Wrong PIN — ${5 - attempts} attempt${if (5 - attempts == 1) "" else "s"} left"
                     }
@@ -85,21 +155,25 @@ class SettingsActivity : AppCompatActivity() {
         input.requestFocus()
     }
 
-    private fun initSettings() {
+    private fun unlockAdminSection() {
+        binding.layoutAdminContent.visibility = View.VISIBLE
+        refreshAdminLockRow()
+        initAdminSettings()
+    }
+
+    // ── Admin settings (PIN required if PIN set) ───────────────────────────────
+
+    private fun initAdminSettings() {
         binding.spinnerGatewayId.adapter =
             ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, primaryIds)
         binding.spinnerSecondaryGatewayId.adapter =
             ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, gatewayIds)
 
         setupSimSpinner()
-        loadSettings()
+        loadAdminSettings()
 
         binding.btnSave.setOnClickListener { saveSettings() }
         binding.btnTestConnection.setOnClickListener { testConnection() }
-        binding.btnCheckUpdate.setOnClickListener {
-            Toast.makeText(this, "Checking for updates…", Toast.LENGTH_SHORT).show()
-            UpdateChecker.checkInBackground(this, showResult = true)
-        }
     }
 
     private fun setupSimSpinner() {
@@ -127,7 +201,7 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-    private fun loadSettings() {
+    private fun loadAdminSettings() {
         val currentId = Prefs.getGatewayId(this)
         binding.spinnerGatewayId.setSelection(primaryIds.indexOf(currentId).coerceAtLeast(0))
 
@@ -142,13 +216,6 @@ class SettingsActivity : AppCompatActivity() {
         binding.etBackendUrl.setText(Prefs.getBackendUrl(this))
         binding.etAdminApiKey.setText(Prefs.getAdminApiKey(this))
         binding.switchAutoStart.isChecked = Prefs.isAutoStartOnBoot(this)
-
-        // About section
-        val version = try {
-            packageManager.getPackageInfo(packageName, 0).versionName
-        } catch (_: Exception) { "—" }
-        binding.tvAboutVersion.text = "v$version"
-        binding.tvAboutGatewayId.text = Prefs.getGatewayId(this)
     }
 
     private fun testConnection() {

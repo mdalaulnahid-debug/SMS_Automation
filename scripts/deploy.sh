@@ -17,8 +17,9 @@ scp src/parser.js     "$VPS:$REMOTE/src/parser.js"
 
 # Copy web dashboard
 echo "==> Copying dashboard..."
-scp public/index.html "$VPS:$REMOTE/public/index.html"
-scp public/app.js     "$VPS:$REMOTE/public/app.js"
+scp public/index.html        "$VPS:$REMOTE/public/index.html"
+scp public/app.js            "$VPS:$REMOTE/public/app.js"
+scp public/app-version.json  "$VPS:$REMOTE/public/app-version.json"
 
 # Copy Telegram bridge files
 echo "==> Copying bridge files..."

@@ -55,9 +55,9 @@ class PermissionsActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // Re-check after user returns from battery settings
-        if (allPermissionsGranted() && isBatteryOptimized()) {
-            // Still not exempted — dialog will show again next time they tap Grant
+        // Re-check after user returns from battery settings — if now exempted, proceed
+        if (allPermissionsGranted() && !isBatteryOptimized()) {
+            proceed()
         }
     }
 
@@ -86,10 +86,15 @@ class PermissionsActivity : AppCompatActivity() {
     private fun proceed() {
         if (isBatteryOptimized()) {
             showBatteryOptimizationDialog()
-        } else {
-            startActivity(Intent(this, MainActivity::class.java))
-            finish()
+            return
         }
+        val destination = if (Prefs.isAdminConfigured(this)) {
+            AdminActivity::class.java
+        } else {
+            MainActivity::class.java
+        }
+        startActivity(Intent(this, destination))
+        finish()
     }
 
     private fun showBatteryOptimizationDialog() {
@@ -109,7 +114,12 @@ class PermissionsActivity : AppCompatActivity() {
                 startActivity(intent)
             }
             .setNegativeButton("Skip (not recommended)") { _, _ ->
-                startActivity(Intent(this, MainActivity::class.java))
+                val destination = if (Prefs.isAdminConfigured(this)) {
+                    AdminActivity::class.java
+                } else {
+                    MainActivity::class.java
+                }
+                startActivity(Intent(this, destination))
                 finish()
             }
             .show()

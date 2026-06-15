@@ -286,6 +286,92 @@ object BackendClient {
         }
     }
 
+    // ── Dashboard / monitoring ────────────────────────────────────────────────
+
+    data class DispatchInfo(val operator: String, val sentStatus: String)
+
+    data class RequestSummary(
+        val requestId: String,
+        val status: String,
+        val target: String,
+        val requestType: String,
+        val requesterName: String,
+        val createdAt: String,
+        val dispatches: List<DispatchInfo>
+    )
+
+    data class AuditEntry(
+        val actor: String,
+        val action: String,
+        val requestId: String,
+        val timestamp: String
+    )
+
+    data class DashboardSnapshot(
+        val requests: List<RequestSummary>,
+        val outboxCount: Int,
+        val inboxCount: Int,
+        val auditLogs: List<AuditEntry>
+    )
+
+    fun fetchDashboard(backendUrl: String, adminKey: String): DashboardSnapshot? {
+        val base = backendUrl.trim().trimEnd('/')
+        if (base.isBlank()) return null
+        return try {
+            val req = Request.Builder().url("$base/api/dashboard").get()
+                .header("x-api-key", adminKey).build()
+            client.newCall(req).execute().use { r ->
+                if (!r.isSuccessful) return null
+                val body = org.json.JSONObject(r.body?.string().orEmpty())
+
+                val reqArr = body.optJSONArray("requests") ?: return null
+                val requests = (0 until reqArr.length()).map { i ->
+                    val rq = reqArr.getJSONObject(i)
+                    val dispatches = mutableListOf<DispatchInfo>()
+                    val dArr = rq.optJSONArray("dispatches")
+                    if (dArr != null) {
+                        for (j in 0 until dArr.length()) {
+                            val d = dArr.getJSONObject(j)
+                            dispatches.add(DispatchInfo(d.optString("operator"), d.optString("sentStatus")))
+                        }
+                    }
+                    RequestSummary(
+                        requestId = rq.optString("requestId"),
+                        status = rq.optString("status"),
+                        target = rq.optString("target").ifBlank { rq.optString("testDestination") },
+                        requestType = rq.optString("requestType"),
+                        requesterName = rq.optString("requesterName"),
+                        createdAt = rq.optString("createdAt"),
+                        dispatches = dispatches
+                    )
+                }.sortedByDescending { it.createdAt }
+
+                val auditArr = body.optJSONArray("auditLogs")
+                val auditLogs = if (auditArr != null) {
+                    (0 until auditArr.length()).reversed().map { i ->
+                        val e = auditArr.getJSONObject(i)
+                        AuditEntry(
+                            actor = e.optString("actor"),
+                            action = e.optString("action"),
+                            requestId = e.optString("requestId"),
+                            timestamp = e.optString("timestamp")
+                        )
+                    }
+                } else emptyList()
+
+                DashboardSnapshot(
+                    requests = requests,
+                    outboxCount = body.optJSONArray("smsOutbox")?.length() ?: 0,
+                    inboxCount = body.optJSONArray("smsInbox")?.length() ?: 0,
+                    auditLogs = auditLogs
+                )
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "fetchDashboard failed: ${e.message}")
+            null
+        }
+    }
+
     data class GatewayStatus(
         val id: String,
         val operator: String,

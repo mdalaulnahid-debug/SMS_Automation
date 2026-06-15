@@ -1,24 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="bg_primary">#0B1220</color>
-    <color name="bg_surface">#111827</color>
-    <color name="bg_card">#1F2937</color>
-    <color name="bg_card_elevated">#243041</color>
-    <color name="accent">#38BDF8</color>
-    <color name="accent_muted">#0EA5E9</color>
-    <color name="text_primary">#F8FAFC</color>
-    <color name="text_secondary">#94A3B8</color>
-    <color name="text_muted">#64748B</color>
-    <color name="success">#34D399</color>
-    <color name="danger">#F87171</color>
-    <color name="warning">#FBBF24</color>
-    <color name="divider">#334155</color>
-    <color name="chip_running_bg">#064E3B</color>
-    <color name="chip_stopped_bg">#7F1D1D</color>
+    <!-- Backgrounds — deep command-center navy -->
+    <color name="bg_primary">#060D1A</color>
+    <color name="bg_surface">#091422</color>
+    <color name="bg_card">#0F1E33</color>
+    <color name="bg_card_elevated">#162840</color>
 
-    <color name="status_running_glow">#1A34D399</color>
-    <color name="status_stopped_glow">#1AF87171</color>
-    <color name="status_connecting_glow">#1AFBBF24</color>
-    <color name="stat_value">#E2E8F0</color>
-    <color name="stat_label">#64748B</color>
+    <!-- Electric cyan accent -->
+    <color name="accent">#22D3EE</color>
+    <color name="accent_muted">#0891B2</color>
+    <color name="accent_dim">#0C3A52</color>
+
+    <!-- Text hierarchy -->
+    <color name="text_primary">#EFF6FF</color>
+    <color name="text_secondary">#7FA3C4</color>
+    <color name="text_muted">#3D5A7A</color>
+
+    <!-- Status colours -->
+    <color name="success">#10D9A0</color>
+    <color name="success_dim">#043D2B</color>
+    <color name="danger">#F87171</color>
+    <color name="danger_dim">#4D1A1A</color>
+    <color name="warning">#FBBF24</color>
+    <color name="warning_dim">#4A3000</color>
+
+    <!-- SIM 2 amethyst identity -->
+    <color name="sim2_color">#C084FC</color>
+    <color name="sim2_dim">#2D1B50</color>
+
+    <!-- Structural -->
+    <color name="divider">#1A2E4A</color>
+    <color name="chip_running_bg">#043D2B</color>
+    <color name="chip_stopped_bg">#4D1A1A</color>
+
+    <!-- Animated ring glows -->
+    <color name="status_running_glow">#3010D9A0</color>
+    <color name="status_stopped_glow">#30F87171</color>
+    <color name="status_connecting_glow">#30FBBF24</color>
+
+    <!-- Stats -->
+    <color name="stat_value">#EFF6FF</color>
+    <color name="stat_label">#3D5A7A</color>
 </resources>

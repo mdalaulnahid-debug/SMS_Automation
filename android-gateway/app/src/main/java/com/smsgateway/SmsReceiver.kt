@@ -37,9 +37,24 @@ class SmsReceiver : BroadcastReceiver() {
 
         Log.d(TAG, "SMS from $sender: ${body.take(50)}")
 
+        // Determine which SIM received this SMS so we use the right gatewayId.
+        val incomingSubId = intent.getIntExtra("android.telephony.extra.SUBSCRIPTION_INDEX", -1)
+            .takeIf { it >= 0 }
+            ?: intent.getIntExtra("subscription", -1)
+
         CoroutineScope(Dispatchers.IO).launch {
             val db = AppDatabase.get(context)
-            val gatewayId = Prefs.getGatewayId(context)
+
+            // Match subId to configured gateway; fall back to primary.
+            val gatewayId = if (incomingSubId >= 0) {
+                Prefs.configuredGateways(context)
+                    .firstOrNull { (_, subId) -> subId == incomingSubId }
+                    ?.first ?: Prefs.getGatewayId(context)
+            } else {
+                Prefs.getGatewayId(context)
+            }
+
+            Log.d(TAG, "Routing inbound SMS (subId=$incomingSubId) to gateway $gatewayId")
 
             val ok = WebhookSender.forward(context, gatewayId, sender, body, receivedAt)
 
@@ -49,8 +64,10 @@ class SmsReceiver : BroadcastReceiver() {
                     direction = "INBOUND",
                     sender = sender,
                     messageBody = body.take(500),
+                    operator = gatewayId,
                     status = if (ok) "OK" else "PENDING_RETRY",
-                    errorDetail = if (!ok) "Webhook delivery failed — pending retry" else null
+                    errorDetail = if (!ok) "Webhook delivery failed — pending retry" else null,
+                    subId = incomingSubId
                 )
             )
 

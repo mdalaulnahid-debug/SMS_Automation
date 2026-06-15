@@ -1,5 +1,1 @@
-﻿{
-    "versionCode":  15,
-    "versionName":  "1.9.0",
-    "releaseNotes":  "Added Check for Update option in toolbar menu"
-}
+{"versionCode":47,"versionName":"2.6.1","releaseNotes":"Fix: dual SIM labels on Samsung A16 (SP fallback → SIM 2)"}

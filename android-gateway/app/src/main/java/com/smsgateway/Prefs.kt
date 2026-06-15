@@ -106,6 +106,14 @@ object Prefs {
         return list
     }
 
+    // ── Theme ────────────────────────────────────────────────────────────────────
+
+    fun getThemeMode(context: Context): String =
+        prefs(context).getString("theme_mode", "auto") ?: "auto"
+
+    fun setThemeMode(context: Context, value: String) =
+        prefs(context).edit().putString("theme_mode", value).apply()
+
     // ── PIN management ───────────────────────────────────────────────────────────
 
     private fun sha256(text: String): String {

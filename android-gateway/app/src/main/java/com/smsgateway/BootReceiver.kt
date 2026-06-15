@@ -18,7 +18,7 @@ class BootReceiver : BroadcastReceiver() {
         val action = intent.action ?: return
         if (action != Intent.ACTION_BOOT_COMPLETED && action != "android.intent.action.LOCKED_BOOT_COMPLETED") return
 
-        if (!Prefs.isServiceEnabled(context)) return
+        if (!Prefs.isAutoStartOnBoot(context) && !Prefs.isServiceEnabled(context)) return
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
             ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)

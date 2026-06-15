@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_toolbar, menu)
         menu.findItem(R.id.action_admin)?.isVisible = Prefs.isAdminConfigured(this)
-        menu.findItem(R.id.action_scan_qr)?.isVisible = !Prefs.isProvisioned(this)
+        menu.findItem(R.id.action_scan_qr)?.isVisible = !Prefs.hasPinSet(this)
         return true
     }
 
@@ -187,32 +187,35 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun isDualSimHardware(): Boolean {
+        // Permission-free checks first — these work even if READ_PHONE_STATE is denied on Android 12+
+        val tm = getSystemService(TelephonyManager::class.java)
+        if (tm != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && tm.activeModemCount >= 2) return true
+            @Suppress("DEPRECATION")
+            if (tm.phoneCount >= 2) return true
+        }
+        // Permission-gated APIs — may return 0 if READ_PHONE_STATE denied
         val sm = getSystemService(SubscriptionManager::class.java)
         if ((sm?.activeSubscriptionInfoCountMax ?: 0) >= 2) return true
         if ((sm?.activeSubscriptionInfoCount ?: 0) >= 2) return true
-        val simsSize = SmsSender.listSims(this).size
-        if (simsSize >= 2) return true
-        val tm = getSystemService(TelephonyManager::class.java) ?: return false
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && tm.activeModemCount >= 2) return true
-        @Suppress("DEPRECATION")
-        return tm.phoneCount >= 2
+        return SmsSender.listSims(this).size >= 2
     }
 
     private fun setupSimSwitcher() {
         val secondary = Prefs.getSecondaryGatewayId(this)
-        val isDualSim = isDualSimHardware()
+        val sims = SmsSender.listSims(this)
+        val isDualSim = isDualSimHardware() || sims.size >= 2
         if (secondary.isBlank() && !isDualSim) {
             binding.simSwitcher.visibility = View.GONE
             return
         }
         binding.simSwitcher.visibility = View.VISIBLE
 
-        val sims = SmsSender.listSims(this)
+        // Labels come only from configured gateway IDs — Samsung BD devices return unreliable
+        // carrier names (e.g. "GP" for both SIM slots) from SubscriptionInfo.displayName.
         val primaryId = Prefs.getGatewayId(this)
-        val sim1Label = if (primaryId.isNotBlank()) primaryId.substringBefore("_")
-                        else if (sims.isNotEmpty()) sims[0].second else "SIM 1"
-        val sim2Label = if (secondary.isNotBlank()) secondary.substringBefore("_")
-                        else if (sims.size >= 2) sims[1].second else "SIM 2"
+        val sim1Label = if (primaryId.isNotBlank()) primaryId.substringBefore("_") else "SIM 1"
+        val sim2Label = if (secondary.isNotBlank()) secondary.substringBefore("_") else "SIM 2"
         binding.tvSim1Name.text = sim1Label
         binding.tvSim2Name.text = sim2Label
 

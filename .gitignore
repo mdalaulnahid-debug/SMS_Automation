@@ -14,3 +14,4 @@ android-gateway/keystore.properties
 *.jks
 public/gateway-app.apk
 data/telegram-offset.json
+config/vps.md

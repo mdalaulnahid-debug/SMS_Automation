@@ -25,10 +25,11 @@ pm2 status
 
 1. Install the app via USB: `adb -s <device-id> install -r app-release.apk`
    Or publish OTA via Admin Panel on A55
-2. Open app → **Settings**:
+2. Open app → **Settings** → tap **Gateway & Connection** (Admin Setup lock) → enter PIN:
    - Backend URL: `http://45.77.240.195:3000`
    - Gateway ID: `GP_PHONE_01` / `BANGLALINK_PHONE_01` / `ROBI_PHONE_01`
    - SIM: select correct slot
+   - For dual-SIM (A16): also set Secondary Gateway ID = `BANGLALINK_PHONE_01`, Secondary SIM = SIM 2
 3. Tap **Save** → **Start**
 4. Check VPS logs: `pm2 logs sms-backend --lines 20`
 
@@ -42,6 +43,7 @@ pm2 status
 - [x] **Telegram open-group auth** — any group member can submit
 - [x] **Late reply matching** — replies arriving after finalization are now matched and re-posted
 - [x] **Multi-operator live posting** — NID-MS and IMEI-MS post immediately on first reply, edit as more come in
+- [ ] **[TOMORROW] Release gateway phone settings from PIN lock** — Backend URL, Gateway ID, SIM slot selection should be freely editable without PIN (so gateway phone can be reconfigured if something breaks). Only admin/system settings stay behind PIN: admin API key, secondary gateway ID, test connection, PIN management itself.
 
 ---
 

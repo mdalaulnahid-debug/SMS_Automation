@@ -23,8 +23,8 @@ android {
         applicationId = "com.smsgateway"
         minSdk = 26
         targetSdk = 34
-        versionCode = 41
-        versionName = "2.3.0"
+        versionCode = 47
+        versionName = "2.6.1"
     }
 
     signingConfigs {

@@ -1,6 +1,6 @@
 # Progress Tracker
 
-Last updated: **2026-06-15 — Multi-operator live posting implemented (v2.4.0)**
+Last updated: **2026-06-15 — Admin monitoring dashboard + dual-SIM A16 fix (v2.6.1)**
 
 ---
 
@@ -18,37 +18,46 @@ Deploy is now one command from Git Bash: `bash scripts/deploy.sh` (passwordless 
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Android app v2.3.0 | Done | Real SIM phone number sent on registration; shown in admin gateway cards |
-| SSH key auth on VPS | Done | `~/.ssh/id_ed25519` copied — `bash scripts/deploy.sh` runs without password |
-| One-command deploy script | Done | `scripts/deploy.sh` — scp all src + bridge + config files, restart PM2 |
-| MS-NID routing fix | Done | Was ALL_OPERATORS; now RELEVANT_OPERATOR (prefix-based: 017→GP, 018→Robi, etc.) |
-| Telegram open-group auth | Done | `authorizedUsers: {}` — any group member can submit, not just whitelisted IDs |
-| Late reply matching | Done | `findActiveRequestForGateway` now searches NEEDS_MANUAL_REVIEW requests (6h window) |
-| Late reply re-posting | Done | If reply arrives after request finalized, existing draft updated and re-approved for post |
-| Admin app UI redesign | Done | Stat hero row (ONLINE/OFFLINE/TOTAL), operator initial circles, dark theme |
-| SIM switcher redesign | Done | Two-line stacked layout, cyan (SIM 1) / amethyst (SIM 2) color identity |
-| Web dashboard dark theme | Done | Navy theme matching Android app |
-| Robi phone updated | Done | v2.3.0 installed via ADB |
-| **Multi-operator live posting** | **Done** | NID-MS / IMEI-MS post on first reply, edited as more come in |
+| Settings split | Done | Theme/display/about/help freely accessible; admin config (URL, gateway ID, API key) behind PIN in "Gateway & Connection" submenu |
+| About section | Done | Collapsible card with chevron; shows version inline in header |
+| Help section | Done | Collapsible; stripped of all backend/admin info — only shows "contact your administrator" |
+| Admin phone monitoring (A55) | Done | AdminActivity rebuilt as 5-tab dashboard: OVERVIEW, GATEWAYS, REQUESTS, AUDIT, PUBLISH |
+| Auto-refresh | Done | Dashboard auto-refreshes every 30s using `repeatOnLifecycle` + coroutine loop |
+| Request status colour coding | Done | WAITING=blue, QUEUED/RETRY=yellow, COMPLETED=green, FAILED/TIMED_OUT=red |
+| Audit log actor badges | Done | ADMIN=cyan, SYSTEM=yellow, others=grey |
+| Backend health dot | Done | Green/red dot on OVERVIEW tab with live URL display |
+| OTA deploy fix | Done | `scripts/deploy.sh` was missing `app-version.json` copy — now included |
+| **A16 dual-SIM label fix** | **Done** | Samsung A16 returned "GP" for both SIM slots; labels now come from gateway ID only; "SIM 2" fallback when unconfigured |
+| **A16 dual-SIM visibility fix** | **Done** | `isDualSimHardware()` now checks `TelephonyManager.phoneCount` first (no permission needed) — switcher no longer hides on A16 |
 
 ### Key bugs fixed this session
 
 | Bug | Fix |
 |-----|-----|
-| MS-NID sent to all 3 operators | Changed domain.js target to RELEVANT_OPERATOR |
-| Telegram: non-whitelisted users rejected | Cleared authorizedUsers — group membership is the gate |
-| VPS git pull blocked by no credentials | Deploy script uses scp directly — no git on VPS needed |
-| Late operator replies dropped as unmatched | Extended search to NEEDS_MANUAL_REVIEW + re-approve draft |
-| `config/telegram.json` broken by nano edit | Rewrote cleanly with `cat > file << EOF` |
-| Fan-out results only posted when all done | Multi-op live posting — post immediately, edit as more reply |
+| All settings hidden behind PIN | Split: display/help/about free; only admin config gated |
+| Samsung A16: both SIM labels show "GP" | Labels derived from gateway ID only, not `SubscriptionInfo.displayName` |
+| Samsung A16: Banglalink SIM option gone | `isDualSimHardware()` now checks modem count before permission-gated APIs |
+| `scripts/deploy.sh` missing version JSON | Added `scp public/app-version.json` to deploy script |
+| A16 secondary gateway ID never set by QR | QR only sets primary — must configure secondary via Admin Setup manually |
 
 ### Current versions
 
 | Version | Code | Notes |
 |---------|------|-------|
 | Backend v2.4.0 | — | Multi-operator live posting (NID-MS, IMEI-MS) |
-| Android v2.3.0 | 41 | SIM phone number in registration + admin card |
-| Android v2.2.7-beta | 40 | Previous |
+| Android v2.6.1 | 47 | A16 dual-SIM label + visibility fix |
+| Android v2.6.0 | 46 | 5-tab admin monitoring dashboard |
+| Android v2.3.0 | 41 | Previous stable (SIM phone number) |
+
+### Pending on A16 gateway phone (action required)
+
+After installing v2.6.1, the A16 user must configure the secondary gateway manually:
+1. Open app → Settings → **Gateway & Connection** → enter PIN
+2. Set **Secondary Gateway ID** = `BANGLALINK_PHONE_01`
+3. Set **Secondary SIM** = SIM 2
+4. Tap **Save**
+
+Until this is done, SIM 2 shows as "SIM 2" (unconfigured) and dispatches won't route to Banglalink.
 
 ---
 
@@ -58,9 +67,9 @@ Deploy is now one command from Git Bash: `bash scripts/deploy.sh` (passwordless 
 |-----------|----------|-------|
 | Backend | `45.77.240.195:3000` | Vultr Singapore VPS, PM2 `sms-backend` |
 | Telegram bridge | `45.77.240.195` | PM2 `sms-bridge` on same VPS |
-| Gateway phone | Samsung (dual-SIM) | SIM 1 = Banglalink, SIM 2 = GP |
-| Admin phone | Samsung A55 | Admin Panel, OTA publish |
-| Robi phone | Samsung (f0c7c672) | v2.3.0 installed, Robi SIM confirmed |
+| A16 gateway phone | Samsung A16 (`R9TY808NKZL`) | SIM 1 = GP, SIM 2 = Banglalink; v2.6.1 |
+| Admin phone | Samsung A55 (`RRCXA03MTRA`) | 5-tab monitoring dashboard; v2.6.0+ |
+| Robi phone | Samsung (`f0c7c672`) | v2.3.0 installed, Robi SIM confirmed |
 
 ### VPS credentials
 
@@ -144,11 +153,14 @@ Copies `src/`, `telegram-bridge/`, and `config/telegram.json` directly via SCP, 
 - **Admin app dark theme redesign: stat hero row, operator circles**
 - **SIM switcher: two-line stacked, cyan/amethyst color identity**
 - **Web dashboard: dark navy theme**
+- **v2.6.0: Settings split (theme/help/about free; admin config PIN-gated); 5-tab admin monitoring dashboard with auto-refresh**
+- **v2.6.1: A16 dual-SIM label fix (Samsung returns "GP" for both slots); modem-count-first dual-SIM detection**
 
 ---
 
 ## Next Milestone
 
-1. **Deploy to VPS** — run `bash scripts/deploy.sh` to push multi-operator live posting
-2. **Nightly DB backup on VPS** — cron job
-3. **compileSdk/targetSdk bump** to 35
+1. **[TOMORROW] Release gateway phone settings from PIN lock** — Backend URL, Gateway ID, SIM slot should be editable without PIN; only admin key, secondary gateway config, and PIN management stay gated
+2. **Configure A16 secondary gateway** — set `BANGLALINK_PHONE_01` / SIM 2 via Admin Setup on A16
+3. **Nightly DB backup on VPS** — cron job
+4. **compileSdk/targetSdk bump** to 35

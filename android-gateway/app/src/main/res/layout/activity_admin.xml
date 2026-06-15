@@ -16,29 +16,566 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            app:navigationIcon="?attr/homeAsUpIndicator"
-            app:title="Admin Panel"
-            app:titleTextColor="@color/text_primary" />
+            android:background="@color/bg_surface"
+            app:title="CONTROL CENTER"
+            app:titleTextColor="@color/text_primary"
+            app:subtitleTextColor="@color/accent" />
+
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tabLayout"
+            style="@style/Widget.SmsGateway.TabLayout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp" />
+
     </com.google.android.material.appbar.AppBarLayout>
 
+    <!-- ══ TAB 0: OVERVIEW ══ -->
     <androidx.core.widget.NestedScrollView
+        android:id="@+id/overviewContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="@dimen/screen_padding"
+        android:clipToPadding="false"
+        android:paddingBottom="32dp"
+        android:visibility="visible"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="16dp">
 
-            <!-- OTA update publish card -->
+            <!-- Backend health banner -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/section_gap"
+                android:layout_marginBottom="16dp"
                 app:cardBackgroundColor="@color/bg_card"
-                app:cardCornerRadius="@dimen/card_radius"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/divider"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="16dp">
+
+                    <View
+                        android:id="@+id/backendHealthDot"
+                        android:layout_width="10dp"
+                        android:layout_height="10dp"
+                        android:background="@drawable/bg_operator_circle"
+                        android:layout_marginEnd="12dp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvBackendHealthStatus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Connecting…"
+                            android:textColor="@color/text_primary"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvBackendHealthUrl"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="11sp"
+                            android:fontFamily="monospace" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="end">
+
+                        <TextView
+                            android:id="@+id/tvLastRefreshed"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="—"
+                            android:textColor="@color/text_muted"
+                            android:textSize="10sp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnRefreshOverview"
+                            style="@style/Widget.MaterialComponents.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:minHeight="0dp"
+                            android:paddingHorizontal="0dp"
+                            android:text="Refresh"
+                            android:textColor="@color/accent"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Stats 2×2 grid -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp"
+                android:baselineAligned="false">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="6dp"
+                    android:background="@drawable/bg_stat_card"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingVertical="16dp">
+
+                    <TextView
+                        android:id="@+id/tvOvActive"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="—"
+                        android:textColor="@color/accent"
+                        android:textAppearance="@style/TextAppearance.SmsGateway.StatNumber" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp" android:text="ACTIVE"
+                        android:textColor="@color/stat_label" android:textSize="9sp"
+                        android:textStyle="bold" android:letterSpacing="0.12" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginHorizontal="6dp"
+                    android:background="@drawable/bg_stat_card"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingVertical="16dp">
+
+                    <TextView
+                        android:id="@+id/tvOvToday"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="—"
+                        android:textColor="@color/text_primary"
+                        android:textAppearance="@style/TextAppearance.SmsGateway.StatNumber" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp" android:text="TODAY"
+                        android:textColor="@color/stat_label" android:textSize="9sp"
+                        android:textStyle="bold" android:letterSpacing="0.12" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginHorizontal="6dp"
+                    android:background="@drawable/bg_stat_card"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingVertical="16dp">
+
+                    <TextView
+                        android:id="@+id/tvOvCompleted"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="—"
+                        android:textColor="@color/success"
+                        android:textAppearance="@style/TextAppearance.SmsGateway.StatNumber" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp" android:text="DONE"
+                        android:textColor="@color/stat_label" android:textSize="9sp"
+                        android:textStyle="bold" android:letterSpacing="0.12" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/bg_stat_card"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingVertical="16dp">
+
+                    <TextView
+                        android:id="@+id/tvOvFailed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="—"
+                        android:textColor="@color/danger"
+                        android:textAppearance="@style/TextAppearance.SmsGateway.StatNumber" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp" android:text="FAILED"
+                        android:textColor="@color/stat_label" android:textSize="9sp"
+                        android:textStyle="bold" android:letterSpacing="0.12" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- SMS sent/received row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="20dp"
+                android:baselineAligned="false">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="6dp"
+                    android:background="@drawable/bg_stat_card"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingVertical="14dp">
+
+                    <TextView
+                        android:id="@+id/tvOvSmsSent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="—"
+                        android:textColor="@color/text_secondary"
+                        android:textAppearance="@style/TextAppearance.SmsGateway.StatNumber" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp" android:text="SMS SENT"
+                        android:textColor="@color/stat_label" android:textSize="9sp"
+                        android:textStyle="bold" android:letterSpacing="0.12" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/bg_stat_card"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingVertical="14dp">
+
+                    <TextView
+                        android:id="@+id/tvOvSmsReceived"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="—"
+                        android:textColor="@color/text_secondary"
+                        android:textAppearance="@style/TextAppearance.SmsGateway.StatNumber" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp" android:text="SMS RECV"
+                        android:textColor="@color/stat_label" android:textSize="9sp"
+                        android:textStyle="bold" android:letterSpacing="0.12" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Recent activity -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="RECENT ACTIVITY"
+                    android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel" />
+            </LinearLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                app:cardBackgroundColor="@color/bg_card"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/divider"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:id="@+id/recentActivityContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="8dp" />
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- ══ TAB 1: GATEWAYS ══ -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/gatewaysContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="32dp"
+        android:visibility="gone"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="GATEWAY STATUS"
+                    android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRefreshGateways"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/accent"
+                    android:textSize="13sp"
+                    android:letterSpacing="0.04"
+                    android:text="Refresh" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="20dp"
+                android:baselineAligned="false">
+
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:layout_marginEnd="6dp"
+                    android:background="@drawable/bg_stat_card" android:gravity="center"
+                    android:orientation="vertical" android:paddingVertical="18dp">
+                    <TextView android:id="@+id/tvStatOnline" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:text="—"
+                        android:textColor="@color/success"
+                        android:textAppearance="@style/TextAppearance.SmsGateway.StatNumber" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp" android:text="ONLINE"
+                        android:textColor="@color/stat_label" android:textSize="10sp"
+                        android:textStyle="bold" android:letterSpacing="0.12" />
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:layout_marginHorizontal="6dp"
+                    android:background="@drawable/bg_stat_card" android:gravity="center"
+                    android:orientation="vertical" android:paddingVertical="18dp">
+                    <TextView android:id="@+id/tvStatOffline" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:text="—"
+                        android:textColor="@color/danger"
+                        android:textAppearance="@style/TextAppearance.SmsGateway.StatNumber" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp" android:text="OFFLINE"
+                        android:textColor="@color/stat_label" android:textSize="10sp"
+                        android:textStyle="bold" android:letterSpacing="0.12" />
+                </LinearLayout>
+
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:layout_marginStart="6dp"
+                    android:background="@drawable/bg_stat_card" android:gravity="center"
+                    android:orientation="vertical" android:paddingVertical="18dp">
+                    <TextView android:id="@+id/tvStatTotal" android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" android:text="—"
+                        android:textColor="@color/accent"
+                        android:textAppearance="@style/TextAppearance.SmsGateway.StatNumber" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp" android:text="TOTAL"
+                        android:textColor="@color/stat_label" android:textSize="10sp"
+                        android:textStyle="bold" android:letterSpacing="0.12" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/gatewayCardsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- ══ TAB 2: REQUESTS ══ -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/requestsContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="32dp"
+        android:visibility="gone"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:id="@+id/tvRequestsCount"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="REQUESTS"
+                    android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRefreshRequests"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/accent"
+                    android:textSize="13sp"
+                    android:text="Refresh" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/requestCardsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- ══ TAB 3: AUDIT ══ -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/auditContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="32dp"
+        android:visibility="gone"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="12dp">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="AUDIT LOG"
+                    android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRefreshAudit"
+                    style="@style/Widget.MaterialComponents.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/accent"
+                    android:textSize="13sp"
+                    android:text="Refresh" />
+            </LinearLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/bg_card"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/divider"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:id="@+id/auditEntriesContainer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="4dp"
+                    />
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- ══ TAB 4: PUBLISH ══ -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/publishContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="32dp"
+        android:visibility="gone"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="16dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/bg_stat_card"
+                android:padding="18dp"
+                android:layout_marginBottom="14dp"
+                android:gravity="center_vertical">
+
+                <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content"
+                    android:layout_weight="1" android:orientation="vertical">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="OTA UPDATE"
+                        android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel"
+                        android:layout_marginBottom="4dp" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="Push APK to all gateway phones wirelessly. No USB cable needed."
+                        android:textColor="@color/text_secondary" android:textSize="13sp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/bg_card"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
                 app:strokeColor="@color/accent_muted"
                 app:strokeWidth="1dp">
 
@@ -46,86 +583,50 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="@dimen/card_padding">
+                    android:padding="20dp">
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
                         android:text="Publish Update"
                         android:textAppearance="@style/TextAppearance.SmsGateway.CardTitle"
-                        android:layout_marginBottom="6dp" />
+                        android:layout_marginBottom="8dp" />
 
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Select an APK from storage. All gateway phones will be notified and can update over the internet — no USB needed."
-                        android:textColor="@color/text_secondary"
-                        android:textSize="13sp"
-                        android:layout_marginBottom="14dp" />
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:text="Select a signed APK from storage. All gateway phones will receive an update notification and can install over the internet."
+                        android:textColor="@color/text_secondary" android:textSize="13sp"
+                        android:lineSpacingExtra="3dp" android:layout_marginBottom="20dp" />
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content"
+                        android:orientation="vertical" android:background="@color/bg_card_elevated"
+                        android:padding="14dp" android:layout_marginBottom="20dp">
+
+                        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:text="HOW IT WORKS"
+                            android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel"
+                            android:layout_marginBottom="10dp" />
+                        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:text="1. Build a new release APK" android:textColor="@color/text_secondary"
+                            android:textSize="13sp" android:layout_marginBottom="6dp" />
+                        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:text="2. Tap Select APK and Publish below" android:textColor="@color/text_secondary"
+                            android:textSize="13sp" android:layout_marginBottom="6dp" />
+                        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:text="3. Gateway phones get a notification" android:textColor="@color/text_secondary"
+                            android:textSize="13sp" android:layout_marginBottom="6dp" />
+                        <TextView android:layout_width="match_parent" android:layout_height="wrap_content"
+                            android:text="4. Tap notification → auto installs" android:textColor="@color/text_secondary"
+                            android:textSize="13sp" />
+                    </LinearLayout>
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnPublishUpdate"
+                        style="@style/Widget.SmsGateway.Button.Hero"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="56dp"
                         android:text="Select APK and Publish" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Gateway health -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/section_gap"
-                app:cardBackgroundColor="@color/bg_card"
-                app:cardCornerRadius="@dimen/card_radius"
-                app:strokeColor="@color/divider"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="@dimen/card_padding">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:layout_marginBottom="8dp">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Gateway Health"
-                            android:textAppearance="@style/TextAppearance.SmsGateway.CardTitle" />
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnRefreshGateways"
-                            style="@style/Widget.Material3.Button.TextButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Refresh" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/tvGatewayStatus"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Loading…"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="13sp"
-                        android:layout_marginBottom="12dp" />
-
-                    <LinearLayout
-                        android:id="@+id/gatewayCardsContainer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
