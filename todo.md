@@ -41,33 +41,23 @@ pm2 status
 - [x] **MS-NID single-operator routing** — routes by MSISDN prefix, not all operators
 - [x] **Telegram open-group auth** — any group member can submit
 - [x] **Late reply matching** — replies arriving after finalization are now matched and re-posted
-- [ ] **Multi-operator live posting** — NID-MS and IMEI-MS post immediately on first reply, edit as more come in *(design reviewed, pending implementation)*
+- [x] **Multi-operator live posting** — NID-MS and IMEI-MS post immediately on first reply, edit as more come in
 
 ---
 
-## Multi-Operator Live Posting (NID-MS / IMEI-MS) — Design
+## Multi-Operator Live Posting (NID-MS / IMEI-MS) — DONE
 
-**Behaviour:**
-- When first operator replies → immediately post to Telegram group:
-  ```
-  @Requester
-  NID-MS: <payload>
+**Behaviour (implemented):**
+- First operator reply → post immediately to Telegram: GP filled, Robi/BL "pending..."
+- Each subsequent reply → **edit** same message in-place
+- All done or timed out → final edit → request COMPLETED
 
-  — GP: [reply text]
-  — Robi: pending...
-  — Banglalink: pending...
-  ```
-- When next operator replies → **edit** that same Telegram message to fill in their slot
-- When last operator replies → edit again, all slots filled
-- If operator times out → edit to show "no reply (timed out)"
+**Design decisions:**
+1. Duplicate operator reply → update (take latest text)
+2. Edit fails >48h → falls back to new threaded message
+3. autoApprove=false → reviewer approves first post once; all subsequent edits automatic
 
-**Applies to:** NID-MS and IMEI-MS only (multi-operator fan-out requests)
-**Does not affect:** LRL, LCL, MS-NID (single-operator, unchanged)
-
-**Open design questions (to answer before coding):**
-1. If a second reply arrives from an already-replied operator — update or ignore?
-2. If Telegram edit fails (>48h old message) — fall back to new message?
-3. If `autoApprove` is false — does reviewer approve once (first post) and subsequent edits are automatic?
+**Status lifecycle:** `APPROVED_FOR_POST` → `POSTED_LIVE` → `APPROVED_FOR_EDIT` → `POSTED_LIVE` → ... → `POSTED`
 
 ---
 
@@ -135,3 +125,4 @@ pm2 status
 - [x] Telegram open-group auth (any group member can submit)
 - [x] Late reply matching + re-posting (6-hour window)
 - [x] One-command deploy script (`scripts/deploy.sh`, passwordless SSH)
+- [x] Multi-operator live posting (NID-MS, IMEI-MS) — post on first reply, edit as more come in

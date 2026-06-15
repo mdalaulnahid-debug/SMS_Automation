@@ -1,6 +1,6 @@
 # Progress Tracker
 
-Last updated: **2026-06-15 — Late reply fix deployed; multi-operator live posting planned**
+Last updated: **2026-06-15 — Multi-operator live posting implemented (v2.4.0)**
 
 ---
 
@@ -20,7 +20,7 @@ Deploy is now one command from Git Bash: `bash scripts/deploy.sh` (passwordless 
 |------|--------|-------|
 | Android app v2.3.0 | Done | Real SIM phone number sent on registration; shown in admin gateway cards |
 | SSH key auth on VPS | Done | `~/.ssh/id_ed25519` copied — `bash scripts/deploy.sh` runs without password |
-| One-command deploy script | Done | `scripts/deploy.sh` — scp all src + config files, restart PM2 |
+| One-command deploy script | Done | `scripts/deploy.sh` — scp all src + bridge + config files, restart PM2 |
 | MS-NID routing fix | Done | Was ALL_OPERATORS; now RELEVANT_OPERATOR (prefix-based: 017→GP, 018→Robi, etc.) |
 | Telegram open-group auth | Done | `authorizedUsers: {}` — any group member can submit, not just whitelisted IDs |
 | Late reply matching | Done | `findActiveRequestForGateway` now searches NEEDS_MANUAL_REVIEW requests (6h window) |
@@ -29,6 +29,7 @@ Deploy is now one command from Git Bash: `bash scripts/deploy.sh` (passwordless 
 | SIM switcher redesign | Done | Two-line stacked layout, cyan (SIM 1) / amethyst (SIM 2) color identity |
 | Web dashboard dark theme | Done | Navy theme matching Android app |
 | Robi phone updated | Done | v2.3.0 installed via ADB |
+| **Multi-operator live posting** | **Done** | NID-MS / IMEI-MS post on first reply, edited as more come in |
 
 ### Key bugs fixed this session
 
@@ -39,13 +40,15 @@ Deploy is now one command from Git Bash: `bash scripts/deploy.sh` (passwordless 
 | VPS git pull blocked by no credentials | Deploy script uses scp directly — no git on VPS needed |
 | Late operator replies dropped as unmatched | Extended search to NEEDS_MANUAL_REVIEW + re-approve draft |
 | `config/telegram.json` broken by nano edit | Rewrote cleanly with `cat > file << EOF` |
+| Fan-out results only posted when all done | Multi-op live posting — post immediately, edit as more reply |
 
-### Current app versions
+### Current versions
 
 | Version | Code | Notes |
 |---------|------|-------|
-| v2.3.0 | 41 | Current — SIM phone number in registration + admin card |
-| v2.2.7-beta | 40 | Previous |
+| Backend v2.4.0 | — | Multi-operator live posting (NID-MS, IMEI-MS) |
+| Android v2.3.0 | 41 | SIM phone number in registration + admin card |
+| Android v2.2.7-beta | 40 | Previous |
 
 ---
 
@@ -146,6 +149,6 @@ Copies `src/`, `telegram-bridge/`, and `config/telegram.json` directly via SCP, 
 
 ## Next Milestone
 
-1. **Multi-operator live posting** — NID-MS and IMEI-MS post to Telegram immediately on first reply, then edit the message as more operators reply (see `todo.md`)
+1. **Deploy to VPS** — run `bash scripts/deploy.sh` to push multi-operator live posting
 2. **Nightly DB backup on VPS** — cron job
 3. **compileSdk/targetSdk bump** to 35
