@@ -14,7 +14,7 @@ const { readFileSync, writeFileSync, existsSync } = require('node:fs');
 const { join } = require('node:path');
 const { TelegramClient } = require('./telegramClient');
 const { BackendClient } = require('./backendClient');
-const { handleIntake, postApprovedReplies, notifyTimeouts } = require('./bridge');
+const { handleIntake, postApprovedReplies, postLiveEdits, notifyTimeouts } = require('./bridge');
 
 function loadConfig() {
   const path = join(__dirname, '..', 'config', 'telegram.json');
@@ -112,6 +112,11 @@ async function postingLoop(config, telegram, backend) {
       await postApprovedReplies({ backend, telegram, log });
     } catch (error) {
       log(`postApprovedReplies error: ${error.message}`);
+    }
+    try {
+      await postLiveEdits({ backend, telegram, log });
+    } catch (error) {
+      log(`postLiveEdits error: ${error.message}`);
     }
     try {
       await notifyTimeouts({ backend, telegram, notifiedSet: notifiedTimeouts, log });

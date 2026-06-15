@@ -63,6 +63,32 @@ class TelegramClient {
       allow_sending_without_reply: true
     });
   }
+
+  // Edit an existing Telegram message in-place (live posting updates).
+  // Falls back to sendThreadedReply if the message is too old to edit (>48h).
+  async editMessage({ chatId, messageId, text, replyToMessageId, mention }) {
+    const params = { chat_id: chatId, message_id: messageId, text };
+    if (mention && mention.userId && mention.length > 0) {
+      params.entities = [
+        {
+          type: 'text_mention',
+          offset: mention.offset || 0,
+          length: mention.length,
+          user: { id: Number(mention.userId) }
+        }
+      ];
+    }
+    try {
+      return await this.call('editMessageText', params);
+    } catch (err) {
+      // Message too old to edit or already identical — fall back to a new reply
+      if (err.message && (err.message.includes("can't be edited") || err.message.includes('message is not modified'))) {
+        if (err.message.includes('message is not modified')) return null;
+        return this.sendThreadedReply({ chatId, text, replyToMessageId, mention });
+      }
+      throw err;
+    }
+  }
 }
 
 module.exports = { TelegramClient };

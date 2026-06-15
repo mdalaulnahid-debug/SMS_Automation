@@ -135,6 +135,35 @@ async function postApprovedReplies({ backend, telegram, log = () => {} }) {
   return posted;
 }
 
+// Edit live Telegram messages as more operators reply to a fan-out request (NID-MS, IMEI-MS).
+// The backend marks each updated draft APPROVED_FOR_EDIT with the latest combined text.
+// After editing, confirm back to the backend so it can finalise the request if all operators
+// are done, or keep the message live if some are still pending.
+async function postLiveEdits({ backend, telegram, log = () => {} }) {
+  const replies = await backend.listPendingEdits();
+  const edited = [];
+  for (const reply of replies) {
+    if (reply.channel !== 'telegram') continue;
+    if (!reply.postedMessageId) continue; // initial post not yet confirmed — skip until it is
+    try {
+      const mention = buildMention(reply.replyText, reply.requesterId);
+      await telegram.editMessage({
+        chatId: reply.chatId,
+        messageId: reply.postedMessageId,
+        text: reply.replyText,
+        replyToMessageId: reply.sourceMessageId,
+        mention
+      });
+      await backend.markReplyEdited(reply.id);
+      edited.push(reply.id);
+      log(`live-edit: updated reply ${reply.id} for ${reply.requestId} (msg ${reply.postedMessageId})`);
+    } catch (error) {
+      log(`live-edit: FAILED reply ${reply.id} — ${error.message} (will retry)`);
+    }
+  }
+  return edited;
+}
+
 // Notify the group when requests time out or fail without any reply.
 // Tracks which request IDs have been notified to avoid repeats.
 async function notifyTimeouts({ backend, telegram, notifiedSet, log = () => {} }) {
@@ -171,4 +200,4 @@ async function notifyTimeouts({ backend, telegram, notifiedSet, log = () => {} }
   return posted;
 }
 
-module.exports = { buildMention, planIntake, handleIntake, postApprovedReplies, notifyTimeouts };
+module.exports = { buildMention, planIntake, handleIntake, postApprovedReplies, postLiveEdits, notifyTimeouts };

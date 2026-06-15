@@ -55,6 +55,22 @@ class BackendClient {
     );
     return res.json();
   }
+
+  async listPendingEdits() {
+    const res = await this.fetch(`${this.base}/api/whatsapp-replies?status=APPROVED_FOR_EDIT`, {
+      headers: this.headers()
+    });
+    const data = await res.json();
+    return data.whatsappReplies || [];
+  }
+
+  async markReplyEdited(replyId) {
+    const res = await this.fetch(
+      `${this.base}/api/whatsapp-replies/${encodeURIComponent(replyId)}/edited`,
+      { method: 'POST', headers: this.headers({ 'content-type': 'application/json' }), body: '{}' }
+    );
+    return res.json();
+  }
 }
 
 module.exports = { BackendClient };

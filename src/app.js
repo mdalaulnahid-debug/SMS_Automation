@@ -285,6 +285,9 @@ function createApp(options = {}) {
             request: await service.markReplyPosted(id, { postedMessageId: body.postedMessageId })
           });
         }
+        if (action === 'edited') {
+          return json(res, 200, { request: await service.markReplyEdited(id) });
+        }
         return json(res, 404, { error: 'Not found' });
       }
       if (req.method === 'POST' && req.url.startsWith('/api/requests/') && req.url.endsWith('/reject')) {
