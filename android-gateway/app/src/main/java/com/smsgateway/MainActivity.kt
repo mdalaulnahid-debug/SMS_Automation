@@ -4,19 +4,18 @@ import android.Manifest
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
 import android.content.BroadcastReceiver
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
+import android.telephony.SubscriptionManager
+import android.telephony.TelephonyManager
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -35,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     private var serviceToggleInFlight = false
     private var pulseAnimator: ObjectAnimator? = null
     private var noInternetSnackbar: Snackbar? = null
+    private var selectedSimIndex = 0
 
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -82,19 +82,37 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setSupportActionBar(binding.toolbar)
-        supportActionBar?.subtitle = "Operator bridge"
 
         binding.btnToggleService.setOnClickListener { toggleService() }
-        binding.btnCopyIp.setOnClickListener { copyLocalIp() }
 
-        setupCollapsibleDetails()
         observeActivityLog()
         requestPermissions()
+
+        // Auto-restart service after upgrade if it was running before
+        if (Prefs.isServiceEnabled(this)) {
+            ContextCompat.startForegroundService(this, Intent(this, GatewayForegroundService::class.java))
+        }
+    }
+
+    private val qrScanLauncher = registerForActivityResult(
+        androidx.activity.result.contract.ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == android.app.Activity.RESULT_OK) {
+            val gwId = result.data?.getStringExtra(QrScanActivity.EXTRA_GATEWAY_ID) ?: ""
+            if (gwId.isNotBlank()) {
+                com.google.android.material.snackbar.Snackbar
+                    .make(binding.root, "Provisioned as $gwId — restart service to apply", com.google.android.material.snackbar.Snackbar.LENGTH_LONG)
+                    .show()
+                invalidateOptionsMenu()
+                updateUI()
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.main_toolbar, menu)
         menu.findItem(R.id.action_admin)?.isVisible = Prefs.isAdminConfigured(this)
+        menu.findItem(R.id.action_scan_qr)?.isVisible = !Prefs.isProvisioned(this)
         return true
     }
 
@@ -103,6 +121,10 @@ class MainActivity : AppCompatActivity() {
             R.id.action_check_update -> {
                 android.widget.Toast.makeText(this, "Checking for updates…", android.widget.Toast.LENGTH_SHORT).show()
                 UpdateChecker.checkInBackground(this, showResult = true)
+                true
+            }
+            R.id.action_scan_qr -> {
+                qrScanLauncher.launch(Intent(this, QrScanActivity::class.java))
                 true
             }
             R.id.action_admin -> {
@@ -118,20 +140,6 @@ class MainActivity : AppCompatActivity() {
                 true
             }
             else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    private fun setupCollapsibleDetails() {
-        binding.detailsHeader.setOnClickListener {
-            val body = binding.detailsBody
-            val chevron = binding.detailsChevron
-            if (body.visibility == View.GONE) {
-                body.visibility = View.VISIBLE
-                chevron.animate().rotation(180f).setDuration(200).start()
-            } else {
-                body.visibility = View.GONE
-                chevron.animate().rotation(0f).setDuration(200).start()
-            }
         }
     }
 
@@ -162,11 +170,12 @@ class MainActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        invalidateOptionsMenu()  // re-check admin key visibility
+        invalidateOptionsMenu()
         LocalBroadcastManager.getInstance(this).registerReceiver(
             serviceReceiver,
             IntentFilter(ServiceEvents.ACTION_STATUS)
         )
+        setupSimSwitcher()
         updateUI()
         discoverAndCheckBackend()
     }
@@ -175,6 +184,79 @@ class MainActivity : AppCompatActivity() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(serviceReceiver)
         pulseAnimator?.cancel()
         super.onPause()
+    }
+
+    private fun isDualSimHardware(): Boolean {
+        val sm = getSystemService(SubscriptionManager::class.java)
+        if ((sm?.activeSubscriptionInfoCountMax ?: 0) >= 2) return true
+        if ((sm?.activeSubscriptionInfoCount ?: 0) >= 2) return true
+        val simsSize = SmsSender.listSims(this).size
+        if (simsSize >= 2) return true
+        val tm = getSystemService(TelephonyManager::class.java) ?: return false
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && tm.activeModemCount >= 2) return true
+        @Suppress("DEPRECATION")
+        return tm.phoneCount >= 2
+    }
+
+    private fun setupSimSwitcher() {
+        val secondary = Prefs.getSecondaryGatewayId(this)
+        val isDualSim = isDualSimHardware()
+        if (secondary.isBlank() && !isDualSim) {
+            binding.simSwitcher.visibility = View.GONE
+            return
+        }
+        binding.simSwitcher.visibility = View.VISIBLE
+
+        val sims = SmsSender.listSims(this)
+        val primaryId = Prefs.getGatewayId(this)
+        val sim1Label = if (primaryId.isNotBlank()) primaryId.substringBefore("_")
+                        else if (sims.isNotEmpty()) sims[0].second else "SIM 1"
+        val sim2Label = if (secondary.isNotBlank()) secondary.substringBefore("_")
+                        else if (sims.size >= 2) sims[1].second else "SIM 2"
+        binding.tvSim1Name.text = sim1Label
+        binding.tvSim2Name.text = sim2Label
+
+        updateSimVisuals()
+
+        binding.btnSim1.setOnClickListener {
+            if (selectedSimIndex != 0) { selectedSimIndex = 0; updateGatewayIdDisplay(); updateSimVisuals() }
+        }
+        binding.btnSim2.setOnClickListener {
+            if (selectedSimIndex != 1) { selectedSimIndex = 1; updateGatewayIdDisplay(); updateSimVisuals() }
+        }
+    }
+
+    private fun updateSimVisuals() {
+        val dark      = getColor(R.color.bg_primary)
+        val secondary = getColor(R.color.text_secondary)
+        val cyan      = getColor(R.color.accent)
+        val violet    = getColor(R.color.sim2_color)
+
+        if (selectedSimIndex == 0) {
+            binding.btnSim1.setBackgroundResource(R.drawable.bg_sim1_active)
+            binding.tvSim1Slot.setTextColor(dark)
+            binding.tvSim1Name.setTextColor(dark)
+            binding.btnSim2.setBackgroundResource(R.drawable.bg_sim2_inactive)
+            binding.tvSim2Slot.setTextColor(violet)
+            binding.tvSim2Name.setTextColor(secondary)
+        } else {
+            binding.btnSim2.setBackgroundResource(R.drawable.bg_sim2_active)
+            binding.tvSim2Slot.setTextColor(dark)
+            binding.tvSim2Name.setTextColor(dark)
+            binding.btnSim1.setBackgroundResource(R.drawable.bg_sim1_inactive)
+            binding.tvSim1Slot.setTextColor(cyan)
+            binding.tvSim1Name.setTextColor(secondary)
+        }
+    }
+
+    private fun updateGatewayIdDisplay() {
+        val gId = if (selectedSimIndex == 0) {
+            Prefs.getGatewayId(this)
+        } else {
+            Prefs.getSecondaryGatewayId(this).ifBlank { "Not configured — set in Settings" }
+        }
+        binding.tvGatewayId.text = gId
+        supportActionBar?.subtitle = gId
     }
 
     private fun discoverAndCheckBackend() {
@@ -201,7 +283,6 @@ class MainActivity : AppCompatActivity() {
 
             if (connected != null) {
                 binding.tvBackendHealth.text = "Backend: connected"
-                binding.tvBackendUrl.text = connected
                 binding.tvBackendHealth.setTextColor(getColor(R.color.success))
                 setBackendDotColor(R.color.success)
             } else {
@@ -220,17 +301,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun String.isLanUrl(): Boolean =
         matches(Regex("https?://(192\\.168|10\\.|172\\.(1[6-9]|2[0-9]|3[01]))\\..*"))
-
-    private fun copyLocalIp() {
-        val ip = getLocalIp()
-        if (ip == "Not connected to Wi-Fi") {
-            Toast.makeText(this, ip, Toast.LENGTH_SHORT).show()
-            return
-        }
-        val clipboard = getSystemService(ClipboardManager::class.java)
-        clipboard.setPrimaryClip(ClipData.newPlainText("gateway_ip", ip))
-        Snackbar.make(binding.root, "Copied $ip", Snackbar.LENGTH_SHORT).show()
-    }
 
     private fun toggleService() {
         if (serviceToggleInFlight) return
@@ -293,6 +363,8 @@ class MainActivity : AppCompatActivity() {
         binding.tvServiceStatus.text = if (running) "RUNNING" else "STOPPED"
         binding.tvServiceStatus.setTextColor(getColor(if (running) R.color.success else R.color.danger))
 
+        binding.tvPollingStatus.visibility = if (running) View.VISIBLE else View.GONE
+
         if (running) {
             binding.statusGlow.backgroundTintList =
                 android.content.res.ColorStateList.valueOf(getColor(R.color.status_running_glow))
@@ -310,11 +382,7 @@ class MainActivity : AppCompatActivity() {
             else -> "Start Service"
         }
 
-        binding.tvGatewayId.text = Prefs.getGatewayId(this)
-        binding.tvPort.text = ":${Prefs.getHttpPort(this)}"
-        binding.tvBackendUrl.text = Prefs.getBackendUrl(this)
-        binding.tvLocalIp.text = getLocalIp()
-        supportActionBar?.subtitle = if (running) "Service active" else "Service stopped"
+        updateGatewayIdDisplay()
     }
 
     private fun startPulse() {
@@ -338,11 +406,6 @@ class MainActivity : AppCompatActivity() {
         binding.statusGlow.scaleX = 1f
         binding.statusGlow.scaleY = 1f
         binding.statusGlow.alpha = 1f
-    }
-
-    private fun getLocalIp(): String {
-        val ip = NetworkUtils.getLocalIp(this)
-        return ip.ifBlank { "Not connected to Wi-Fi" }
     }
 
     private fun requestPermissions() {

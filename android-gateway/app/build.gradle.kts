@@ -85,4 +85,7 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+
+    // QR code scanning (provisioning flow)
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
 }

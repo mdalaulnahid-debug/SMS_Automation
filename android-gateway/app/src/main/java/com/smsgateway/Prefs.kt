@@ -92,11 +92,59 @@ object Prefs {
 
     fun isAdminConfigured(context: Context): Boolean = getAdminApiKey(context).isNotBlank()
 
+    fun isAutoStartOnBoot(context: Context): Boolean =
+        prefs(context).getBoolean("auto_start_on_boot", true)
+
+    fun setAutoStartOnBoot(context: Context, value: Boolean) =
+        prefs(context).edit().putBoolean("auto_start_on_boot", value).apply()
+
     /** Returns list of (gatewayId, subId) for every configured gateway on this phone. */
     fun configuredGateways(context: Context): List<Pair<String, Int>> {
         val list = mutableListOf(getGatewayId(context) to getPreferredSubId(context))
         val secondary = getSecondaryGatewayId(context)
         if (secondary.isNotBlank()) list.add(secondary to getSecondarySubId(context))
         return list
+    }
+
+    // ── PIN management ───────────────────────────────────────────────────────────
+
+    private fun sha256(text: String): String {
+        val bytes = java.security.MessageDigest.getInstance("SHA-256").digest(text.toByteArray())
+        return bytes.joinToString("") { "%02x".format(it) }
+    }
+
+    fun hasPinSet(context: Context): Boolean =
+        prefs(context).getString("pin_hash", "").orEmpty().isNotBlank()
+
+    fun verifyPin(context: Context, input: String): Boolean {
+        val stored = prefs(context).getString("pin_hash", "") ?: return false
+        return stored.isNotBlank() && stored == sha256(input)
+    }
+
+    fun setPin(context: Context, pin: String) =
+        prefs(context).edit().putString("pin_hash", sha256(pin)).apply()
+
+    fun clearPin(context: Context) =
+        prefs(context).edit().remove("pin_hash").apply()
+
+    // ── QR provisioning ──────────────────────────────────────────────────────────
+
+    /** True once backendUrl and gatewayId have been configured (via QR or manually). */
+    fun isProvisioned(context: Context): Boolean =
+        getBackendUrl(context).isNotBlank() && getGatewayId(context).isNotBlank()
+
+    /**
+     * Apply all fields from a provisioning QR code in one atomic write.
+     * [pin] is hashed before storage; [secret] is stored as the admin API key.
+     */
+    fun setFromQrPayload(context: Context, url: String, gatewayId: String, pin: String, secret: String = "") {
+        prefs(context).edit()
+            .putString("backend_url", url.trim())
+            .putString("gateway_id", gatewayId.trim())
+            .also { ed ->
+                if (pin.isNotBlank()) ed.putString("pin_hash", sha256(pin))
+                if (secret.isNotBlank()) ed.putString("admin_api_key", secret)
+            }
+            .apply()
     }
 }

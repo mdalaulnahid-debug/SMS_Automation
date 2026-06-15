@@ -3,218 +3,629 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>SMS/WhatsApp Automation Dashboard</title>
+    <title>SMS Gateway · Control Center</title>
     <style>
+      :root {
+        --bg-primary:      #060D1A;
+        --bg-surface:      #091422;
+        --bg-card:         #0F1E33;
+        --bg-card-el:      #162840;
+        --accent:          #22D3EE;
+        --accent-muted:    #0891B2;
+        --accent-dim:      #0C3A52;
+        --text-primary:    #EFF6FF;
+        --text-secondary:  #7FA3C4;
+        --text-muted:      #3D5A7A;
+        --divider:         #1A2E4A;
+        --success:         #10D9A0;
+        --success-dim:     #043D2B;
+        --danger:          #F87171;
+        --danger-dim:      #4D1A1A;
+        --warning:         #FBBF24;
+        --warning-dim:     #4A3000;
+      }
+
+      * { box-sizing: border-box; }
+
       body {
-        font-family: Arial, sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
         margin: 0;
-        background: #f6f7fb;
-        color: #1f2937;
+        background: var(--bg-primary);
+        color: var(--text-primary);
+        font-size: 14px;
+        line-height: 1.5;
       }
 
+      /* ── HEADER ── */
       header {
-        background: #111827;
-        color: white;
-        padding: 20px 28px;
+        background: var(--bg-surface);
+        border-bottom: 1px solid var(--divider);
+        padding: 14px 20px 0;
+        position: sticky;
+        top: 0;
+        z-index: 10;
       }
+      .header-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+      }
+      header h1 {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        color: var(--text-primary);
+        text-transform: uppercase;
+      }
+      header p {
+        margin: 1px 0 0;
+        font-size: 11px;
+        color: var(--accent);
+        letter-spacing: 0.04em;
+        font-weight: 600;
+      }
+      .header-refresh {
+        font-size: 11px;
+        color: var(--text-muted);
+        white-space: nowrap;
+        padding-top: 2px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .btn-key {
+        background: none;
+        border: 1px solid var(--divider);
+        border-radius: 6px;
+        color: var(--text-muted);
+        padding: 3px 8px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        cursor: pointer;
+        width: auto;
+        margin: 0;
+        transition: all 0.15s;
+      }
+      .btn-key:hover { color: var(--accent); border-color: var(--accent-muted); }
 
+      /* ── AUTH OVERLAY ── */
+      #authOverlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(6, 13, 26, 0.85);
+        z-index: 100;
+        align-items: center;
+        justify-content: center;
+      }
+      #authOverlay.visible { display: flex; }
+      .auth-box {
+        background: var(--bg-card);
+        border: 1px solid var(--divider);
+        border-radius: 16px;
+        padding: 28px 24px;
+        width: 320px;
+      }
+      .auth-box h3 {
+        margin: 0 0 6px;
+        font-size: 14px;
+        font-weight: 800;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--text-primary);
+      }
+      .auth-box p { margin: 0 0 16px; font-size: 13px; color: var(--text-secondary); }
+      .auth-row { display: flex; gap: 8px; margin-top: 8px; }
+      .auth-row input { flex: 1; margin: 0; }
+      .auth-row button { width: auto; margin: 0; padding: 10px 16px; font-size: 13px; }
+
+      /* ── TAB NAV ── */
+      .tab-nav {
+        display: flex;
+        gap: 0;
+        margin: 10px -20px 0;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+      .tab-nav::-webkit-scrollbar { display: none; }
+      .tab-btn {
+        background: none;
+        border: none;
+        border-bottom: 2px solid transparent;
+        color: var(--text-muted);
+        padding: 8px 18px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        cursor: pointer;
+        width: auto;
+        margin: 0;
+        border-radius: 0;
+        transition: color 0.15s, border-color 0.15s;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .tab-btn:hover { opacity: 1; color: var(--text-secondary); }
+      .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+      /* ── LAYOUT ── */
       main {
-        display: grid;
-        gap: 20px;
-        padding: 24px;
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 20px 16px 40px;
       }
 
-      section {
-        background: white;
-        border: 1px solid #e5e7eb;
-        border-radius: 12px;
-        padding: 18px;
-        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
-      }
+      .tab-panel { display: none; }
+      .tab-panel.active { display: block; }
 
       .grid {
         display: grid;
         gap: 16px;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       }
 
+      /* ── STATS ROW ── */
+      .stats-row {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 12px;
+        margin-bottom: 16px;
+      }
+      @media (max-width: 600px) {
+        .stats-row { grid-template-columns: repeat(2, 1fr); }
+      }
+      .stat-card {
+        background: var(--bg-card);
+        border: 1px solid var(--divider);
+        border-radius: 12px;
+        padding: 14px 16px;
+        text-align: center;
+      }
+      .stat-num {
+        font-size: 30px;
+        font-weight: 800;
+        line-height: 1;
+        color: var(--text-primary);
+      }
+      .stat-label {
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-top: 5px;
+      }
+
+      /* ── SECTION CARD ── */
+      section {
+        background: var(--bg-card);
+        border: 1px solid var(--divider);
+        border-radius: 16px;
+        padding: 18px;
+        margin-bottom: 16px;
+      }
+      section:last-child { margin-bottom: 0; }
+
+      section h2 {
+        margin: 0 0 14px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .section-desc {
+        color: var(--text-secondary);
+        font-size: 13px;
+        margin: -6px 0 12px;
+      }
+
+      /* ── SUB-TABS ── */
+      .sub-tab-nav {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 16px;
+      }
+      .sub-tab-btn {
+        background: var(--bg-card-el);
+        border: 1px solid var(--divider);
+        border-radius: 8px;
+        color: var(--text-muted);
+        padding: 7px 16px;
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        cursor: pointer;
+        width: auto;
+        margin: 0;
+        transition: all 0.15s;
+      }
+      .sub-tab-btn.active {
+        background: var(--accent-dim);
+        border-color: var(--accent-muted);
+        color: var(--accent);
+      }
+      .sub-tab-btn:hover { opacity: 1; color: var(--text-primary); }
+
+      .subpanel { display: none; }
+      .subpanel.active { display: block; }
+
+      /* ── FORM ELEMENTS ── */
       label {
         display: block;
+        font-size: 11px;
         font-weight: 700;
-        margin-top: 12px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin-top: 14px;
       }
 
-      input,
-      textarea,
-      button {
-        box-sizing: border-box;
+      input, textarea, select {
         width: 100%;
-        margin-top: 6px;
-        padding: 10px;
-        border: 1px solid #d1d5db;
-        border-radius: 8px;
+        margin-top: 5px;
+        padding: 10px 12px;
+        background: var(--bg-card-el);
+        border: 1px solid var(--divider);
+        border-radius: 10px;
+        color: var(--text-primary);
+        font-size: 14px;
+        font-family: inherit;
+        outline: none;
+        transition: border-color 0.15s;
       }
+      input:focus, textarea:focus, select:focus { border-color: var(--accent); }
+      textarea { min-height: 80px; resize: vertical; }
 
+      /* ── BUTTONS ── */
       button {
-        cursor: pointer;
-        background: #2563eb;
-        border-color: #2563eb;
-        color: white;
+        display: inline-block;
+        width: 100%;
+        margin-top: 14px;
+        padding: 13px 20px;
+        background: var(--accent);
+        border: none;
+        border-radius: 30px;
+        color: var(--bg-primary);
+        font-size: 14px;
         font-weight: 700;
+        letter-spacing: 0.04em;
+        cursor: pointer;
+        transition: opacity 0.15s;
+        font-family: inherit;
       }
+      button:hover { opacity: 0.88; }
+      button:active { opacity: 0.72; }
 
+      .btn-danger  { background: var(--danger);    color: var(--bg-primary); }
+      .btn-retry   { background: var(--warning);   color: var(--bg-primary); }
+      .btn-secondary { background: var(--bg-card-el); color: var(--text-secondary); border: 1px solid var(--divider); }
+      .btn-csv {
+        background: none;
+        border: 1px solid var(--divider);
+        border-radius: 8px;
+        color: var(--text-muted);
+        padding: 3px 10px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        cursor: pointer;
+        width: auto;
+        margin: 0;
+        transition: all 0.15s;
+      }
+      .btn-csv:hover { color: var(--accent); border-color: var(--accent-muted); }
+
+      .actions { display: flex; gap: 8px; margin-top: 10px; }
+      .actions button { width: auto; margin-top: 0; padding: 8px 16px; font-size: 12px; }
+
+      /* ── DATA CARDS ── */
+      .card {
+        background: var(--bg-card-el);
+        border: 1px solid var(--divider);
+        border-radius: 12px;
+        padding: 14px;
+        margin-top: 10px;
+      }
+      .card:first-child { margin-top: 0; }
+      .card strong {
+        font-size: 13px;
+        color: var(--text-primary);
+        font-weight: 700;
+        font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+      }
+      .card p { margin: 5px 0 0; color: var(--text-secondary); font-size: 13px; }
+
+      /* ── STATUS PILLS ── */
+      .status {
+        display: inline-block;
+        padding: 2px 9px;
+        border-radius: 999px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        background: var(--accent-dim);
+        color: var(--accent);
+        margin-left: 6px;
+        vertical-align: middle;
+      }
+      .status-ok   { background: var(--success-dim); color: var(--success); }
+      .status-err  { background: var(--danger-dim);  color: var(--danger); }
+      .status-warn { background: var(--warning-dim); color: var(--warning); }
+
+      /* ── DISPATCH BADGES ── */
+      .dispatch-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+      .dispatch-badge {
+        font-size: 11px;
+        font-weight: 700;
+        padding: 3px 10px;
+        border-radius: 6px;
+        letter-spacing: 0.05em;
+      }
+      .dispatch-ok      { background: var(--success-dim); color: var(--success); }
+      .dispatch-err     { background: var(--danger-dim);  color: var(--danger); }
+      .dispatch-pending { background: var(--accent-dim);  color: var(--accent); }
+
+      /* ── PRE / CODE ── */
       pre {
         overflow: auto;
         white-space: pre-wrap;
-        background: #f3f4f6;
-        padding: 12px;
+        word-break: break-word;
+        background: var(--bg-primary);
+        border: 1px solid var(--divider);
         border-radius: 8px;
+        padding: 10px 12px;
+        margin: 8px 0 0;
+        font-size: 12px;
+        color: var(--text-secondary);
+        font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+        line-height: 1.6;
+      }
+      code {
+        font-family: 'SF Mono', 'Fira Code', 'Consolas', monospace;
+        font-size: 12px;
+        color: var(--accent);
       }
 
-      .card {
-        border: 1px solid #e5e7eb;
+      /* ── GATEWAY CARDS ── */
+      .gw-dot {
+        display: inline-block; width: 8px; height: 8px;
+        border-radius: 50%; margin-right: 6px; vertical-align: middle;
+      }
+      .gw-dot.online  { background: var(--success); }
+      .gw-dot.offline { background: var(--danger); }
+      .gw-dot.mock    { background: var(--text-muted); }
+      .card-gw { border-left-width: 3px; }
+      .card-gw.online  { border-left-color: var(--success); }
+      .card-gw.offline { border-left-color: var(--danger); }
+      .card-gw.mock    { border-left-color: var(--text-muted); }
+
+      /* ── MANUAL MATCH FORM ── */
+      .match-form {
+        display: flex; gap: 8px; align-items: center; margin-top: 10px;
+      }
+      .match-form select { flex: 1; margin-top: 0; padding: 8px 10px; }
+      .btn-match {
+        width: auto !important; margin-top: 0 !important;
+        padding: 8px 14px !important; font-size: 12px; flex-shrink: 0;
+      }
+
+      /* ── INTEGRITY BANNER ── */
+      .integrity-banner {
         border-radius: 10px;
-        padding: 12px;
-        margin-top: 10px;
-      }
-
-      .status {
-        display: inline-block;
-        padding: 3px 8px;
-        border-radius: 999px;
-        background: #eef2ff;
-        color: #3730a3;
+        padding: 10px 16px;
         font-size: 12px;
         font-weight: 700;
+        letter-spacing: 0.04em;
+        margin-bottom: 16px;
       }
+      .integrity-ok  { background: var(--success-dim); color: var(--success); border: 1px solid #0a6040; }
+      .integrity-warn { background: var(--warning-dim); color: var(--warning); border: 1px solid #805000; }
 
-      .status-ok {
-        background: #dcfce7;
-        color: #166534;
+      /* ── DEV TOOLS ── */
+      details.dev-tools {
+        background: var(--bg-card);
+        border: 1px solid var(--divider);
+        border-radius: 16px;
+        margin-top: 16px;
       }
-
-      .status-err {
-        background: #fee2e2;
-        color: #991b1b;
-      }
-
-      .status-warn {
-        background: #fef3c7;
-        color: #92400e;
-      }
-
-      .error-text {
-        color: #dc2626;
-        font-size: 13px;
-      }
-
-      .actions {
+      details.dev-tools summary {
+        padding: 14px 18px;
+        font-size: 10px;
+        font-weight: 700;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        cursor: pointer;
+        list-style: none;
         display: flex;
-        gap: 8px;
-        margin-top: 8px;
-      }
-
-      .actions button {
-        width: auto;
-        padding: 6px 14px;
-        font-size: 13px;
-      }
-
-      .btn-danger {
-        background: #dc2626;
-        border-color: #dc2626;
-      }
-
-      .btn-retry {
-        background: #f59e0b;
-        border-color: #f59e0b;
-      }
-
-      .btn-match {
-        width: auto !important;
-        padding: 6px 14px !important;
-        font-size: 13px;
-      }
-
-      .match-form {
-        display: flex;
-        gap: 8px;
         align-items: center;
-        margin-top: 8px;
+        gap: 8px;
       }
+      details.dev-tools summary::-webkit-details-marker { display: none; }
+      details.dev-tools summary::before {
+        content: '▶';
+        font-size: 9px;
+        transition: transform 0.15s;
+      }
+      details.dev-tools[open] summary::before { transform: rotate(90deg); }
+      details.dev-tools .dev-inner { padding: 0 18px 18px; }
 
-      .match-form select {
-        flex: 1;
-        padding: 6px;
-        border-radius: 6px;
-        border: 1px solid #d1d5db;
-      }
+      /* ── MISC ── */
+      .error-text  { color: var(--danger);    font-size: 12px; margin-top: 6px; }
+      .empty       { color: var(--text-muted); font-size: 13px; padding: 8px 0; }
+      hr { border: none; border-top: 1px solid var(--divider); margin: 12px 0; }
     </style>
   </head>
   <body>
     <header>
-      <h1>SMS/WhatsApp Automation Dashboard</h1>
-      <p>Manual intake, SMS gateway routing, reply matching, and WhatsApp reply review.</p>
+      <div class="header-top">
+        <div>
+          <h1>SMS Gateway</h1>
+          <p>Control Center · Police Investigation Support</p>
+        </div>
+        <div class="header-refresh">
+          <span id="lastRefresh"></span>
+          <button class="btn-key" onclick="showAuthDialog()">🔑 API Key</button>
+        </div>
+      </div>
+      <nav class="tab-nav">
+        <button class="tab-btn active" data-tab="requests">Requests</button>
+        <button class="tab-btn" data-tab="sms">SMS Monitor</button>
+        <button class="tab-btn" data-tab="gateways">Gateways</button>
+        <button class="tab-btn" data-tab="audit">Audit Log</button>
+      </nav>
     </header>
+
     <main>
-      <section>
-        <h2>Submit Request</h2>
-        <form id="requestForm">
-          <label>Requester name <input name="requesterName" value="Officer Rahim" /></label>
-          <label>Requester WhatsApp ID <input name="requesterWhatsappId" value="8801700000000" /></label>
-          <label>WhatsApp group ID <input name="whatsappGroupId" value="operations-group" /></label>
-          <label>Request text <textarea name="text">LRL 01712345678</textarea></label>
-          <button type="submit">Queue and Send SMS</button>
-        </form>
-      </section>
 
-      <section>
-        <h2>Simulate Operator Reply</h2>
-        <form id="smsForm">
-          <label>Gateway ID <input name="gatewayId" value="GP_PHONE_01" /></label>
-          <label>From short code <input name="from" value="12345" /></label>
-          <label>SMS body <textarea name="body">LRL cell location</textarea></label>
-          <button type="submit">Receive SMS Webhook</button>
-        </form>
-      </section>
+      <!-- ══ REQUESTS TAB ══ -->
+      <div id="panel-requests" class="tab-panel active">
+        <div class="stats-row" id="statsRow"></div>
 
-      <div class="grid">
         <section>
-          <h2>Gateway Health</h2>
-          <div id="gateways"></div>
+          <h2>Active Requests</h2>
+          <div id="requests"></div>
         </section>
+
         <section>
-          <h2>Operator Queues</h2>
-          <div id="queues"></div>
+          <h2>Reply Drafts</h2>
+          <div id="replies"></div>
+        </section>
+
+        <section>
+          <h2>Unmatched Inbound SMS</h2>
+          <p class="section-desc">SMS from trusted senders that did not match any pending request. Use manual match to link to a waiting request.</p>
+          <div id="unmatched"></div>
+        </section>
+
+        <details class="dev-tools">
+          <summary>Dev Tools</summary>
+          <div class="dev-inner">
+            <div class="grid" style="margin-top:4px">
+              <section style="margin-bottom:0">
+                <h2>Submit Request</h2>
+                <form id="requestForm">
+                  <label>Requester name <input name="requesterName" value="Officer Rahim" /></label>
+                  <label>Requester WhatsApp ID <input name="requesterWhatsappId" value="8801700000000" /></label>
+                  <label>WhatsApp group ID <input name="whatsappGroupId" value="operations-group" /></label>
+                  <label>Request text <textarea name="text">LRL 01712345678</textarea></label>
+                  <button type="submit">Queue and Send SMS</button>
+                </form>
+              </section>
+              <section style="margin-bottom:0">
+                <h2>Simulate Operator Reply</h2>
+                <form id="smsForm">
+                  <label>Gateway ID <input name="gatewayId" value="GP_PHONE_01" /></label>
+                  <label>From short code <input name="from" value="12345" /></label>
+                  <label>SMS body <textarea name="body">LRL cell location</textarea></label>
+                  <button type="submit">Receive SMS Webhook</button>
+                </form>
+              </section>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- ══ SMS MONITOR TAB ══ -->
+      <div id="panel-sms" class="tab-panel">
+        <div class="sub-tab-nav">
+          <button class="sub-tab-btn active" data-sub="outbox">Outbox</button>
+          <button class="sub-tab-btn" data-sub="inbox">Inbox</button>
+        </div>
+        <div id="subpanel-outbox" class="subpanel active">
+          <section>
+            <h2>Outbound SMS</h2>
+            <div id="outbox"></div>
+          </section>
+        </div>
+        <div id="subpanel-inbox" class="subpanel">
+          <section>
+            <h2>Received SMS</h2>
+            <div id="inbox"></div>
+          </section>
+        </div>
+      </div>
+
+      <!-- ══ GATEWAYS TAB ══ -->
+      <div id="panel-gateways" class="tab-panel">
+        <div class="grid">
+          <section style="margin-bottom:0">
+            <h2>Gateway Health</h2>
+            <div id="gateways"></div>
+          </section>
+          <section style="margin-bottom:0">
+            <h2>Operator Queues</h2>
+            <div id="queues"></div>
+          </section>
+        </div>
+
+        <section style="margin-top:16px">
+          <h2>Provision Gateway Phone</h2>
+          <p class="section-desc">Generate a QR code to set up a gateway phone without exposing the backend URL in the UI. The phone scans it once and stores all settings locally.</p>
+          <label>Gateway ID
+            <select id="provGwId">
+              <option>GP_PHONE_01</option>
+              <option>ROBI_PHONE_01</option>
+              <option>BANGLALINK_PHONE_01</option>
+            </select>
+          </label>
+          <label>Backend URL (what the phone will connect to)
+            <input id="provUrl" type="url" placeholder="http://45.77.240.195:3000" />
+          </label>
+          <label>Admin PIN (4+ digits — locks Settings on the phone)
+            <input id="provPin" type="password" placeholder="e.g. 1234" autocomplete="new-password" />
+          </label>
+          <label>Gateway secret (optional — leave blank if not using secret auth)
+            <input id="provSecret" type="text" placeholder="gateway-secret" />
+          </label>
+          <button onclick="generateProvisionQr()" style="margin-top:16px">Generate Provisioning QR</button>
+          <div id="provResult" style="display:none;margin-top:16px;text-align:center">
+            <img id="provQrImg" alt="Provisioning QR code" style="max-width:220px;border-radius:12px;background:#fff;padding:8px" />
+            <p style="font-size:12px;color:var(--text-secondary);margin-top:8px">Scan with the gateway phone → menu → Scan QR to Set Up</p>
+            <button class="btn-secondary" onclick="copyProvPayload()" style="margin-top:8px;width:auto;padding:8px 16px;font-size:12px">Copy JSON Payload</button>
+          </div>
+          <div id="provError" class="error-text" style="display:none"></div>
         </section>
       </div>
 
-      <section>
-        <h2>Requests</h2>
-        <div id="requests"></div>
-      </section>
+      <!-- ══ AUDIT LOG TAB ══ -->
+      <div id="panel-audit" class="tab-panel">
+        <div id="chainIntegrity" class="integrity-banner"></div>
+        <section>
+          <h2>
+            Audit Log
+            <button class="btn-csv" onclick="exportAuditCsv()">Export CSV</button>
+          </h2>
+          <div id="audit"></div>
+        </section>
+      </div>
 
-      <section>
-        <h2>Outbound SMS</h2>
-        <div id="outbox"></div>
-      </section>
-
-      <section>
-        <h2>WhatsApp Reply Drafts</h2>
-        <div id="replies"></div>
-      </section>
-
-      <section>
-        <h2>Unmatched Inbound SMS</h2>
-        <p>SMS received from trusted senders that did not match any pending request. Use manual match to link one to a waiting request.</p>
-        <div id="unmatched"></div>
-      </section>
-
-      <section>
-        <h2>Audit Log</h2>
-        <div id="audit"></div>
-      </section>
     </main>
+
+    <!-- Auth overlay -->
+    <div id="authOverlay">
+      <div class="auth-box">
+        <h3>Authentication Required</h3>
+        <p>Enter your admin API key (set in <code>config/auth.json</code>).</p>
+        <div class="auth-row">
+          <input id="authKeyInput" type="password" placeholder="Admin API key" autocomplete="off" />
+          <button onclick="submitAuthKey()">Save</button>
+        </div>
+      </div>
+    </div>
+
     <script src="/app.js"></script>
   </body>
 </html>

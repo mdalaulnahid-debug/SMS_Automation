@@ -142,6 +142,21 @@ function createApp(options = {}) {
           });
         });
       }
+      if (req.method === 'POST' && req.url === '/api/admin/generate-qr') {
+        if (!requireAdmin(req, res)) return undefined;
+        const body = await readJson(req);
+        const { gwId, url, pin, secret } = body;
+        if (!gwId || !url) return json(res, 400, { error: 'gwId and url required' });
+        const payload = JSON.stringify({ v: 1, url, gwId, pin: pin || '', secret: secret || '' });
+        try {
+          const QRCode = require('qrcode');
+          const dataUrl = await QRCode.toDataURL(payload, { width: 300, margin: 2 });
+          return json(res, 200, { dataUrl, payload });
+        } catch (err) {
+          return json(res, 500, { error: `QR generation failed: ${err.message}` });
+        }
+      }
+
       if (req.method === 'GET' && req.url === '/api/gateways') {
         if (!requireAdmin(req, res)) return undefined;
         const ONLINE_THRESHOLD_MS = 5 * 60 * 1000; // 5 min
@@ -345,7 +360,7 @@ function isValidGatewayHeader(req, store, authConfig) {
 
 async function serveFile(res, fileName, contentType) {
   const content = await readFileAsync(join(__dirname, '..', 'public', fileName), 'utf8');
-  res.writeHead(200, { 'content-type': contentType });
+  res.writeHead(200, { 'content-type': contentType, 'cache-control': 'no-store' });
   res.end(content);
 }
 

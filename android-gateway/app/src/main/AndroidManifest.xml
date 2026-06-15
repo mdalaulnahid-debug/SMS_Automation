@@ -25,6 +25,9 @@
     <!-- Notifications (Android 13+) -->
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
+    <!-- Camera for QR code provisioning scan -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <!-- OTA update: allow installing APKs downloaded from the backend -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
@@ -68,6 +71,11 @@
             android:name=".AdminActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity" />
+
+        <activity
+            android:name=".QrScanActivity"
+            android:exported="false"
+            android:screenOrientation="portrait" />
 
         <service
             android:name=".GatewayForegroundService"
