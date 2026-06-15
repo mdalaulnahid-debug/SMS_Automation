@@ -307,6 +307,9 @@ class AutomationStore {
       requesterName: entry.requesterName || null,
       requesterId: entry.requesterId || null,
       postedMessageId: null,
+      // holdUntil: epoch ms before which the bridge should not post this reply.
+      // Used for the multi-op grace period (5s from first reply). Not persisted.
+      holdUntil: entry.holdUntil || null,
       sentAt: entry.sentAt || nowIso()
     };
     this.whatsappReplies.push(row);
@@ -440,8 +443,15 @@ class AutomationStore {
   findActiveRequestForGateway(gatewayId, senderNumber, windowMs, messageBody = '') {
     const reference = extractSilentReference(messageBody);
     if (reference) {
+      // Silent reference: authoritative match — search all non-terminal statuses plus TIMEOUT
+      // so replies that arrive after a timeout (e.g. phone was offline) are still captured.
       const byReference = this.listRequests().find((request) => {
-        if (![STATUSES.WAITING_OPERATOR_REPLY, STATUSES.REPLY_RECEIVED].includes(request.status)) {
+        if (![
+          STATUSES.WAITING_OPERATOR_REPLY,
+          STATUSES.REPLY_RECEIVED,
+          STATUSES.NEEDS_MANUAL_REVIEW,
+          STATUSES.TIMEOUT
+        ].includes(request.status)) {
           return false;
         }
         const sent = this.smsOutbox.find((row) => {
@@ -452,23 +462,41 @@ class AutomationStore {
       if (byReference) return byReference;
     }
 
-    // No queue blocking: multiple requests may be in-flight simultaneously.
-    // Find ALL waiting requests that were sent through this gateway from a matching sender.
+    // Search active and recently-finalized requests. Also search TIMEOUT requests within
+    // a 1-hour window — handles the case where the gateway phone was offline during the
+    // reply window (WiFi/mobile transition), WorkManager retried after the timeout fired,
+    // and the reply would otherwise be silently dropped as unmatched.
+    const LATE_WINDOW_MS = 6 * 60 * 60 * 1000;   // 6h for WAITING / NEEDS_MANUAL_REVIEW
+    const TIMEOUT_WINDOW_MS = 60 * 60 * 1000;     // 1h for TIMEOUT (offline-phone recovery)
+    const now = Date.now();
+    const lateThreshold = now - LATE_WINDOW_MS;
+    const timeoutThreshold = now - TIMEOUT_WINDOW_MS;
+
     const pending = this.listRequests()
-      .filter((request) => request.status === STATUSES.WAITING_OPERATOR_REPLY)
+      .filter((request) => {
+        if (request.status === STATUSES.TIMEOUT) {
+          return new Date(request.createdAt).getTime() > timeoutThreshold;
+        }
+        return [STATUSES.WAITING_OPERATOR_REPLY, STATUSES.NEEDS_MANUAL_REVIEW].includes(request.status)
+          && new Date(request.createdAt).getTime() > lateThreshold;
+      })
       .filter((request) => {
         const sent = this.getOutboxForGateway(request.requestId, gatewayId);
         if (!sent) return false;
-
         const senderMatchesDestination =
           normalizePhoneNumber(sent.destinationNumber) === normalizePhoneNumber(senderNumber);
         const senderIsTrustedOperator = this.isTrustedSenderForGateway(gatewayId, senderNumber);
-
         return senderMatchesDestination || senderIsTrustedOperator;
       });
 
-    if (pending.length === 1) return pending[0];
-    if (pending.length > 1) return { ambiguous: true, candidates: pending };
+    // Priority: WAITING_OPERATOR_REPLY > NEEDS_MANUAL_REVIEW > TIMEOUT
+    const active = pending.filter((r) => r.status === STATUSES.WAITING_OPERATOR_REPLY);
+    const finalized = pending.filter((r) => r.status === STATUSES.NEEDS_MANUAL_REVIEW);
+    const timedOut = pending.filter((r) => r.status === STATUSES.TIMEOUT);
+    const candidates = active.length ? active : finalized.length ? finalized : timedOut;
+
+    if (candidates.length === 1) return candidates[0];
+    if (candidates.length > 1) return { ambiguous: true, candidates };
     return null;
   }
 

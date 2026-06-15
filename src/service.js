@@ -4,7 +4,12 @@ const { OPERATORS, STATUSES, DISPATCH_STATUSES, TERMINAL_DISPATCH_STATUSES } = r
 const { parseRequestText, INVALID_FORMAT_MESSAGE } = require('./parser');
 const { analyzeOperatorReply, saveMatchedReplyKeywords } = require('./replyAnalyzer');
 
-const DEFAULT_REPLY_WINDOW_MS = 5 * 60 * 1000;
+const DEFAULT_REPLY_WINDOW_MS = 10 * 60 * 1000;
+
+// Grace period before posting the first partial live reply for a fan-out request.
+// Holds the draft for this many ms so replies that arrive close together are batched
+// into one post rather than causing immediate partial posts followed by rapid edits.
+const LIVE_POST_HOLD_MS = 5 * 1000;
 
 class AutomationService {
   constructor({ store, queue, smsGateway, replyWindowMs = DEFAULT_REPLY_WINDOW_MS, denyUnknownRequesters = false, autoApproveChannels = [] }) {
@@ -188,6 +193,7 @@ class AutomationService {
             requestId: matchedRequest.requestId,
             replyText: updatedText,
             sentStatus: autoApprove ? 'APPROVED_FOR_POST' : 'DRAFT',
+            holdUntil: Date.now() + LIVE_POST_HOLD_MS,
             channel: request.channel,
             chatId: request.chatId,
             sourceMessageId: request.sourceMessageId,
@@ -219,9 +225,33 @@ class AutomationService {
       }
     }
 
+    // Reply arrived after the request timed out (phone was offline during reply window).
+    // Revive the dispatch so the reply is captured and a combined draft is assembled.
+    const currentRequest = this.store.getRequest(matchedRequest.requestId);
+    if (currentRequest.status === STATUSES.TIMEOUT) {
+      // Reset the timed-out dispatch back to REPLY_RECEIVED so _finalizeIfTerminal
+      // can reassemble a proper combined reply including this late data.
+      if (operatorKey) {
+        const dispatch = this.store.getDispatch(matchedRequest.requestId, operatorKey);
+        if (dispatch && dispatch.status === DISPATCH_STATUSES.TIMEOUT) {
+          dispatch.status = DISPATCH_STATUSES.REPLY_RECEIVED;
+          dispatch.inboxId = inbox.id;
+          dispatch.repliedAt = new Date().toISOString();
+          if (this.store.persistence) this.store.persistence.upsertDispatch(dispatch);
+        }
+      }
+      // Revive the request to WAITING_OPERATOR_REPLY so status transitions are valid,
+      // then let _finalizeIfTerminal move it to NEEDS_MANUAL_REVIEW with a combined draft.
+      this.store.updateRequestStatus(matchedRequest.requestId, STATUSES.WAITING_OPERATOR_REPLY);
+      this.store.audit('system', 'REQUEST_REVIVED_AFTER_TIMEOUT', matchedRequest.requestId, {
+        operator: operatorKey, inboxId: inbox.id
+      });
+      const outcome = this._finalizeIfTerminal(matchedRequest.requestId);
+      return { ok: true, inbox, request: outcome.request, whatsappReply: outcome.reply };
+    }
+
     // Late reply: request already finalized (NEEDS_MANUAL_REVIEW). Re-generate the combined
     // reply with the new operator data and re-approve for posting instead of re-finalizing.
-    const currentRequest = this.store.getRequest(matchedRequest.requestId);
     if (currentRequest.status === STATUSES.NEEDS_MANUAL_REVIEW) {
       const updatedText = formatCombinedReply(currentRequest, this.store);
       const autoApprove = currentRequest.channel && this.autoApproveChannels.includes(currentRequest.channel);

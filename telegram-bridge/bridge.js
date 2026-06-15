@@ -118,6 +118,12 @@ async function postApprovedReplies({ backend, telegram, log = () => {} }) {
   const posted = [];
   for (const reply of replies) {
     if (reply.channel !== 'telegram') continue;
+    // Grace period: hold multi-op live drafts for a few seconds so replies that arrive
+    // close together are batched into a single post rather than rapid partial posts.
+    if (reply.holdUntil && Date.now() < reply.holdUntil) {
+      log(`post: holding reply ${reply.id} for ${Math.ceil((reply.holdUntil - Date.now()) / 1000)}s (grace period)`);
+      continue;
+    }
     try {
       const sent = await telegram.sendThreadedReply({
         chatId: reply.chatId,

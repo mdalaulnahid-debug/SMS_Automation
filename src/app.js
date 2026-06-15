@@ -34,6 +34,14 @@ function createApp(options = {}) {
   // Restore the per-operator waiting lists from any persisted QUEUED requests.
   queue.rebuild();
 
+  // Automatically time out waiting dispatches every 60 seconds. Without this, requests
+  // would stay stuck in WAITING_OPERATOR_REPLY indefinitely if nobody hits /api/timeouts/run.
+  setInterval(() => {
+    service.timeoutWaitingRequests().catch((err) => {
+      console.error('[timeout] auto-run error:', err.message);
+    });
+  }, 60_000);
+
   // Resume sending for requests that were queued (but not yet dispatched) before a restart.
   async function recover() {
     return smsGateway.dispatchAll();
