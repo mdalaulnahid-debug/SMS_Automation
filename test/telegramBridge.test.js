@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
@@ -52,7 +52,7 @@ test('planIntake builds a telegram submit plan for authorized users', () => {
   assert.equal(plan.request.channel, 'telegram');
   assert.equal(plan.request.chatId, CONFIG.groupChatId);
   assert.equal(plan.request.sourceMessageId, 42);
-  assert.equal(plan.request.requesterWhatsappId, '777888999');
+  assert.equal(plan.request.requesterId, '777888999');
   assert.equal(plan.request.requesterName, 'Officer Rahim');
 });
 

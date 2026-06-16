@@ -30,7 +30,7 @@ class AutomationStore {
     this.requests = new Map();
     this.smsOutbox = [];
     this.smsInbox = [];
-    this.whatsappReplies = [];
+    this.replyDrafts = [];
     this.auditLogs = [];
     this.lastAuditHash = '';
     // Persistence is opt-in: with no dbPath the store is pure in-memory (tests, ephemeral runs).
@@ -64,7 +64,7 @@ class AutomationStore {
     this.sequence = Number(data.meta.sequence || 0);
     this.referenceSequence = Number(data.meta.referenceSequence || 0);
 
-    data.users.forEach((user) => this.users.set(user.whatsappId, user));
+    data.users.forEach((user) => this.users.set(user.telegramId, user));
     data.requests.forEach((request) => {
       request.dispatches = [];
       this.requests.set(request.requestId, request);
@@ -75,7 +75,7 @@ class AutomationStore {
     });
     this.smsOutbox = data.smsOutbox;
     this.smsInbox = data.smsInbox;
-    this.whatsappReplies = data.whatsappReplies;
+    this.replyDrafts = data.replyDrafts;
     this.auditLogs = data.auditLogs;
     // Resume the hash chain from the last persisted audit row.
     this.lastAuditHash = this.auditLogs.length ? this.auditLogs.at(-1).hash : '';
@@ -99,11 +99,11 @@ class AutomationStore {
     if (this.persistence) this.persistence.close();
   }
 
-  upsertUser({ whatsappId, displayName, role, allowedOperators, status }) {
-    const existing = this.users.get(whatsappId);
+  upsertUser({ telegramId, displayName, role, allowedOperators, status }) {
+    const existing = this.users.get(telegramId);
     const user = {
       id: existing?.id || randomId('user'),
-      whatsappId,
+      telegramId,
       displayName: displayName !== undefined ? displayName : existing?.displayName,
       role: role !== undefined ? role : (existing?.role ?? 'REQUESTER'),
       allowedOperators:
@@ -114,23 +114,23 @@ class AutomationStore {
       status: status !== undefined ? status : (existing?.status ?? 'ACTIVE'),
       createdAt: existing?.createdAt || nowIso()
     };
-    this.users.set(whatsappId, user);
+    this.users.set(telegramId, user);
     if (this.persistence) this.persistence.upsertUser(user);
     return user;
   }
 
-  getUser(whatsappId) {
-    return this.users.get(whatsappId) || null;
+  getUser(telegramId) {
+    return this.users.get(telegramId) || null;
   }
 
   listUsers() {
     return Array.from(this.users.values());
   }
 
-  setUserStatus(whatsappId, status) {
-    const existing = this.users.get(whatsappId);
-    if (!existing) throw new Error(`User not found: ${whatsappId}`);
-    return this.upsertUser({ whatsappId, status });
+  setUserStatus(telegramId, status) {
+    const existing = this.users.get(telegramId);
+    if (!existing) throw new Error(`User not found: ${telegramId}`);
+    return this.upsertUser({ telegramId, status });
   }
 
   nextRequestId() {
@@ -149,13 +149,10 @@ class AutomationStore {
     const request = {
       id: randomId('request'),
       requestId: input.requestId || this.nextRequestId(),
-      whatsappGroupId: input.whatsappGroupId,
-      requesterWhatsappId: input.requesterWhatsappId,
+      requesterId: input.requesterId,
       requesterName: input.requesterName,
-      // Channel routing (channel-agnostic; 'manual' keeps the dashboard copy/paste flow,
-      // 'telegram'/'whatsapp' let an external bridge post the reply back to the source chat).
       channel: input.channel || 'manual',
-      chatId: input.chatId || input.whatsappGroupId || null,
+      chatId: input.chatId || null,
       sourceMessageId: input.sourceMessageId || null,
       operator: input.operator,
       targetOperators: input.targetOperators || [input.operator],
@@ -293,9 +290,9 @@ class AutomationStore {
     return row;
   }
 
-  addWhatsAppReply(entry) {
+  addReplyDraft(entry) {
     const row = {
-      id: randomId('whatsapp'),
+      id: randomId('reply'),
       requestId: entry.requestId,
       replyText: entry.replyText,
       sentStatus: entry.sentStatus,
@@ -312,29 +309,29 @@ class AutomationStore {
       holdUntil: entry.holdUntil || null,
       sentAt: entry.sentAt || nowIso()
     };
-    this.whatsappReplies.push(row);
-    if (this.persistence) this.persistence.upsertWhatsAppReply(row);
-    this.audit('operator', 'WHATSAPP_REPLY_DRAFTED', entry.requestId, row);
+    this.replyDrafts.push(row);
+    if (this.persistence) this.persistence.upsertReplyDraft(row);
+    this.audit('operator', 'REPLY_DRAFTED', entry.requestId, row);
     return row;
   }
 
   // Mutate a draft (status, sentAt, postedMessageId) in-memory and write-through. Routing all
   // reply edits through here keeps the persisted copy in sync (service.js no longer mutates rows directly).
-  updateWhatsAppReply(replyId, fields = {}) {
-    const row = this.getWhatsAppReply(replyId);
-    if (!row) throw new Error(`WhatsApp reply not found: ${replyId}`);
+  updateReplyDraft(replyId, fields = {}) {
+    const row = this.getReplyDraft(replyId);
+    if (!row) throw new Error(`Reply draft not found: ${replyId}`);
     Object.assign(row, fields);
-    if (this.persistence) this.persistence.upsertWhatsAppReply(row);
+    if (this.persistence) this.persistence.upsertReplyDraft(row);
     return row;
   }
 
-  listWhatsAppReplies({ status } = {}) {
-    const rows = this.whatsappReplies;
+  listReplyDrafts({ status } = {}) {
+    const rows = this.replyDrafts;
     return status ? rows.filter((row) => row.sentStatus === status) : [...rows];
   }
 
-  getWhatsAppReply(replyId) {
-    return this.whatsappReplies.find((row) => row.id === replyId) || null;
+  getReplyDraft(replyId) {
+    return this.replyDrafts.find((row) => row.id === replyId) || null;
   }
 
   getRequest(requestId) {
@@ -573,7 +570,7 @@ class AutomationStore {
       requests: this.listRequests(),
       smsOutbox: this.smsOutbox.slice(-50),
       smsInbox: this.smsInbox.slice(-50),
-      whatsappReplies: this.whatsappReplies.slice(-50),
+      replyDrafts: this.replyDrafts.slice(-50),
       auditLogs: this.auditLogs.slice(-100)
     };
   }

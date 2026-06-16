@@ -135,7 +135,7 @@ function createApp(options = {}) {
         const preferredLanIp = getPreferredLanIp();
         return json(res, 200, {
           ok: true,
-          service: 'sms-whatsapp-automation',
+          service: 'sms-telegram-automation',
           version: '0.1.0',
           port,
           preferredLanIp,
@@ -254,11 +254,11 @@ function createApp(options = {}) {
           return json(res, 401, { error: 'Authentication required to submit requests.' });
         }
         // Per-requester rate limit: 30 requests per 60s. Admin key bypasses (id = blank).
-        const requesterId = isAdmin(req, authConfig) ? null : body.requesterWhatsappId;
-        if (!requestRateLimiter.check(requesterId)) {
+        const rateLimitId = isAdmin(req, authConfig) ? null : body.requesterId;
+        if (!requestRateLimiter.check(rateLimitId)) {
           return json(res, 429, { error: 'Too many requests. Please wait a moment before submitting again.' });
         }
-        const result = await service.submitWhatsAppRequest(body);
+        const result = await service.submitRequest(body);
         return json(res, result.ok ? 201 : 400, result);
       }
       if (req.method === 'POST' && req.url === '/api/sms/inbound') {
@@ -330,23 +330,23 @@ function createApp(options = {}) {
       if (req.method === 'POST' && req.url === '/api/users') {
         if (!requireAdmin(req, res)) return undefined;
         const body = await readJson(req);
-        if (!body.whatsappId) return json(res, 400, { error: 'whatsappId is required.' });
+        if (!body.telegramId) return json(res, 400, { error: 'telegramId is required.' });
         const user = store.upsertUser({
-          whatsappId: body.whatsappId,
+          telegramId: body.telegramId,
           displayName: body.displayName,
           role: body.role,
           allowedOperators: body.allowedOperators,
           status: body.status
         });
-        store.audit('admin', 'USER_UPSERTED', null, { whatsappId: user.whatsappId });
+        store.audit('admin', 'USER_UPSERTED', null, { telegramId: user.telegramId });
         return json(res, 200, { user });
       }
       if (req.method === 'POST' && req.url.startsWith('/api/users/') && req.url.endsWith('/status')) {
         if (!requireAdmin(req, res)) return undefined;
-        const whatsappId = decodeURIComponent(req.url.split('/').at(-2) || '');
+        const telegramId = decodeURIComponent(req.url.split('/').at(-2) || '');
         const body = await readJson(req);
-        const user = store.setUserStatus(whatsappId, body.status);
-        store.audit('admin', 'USER_STATUS_CHANGED', null, { whatsappId, status: body.status });
+        const user = store.setUserStatus(telegramId, body.status);
+        store.audit('admin', 'USER_STATUS_CHANGED', null, { telegramId, status: body.status });
         return json(res, 200, { user });
       }
       if (req.method === 'GET' && req.url === '/api/audit/verify') {
@@ -357,18 +357,18 @@ function createApp(options = {}) {
         if (!requireAdmin(req, res)) return undefined;
         return csv(res, 'audit-log.csv', auditToCsv(store.auditLogs));
       }
-      if (req.method === 'GET' && req.url.startsWith('/api/whatsapp-replies')) {
+      if (req.method === 'GET' && req.url.startsWith('/api/reply-drafts')) {
         if (!requireAdmin(req, res)) return undefined;
         const url = new URL(req.url, 'http://localhost');
         const status = url.searchParams.get('status') || undefined;
-        return json(res, 200, { whatsappReplies: store.listWhatsAppReplies({ status }) });
+        return json(res, 200, { replyDrafts: store.listReplyDrafts({ status }) });
       }
-      if (req.method === 'POST' && req.url.startsWith('/api/whatsapp-replies/')) {
+      if (req.method === 'POST' && req.url.startsWith('/api/reply-drafts/')) {
         if (!requireAdmin(req, res)) return undefined;
         const id = decodeURIComponent(req.url.split('/').at(-2) || '');
         const action = req.url.split('/').at(-1);
         if (action === 'approve') {
-          return json(res, 200, { request: await service.approveWhatsAppReply(id) });
+          return json(res, 200, { request: await service.approveReply(id) });
         }
         if (action === 'posted') {
           const body = await readJson(req);

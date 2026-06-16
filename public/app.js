@@ -106,7 +106,7 @@ async function refresh() {
     renderRequests(data.requests || []);
     renderOutbox(data.smsOutbox || []);
     renderInbox(data.smsInbox || [], unmatched);
-    renderReplies(data.whatsappReplies || [], data.requests || []);
+    renderReplies(data.replyDrafts || [], data.requests || []);
     renderUnmatched(unmatched, data.requests || []);
     renderAudit(data.auditLogs || []);
 
@@ -307,7 +307,7 @@ function renderReplies(replies, requests) {
 
   document.querySelectorAll('[data-approve]').forEach((btn) => {
     btn.addEventListener('click', async () => {
-      try { await postJson(`/api/whatsapp-replies/${encodeURIComponent(btn.dataset.approve)}/approve`, {}); }
+      try { await postJson(`/api/reply-drafts/${encodeURIComponent(btn.dataset.approve)}/approve`, {}); }
       catch (e) { alert(e.message); }
       await refresh();
     });

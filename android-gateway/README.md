@@ -139,7 +139,7 @@ On app resume, if saved Backend URL fails or is blank:
 1. Read phone Wi‑Fi IP → derive subnet (e.g. `192.168.0`)
 2. Try last-known URL first
 3. Scan hosts in priority order: `.1`, `.254`, `.200–.254`, then rest
-4. Fast health check (1s connect) — must return `service: sms-whatsapp-automation`
+4. Fast health check (1s connect) — must return `service: sms-telegram-automation`
 5. Save discovered URL to prefs
 
 **v1.2.0 bug:** scanned 1→254 with 8s timeout / 10s total — missed PCs in high DHCP range (e.g. `.230`).

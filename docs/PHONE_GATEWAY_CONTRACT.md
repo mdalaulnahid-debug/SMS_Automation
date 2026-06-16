@@ -31,7 +31,7 @@ Example response:
 ```json
 {
   "ok": true,
-  "service": "sms-whatsapp-automation",
+  "service": "sms-telegram-automation",
   "version": "0.1.0",
   "port": 3000,
   "preferredLanIp": "192.168.0.230",
@@ -133,7 +133,7 @@ Content-Type: application/json
 
 Backend ignores messages unless `from` (normalized) is in that gateway's `trustedSenders` list in `config/gateways.json`.
 
-Matching: trusted sender + single pending request on gateway within reply window → `NEEDS_MANUAL_REVIEW` + WhatsApp draft.
+Matching: trusted sender + single pending request on gateway within reply window → `NEEDS_MANUAL_REVIEW` + reply draft.
 
 ---
 
@@ -174,5 +174,5 @@ Restart backend after editing `gateways.json`.
 2. Backend queues → `POST` phone `/send-sms` with `to: 01936759367`
 3. Target phone receives `LRL <payload>`, replies manually
 4. Phone `SmsReceiver` → `POST /api/sms/inbound`
-5. Backend drafts WhatsApp reply → dashboard `NEEDS_MANUAL_REVIEW`
-6. Human copies draft to WhatsApp group (no auto-post in MVP)
+5. Backend drafts reply → dashboard `NEEDS_MANUAL_REVIEW`
+6. Reviewer approves draft → Telegram bridge posts to group

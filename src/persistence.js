@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS meta (
   value TEXT
 );
 CREATE TABLE IF NOT EXISTS users (
-  whatsapp_id TEXT PRIMARY KEY,
+  telegram_id TEXT PRIMARY KEY,
   id TEXT NOT NULL,
   display_name TEXT,
   role TEXT NOT NULL,
@@ -37,8 +37,7 @@ CREATE TABLE IF NOT EXISTS gateways (
 CREATE TABLE IF NOT EXISTS requests (
   request_id TEXT PRIMARY KEY,
   id TEXT NOT NULL,
-  whatsapp_group_id TEXT,
-  requester_whatsapp_id TEXT,
+  requester_id TEXT,
   requester_name TEXT,
   channel TEXT,
   chat_id TEXT,
@@ -91,7 +90,7 @@ CREATE TABLE IF NOT EXISTS sms_inbox (
   analysis TEXT,
   received_at TEXT NOT NULL
 );
-CREATE TABLE IF NOT EXISTS whatsapp_replies (
+CREATE TABLE IF NOT EXISTS reply_drafts (
   id TEXT PRIMARY KEY,
   request_id TEXT NOT NULL,
   reply_text TEXT,
@@ -136,8 +135,12 @@ class Persistence {
     this.db = new DatabaseSync(dbPath);
     this.db.exec('PRAGMA journal_mode = WAL;');
     this.db.exec(SCHEMA);
-    // Migrate existing DBs that predate the claimed_at column.
+    // Idempotent migrations — each wrapped in try/catch so they silently skip if already applied.
     try { this.db.exec('ALTER TABLE sms_outbox ADD COLUMN claimed_at TEXT'); } catch (_) {}
+    try { this.db.exec('ALTER TABLE users RENAME COLUMN whatsapp_id TO telegram_id'); } catch (_) {}
+    try { this.db.exec('ALTER TABLE requests DROP COLUMN whatsapp_group_id'); } catch (_) {}
+    try { this.db.exec('ALTER TABLE requests RENAME COLUMN requester_whatsapp_id TO requester_id'); } catch (_) {}
+    try { this.db.exec('ALTER TABLE whatsapp_replies RENAME TO reply_drafts'); } catch (_) {}
   }
 
   close() {
@@ -154,10 +157,10 @@ class Persistence {
     this.db
       .prepare(
         `INSERT OR REPLACE INTO users
-         (whatsapp_id, id, display_name, role, allowed_operators, status, created_at)
+         (telegram_id, id, display_name, role, allowed_operators, status, created_at)
          VALUES (?, ?, ?, ?, ?, ?, ?)`
       )
-      .run(u.whatsappId, u.id, nz(u.displayName), u.role, j(u.allowedOperators), u.status, u.createdAt);
+      .run(u.telegramId, u.id, nz(u.displayName), u.role, j(u.allowedOperators), u.status, u.createdAt);
   }
 
   upsertGateway(g) {
@@ -178,14 +181,14 @@ class Persistence {
     this.db
       .prepare(
         `INSERT OR REPLACE INTO requests
-         (request_id, id, whatsapp_group_id, requester_whatsapp_id, requester_name, channel,
+         (request_id, id, requester_id, requester_name, channel,
           chat_id, source_message_id, operator, target_operators, request_type, payload,
           silent_reference, raw_request_text, formatted_sms_text, received_operators, status,
           created_at, completed_at, failed_reason, test_destination)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
       )
       .run(
-        r.requestId, r.id, nz(r.whatsappGroupId), nz(r.requesterWhatsappId), nz(r.requesterName),
+        r.requestId, r.id, nz(r.requesterId), nz(r.requesterName),
         nz(r.channel), nz(r.chatId), r.sourceMessageId === null || r.sourceMessageId === undefined
           ? null : String(r.sourceMessageId),
         r.operator, j(r.targetOperators), r.requestType, r.payload, r.silentReference,
@@ -247,10 +250,10 @@ class Persistence {
       );
   }
 
-  upsertWhatsAppReply(row) {
+  upsertReplyDraft(row) {
     this.db
       .prepare(
-        `INSERT OR REPLACE INTO whatsapp_replies
+        `INSERT OR REPLACE INTO reply_drafts
          (id, request_id, reply_text, sent_status, channel, chat_id, source_message_id,
           requester_name, requester_id, posted_message_id, sent_at)
          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
@@ -286,7 +289,7 @@ class Persistence {
       meta,
       users: all('SELECT * FROM users ORDER BY rowid').map((u) => ({
         id: u.id,
-        whatsappId: u.whatsapp_id,
+        telegramId: u.telegram_id,
         displayName: u.display_name,
         role: u.role,
         allowedOperators: p(u.allowed_operators, []),
@@ -309,8 +312,7 @@ class Persistence {
       requests: all('SELECT * FROM requests ORDER BY rowid').map((r) => ({
         id: r.id,
         requestId: r.request_id,
-        whatsappGroupId: r.whatsapp_group_id,
-        requesterWhatsappId: r.requester_whatsapp_id,
+        requesterId: r.requester_id,
         requesterName: r.requester_name,
         channel: r.channel,
         chatId: r.chat_id,
@@ -362,7 +364,7 @@ class Persistence {
         analysis: p(i.analysis, null),
         receivedAt: i.received_at
       })),
-      whatsappReplies: all('SELECT * FROM whatsapp_replies ORDER BY rowid').map((w) => ({
+      replyDrafts: all('SELECT * FROM reply_drafts ORDER BY rowid').map((w) => ({
         id: w.id,
         requestId: w.request_id,
         replyText: w.reply_text,

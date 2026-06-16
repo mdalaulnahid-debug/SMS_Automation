@@ -29,11 +29,11 @@ class BackendClient {
   }
 
   async listApprovedReplies() {
-    const res = await this.fetch(`${this.base}/api/whatsapp-replies?status=APPROVED_FOR_POST`, {
+    const res = await this.fetch(`${this.base}/api/reply-drafts?status=APPROVED_FOR_POST`, {
       headers: this.headers()
     });
     const data = await res.json();
-    return data.whatsappReplies || [];
+    return data.replyDrafts || [];
   }
 
   async listRecentRequests() {
@@ -46,7 +46,7 @@ class BackendClient {
 
   async markReplyPosted(replyId, postedMessageId) {
     const res = await this.fetch(
-      `${this.base}/api/whatsapp-replies/${encodeURIComponent(replyId)}/posted`,
+      `${this.base}/api/reply-drafts/${encodeURIComponent(replyId)}/posted`,
       {
         method: 'POST',
         headers: this.headers({ 'content-type': 'application/json' }),
@@ -57,16 +57,16 @@ class BackendClient {
   }
 
   async listPendingEdits() {
-    const res = await this.fetch(`${this.base}/api/whatsapp-replies?status=APPROVED_FOR_EDIT`, {
+    const res = await this.fetch(`${this.base}/api/reply-drafts?status=APPROVED_FOR_EDIT`, {
       headers: this.headers()
     });
     const data = await res.json();
-    return data.whatsappReplies || [];
+    return data.replyDrafts || [];
   }
 
   async markReplyEdited(replyId) {
     const res = await this.fetch(
-      `${this.base}/api/whatsapp-replies/${encodeURIComponent(replyId)}/edited`,
+      `${this.base}/api/reply-drafts/${encodeURIComponent(replyId)}/edited`,
       { method: 'POST', headers: this.headers({ 'content-type': 'application/json' }), body: '{}' }
     );
     return res.json();

@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS meta (
 );
 
 CREATE TABLE IF NOT EXISTS users (
-  whatsapp_id TEXT PRIMARY KEY,      -- channel-agnostic requester key (telegram user id for telegram)
+  telegram_id TEXT PRIMARY KEY,      -- Telegram user ID (string form of integer)
   id TEXT NOT NULL,
   display_name TEXT,
   role TEXT NOT NULL,
@@ -36,11 +36,10 @@ CREATE TABLE IF NOT EXISTS gateways (
 CREATE TABLE IF NOT EXISTS requests (
   request_id TEXT PRIMARY KEY,       -- REQ-YYYYMMDD-NNNN-XXXX
   id TEXT NOT NULL,
-  whatsapp_group_id TEXT,
-  requester_whatsapp_id TEXT,
+  requester_id TEXT,                 -- Telegram user ID of the requester
   requester_name TEXT,
-  channel TEXT,                      -- manual | telegram | whatsapp
-  chat_id TEXT,                      -- source chat (telegram group id, etc.)
+  channel TEXT,                      -- manual | telegram
+  chat_id TEXT,                      -- source chat (Telegram group id)
   source_message_id TEXT,            -- message to reply to when posting back
   operator TEXT NOT NULL,
   target_operators TEXT NOT NULL,    -- JSON array (fan-out)
@@ -83,7 +82,8 @@ CREATE TABLE IF NOT EXISTS sms_outbox (
   message_body TEXT,
   sent_status TEXT NOT NULL,         -- SENT | FAILED
   send_result TEXT,                  -- JSON
-  sent_at TEXT
+  sent_at TEXT,
+  claimed_at TEXT
 );
 
 CREATE TABLE IF NOT EXISTS sms_inbox (
@@ -96,7 +96,7 @@ CREATE TABLE IF NOT EXISTS sms_inbox (
   received_at TEXT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS whatsapp_replies (
+CREATE TABLE IF NOT EXISTS reply_drafts (
   id TEXT PRIMARY KEY,
   request_id TEXT NOT NULL,
   reply_text TEXT,

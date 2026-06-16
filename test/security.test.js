@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
@@ -73,7 +73,7 @@ test('inbound SMS webhook requires the gateway secret', async () => {
     method: 'POST',
     url: '/api/requests',
     headers: { 'x-api-key': 'topsecret', 'content-type': 'application/json' },
-    body: { requesterWhatsappId: '8801700000000', requesterName: 'Ofc', text: 'LRL 01712345678' }
+    body: { requesterId: '8801700000000', requesterName: 'Ofc', text: 'LRL 01712345678' }
   });
 
   const unsigned = await call(app, {
@@ -100,7 +100,7 @@ test('submitting a request requires admin or a valid gateway secret', async () =
     method: 'POST',
     url: '/api/requests',
     headers: { 'content-type': 'application/json' },
-    body: { requesterWhatsappId: '880170', requesterName: 'X', text: 'LRL 01712345678' }
+    body: { requesterId: '880170', requesterName: 'X', text: 'LRL 01712345678' }
   });
   assert.equal(denied.status, 401);
 });
@@ -115,14 +115,14 @@ test('dashboard snapshot never leaks gateway secret or apiKey', async () => {
 });
 
 test('deny-by-default rejects unknown requesters and allows provisioned ones', async () => {
-  // adminApiKey empty → admin auth disabled, so we can exercise the deny-unknown flag directly.
+  // adminApiKey empty â†’ admin auth disabled, so we can exercise the deny-unknown flag directly.
   const app = appWith({ denyUnknownRequesters: true });
 
   const unknown = await call(app, {
     method: 'POST',
     url: '/api/requests',
     headers: { 'content-type': 'application/json' },
-    body: { requesterWhatsappId: '999', requesterName: 'Stranger', text: 'LRL 01712345678' }
+    body: { requesterId: '999', requesterName: 'Stranger', text: 'LRL 01712345678' }
   });
   assert.equal(unknown.status, 400);
   assert.match(unknown.json.replyText, /not an authorized requester/i);
@@ -132,13 +132,13 @@ test('deny-by-default rejects unknown requesters and allows provisioned ones', a
     method: 'POST',
     url: '/api/users',
     headers: { 'content-type': 'application/json' },
-    body: { whatsappId: '999', displayName: 'Now Allowed' }
+    body: { telegramId: '999', displayName: 'Now Allowed' }
   });
   const allowed = await call(app, {
     method: 'POST',
     url: '/api/requests',
     headers: { 'content-type': 'application/json' },
-    body: { requesterWhatsappId: '999', requesterName: 'Now Allowed', text: 'LRL 01712345678' }
+    body: { requesterId: '999', requesterName: 'Now Allowed', text: 'LRL 01712345678' }
   });
   assert.equal(allowed.status, 201);
   assert.equal(allowed.json.ok, true);
@@ -150,13 +150,13 @@ test('disabled users are rejected even when deny-unknown is off', async () => {
     method: 'POST',
     url: '/api/users',
     headers: { 'content-type': 'application/json' },
-    body: { whatsappId: '555', displayName: 'Bad Actor', status: 'DISABLED' }
+    body: { telegramId: '555', displayName: 'Bad Actor', status: 'DISABLED' }
   });
   const blocked = await call(app, {
     method: 'POST',
     url: '/api/requests',
     headers: { 'content-type': 'application/json' },
-    body: { requesterWhatsappId: '555', requesterName: 'Bad Actor', text: 'LRL 01712345678' }
+    body: { requesterId: '555', requesterName: 'Bad Actor', text: 'LRL 01712345678' }
   });
   assert.equal(blocked.status, 400);
   assert.match(blocked.json.replyText, /disabled/i);
@@ -182,7 +182,7 @@ test('audit chain verifies clean and detects tampering', () => {
 
   assert.deepEqual(store.verifyAuditChain().ok, true);
 
-  // Tamper a past entry's details — the chain must flag it.
+  // Tamper a past entry's details â€” the chain must flag it.
   store.auditLogs[1].details = { y: 999 };
   const result = store.verifyAuditChain();
   assert.equal(result.ok, false);
@@ -204,7 +204,7 @@ test('audit export returns CSV with the hash columns', async () => {
     method: 'POST',
     url: '/api/requests',
     headers: { 'x-api-key': 'topsecret', 'content-type': 'application/json' },
-    body: { requesterWhatsappId: '880170', requesterName: 'Ofc', text: 'LRL 01712345678' }
+    body: { requesterId: '880170', requesterName: 'Ofc', text: 'LRL 01712345678' }
   });
   const res = await call(app, { method: 'GET', url: '/api/audit/export', headers: { 'x-api-key': 'topsecret' } });
   assert.equal(res.status, 200);

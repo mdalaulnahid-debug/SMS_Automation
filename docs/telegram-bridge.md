@@ -24,9 +24,9 @@ Backend (unchanged core)  → route → gateway phone → operator SMS → reply
   │
   │  reviewer approves on dashboard → draft status APPROVED_FOR_POST  (request stays NEEDS_MANUAL_REVIEW)
   ▼
-Telegram Bridge  ── poll GET /api/whatsapp-replies?status=APPROVED_FOR_POST ──► posting
+Telegram Bridge  ── poll GET /api/reply-drafts?status=APPROVED_FOR_POST ──► posting
      sendMessage(reply_to_message_id = sourceMessageId, text_mention entity = requester)
-     → POST /api/whatsapp-replies/:id/posted  → request COMPLETED
+     → POST /api/reply-drafts/:id/posted  → request COMPLETED
 ```
 
 The matching/safety core (trusted-sender filter, one-active-per-operator queue, reply window,
@@ -37,7 +37,7 @@ manual-review gate) is **unchanged** — the bridge only adds the two chat-facin
 For automated channels, dashboard **Approve** does *not* mark the request complete. It sets the
 draft to `APPROVED_FOR_POST` and leaves the request in `NEEDS_MANUAL_REVIEW`. Only after the
 bridge actually delivers the message to Telegram does it call `/posted`, which moves the request
-to `WHATSAPP_REPLY_POSTED → COMPLETED`. This guarantees a reply that failed to send never looks
+to `REPLY_POSTED → COMPLETED`. This guarantees a reply that failed to send never looks
 completed, and is retried on the next polling cycle. Manual channel (`channel: 'manual'`, the
 default) is unchanged: Approve completes in one step because the reviewer pastes it themselves.
 
@@ -83,8 +83,8 @@ Tests: `test/telegramBridge.test.js` (`node --test`).
 | Method | Path | Purpose |
 |--------|------|---------|
 | POST | `/api/requests` | Submit intake with `channel:'telegram'`, `chatId`, `sourceMessageId` |
-| GET | `/api/whatsapp-replies?status=APPROVED_FOR_POST` | Poll reviewer-approved drafts to post |
-| POST | `/api/whatsapp-replies/:replyId/posted` | Confirm delivery (`{ postedMessageId }`) → completes request |
+| GET | `/api/reply-drafts?status=APPROVED_FOR_POST` | Poll reviewer-approved drafts to post |
+| POST | `/api/reply-drafts/:replyId/posted` | Confirm delivery (`{ postedMessageId }`) → completes request |
 
 ## Notes & limits
 

@@ -1,5 +1,5 @@
 {
-  "name": "sms-whatsapp-automation",
+  "name": "sms-telegram-automation",
   "version": "0.1.0",
   "private": true,
   "description": "SMS operator bridge with Telegram-based intake and reply posting.",

@@ -56,7 +56,7 @@ function planIntake(message, config) {
       chatId,
       sourceMessageId: message.message_id,
       requesterName: displayName,
-      requesterWhatsappId: fromId,
+      requesterId: fromId,
       text,
       ...(config.testDestination ? { testDestination: config.testDestination } : {})
     },
@@ -189,7 +189,7 @@ async function notifyTimeouts({ backend, telegram, notifiedSet, log = () => {} }
     ].filter(Boolean).join('\n');
 
     try {
-      const mention = buildMention(text, request.requesterWhatsappId);
+      const mention = buildMention(text, request.requesterId);
       await telegram.sendThreadedReply({
         chatId: request.chatId,
         text,

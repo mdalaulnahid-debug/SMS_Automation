@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
@@ -33,10 +33,10 @@ test('rejects invalid request format with correction message', () => {
 
 test('submits request, sends SMS, and waits for operator reply', async () => {
   const { store, service } = createHarness();
-  const result = await service.submitWhatsAppRequest({
-    whatsappGroupId: 'operations',
+  const result = await service.submitRequest({
+    chatId: 'operations',
     requesterName: 'Officer Rahim',
-    requesterWhatsappId: '8801700000000',
+    requesterId: '8801700000000',
     text: 'LRL 01712345678'
   });
 
@@ -50,16 +50,16 @@ test('submits request, sends SMS, and waits for operator reply', async () => {
 
 test('dispatches multiple same-operator requests without blocking', async () => {
   const { store, service } = createHarness();
-  await service.submitWhatsAppRequest({
-    whatsappGroupId: 'operations',
+  await service.submitRequest({
+    chatId: 'operations',
     requesterName: 'Officer Rahim',
-    requesterWhatsappId: '8801700000000',
+    requesterId: '8801700000000',
     text: 'LRL 01712345678'
   });
-  await service.submitWhatsAppRequest({
-    whatsappGroupId: 'operations',
+  await service.submitRequest({
+    chatId: 'operations',
     requesterName: 'Officer Karim',
-    requesterWhatsappId: '8801800000000',
+    requesterId: '8801800000000',
     text: 'LRL 01798765432'
   });
 
@@ -70,10 +70,10 @@ test('dispatches multiple same-operator requests without blocking', async () => 
 
 test('matches operator reply and drafts tagged WhatsApp response', async () => {
   const { service } = createHarness();
-  const submitted = await service.submitWhatsAppRequest({
-    whatsappGroupId: 'operations',
+  const submitted = await service.submitRequest({
+    chatId: 'operations',
     requesterName: 'Officer Rahim',
-    requesterWhatsappId: '8801700000000',
+    requesterId: '8801700000000',
     text: 'LRL 01712345678'
   });
 
@@ -86,16 +86,16 @@ test('matches operator reply and drafts tagged WhatsApp response', async () => {
   assert.equal(inbound.ok, true);
   assert.equal(inbound.request.requestId, submitted.request.requestId);
   assert.equal(inbound.request.status, STATUSES.NEEDS_MANUAL_REVIEW);
-  assert.match(inbound.whatsappReply.replyText, /@Officer Rahim/);
-  assert.match(inbound.whatsappReply.replyText, /LRL: 01712345678/);
+  assert.match(inbound.replyDraft.replyText, /@Officer Rahim/);
+  assert.match(inbound.replyDraft.replyText, /LRL: 01712345678/);
 });
 
 test('manual approval completes request after reply review', async () => {
   const { service } = createHarness();
-  const submitted = await service.submitWhatsAppRequest({
-    whatsappGroupId: 'operations',
+  const submitted = await service.submitRequest({
+    chatId: 'operations',
     requesterName: 'Officer Rahim',
-    requesterWhatsappId: '8801700000000',
+    requesterId: '8801700000000',
     text: 'LRL 01712345678'
   });
   service.receiveSmsWebhook({
@@ -104,28 +104,28 @@ test('manual approval completes request after reply review', async () => {
     body: 'LRL cell location'
   });
 
-  const completed = await service.approveWhatsAppReply(submitted.request.requestId);
+  const completed = await service.approveReply(submitted.request.requestId);
   assert.equal(completed.status, STATUSES.COMPLETED);
 });
 
 test('payload matching disambiguates concurrent same-operator requests', async () => {
   const { store, service } = createHarness();
-  await service.submitWhatsAppRequest({
-    whatsappGroupId: 'operations',
+  await service.submitRequest({
+    chatId: 'operations',
     requesterName: 'Officer Rahim',
-    requesterWhatsappId: '8801700000000',
+    requesterId: '8801700000000',
     text: 'LRL 01712345678'
   });
-  await service.submitWhatsAppRequest({
-    whatsappGroupId: 'operations',
+  await service.submitRequest({
+    chatId: 'operations',
     requesterName: 'Officer Karim',
-    requesterWhatsappId: '8801800000000',
+    requesterId: '8801800000000',
     text: 'LRL 01798765432'
   });
 
   assert.equal(store.smsOutbox.length, 2);
 
-  // Reply contains the second request's phone number — should match Officer Karim's request
+  // Reply contains the second request's phone number â€” should match Officer Karim's request
   const inbound = service.receiveSmsWebhook({
     gatewayId: 'GP_PHONE_01',
     from: '12345',
@@ -136,13 +136,13 @@ test('payload matching disambiguates concurrent same-operator requests', async (
   assert.equal(inbound.request.requesterName, 'Officer Karim');
 });
 
-test('MS-NID request is sent to all operator gateways', async () => {
+test('NID-MS request is sent to all operator gateways', async () => {
   const { store, service } = createHarness();
-  const result = await service.submitWhatsAppRequest({
-    whatsappGroupId: 'operations',
+  const result = await service.submitRequest({
+    chatId: 'operations',
     requesterName: 'Officer Rahim',
-    requesterWhatsappId: '8801700000000',
-    text: 'MS-NID 01712345678'
+    requesterId: '8801700000000',
+    text: 'NID-MS 123456789012'
   });
 
   assert.equal(result.ok, true);
@@ -156,11 +156,11 @@ test('MS-NID request is sent to all operator gateways', async () => {
 
 test('all-operator request waits for every operator reply before review', async () => {
   const { service } = createHarness();
-  const submitted = await service.submitWhatsAppRequest({
-    whatsappGroupId: 'operations',
+  const submitted = await service.submitRequest({
+    chatId: 'operations',
     requesterName: 'Officer Rahim',
-    requesterWhatsappId: '8801700000000',
-    text: 'MS-NID 01712345678'
+    requesterId: '8801700000000',
+    text: 'NID-MS 123456789012'
   });
 
   const firstReply = service.receiveSmsWebhook({
@@ -186,11 +186,11 @@ test('all-operator request waits for every operator reply before review', async 
 
 test('partial all-operator reply cannot be approved early', async () => {
   const { service } = createHarness();
-  const submitted = await service.submitWhatsAppRequest({
-    whatsappGroupId: 'operations',
+  const submitted = await service.submitRequest({
+    chatId: 'operations',
     requesterName: 'Officer Rahim',
-    requesterWhatsappId: '8801700000000',
-    text: 'MS-NID 01712345678'
+    requesterId: '8801700000000',
+    text: 'NID-MS 123456789012'
   });
   service.receiveSmsWebhook({
     gatewayId: 'GP_PHONE_01',
@@ -199,17 +199,17 @@ test('partial all-operator reply cannot be approved early', async () => {
   });
 
   await assert.rejects(
-    () => service.approveWhatsAppReply(submitted.request.requestId),
-    /not ready for WhatsApp reply approval/
+    () => service.approveReply(submitted.request.requestId),
+    /not ready for reply approval/
   );
 });
 
 test('ignores junk SMS from untrusted sender before analysis', async () => {
   const { store, service } = createHarness();
-  const submitted = await service.submitWhatsAppRequest({
-    whatsappGroupId: 'operations',
+  const submitted = await service.submitRequest({
+    chatId: 'operations',
     requesterName: 'Officer Rahim',
-    requesterWhatsappId: '8801700000000',
+    requesterId: '8801700000000',
     text: 'LRL 01712345678'
   });
 
@@ -228,10 +228,10 @@ test('SMS job is queued as PENDING_PICKUP for phone to poll', async () => {
   const { store, service } = createHarness({
     GP: { gatewayUrl: 'http://phone-gp.local:8080', trustedSenders: ['12345'] }
   });
-  await service.submitWhatsAppRequest({
-    whatsappGroupId: 'operations',
+  await service.submitRequest({
+    chatId: 'operations',
     requesterName: 'Officer Rahim',
-    requesterWhatsappId: '8801700000000',
+    requesterId: '8801700000000',
     text: 'LRL 01712345678'
   });
   const jobs = store.claimPendingJobs('GP_PHONE_01');
@@ -243,15 +243,15 @@ test('SMS job is queued as PENDING_PICKUP for phone to poll', async () => {
 test('requester authorization is preserved and enforced', async () => {
   const { store, service } = createHarness();
   store.upsertUser({
-    whatsappId: '8801700000000',
+    telegramId: '8801700000000',
     displayName: 'Officer Rahim',
     allowedOperators: ['ROBI']
   });
 
-  const blocked = await service.submitWhatsAppRequest({
-    whatsappGroupId: 'operations',
+  const blocked = await service.submitRequest({
+    chatId: 'operations',
     requesterName: 'Officer Rahim',
-    requesterWhatsappId: '8801700000000',
+    requesterId: '8801700000000',
     text: 'LRL 01712345678'
   });
 
@@ -265,10 +265,10 @@ test('matches branded operator sender ID without destination number equality', a
       trustedSenders: ['12345', 'GP-INFO']
     }
   });
-  const submitted = await service.submitWhatsAppRequest({
-    whatsappGroupId: 'operations',
+  const submitted = await service.submitRequest({
+    chatId: 'operations',
     requesterName: 'Officer Rahim',
-    requesterWhatsappId: '8801700000000',
+    requesterId: '8801700000000',
     text: 'LRL 01712345678'
   });
 
@@ -284,21 +284,21 @@ test('matches branded operator sender ID without destination number equality', a
 
 test('timeout sweep dispatches next queued request for same operator', async () => {
   const { store, service } = createHarness();
-  await service.submitWhatsAppRequest({
-    whatsappGroupId: 'operations',
+  await service.submitRequest({
+    chatId: 'operations',
     requesterName: 'Officer Rahim',
-    requesterWhatsappId: '8801700000000',
+    requesterId: '8801700000000',
     text: 'LRL 01712345678'
   });
-  await service.submitWhatsAppRequest({
-    whatsappGroupId: 'operations',
+  await service.submitRequest({
+    chatId: 'operations',
     requesterName: 'Officer Karim',
-    requesterWhatsappId: '8801800000000',
+    requesterId: '8801800000000',
     text: 'LRL 01798765432'
   });
 
   const waiting = store.listRequests().find((request) => request.requesterName === 'Officer Rahim');
-  store.smsOutbox[0].sentAt = new Date(Date.now() - 6 * 60 * 1000).toISOString();
+  store.smsOutbox[0].sentAt = new Date(Date.now() - 11 * 60 * 1000).toISOString();
 
   const timedOut = await service.timeoutWaitingRequests();
   assert.equal(timedOut.length, 1);
@@ -319,10 +319,10 @@ test('phone polling claims job and ack updates outbox status', async () => {
   const { store, service } = createHarness({
     GP: { trustedSenders: ['12345'] }
   });
-  await service.submitWhatsAppRequest({
-    whatsappGroupId: 'operations',
+  await service.submitRequest({
+    chatId: 'operations',
     requesterName: 'Officer Rahim',
-    requesterWhatsappId: '8801700000000',
+    requesterId: '8801700000000',
     text: 'LRL 01712345678'
   });
 
@@ -339,11 +339,11 @@ test('phone polling claims job and ack updates outbox status', async () => {
 
 test('fan-out with two replies and one timeout finalizes to manual review (not timeout)', async () => {
   const { store, service } = createHarness();
-  const submitted = await service.submitWhatsAppRequest({
-    whatsappGroupId: 'operations',
+  const submitted = await service.submitRequest({
+    chatId: 'operations',
     requesterName: 'Officer Rahim',
-    requesterWhatsappId: '8801700000000',
-    text: 'MS-NID 01712345678'
+    requesterId: '8801700000000',
+    text: 'NID-MS 123456789012'
   });
   const requestId = submitted.request.requestId;
 
@@ -354,12 +354,12 @@ test('fan-out with two replies and one timeout finalizes to manual review (not t
 
   // Age the Banglalink send past the reply window so only ITS dispatch times out.
   const blOutbox = store.smsOutbox.find((row) => row.gatewayId === 'BANGLALINK_PHONE_01');
-  blOutbox.sentAt = new Date(Date.now() - 6 * 60 * 1000).toISOString();
+  blOutbox.sentAt = new Date(Date.now() - 11 * 60 * 1000).toISOString();
 
   const finalized = await service.timeoutWaitingRequests();
   const request = store.getRequest(requestId);
 
-  // Derived status: at least one reply arrived, so the request is reviewable — NOT a blanket timeout.
+  // Derived status: at least one reply arrived, so the request is reviewable â€” NOT a blanket timeout.
   assert.equal(request.status, STATUSES.NEEDS_MANUAL_REVIEW);
   assert.equal(finalized.length, 1);
 
@@ -369,7 +369,7 @@ test('fan-out with two replies and one timeout finalizes to manual review (not t
   assert.equal(dispatchStatus('BANGLALINK'), 'TIMEOUT');
 
   // One combined draft with per-operator sections (replies + the timed-out operator marked).
-  const drafts = store.listWhatsAppReplies().filter((r) => r.requestId === requestId);
+  const drafts = store.listReplyDrafts().filter((r) => r.requestId === requestId);
   assert.equal(drafts.length, 1);
   assert.match(drafts[0].replyText, /GP:/);
   assert.match(drafts[0].replyText, /NID 111 GP/);
@@ -378,14 +378,14 @@ test('fan-out with two replies and one timeout finalizes to manual review (not t
 
 test('fan-out with no replies times out as a whole', async () => {
   const { store, service } = createHarness();
-  const submitted = await service.submitWhatsAppRequest({
-    whatsappGroupId: 'operations',
+  const submitted = await service.submitRequest({
+    chatId: 'operations',
     requesterName: 'Officer Rahim',
-    requesterWhatsappId: '8801700000000',
-    text: 'MS-NID 01712345678'
+    requesterId: '8801700000000',
+    text: 'NID-MS 123456789012'
   });
   for (const row of store.smsOutbox) {
-    row.sentAt = new Date(Date.now() - 6 * 60 * 1000).toISOString();
+    row.sentAt = new Date(Date.now() - 11 * 60 * 1000).toISOString();
   }
   const finalized = await service.timeoutWaitingRequests();
   assert.equal(finalized.length, 1);
@@ -394,12 +394,12 @@ test('fan-out with no replies times out as a whole', async () => {
 
 test('telegram-channel request carries chat + source message metadata to the draft', async () => {
   const { store, service } = createHarness();
-  const submitted = await service.submitWhatsAppRequest({
+  const submitted = await service.submitRequest({
     channel: 'telegram',
     chatId: '-1001234567890',
     sourceMessageId: 42,
     requesterName: 'Officer Rahim',
-    requesterWhatsappId: '777888999',
+    requesterId: '777888999',
     text: 'LRL 01712345678'
   });
 
@@ -409,7 +409,7 @@ test('telegram-channel request carries chat + source message metadata to the dra
 
   service.receiveSmsWebhook({ gatewayId: 'GP_PHONE_01', from: '12345', body: 'LRL cell location' });
 
-  const draft = store.listWhatsAppReplies({ status: 'DRAFT' }).at(-1);
+  const draft = store.listReplyDrafts({ status: 'DRAFT' }).at(-1);
   assert.equal(draft.channel, 'telegram');
   assert.equal(draft.chatId, '-1001234567890');
   assert.equal(draft.sourceMessageId, 42);
@@ -418,39 +418,39 @@ test('telegram-channel request carries chat + source message metadata to the dra
 
 test('automated-channel approval defers posting and bridge confirmation completes it', async () => {
   const { store, service } = createHarness();
-  const submitted = await service.submitWhatsAppRequest({
+  const submitted = await service.submitRequest({
     channel: 'telegram',
     chatId: '-1001234567890',
     sourceMessageId: 42,
     requesterName: 'Officer Rahim',
-    requesterWhatsappId: '777888999',
+    requesterId: '777888999',
     text: 'LRL 01712345678'
   });
   service.receiveSmsWebhook({ gatewayId: 'GP_PHONE_01', from: '12345', body: 'LRL cell location' });
 
-  // Approval does NOT complete the request for automated channels — it queues for the bridge.
-  await service.approveWhatsAppReply(submitted.request.requestId);
+  // Approval does NOT complete the request for automated channels â€” it queues for the bridge.
+  await service.approveReply(submitted.request.requestId);
   assert.equal(store.getRequest(submitted.request.requestId).status, STATUSES.NEEDS_MANUAL_REVIEW);
-  const queued = store.listWhatsAppReplies({ status: 'APPROVED_FOR_POST' });
+  const queued = store.listReplyDrafts({ status: 'APPROVED_FOR_POST' });
   assert.equal(queued.length, 1);
 
-  // Bridge confirms it posted → request completes.
+  // Bridge confirms it posted â†’ request completes.
   const completed = await service.markReplyPosted(queued[0].id, { postedMessageId: 100 });
   assert.equal(completed.status, STATUSES.COMPLETED);
-  assert.equal(store.getWhatsAppReply(queued[0].id).sentStatus, 'POSTED');
-  assert.equal(store.getWhatsAppReply(queued[0].id).postedMessageId, 100);
+  assert.equal(store.getReplyDraft(queued[0].id).sentStatus, 'POSTED');
+  assert.equal(store.getReplyDraft(queued[0].id).postedMessageId, 100);
 });
 
 test('manual-channel approval still completes in one step', async () => {
   const { service } = createHarness();
-  const submitted = await service.submitWhatsAppRequest({
+  const submitted = await service.submitRequest({
     requesterName: 'Officer Rahim',
-    requesterWhatsappId: '8801700000000',
+    requesterId: '8801700000000',
     text: 'LRL 01712345678'
   });
   service.receiveSmsWebhook({ gatewayId: 'GP_PHONE_01', from: '12345', body: 'LRL cell location' });
 
-  const completed = await service.approveWhatsAppReply(submitted.request.requestId);
+  const completed = await service.approveReply(submitted.request.requestId);
   assert.equal(completed.status, STATUSES.COMPLETED);
 });
 
@@ -461,8 +461,8 @@ test('disambiguates multiple pending requests by reply content analysis', async 
 
   // Create two requests on the GP gateway, both WAITING_OPERATOR_REPLY.
   const req1Input = {
-    whatsappGroupId: 'operations',
-    requesterWhatsappId: '8801700000000',
+    chatId: 'operations',
+    requesterId: '8801700000000',
     requesterName: 'Officer Rahim',
     operator: 'GP',
     targetOperators: ['GP'],
@@ -471,8 +471,8 @@ test('disambiguates multiple pending requests by reply content analysis', async 
     rawRequestText: 'LRL 01712345678'
   };
   const req2Input = {
-    whatsappGroupId: 'operations',
-    requesterWhatsappId: '8801800000000',
+    chatId: 'operations',
+    requesterId: '8801800000000',
     requesterName: 'Officer Karim',
     operator: 'GP',
     targetOperators: ['GP'],
@@ -505,7 +505,7 @@ test('disambiguates multiple pending requests by reply content analysis', async 
   });
   store.setDispatchSent(req2.requestId, 'GP', { ok: true });
 
-  // Reply with NID content — should match the MS-NID request, not LRL.
+  // Reply with NID content â€” should match the MS-NID request, not LRL.
   const result = service.receiveSmsWebhook({
     gatewayId: 'GP_PHONE_01',
     from: '12345',
@@ -519,9 +519,9 @@ test('disambiguates multiple pending requests by reply content analysis', async 
 test('ambiguous requests with equal scores fall to manual review', async () => {
   const { store, service } = createHarness();
 
-  // Two LRL requests with the same type — reply analysis can't differentiate.
+  // Two LRL requests with the same type â€” reply analysis can't differentiate.
   const req1 = store.createRequest({
-    whatsappGroupId: 'ops', requesterWhatsappId: '111', requesterName: 'A',
+    chatId: 'ops', requesterId: '111', requesterName: 'A',
     operator: 'GP', targetOperators: ['GP'], requestType: 'LRL',
     payload: '01712345678', rawRequestText: 'LRL 01712345678'
   });
@@ -537,7 +537,7 @@ test('ambiguous requests with equal scores fall to manual review', async () => {
   store.setDispatchSent(req1.requestId, 'GP', { ok: true });
 
   const req2 = store.createRequest({
-    whatsappGroupId: 'ops', requesterWhatsappId: '222', requesterName: 'B',
+    chatId: 'ops', requesterId: '222', requesterName: 'B',
     operator: 'GP', targetOperators: ['GP'], requestType: 'LRL',
     payload: '01798765432', rawRequestText: 'LRL 01798765432'
   });
@@ -552,7 +552,7 @@ test('ambiguous requests with equal scores fall to manual review', async () => {
   });
   store.setDispatchSent(req2.requestId, 'GP', { ok: true });
 
-  // Reply matches both equally — should go to manual review (unmatched).
+  // Reply matches both equally â€” should go to manual review (unmatched).
   const result = service.receiveSmsWebhook({
     gatewayId: 'GP_PHONE_01',
     from: '12345',
@@ -565,19 +565,19 @@ test('ambiguous requests with equal scores fall to manual review', async () => {
 
 test('reject moves request to FAILED and frees the operator queue', async () => {
   const { store, service } = createHarness();
-  const submitted = await service.submitWhatsAppRequest({
-    whatsappGroupId: 'operations',
+  const submitted = await service.submitRequest({
+    chatId: 'operations',
     requesterName: 'Officer Rahim',
-    requesterWhatsappId: '8801700000000',
+    requesterId: '8801700000000',
     text: 'LRL 01712345678'
   });
   service.receiveSmsWebhook({ gatewayId: 'GP_PHONE_01', from: '12345', body: 'LRL cell location' });
 
   // Queue a second request while the first is in review.
-  await service.submitWhatsAppRequest({
-    whatsappGroupId: 'operations',
+  await service.submitRequest({
+    chatId: 'operations',
     requesterName: 'Officer Karim',
-    requesterWhatsappId: '8801800000000',
+    requesterId: '8801800000000',
     text: 'LRL 01798765432'
   });
 
@@ -590,10 +590,10 @@ test('reject moves request to FAILED and frees the operator queue', async () => 
 
 test('retry re-queues a failed request and dispatches it', async () => {
   const { store, service } = createHarness();
-  const submitted = await service.submitWhatsAppRequest({
-    whatsappGroupId: 'operations',
+  const submitted = await service.submitRequest({
+    chatId: 'operations',
     requesterName: 'Officer Rahim',
-    requesterWhatsappId: '8801700000000',
+    requesterId: '8801700000000',
     text: 'LRL 01712345678'
   });
   service.receiveSmsWebhook({ gatewayId: 'GP_PHONE_01', from: '12345', body: 'LRL cell location' });
@@ -609,13 +609,13 @@ test('retry re-queues a failed request and dispatches it', async () => {
 
 test('retry re-queues a timed-out request', async () => {
   const { store, service } = createHarness();
-  const submitted = await service.submitWhatsAppRequest({
-    whatsappGroupId: 'operations',
+  const submitted = await service.submitRequest({
+    chatId: 'operations',
     requesterName: 'Officer Rahim',
-    requesterWhatsappId: '8801700000000',
+    requesterId: '8801700000000',
     text: 'LRL 01712345678'
   });
-  store.smsOutbox[0].sentAt = new Date(Date.now() - 6 * 60 * 1000).toISOString();
+  store.smsOutbox[0].sentAt = new Date(Date.now() - 11 * 60 * 1000).toISOString();
   await service.timeoutWaitingRequests();
   assert.equal(store.getRequest(submitted.request.requestId).status, STATUSES.TIMEOUT);
 
@@ -625,10 +625,10 @@ test('retry re-queues a timed-out request', async () => {
 
 test('manual match links an unmatched inbox to a waiting request', async () => {
   const { store, service } = createHarness();
-  const submitted = await service.submitWhatsAppRequest({
-    whatsappGroupId: 'operations',
+  const submitted = await service.submitRequest({
+    chatId: 'operations',
     requesterName: 'Officer Rahim',
-    requesterWhatsappId: '8801700000000',
+    requesterId: '8801700000000',
     text: 'LRL 01712345678'
   });
 
@@ -644,7 +644,7 @@ test('manual match links an unmatched inbox to a waiting request', async () => {
   const result = service.manualMatch(inbox.id, submitted.request.requestId);
   assert.equal(result.ok, true);
   assert.equal(result.request.status, STATUSES.NEEDS_MANUAL_REVIEW);
-  assert.ok(result.whatsappReply);
+  assert.ok(result.replyDraft);
 });
 
 test('notifyTimeouts sends a Telegram message for timed-out requests', async () => {
@@ -658,13 +658,13 @@ test('notifyTimeouts sends a Telegram message for timed-out requests', async () 
       {
         requestId: 'REQ-001', channel: 'telegram', status: 'TIMEOUT',
         chatId: '-100', sourceMessageId: 42, requesterName: 'Rahim',
-        requesterWhatsappId: '111', requestType: 'LRL', payload: '017xxx',
+        requesterId: '111', requestType: 'LRL', payload: '017xxx',
         failedReason: 'Operator reply timed out.'
       },
       {
         requestId: 'REQ-002', channel: 'manual', status: 'TIMEOUT',
         chatId: null, sourceMessageId: null, requesterName: 'Karim',
-        requesterWhatsappId: '222', requestType: 'LRL', payload: '018xxx'
+        requesterId: '222', requestType: 'LRL', payload: '018xxx'
       }
     ]
   };

@@ -49,7 +49,7 @@ object BackendClient {
                 val body = r.body?.string().orEmpty()
                 val json = JSONObject(body)
                 json.optBoolean("ok") &&
-                    json.optString("service") == "sms-whatsapp-automation"
+                    json.optString("service") == "sms-telegram-automation"
             }
         } catch (e: Exception) {
             if (logFailures) {

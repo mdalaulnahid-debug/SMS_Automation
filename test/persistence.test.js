@@ -1,4 +1,4 @@
-'use strict';
+﻿'use strict';
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
@@ -28,14 +28,14 @@ function tempDb(t) {
 test('an in-flight WAITING request survives a restart and can still match its reply', async (t) => {
   const dbPath = tempDb(t);
 
-  // First boot: submit a request (mock gateway → SENT → WAITING), then "crash".
+  // First boot: submit a request (mock gateway â†’ SENT â†’ WAITING), then "crash".
   const h1 = harness(dbPath);
-  const submitted = await h1.service.submitWhatsAppRequest({
+  const submitted = await h1.service.submitRequest({
     channel: 'telegram',
     chatId: '-100777',
     sourceMessageId: 9,
     requesterName: 'Officer Rahim',
-    requesterWhatsappId: '8801700000000',
+    requesterId: '8801700000000',
     text: 'LRL 01712345678'
   });
   const requestId = submitted.request.requestId;
@@ -67,8 +67,8 @@ test('a QUEUED request is re-dispatched after restart via recover/rebuild', asyn
 
   // Submit one request, then close before it can be fully processed.
   const h1 = harness(dbPath);
-  await h1.service.submitWhatsAppRequest({
-    requesterName: 'A', requesterWhatsappId: '8801700000001', whatsappGroupId: 'g', text: 'LRL 01712345678'
+  await h1.service.submitRequest({
+    requesterName: 'A', requesterId: '8801700000001', chatId: 'g', text: 'LRL 01712345678'
   });
   assert.equal(h1.store.smsOutbox.length, 1);
   assert.equal(h1.store.getRequest(h1.store.listRequests()[0].requestId).status, STATUSES.WAITING_OPERATOR_REPLY);
@@ -94,9 +94,9 @@ test('per-operator dispatches survive a restart and finalize correctly afterward
 
   // Fan-out request; GP replies before the "crash".
   const h1 = harness(dbPath);
-  const submitted = await h1.service.submitWhatsAppRequest({
-    whatsappGroupId: 'g', requesterName: 'Ofc', requesterWhatsappId: '8801700000000',
-    text: 'MS-NID 01712345678'
+  const submitted = await h1.service.submitRequest({
+    chatId: 'g', requesterName: 'Ofc', requesterId: '8801700000000',
+    text: 'NID-MS 123456789012'
   });
   const requestId = submitted.request.requestId;
   h1.service.receiveSmsWebhook({ gatewayId: 'GP_PHONE_01', from: '12345', body: 'NID 111' });
@@ -109,7 +109,7 @@ test('per-operator dispatches survive a restart and finalize correctly afterward
   assert.equal(restored.dispatches.find((d) => d.operator === 'GP').status, 'REPLY_RECEIVED');
   assert.equal(restored.dispatches.find((d) => d.operator === 'ROBI').status, 'WAITING_REPLY');
 
-  // Remaining operators reply after restart → request finalizes to manual review.
+  // Remaining operators reply after restart â†’ request finalizes to manual review.
   h2.service.receiveSmsWebhook({ gatewayId: 'ROBI_PHONE_01', from: '12345', body: 'NID 222' });
   const last = h2.service.receiveSmsWebhook({ gatewayId: 'BANGLALINK_PHONE_01', from: '12345', body: 'NID 333' });
   assert.equal(last.request.status, STATUSES.NEEDS_MANUAL_REVIEW);

@@ -23,7 +23,7 @@ class AutomationService {
     this.autoApproveChannels = autoApproveChannels;
   }
 
-  async submitWhatsAppRequest(input) {
+  async submitRequest(input) {
     const parsed = parseRequestText(input.text);
     if (!parsed.ok) {
       return {
@@ -33,10 +33,10 @@ class AutomationService {
       };
     }
 
-    const existingUser = this.store.getUser(input.requesterWhatsappId);
+    const existingUser = this.store.getUser(input.requesterId);
     if (existingUser && existingUser.status === 'DISABLED') {
       this.store.audit('system', 'REQUEST_DENIED_DISABLED_USER', null, {
-        requesterWhatsappId: input.requesterWhatsappId
+        requesterId: input.requesterId
       });
       return {
         ok: false,
@@ -46,7 +46,7 @@ class AutomationService {
     }
     if (this.denyUnknownRequesters && !existingUser) {
       this.store.audit('system', 'REQUEST_DENIED_UNKNOWN_USER', null, {
-        requesterWhatsappId: input.requesterWhatsappId
+        requesterId: input.requesterId
       });
       return {
         ok: false,
@@ -56,7 +56,7 @@ class AutomationService {
     }
 
     const requester = this.store.upsertUser({
-      whatsappId: input.requesterWhatsappId,
+      telegramId: input.requesterId,
       displayName: input.requesterName
     });
 
@@ -72,8 +72,7 @@ class AutomationService {
     }
 
     const request = this.store.createRequest({
-      whatsappGroupId: input.whatsappGroupId,
-      requesterWhatsappId: input.requesterWhatsappId,
+      requesterId: input.requesterId,
       requesterName: input.requesterName,
       channel: input.channel,
       chatId: input.chatId,
@@ -185,11 +184,11 @@ class AutomationService {
       if ((request.targetOperators || []).length > 1) {
         const updatedText = formatCombinedReply(request, this.store);
         const autoApprove = request.channel && this.autoApproveChannels.includes(request.channel);
-        const liveReply = this._getLiveReplyForRequest(matchedRequest.requestId);
+        const existingDraft = this._getActiveDraftForRequest(matchedRequest.requestId);
 
         let reply;
-        if (!liveReply) {
-          reply = this.store.addWhatsAppReply({
+        if (!existingDraft) {
+          reply = this.store.addReplyDraft({
             requestId: matchedRequest.requestId,
             replyText: updatedText,
             sentStatus: autoApprove ? 'APPROVED_FOR_POST' : 'DRAFT',
@@ -198,20 +197,20 @@ class AutomationService {
             chatId: request.chatId,
             sourceMessageId: request.sourceMessageId,
             requesterName: request.requesterName,
-            requesterId: request.requesterWhatsappId
+            requesterId: request.requesterId
           });
           if (autoApprove) {
-            this.store.audit('system', 'WHATSAPP_REPLY_AUTO_APPROVED', matchedRequest.requestId, {
+            this.store.audit('system', 'REPLY_AUTO_APPROVED', matchedRequest.requestId, {
               replyId: reply.id, channel: request.channel
             });
           }
-        } else if (liveReply.sentStatus === 'POSTED_LIVE') {
-          this.store.updateWhatsAppReply(liveReply.id, { replyText: updatedText, sentStatus: 'APPROVED_FOR_EDIT' });
-          reply = liveReply;
+        } else if (existingDraft.sentStatus === 'POSTED_LIVE') {
+          this.store.updateReplyDraft(existingDraft.id, { replyText: updatedText, sentStatus: 'APPROVED_FOR_EDIT' });
+          reply = existingDraft;
         } else {
           // DRAFT or APPROVED_FOR_POST — bridge hasn't posted it yet; just update text
-          this.store.updateWhatsAppReply(liveReply.id, { replyText: updatedText });
-          reply = liveReply;
+          this.store.updateReplyDraft(existingDraft.id, { replyText: updatedText });
+          reply = existingDraft;
         }
 
         this.store.audit('system', 'REQUEST_PARTIAL_OPERATOR_REPLY', matchedRequest.requestId, {
@@ -221,7 +220,7 @@ class AutomationService {
           pendingOperators: (request.dispatches || [])
             .filter((d) => !TERMINAL_DISPATCH_STATUSES.includes(d.status)).map((d) => d.operator)
         });
-        return { ok: true, inbox, request, whatsappReply: reply };
+        return { ok: true, inbox, request, replyDraft: reply };
       }
     }
 
@@ -247,7 +246,7 @@ class AutomationService {
         operator: operatorKey, inboxId: inbox.id
       });
       const outcome = this._finalizeIfTerminal(matchedRequest.requestId);
-      return { ok: true, inbox, request: outcome.request, whatsappReply: outcome.reply };
+      return { ok: true, inbox, request: outcome.request, replyDraft: outcome.reply };
     }
 
     // Late reply: request already finalized (NEEDS_MANUAL_REVIEW). Re-generate the combined
@@ -255,19 +254,19 @@ class AutomationService {
     if (currentRequest.status === STATUSES.NEEDS_MANUAL_REVIEW) {
       const updatedText = formatCombinedReply(currentRequest, this.store);
       const autoApprove = currentRequest.channel && this.autoApproveChannels.includes(currentRequest.channel);
-      const allReplies = this.store.listWhatsAppReplies().filter((r) => r.requestId === matchedRequest.requestId);
+      const allReplies = this.store.listReplyDrafts().filter((r) => r.requestId === matchedRequest.requestId);
       const latestReply = allReplies[allReplies.length - 1];
 
       let reply;
       const alreadyDelivered = ['POSTED', 'POSTED_LIVE', 'APPROVED_FOR_EDIT'];
       if (latestReply && !alreadyDelivered.includes(latestReply.sentStatus)) {
-        this.store.updateWhatsAppReply(latestReply.id, {
+        this.store.updateReplyDraft(latestReply.id, {
           replyText: updatedText,
           sentStatus: autoApprove ? 'APPROVED_FOR_POST' : 'DRAFT'
         });
         reply = latestReply;
       } else {
-        reply = this.store.addWhatsAppReply({
+        reply = this.store.addReplyDraft({
           requestId: matchedRequest.requestId,
           replyText: updatedText,
           sentStatus: autoApprove ? 'APPROVED_FOR_POST' : 'DRAFT',
@@ -275,14 +274,14 @@ class AutomationService {
           chatId: currentRequest.chatId,
           sourceMessageId: currentRequest.sourceMessageId,
           requesterName: currentRequest.requesterName,
-          requesterId: currentRequest.requesterWhatsappId
+          requesterId: currentRequest.requesterId
         });
       }
 
       this.store.audit('system', 'REQUEST_LATE_OPERATOR_REPLY', matchedRequest.requestId, {
         operator: operatorKey, inboxId: inbox.id
       });
-      return { ok: true, inbox, request: currentRequest, whatsappReply: reply };
+      return { ok: true, inbox, request: currentRequest, replyDraft: reply };
     }
 
     // Request status is derived from per-operator dispatches: only finalize (NEEDS_MANUAL_REVIEW
@@ -308,7 +307,7 @@ class AutomationService {
       ok: true,
       inbox,
       request: outcome.request,
-      whatsappReply: outcome.reply
+      replyDraft: outcome.reply
     };
   }
 
@@ -329,17 +328,17 @@ class AutomationService {
       const request = this.store.getRequest(requestId);
       const replyText = formatCombinedReply(request, this.store);
 
-      // If a live Telegram message already exists (multi-op live posting), signal the bridge
-      // to edit it with the final combined content. Otherwise create a normal draft.
-      const liveReply = this._getLiveReplyForRequest(requestId);
+      // If any active draft exists (partial reply or live Telegram message), update it in place
+      // with the final combined content. Otherwise create a normal draft.
+      const existingDraft = this._getActiveDraftForRequest(requestId);
       let reply;
-      if (liveReply) {
-        const nextStatus = liveReply.sentStatus === 'POSTED_LIVE' ? 'APPROVED_FOR_EDIT' : liveReply.sentStatus;
-        this.store.updateWhatsAppReply(liveReply.id, { replyText, sentStatus: nextStatus });
-        reply = liveReply;
+      if (existingDraft) {
+        const nextStatus = existingDraft.sentStatus === 'POSTED_LIVE' ? 'APPROVED_FOR_EDIT' : existingDraft.sentStatus;
+        this.store.updateReplyDraft(existingDraft.id, { replyText, sentStatus: nextStatus });
+        reply = existingDraft;
       } else {
         const autoApprove = request.channel && this.autoApproveChannels.includes(request.channel);
-        reply = this.store.addWhatsAppReply({
+        reply = this.store.addReplyDraft({
           requestId,
           replyText,
           sentStatus: autoApprove ? 'APPROVED_FOR_POST' : 'DRAFT',
@@ -347,10 +346,10 @@ class AutomationService {
           chatId: request.chatId,
           sourceMessageId: request.sourceMessageId,
           requesterName: request.requesterName,
-          requesterId: request.requesterWhatsappId
+          requesterId: request.requesterId
         });
         if (autoApprove) {
-          this.store.audit('system', 'WHATSAPP_REPLY_AUTO_APPROVED', requestId, {
+          this.store.audit('system', 'REPLY_AUTO_APPROVED', requestId, {
             replyId: reply.id, channel: request.channel
           });
         }
@@ -367,22 +366,22 @@ class AutomationService {
     return { finalized: true, request: this.store.getRequest(requestId), reply: null };
   }
 
-  async approveWhatsAppReply(requestId) {
+  async approveReply(requestId) {
     const request = this.store.getRequest(requestId);
     if (request.status !== STATUSES.NEEDS_MANUAL_REVIEW) {
-      throw new Error(`Request ${requestId} is not ready for WhatsApp reply approval.`);
+      throw new Error(`Request ${requestId} is not ready for reply approval.`);
     }
-    const latestReply = [...this.store.whatsappReplies]
+    const latestReply = [...this.store.replyDrafts]
       .reverse()
       .find((reply) => reply.requestId === requestId);
-    if (!latestReply) throw new Error(`No WhatsApp reply draft found for ${requestId}`);
+    if (!latestReply) throw new Error(`No reply draft found for ${requestId}`);
 
     // Automated channels (e.g. telegram) defer posting to the bridge: approval only marks
     // the draft APPROVED_FOR_POST. The request stays NEEDS_MANUAL_REVIEW until the bridge
     // confirms the post via markReplyPosted, so an unposted reply never looks completed.
     if (request.channel && request.channel !== 'manual') {
-      const reply = this.store.updateWhatsAppReply(latestReply.id, { sentStatus: 'APPROVED_FOR_POST' });
-      this.store.audit('operator', 'WHATSAPP_REPLY_APPROVED_FOR_POST', requestId, {
+      const reply = this.store.updateReplyDraft(latestReply.id, { sentStatus: 'APPROVED_FOR_POST' });
+      this.store.audit('operator', 'REPLY_APPROVED_FOR_POST', requestId, {
         replyId: latestReply.id,
         channel: request.channel
       });
@@ -391,11 +390,11 @@ class AutomationService {
 
     // Manual channel: the reviewer copy/pastes to the group themselves, so approval
     // completes the request in one step (unchanged legacy behavior).
-    this.store.updateWhatsAppReply(latestReply.id, {
+    this.store.updateReplyDraft(latestReply.id, {
       sentStatus: 'POSTED',
       sentAt: new Date().toISOString()
     });
-    this.store.updateRequestStatus(requestId, STATUSES.WHATSAPP_REPLY_POSTED);
+    this.store.updateRequestStatus(requestId, STATUSES.REPLY_POSTED);
     const completed = this.store.updateRequestStatus(requestId, STATUSES.COMPLETED);
     return completed;
   }
@@ -405,8 +404,8 @@ class AutomationService {
   // message ID for future edits and sets POSTED_LIVE without completing the request.
   // For a regular (final) post, moves to POSTED and completes the request.
   async markReplyPosted(replyId, { postedMessageId } = {}) {
-    const reply = this.store.getWhatsAppReply(replyId);
-    if (!reply) throw new Error(`WhatsApp reply not found: ${replyId}`);
+    const reply = this.store.getReplyDraft(replyId);
+    if (!reply) throw new Error(`Reply draft not found: ${replyId}`);
     if (reply.sentStatus !== 'APPROVED_FOR_POST') {
       throw new Error(`Reply ${replyId} is not approved for posting (status ${reply.sentStatus}).`);
     }
@@ -414,23 +413,23 @@ class AutomationService {
     const request = this.store.getRequest(reply.requestId);
     if (request.status !== STATUSES.NEEDS_MANUAL_REVIEW) {
       // Live initial post — keep request open, store Telegram message ID for edits
-      this.store.updateWhatsAppReply(reply.id, {
+      this.store.updateReplyDraft(reply.id, {
         sentStatus: 'POSTED_LIVE',
         postedMessageId: postedMessageId || null,
         sentAt: new Date().toISOString()
       });
-      this.store.audit('bridge', 'WHATSAPP_REPLY_LIVE_POSTED', reply.requestId, { replyId, postedMessageId });
+      this.store.audit('bridge', 'REPLY_LIVE_POSTED', reply.requestId, { replyId, postedMessageId });
       return request;
     }
 
-    this.store.updateWhatsAppReply(reply.id, {
+    this.store.updateReplyDraft(reply.id, {
       sentStatus: 'POSTED',
       postedMessageId: postedMessageId || null,
       sentAt: new Date().toISOString()
     });
-    this.store.updateRequestStatus(reply.requestId, STATUSES.WHATSAPP_REPLY_POSTED);
+    this.store.updateRequestStatus(reply.requestId, STATUSES.REPLY_POSTED);
     const completed = this.store.updateRequestStatus(reply.requestId, STATUSES.COMPLETED);
-    this.store.audit('bridge', 'WHATSAPP_REPLY_POSTED', reply.requestId, {
+    this.store.audit('bridge', 'REPLY_POSTED', reply.requestId, {
       replyId,
       channel: reply.channel,
       postedMessageId: postedMessageId || null
@@ -442,34 +441,41 @@ class AutomationService {
   // Advances APPROVED_FOR_EDIT → POSTED_LIVE for intermediate edits, or completes
   // the request (POSTED → COMPLETED) when all operators are done.
   async markReplyEdited(replyId) {
-    const reply = this.store.getWhatsAppReply(replyId);
-    if (!reply) throw new Error(`WhatsApp reply not found: ${replyId}`);
+    const reply = this.store.getReplyDraft(replyId);
+    if (!reply) throw new Error(`Reply draft not found: ${replyId}`);
     if (reply.sentStatus !== 'APPROVED_FOR_EDIT') {
       throw new Error(`Reply ${replyId} is not pending edit (status: ${reply.sentStatus}).`);
     }
-    this.store.audit('bridge', 'WHATSAPP_REPLY_EDITED', reply.requestId, { replyId });
+    this.store.audit('bridge', 'REPLY_EDITED', reply.requestId, { replyId });
 
     const request = this.store.getRequest(reply.requestId);
     const isFinal = request.status === STATUSES.NEEDS_MANUAL_REVIEW
       && this.store.allDispatchesTerminal(reply.requestId);
 
     if (isFinal) {
-      this.store.updateWhatsAppReply(reply.id, { sentStatus: 'POSTED', sentAt: new Date().toISOString() });
-      this.store.updateRequestStatus(reply.requestId, STATUSES.WHATSAPP_REPLY_POSTED);
+      this.store.updateReplyDraft(reply.id, { sentStatus: 'POSTED', sentAt: new Date().toISOString() });
+      this.store.updateRequestStatus(reply.requestId, STATUSES.REPLY_POSTED);
       const completed = this.store.updateRequestStatus(reply.requestId, STATUSES.COMPLETED);
-      this.store.audit('bridge', 'WHATSAPP_REPLY_POSTED', reply.requestId, {
+      this.store.audit('bridge', 'REPLY_POSTED', reply.requestId, {
         replyId, channel: reply.channel, postedMessageId: reply.postedMessageId
       });
       return completed;
     }
 
-    this.store.updateWhatsAppReply(reply.id, { sentStatus: 'POSTED_LIVE' });
+    this.store.updateReplyDraft(reply.id, { sentStatus: 'POSTED_LIVE' });
     return request;
+  }
+
+  // Find any active (non-posted) reply draft for a fan-out request, for partial-reply updates.
+  _getActiveDraftForRequest(requestId) {
+    return [...this.store.replyDrafts]
+      .reverse()
+      .find((r) => r.requestId === requestId && r.sentStatus !== 'POSTED') || null;
   }
 
   // Find an in-progress live reply (POSTED_LIVE or APPROVED_FOR_EDIT) for a fan-out request.
   _getLiveReplyForRequest(requestId) {
-    return [...this.store.whatsappReplies]
+    return [...this.store.replyDrafts]
       .reverse()
       .find((r) => r.requestId === requestId
         && (r.sentStatus === 'POSTED_LIVE' || r.sentStatus === 'APPROVED_FOR_EDIT')) || null;
@@ -538,7 +544,7 @@ class AutomationService {
     return {
       ok: true,
       request: outcome.request,
-      whatsappReply: outcome.reply
+      replyDraft: outcome.reply
     };
   }
 
