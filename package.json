@@ -2,7 +2,7 @@
   "name": "sms-whatsapp-automation",
   "version": "0.1.0",
   "private": true,
-  "description": "MVP SMS operator bridge with WhatsApp reply drafting and manual review.",
+  "description": "SMS operator bridge with Telegram-based intake and reply posting.",
   "main": "src/server.js",
   "scripts": {
     "start": "node src/server.js",

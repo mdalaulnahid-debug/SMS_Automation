@@ -6,13 +6,13 @@ System design for the SMS Automation bridge. This document describes both the **
 
 ## 1. Purpose
 
-Authorized users in a WhatsApp group submit formatted lookup requests (LRL, LCL, MS-NID, NID-MS, IMEI-MS). The backend routes each request through the correct operator gateway phone (GP / Robi / Banglalink SIM), the operator push-pull service replies by SMS to that same SIM, the reply is matched back to the original request, and a WhatsApp-ready draft (tagging the original requester) is produced for manual review and posting.
+Authorized users in a Telegram group submit formatted lookup requests (LRL, LCL, MS-NID, NID-MS, IMEI-MS). The backend routes each request through the correct operator gateway phone (GP / Robi / Banglalink SIM), the operator push-pull service replies by SMS to that same SIM, the reply is matched back to the original request, a tagged draft is produced for review, and the Telegram bridge posts the approved reply back to the group.
 
 ## 2. Topology
 
 ```text
 ┌──────────────────────┐
-│  WhatsApp Group       │  (manual intake during MVP; official API later)
+│  Telegram Group       │  (intake + reply posting via Telegram bridge)
 └──────────┬───────────┘
            │ request text + requester identity
            ▼
@@ -109,7 +109,7 @@ Request-level status is **derived**: `NEEDS_MANUAL_REVIEW` when every dispatch i
 
 ```text
 RECEIVED → VALIDATED → QUEUED → SMS_SENT → WAITING_OPERATOR_REPLY
-   → REPLY_RECEIVED → NEEDS_MANUAL_REVIEW → WHATSAPP_REPLY_POSTED → COMPLETED
+   → REPLY_RECEIVED → NEEDS_MANUAL_REVIEW → REPLY_POSTED → COMPLETED
 Failure exits: FAILED, TIMEOUT (terminal)
 ```
 
@@ -146,15 +146,15 @@ Inbound SMS is processed only if the sender is in the gateway's `trustedSenders`
 
 Target: **structured field extractors** per (operator, request type) that pull named fields (MSISDN, NID, IMEI, IMSI, lat/long, cell/LAC, address, dates) into the draft, with the raw operator text always preserved verbatim below the extracted fields.
 
-## 10. WhatsApp Reply Drafting
+## 10. Reply Drafting and Posting
 
 Every matched reply produces a draft tagging `@requesterName` with request ID, type, operator, payload, raw operator response, confidence note, and Dhaka-timezone timestamp. Drafts stay `DRAFT` until manually approved (`POST /api/whatsapp-replies/:id/approve`).
 
 Target for fan-out requests: one **combined draft** assembled when all dispatches are terminal (per-operator sections, missing operators marked "no reply / timeout"), instead of independent per-operator drafts where only the latest gets posted.
 
-WhatsApp posting stays **manual** (copy from dashboard) until an official, policy-safe WhatsApp Business integration is validated. Unofficial WhatsApp Web automation is explicitly out of scope.
+The **Telegram bridge** (`telegram-bridge/`) polls for `APPROVED_FOR_POST` drafts and posts them to the Telegram group automatically. The group is the live intake and reply channel — no WhatsApp integration exists or is planned.
 
-`whatsappGroupId` is stored on each request (from app Settings → Test Metadata, default `test-whatsapp-group`) but is **not used to post** in the current MVP. The draft's `@requesterName` line uses `requesterName` (plain text), not a WhatsApp JID mention.
+`chatId` is stored on each request (from the Telegram `chat_id` of the originating message). The draft's `@requesterName` line uses `requesterName` (plain text tag, not a Telegram mention).
 
 **E2E validated 2026-06-11:** test mode with `testDestination`, manual reply, draft with `NEEDS_MANUAL_REVIEW`. Details in `progress_tracker.md`.
 
@@ -175,7 +175,7 @@ Invariants (from `vision.md`):
 2. Only configured trusted senders are analyzed.
 3. One active request per operator phone unless reference matching is reliable.
 4. Requester identity is preserved from intake to final tagged reply.
-5. Manual review before anything is posted to WhatsApp.
+5. Manual review before anything is posted to the Telegram group.
 
 ## 12. Failure Modes and Recovery
 

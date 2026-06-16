@@ -1,12 +1,12 @@
 # SMS Automation
 
-Lawful operator push-pull SMS automation bridge for Bangladesh mobile operators (GP, Robi, Banglalink). Authorized users submit formatted requests; the backend routes them through Android gateway phones; operator replies are matched and turned into WhatsApp-ready drafts for manual review.
+Lawful operator push-pull SMS automation bridge for Bangladesh mobile operators (GP, Robi, Banglalink). Authorized users submit formatted requests via Telegram; the backend routes them through Android gateway phones; operator replies are matched and the Telegram bridge posts the result back to the group.
 
 This repo has **two main parts**:
 
 | Part | Path | Role |
 |------|------|------|
-| **Backend** | `src/` | Node.js server: parse requests, queue per operator, call phone gateways, match replies, draft WhatsApp responses |
+| **Backend** | `src/` | Node.js server: parse requests, queue per operator, call phone gateways, match replies, post replies via Telegram bridge |
 | **Android Gateway** | `android-gateway/` | Kotlin app on each operator phone: HTTP server for outbound SMS, SMS receiver for inbound, webhook forward to backend |
 
 **Continuing work?** Read `progress_tracker.md` first (session handoff, test results, known issues). Day-to-day tasks: `todo.md`.
@@ -94,7 +94,7 @@ Requires JDK 17 and Android SDK API 34. See `android-gateway/README.md` for path
    - Gateway ID: `GP_PHONE_01` / `ROBI_PHONE_01` / `BANGLALINK_PHONE_01`
    - Backend URL: leave **blank** for auto-discovery, or `http://<PC_IP>:3000`
    - HTTP port: `8080`
-   - Test Metadata: WhatsApp group ID, requester name (for draft `@tag`)
+   - Test Metadata: Telegram chat ID, requester name (for draft `@tag`)
 3. **Dual-SIM phones:** set default **SMS SIM** in phone Settings → SIM manager to the working operator SIM (see `progress_tracker.md`)
 4. **Start Service** → status **RUNNING**, backend **connected**
 5. Use **Test Request** to send a test SMS to a target number
@@ -104,7 +104,7 @@ Requires JDK 17 and Android SDK API 34. See `android-gateway/README.md` for path
 ## End-to-End Flow
 
 ```text
-WhatsApp / dashboard / app test panel
+Telegram group / dashboard / app test panel
   → POST /api/requests
   → backend parser (LRL, LCL, MS-NID, NID-MS, IMEI-MS)
   → per-operator queue
@@ -113,8 +113,8 @@ WhatsApp / dashboard / app test panel
   → operator (or test phone) replies via SMS
   → phone forwards POST /api/sms/inbound
   → trusted sender filter + request matching
-  → reply analyzer → WhatsApp draft (NEEDS_MANUAL_REVIEW)
-  → manual approve on dashboard → copy/paste to WhatsApp (no auto-post yet)
+  → reply analyzer → reply draft (NEEDS_MANUAL_REVIEW)
+  → reviewer approves on dashboard → Telegram bridge posts reply to group
 ```
 
 **Validated 2026-06-11:** full loop works with `testDestination` on Samsung A55 + home PC backend.
@@ -145,15 +145,14 @@ For pre-launch testing with a phone you control instead of operator shortcode `1
 2. Backend sends SMS to `testDestination` instead of operator shortcode
 3. Add all reply numbers to `trustedSenders` in `config/gateways.json`
 4. Reply manually from target phone; gateway forwards to backend
-5. Dashboard shows draft — **copy to WhatsApp manually**
+5. Dashboard shows draft — approve to post via Telegram bridge
 
-### WhatsApp draft / group (important)
+### Telegram reply drafting
 
-- **No message is auto-posted to WhatsApp today.**
-- Draft is stored on dashboard (`whatsappReplies` section).
-- Draft starts with `@<Requester Name>` (plain text, not a real WhatsApp mention).
-- `whatsappGroupId` from app Settings (default `test-whatsapp-group`) is saved on the request for future API use only.
-- Configure in app **Settings → Test Metadata**: Group ID, Requester WhatsApp ID, Requester Name.
+- Draft is stored on dashboard (reply drafts section).
+- Draft starts with `@<Requester Name>` (plain text tag).
+- Once a reviewer approves on the dashboard, the **Telegram bridge** (`telegram-bridge/`) posts the reply automatically to the Telegram group.
+- Configure in app **Settings → Test Metadata**: Chat ID, Requester ID, Requester Name.
 
 ---
 
@@ -260,8 +259,7 @@ npm run organize:training  # → Training Data/Organized/
   WAL). Restart restores requests, drafts, audit log, queues, and registered gateway URLs;
   in-flight requests keep waiting. See `src/persistence.js` and `docs/telegram-bridge.md`.
 - Reply analysis uses keyword/pattern matching, not structured field extractors yet
-- **No real WhatsApp integration** — manual copy/paste from dashboard (Telegram bridge is the
-  automation path; see `docs/telegram-bridge.md`)
+- Intake and reply posting are via Telegram (see `docs/telegram-bridge.md`); dashboard is admin-only
 - Backend API auth exists (Phase 2): admin API key + per-gateway secrets + deny-by-default users +
   hash-chained audit log. Set `config/auth.json`; empty key = dev mode. Phone-side rejection of
   unsigned `/send-sms` is still an Android TODO.
@@ -284,4 +282,4 @@ When continuing this project:
 8. Start backend: `start-backend.bat` from repo root
 9. Tests: `node --test` (18 tests)
 
-Safety principles (from `vision.md`): never alter operator SMS commands; only trust configured senders; manual review before WhatsApp posting; one active request per operator phone unless reference matching is reliable.
+Safety principles (from `vision.md`): never alter operator SMS commands; only trust configured senders; manual review before posting reply; one active request per operator phone unless reference matching is reliable.

@@ -10,9 +10,9 @@ Build a reliable, auditable SMS automation bridge for lawful operator push-pull 
 - Never expose backend silent references to operator SMS services.
 - Process only trusted sender replies from configured push-pull, hotline, or network numbers.
 - Keep one active request per operator phone unless the operator service gives a reliable unique reply reference.
-- Preserve requester identity from intake through final WhatsApp-ready reply.
-- Require manual review before posting sensitive results to WhatsApp.
-- Prefer official/policy-safe WhatsApp integration when full automation is added.
+- Preserve requester identity from intake through final tagged reply.
+- Require manual review before posting sensitive results to the Telegram group.
+- Telegram is the live intake and reply channel; no WhatsApp integration is planned.
 
 ## Target Outcome
 
@@ -24,10 +24,10 @@ An authorized user submits a formatted request. The backend routes it safely, se
 - Android gateway companion app for the three phones (**v1.2.1 shipped; E2E test passed 2026-06-11**).
 - Admin dashboard for queues, phone health, logs, and manual review.
 - Better extractor rules for `IMEI`, `MSISDN`, `NID`, `IMSI`, location, date, and address fields.
-- Official WhatsApp intake/reply integration when available (`whatsappGroupId` stored on requests today; posting is manual).
+- Telegram bridge handles intake and reply posting (`telegram-bridge/`); see `docs/telegram-bridge.md`.
 
 ## Current MVP State (June 2026)
 
 - Test mode works: app Test Request → SMS via gateway phone → manual reply → backend draft with `@requesterName`.
-- WhatsApp group ID and requester metadata come from app Settings (Test Metadata); drafts appear on PC dashboard only.
+- Telegram chat ID and requester metadata come from the Telegram message; drafts appear on the dashboard for review, then the bridge posts approved replies back to the group.
 - Dual-SIM phones need correct default SMS SIM until the app adds a subscription picker.

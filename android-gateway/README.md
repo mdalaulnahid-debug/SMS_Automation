@@ -26,7 +26,7 @@ See `../progress_tracker.md` for 2026-06-11 test results, dual-SIM issue, and of
 
 - **Permissions** — SMS + notification permissions
 - **Home** — service status, backend health, test request panel, recent activity
-- **Settings** — gateway ID, backend URL, HTTP port, test WhatsApp metadata
+- **Settings** — gateway ID, backend URL, HTTP port, test Telegram metadata
 - **Activity Log** — Room-backed sent/received/forwarded history
 
 ---
@@ -48,8 +48,8 @@ Install the same APK on each gateway phone. Only difference is Settings:
 | Gateway ID | `GP_PHONE_01` | Must match backend config key |
 | Backend URL | *(blank)* or `http://<PC_IP>:3000` | Blank = auto-discovery (v1.2.1+) |
 | HTTP port | `8080` | Must match `gateways.json` / registration |
-| WhatsApp Group ID | `test-whatsapp-group` | Stored on request; no auto-post yet |
-| Requester WhatsApp ID | `test-requester` | Auth metadata |
+| Telegram Chat ID | `test-chat-id` | Stored on request; used by Telegram bridge to post reply |
+| Requester Telegram ID | `test-requester` | Auth metadata |
 | Requester Name | `Test User` | Appears as `@Test User` in draft |
 
 ### Dual-SIM phones (important)
