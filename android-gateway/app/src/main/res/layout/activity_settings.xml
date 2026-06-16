@@ -79,92 +79,20 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- ══ ADMIN SETUP (locked row) ══ -->
+            <!-- ══ PHONE SETUP ══ -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="ADMIN SETUP"
+                android:text="PHONE SETUP"
                 android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel"
                 android:layout_marginBottom="8dp"
                 android:layout_marginStart="4dp" />
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardAdminLock"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="@color/bg_card"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:strokeColor="@color/accent_muted"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:padding="18dp">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Gateway &amp; Connection"
-                            android:textColor="@color/text_primary"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:id="@+id/tvAdminLockHint"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="Tap to configure gateway ID, backend URL &amp; SIM"
-                            android:textColor="@color/text_secondary"
-                            android:textSize="12sp" />
-
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/tvAdminLockIcon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
-                        android:text="&#128274;"
-                        android:textSize="20sp" />
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Admin content — hidden until PIN verified -->
-            <LinearLayout
-                android:id="@+id/layoutAdminContent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-            <!-- ══ IDENTITY ══ -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="IDENTITY"
-                android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel"
-                android:layout_marginBottom="8dp"
-                android:layout_marginStart="4dp" />
-
+            <!-- Gateway ID -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="12dp"
                 app:cardBackgroundColor="@color/bg_card"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
@@ -194,19 +122,11 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- ══ SIM CARD ══ -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="SIM CARD"
-                android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel"
-                android:layout_marginBottom="8dp"
-                android:layout_marginStart="4dp" />
-
+            <!-- SIM Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="12dp"
                 app:cardBackgroundColor="@color/bg_card"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
@@ -304,11 +224,11 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- ══ BACKEND ══ -->
+            <!-- ══ CONNECTION ══ -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="BACKEND"
+                android:text="CONNECTION"
                 android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel"
                 android:layout_marginBottom="8dp"
                 android:layout_marginStart="4dp" />
@@ -345,7 +265,6 @@
                             android:textColor="@color/text_primary" />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <!-- Connection test -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -398,7 +317,6 @@
                     android:orientation="vertical"
                     android:padding="18dp">
 
-                    <!-- Auto-start on boot -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -439,62 +357,134 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- ══ ADMIN ACCESS ══ -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="ADMIN ACCESS"
-                android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel"
-                android:layout_marginBottom="8dp"
-                android:layout_marginStart="4dp" />
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                app:cardBackgroundColor="@color/bg_card"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:strokeColor="@color/warning"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="18dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Leave blank on gateway phones. Setting this unlocks the Control Center on this device."
-                        android:textColor="@color/text_secondary"
-                        android:textSize="12sp"
-                        android:layout_marginBottom="14dp" />
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Admin API Key">
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etAdminApiKey"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="textPassword"
-                            android:singleLine="true"
-                            android:textColor="@color/text_primary" />
-                    </com.google.android.material.textfield.TextInputLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- ══ SAVE ══ -->
+            <!-- ══ SAVE (phone settings) ══ -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSave"
                 style="@style/Widget.SmsGateway.Button.Hero"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="28dp"
                 android:text="Save Settings" />
+
+            <!-- ══ ADMIN (API key — PIN locked) ══ -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ADMIN"
+                android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel"
+                android:layout_marginBottom="8dp"
+                android:layout_marginStart="4dp" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardAdminLock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardBackgroundColor="@color/bg_card"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/accent_muted"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:padding="18dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Admin API Key"
+                            android:textColor="@color/text_primary"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:id="@+id/tvAdminLockHint"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="PIN required — only needed on the admin monitoring phone"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvAdminLockIcon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:text="&#128274;"
+                        android:textSize="20sp" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Admin content — hidden until PIN verified -->
+            <LinearLayout
+                android:id="@+id/layoutAdminContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardBackgroundColor="@color/bg_card"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/warning"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="18dp">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Leave blank on gateway phones. Setting this unlocks the Control Center on this device."
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp"
+                            android:layout_marginBottom="14dp" />
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Admin API Key">
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etAdminApiKey"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textPassword"
+                                android:singleLine="true"
+                                android:textColor="@color/text_primary" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSaveAdminKey"
+                    style="@style/Widget.SmsGateway.Button.Outlined"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginBottom="24dp"
+                    android:text="Save Admin Key" />
 
             </LinearLayout> <!-- end layoutAdminContent -->
 
@@ -522,7 +512,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <!-- Tap-to-toggle header -->
                     <LinearLayout
                         android:id="@+id/btnToggleAbout"
                         android:layout_width="match_parent"
@@ -568,7 +557,6 @@
                             android:textSize="12sp" />
                     </LinearLayout>
 
-                    <!-- Collapsible content -->
                     <LinearLayout
                         android:id="@+id/layoutAboutContent"
                         android:layout_width="match_parent"
@@ -668,7 +656,6 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <!-- Tap-to-toggle header -->
                     <LinearLayout
                         android:id="@+id/btnToggleHelp"
                         android:layout_width="match_parent"
@@ -697,7 +684,6 @@
                             android:textSize="12sp" />
                     </LinearLayout>
 
-                    <!-- Collapsible content -->
                     <LinearLayout
                         android:id="@+id/layoutHelpContent"
                         android:layout_width="match_parent"
@@ -714,7 +700,6 @@
                             android:background="@color/divider"
                             android:layout_marginBottom="14dp" />
 
-                        <!-- § 1  Starting the service -->
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -739,7 +724,6 @@
                             android:background="@color/divider"
                             android:layout_marginBottom="14dp" />
 
-                        <!-- § 2  Permissions -->
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -764,7 +748,6 @@
                             android:background="@color/divider"
                             android:layout_marginBottom="14dp" />
 
-                        <!-- § 3  Troubleshooting -->
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -789,7 +772,6 @@
                             android:background="@color/divider"
                             android:layout_marginBottom="14dp" />
 
-                        <!-- § 4  Support -->
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"

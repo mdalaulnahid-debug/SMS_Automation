@@ -13,7 +13,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
-import com.google.android.material.snackbar.Snackbar
 import com.smsgateway.databinding.ActivitySettingsBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -34,13 +33,14 @@ class SettingsActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        initGeneralSettings()
+        initDisplaySettings()
+        initPhoneSettings()
         setupAdminLock()
     }
 
-    // ── General settings (no PIN required) ────────────────────────────────────
+    // ── Display settings (theme — no PIN) ─────────────────────────────────────
 
-    private fun initGeneralSettings() {
+    private fun initDisplaySettings() {
         val themeLabels = arrayOf("Follow System", "Dark", "Light")
         binding.spinnerTheme.adapter =
             ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, themeLabels)
@@ -83,7 +83,113 @@ class SettingsActivity : AppCompatActivity() {
         }
     }
 
-    // ── Admin setup lock row ───────────────────────────────────────────────────
+    // ── Phone settings (gateway ID, SIM, backend URL, behaviour — no PIN) ────
+
+    private fun initPhoneSettings() {
+        binding.spinnerGatewayId.adapter =
+            ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, primaryIds)
+        binding.spinnerSecondaryGatewayId.adapter =
+            ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, gatewayIds)
+
+        setupSimSpinner()
+        loadPhoneSettings()
+
+        binding.btnSave.setOnClickListener { savePhoneSettings() }
+        binding.btnTestConnection.setOnClickListener { testConnection() }
+    }
+
+    private fun setupSimSpinner() {
+        val sims = SmsSender.listSims(this)
+        if (sims.isEmpty()) {
+            simSubIds = listOf(-1)
+            binding.spinnerSim.adapter = ArrayAdapter(
+                this, android.R.layout.simple_spinner_dropdown_item, arrayOf("Default SIM")
+            )
+            binding.tvSimHint.text = "SIM info unavailable (grant READ_PHONE_STATE)"
+            binding.cardSecondaryGateway.isVisible = false
+        } else {
+            simSubIds = listOf(-1) + sims.map { it.first }
+            val labels = listOf("Default SIM") + sims.map { (_, name, slot) -> "SIM ${slot + 1}: $name" }
+            binding.spinnerSim.adapter =
+                ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, labels)
+            binding.tvSimHint.text = "Select which SIM sends operator SMS"
+            if (sims.size >= 2) {
+                binding.cardSecondaryGateway.isVisible = true
+                binding.spinnerSecondarySim.adapter =
+                    ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, labels)
+            } else {
+                binding.cardSecondaryGateway.isVisible = false
+            }
+        }
+    }
+
+    private fun loadPhoneSettings() {
+        val currentId = Prefs.getGatewayId(this)
+        binding.spinnerGatewayId.setSelection(primaryIds.indexOf(currentId).coerceAtLeast(0))
+
+        val savedSubId = Prefs.getPreferredSubId(this)
+        binding.spinnerSim.setSelection(simSubIds.indexOf(savedSubId).coerceAtLeast(0))
+
+        val secondaryId = Prefs.getSecondaryGatewayId(this)
+        binding.spinnerSecondaryGatewayId.setSelection(gatewayIds.indexOf(secondaryId).coerceAtLeast(0))
+        val secSubId = Prefs.getSecondarySubId(this)
+        binding.spinnerSecondarySim.setSelection(simSubIds.indexOf(secSubId).coerceAtLeast(0))
+
+        binding.etBackendUrl.setText(Prefs.getBackendUrl(this))
+        binding.switchAutoStart.isChecked = Prefs.isAutoStartOnBoot(this)
+    }
+
+    private fun savePhoneSettings() {
+        val gatewayId = binding.spinnerGatewayId.selectedItem?.toString() ?: ""
+        val backendUrl = binding.etBackendUrl.text.toString().trim()
+
+        val selectedSimIdx = binding.spinnerSim.selectedItemPosition.coerceIn(0, simSubIds.lastIndex)
+        Prefs.setPreferredSubId(this, simSubIds[selectedSimIdx])
+
+        if (binding.cardSecondaryGateway.isVisible) {
+            val secGwId = binding.spinnerSecondaryGatewayId.selectedItem?.toString().orEmpty()
+            Prefs.setSecondaryGatewayId(this, if (secGwId == "(none)") "" else secGwId)
+            val secSimIdx = binding.spinnerSecondarySim.selectedItemPosition.coerceIn(0, simSubIds.lastIndex)
+            Prefs.setSecondarySubId(this, simSubIds[secSimIdx])
+        }
+
+        Prefs.setGatewayId(this, gatewayId)
+        Prefs.setBackendUrl(this, backendUrl)
+        Prefs.setAutoStartOnBoot(this, binding.switchAutoStart.isChecked)
+
+        Toast.makeText(this, "Saved. Restart service to apply changes.", Toast.LENGTH_LONG).show()
+        finish()
+    }
+
+    private fun testConnection() {
+        val url = binding.etBackendUrl.text.toString().trim()
+        if (url.isBlank()) {
+            binding.tvConnectionResult.text = "Enter a URL first"
+            binding.tvConnectionResult.setTextColor(getColor(R.color.warning))
+            return
+        }
+
+        binding.btnTestConnection.isEnabled = false
+        binding.tvConnectionResult.text = "Connecting…"
+        binding.tvConnectionResult.setTextColor(getColor(R.color.text_secondary))
+
+        lifecycleScope.launch {
+            val start = System.currentTimeMillis()
+            val ok = withContext(Dispatchers.IO) { BackendClient.checkHealth(url) }
+            val ms = System.currentTimeMillis() - start
+
+            binding.btnTestConnection.isEnabled = true
+            if (ok) {
+                binding.tvConnectionResult.text = "✓ Connected (${ms}ms)"
+                binding.tvConnectionResult.setTextColor(getColor(R.color.success))
+            } else {
+                binding.tvConnectionResult.text = "✗ Not reachable"
+                binding.tvConnectionResult.setTextColor(getColor(R.color.danger))
+            }
+        }
+    }
+
+    // ── Admin API key lock row ─────────────────────────────────────────────────
 
     private fun setupAdminLock() {
         refreshAdminLockRow()
@@ -103,11 +209,11 @@ class SettingsActivity : AppCompatActivity() {
         val unlocked = binding.layoutAdminContent.isVisible
         binding.tvAdminLockIcon.text = if (unlocked) "⚙️" else "🔒"
         binding.tvAdminLockHint.text = if (unlocked)
-            "Tap to collapse gateway settings"
+            "Tap to collapse"
         else if (Prefs.hasPinSet(this))
-            "Tap to unlock — enter PIN to configure gateway & backend"
+            "PIN required — only needed on the admin monitoring phone"
         else
-            "Tap to configure gateway ID, backend URL & SIM"
+            "Tap to set Admin API Key"
     }
 
     private fun showPinGate() {
@@ -125,8 +231,8 @@ class SettingsActivity : AppCompatActivity() {
 
         var attempts = 0
         val dialog = AlertDialog.Builder(this)
-            .setTitle("Admin Setup")
-            .setMessage("Enter your PIN to access gateway configuration.")
+            .setTitle("Admin Access")
+            .setMessage("Enter your PIN to access the Admin API Key.")
             .setView(frame)
             .setCancelable(true)
             .setPositiveButton("Unlock", null)
@@ -158,115 +264,13 @@ class SettingsActivity : AppCompatActivity() {
     private fun unlockAdminSection() {
         binding.layoutAdminContent.visibility = View.VISIBLE
         refreshAdminLockRow()
-        initAdminSettings()
-    }
-
-    // ── Admin settings (PIN required if PIN set) ───────────────────────────────
-
-    private fun initAdminSettings() {
-        binding.spinnerGatewayId.adapter =
-            ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, primaryIds)
-        binding.spinnerSecondaryGatewayId.adapter =
-            ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, gatewayIds)
-
-        setupSimSpinner()
-        loadAdminSettings()
-
-        binding.btnSave.setOnClickListener { saveSettings() }
-        binding.btnTestConnection.setOnClickListener { testConnection() }
-    }
-
-    private fun setupSimSpinner() {
-        val sims = SmsSender.listSims(this)
-        if (sims.isEmpty()) {
-            simSubIds = listOf(-1)
-            binding.spinnerSim.adapter = ArrayAdapter(
-                this, android.R.layout.simple_spinner_dropdown_item, arrayOf("Default SIM")
-            )
-            binding.tvSimHint.text = "SIM info unavailable (grant READ_PHONE_STATE)"
-            binding.cardSecondaryGateway.isVisible = false
-        } else {
-            simSubIds = listOf(-1) + sims.map { it.first }
-            val labels = listOf("Default SIM") + sims.map { (_, name, slot) -> "SIM ${slot + 1}: $name" }
-            binding.spinnerSim.adapter =
-                ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, labels)
-            binding.tvSimHint.text = "Select which SIM sends operator SMS"
-            if (sims.size >= 2) {
-                binding.cardSecondaryGateway.isVisible = true
-                binding.spinnerSecondarySim.adapter =
-                    ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, labels)
-            } else {
-                binding.cardSecondaryGateway.isVisible = false
-            }
-        }
-    }
-
-    private fun loadAdminSettings() {
-        val currentId = Prefs.getGatewayId(this)
-        binding.spinnerGatewayId.setSelection(primaryIds.indexOf(currentId).coerceAtLeast(0))
-
-        val savedSubId = Prefs.getPreferredSubId(this)
-        binding.spinnerSim.setSelection(simSubIds.indexOf(savedSubId).coerceAtLeast(0))
-
-        val secondaryId = Prefs.getSecondaryGatewayId(this)
-        binding.spinnerSecondaryGatewayId.setSelection(gatewayIds.indexOf(secondaryId).coerceAtLeast(0))
-        val secSubId = Prefs.getSecondarySubId(this)
-        binding.spinnerSecondarySim.setSelection(simSubIds.indexOf(secSubId).coerceAtLeast(0))
-
-        binding.etBackendUrl.setText(Prefs.getBackendUrl(this))
         binding.etAdminApiKey.setText(Prefs.getAdminApiKey(this))
-        binding.switchAutoStart.isChecked = Prefs.isAutoStartOnBoot(this)
-    }
-
-    private fun testConnection() {
-        val url = binding.etBackendUrl.text.toString().trim()
-        if (url.isBlank()) {
-            binding.tvConnectionResult.text = "Enter a URL first"
-            binding.tvConnectionResult.setTextColor(getColor(R.color.warning))
-            return
+        binding.btnSaveAdminKey.setOnClickListener {
+            Prefs.setAdminApiKey(this, binding.etAdminApiKey.text.toString().trim())
+            Toast.makeText(this, "Admin key saved.", Toast.LENGTH_SHORT).show()
+            binding.layoutAdminContent.visibility = View.GONE
+            refreshAdminLockRow()
         }
-
-        binding.btnTestConnection.isEnabled = false
-        binding.tvConnectionResult.text = "Connecting…"
-        binding.tvConnectionResult.setTextColor(getColor(R.color.text_secondary))
-
-        lifecycleScope.launch {
-            val start = System.currentTimeMillis()
-            val ok = withContext(Dispatchers.IO) { BackendClient.checkHealth(url) }
-            val ms = System.currentTimeMillis() - start
-
-            binding.btnTestConnection.isEnabled = true
-            if (ok) {
-                binding.tvConnectionResult.text = "✓ Connected (${ms}ms)"
-                binding.tvConnectionResult.setTextColor(getColor(R.color.success))
-            } else {
-                binding.tvConnectionResult.text = "✗ Not reachable"
-                binding.tvConnectionResult.setTextColor(getColor(R.color.danger))
-            }
-        }
-    }
-
-    private fun saveSettings() {
-        val gatewayId = binding.spinnerGatewayId.selectedItem?.toString() ?: ""
-        val backendUrl = binding.etBackendUrl.text.toString().trim()
-
-        val selectedSimIdx = binding.spinnerSim.selectedItemPosition.coerceIn(0, simSubIds.lastIndex)
-        Prefs.setPreferredSubId(this, simSubIds[selectedSimIdx])
-
-        if (binding.cardSecondaryGateway.isVisible) {
-            val secGwId = binding.spinnerSecondaryGatewayId.selectedItem?.toString().orEmpty()
-            Prefs.setSecondaryGatewayId(this, if (secGwId == "(none)") "" else secGwId)
-            val secSimIdx = binding.spinnerSecondarySim.selectedItemPosition.coerceIn(0, simSubIds.lastIndex)
-            Prefs.setSecondarySubId(this, simSubIds[secSimIdx])
-        }
-
-        Prefs.setGatewayId(this, gatewayId)
-        Prefs.setBackendUrl(this, backendUrl)
-        Prefs.setAdminApiKey(this, binding.etAdminApiKey.text.toString().trim())
-        Prefs.setAutoStartOnBoot(this, binding.switchAutoStart.isChecked)
-
-        Toast.makeText(this, "Saved. Restart service to apply connection changes.", Toast.LENGTH_LONG).show()
-        finish()
     }
 
     override fun onSupportNavigateUp(): Boolean { finish(); return true }
