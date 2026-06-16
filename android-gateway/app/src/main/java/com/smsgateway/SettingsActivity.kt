@@ -70,6 +70,12 @@ class SettingsActivity : AppCompatActivity() {
             UpdateChecker.checkInBackground(this, showResult = true)
         }
 
+        binding.btnToggleGatewaySetup.setOnClickListener {
+            val expanded = binding.layoutGatewaySetupContent.isVisible
+            binding.layoutGatewaySetupContent.visibility = if (expanded) View.GONE else View.VISIBLE
+            binding.tvGatewaySetupChevron.text = if (expanded) "▼" else "▲"
+        }
+
         binding.btnToggleAbout.setOnClickListener {
             val expanded = binding.layoutAboutContent.isVisible
             binding.layoutAboutContent.visibility = if (expanded) View.GONE else View.VISIBLE
@@ -95,7 +101,6 @@ class SettingsActivity : AppCompatActivity() {
         loadPhoneSettings()
 
         binding.btnSave.setOnClickListener { savePhoneSettings() }
-        binding.btnTestConnection.setOnClickListener { testConnection() }
     }
 
     private fun setupSimSpinner() {
@@ -106,7 +111,7 @@ class SettingsActivity : AppCompatActivity() {
                 this, android.R.layout.simple_spinner_dropdown_item, arrayOf("Default SIM")
             )
             binding.tvSimHint.text = "SIM info unavailable (grant READ_PHONE_STATE)"
-            binding.cardSecondaryGateway.isVisible = false
+            binding.cardSecondaryGateway.visibility = View.GONE
         } else {
             simSubIds = listOf(-1) + sims.map { it.first }
             val labels = listOf("Default SIM") + sims.map { (_, name, slot) -> "SIM ${slot + 1}: $name" }
@@ -114,11 +119,11 @@ class SettingsActivity : AppCompatActivity() {
                 ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, labels)
             binding.tvSimHint.text = "Select which SIM sends operator SMS"
             if (sims.size >= 2) {
-                binding.cardSecondaryGateway.isVisible = true
+                binding.cardSecondaryGateway.visibility = View.VISIBLE
                 binding.spinnerSecondarySim.adapter =
                     ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, labels)
             } else {
-                binding.cardSecondaryGateway.isVisible = false
+                binding.cardSecondaryGateway.visibility = View.GONE
             }
         }
     }
@@ -135,18 +140,16 @@ class SettingsActivity : AppCompatActivity() {
         val secSubId = Prefs.getSecondarySubId(this)
         binding.spinnerSecondarySim.setSelection(simSubIds.indexOf(secSubId).coerceAtLeast(0))
 
-        binding.etBackendUrl.setText(Prefs.getBackendUrl(this))
         binding.switchAutoStart.isChecked = Prefs.isAutoStartOnBoot(this)
     }
 
     private fun savePhoneSettings() {
         val gatewayId = binding.spinnerGatewayId.selectedItem?.toString() ?: ""
-        val backendUrl = binding.etBackendUrl.text.toString().trim()
 
         val selectedSimIdx = binding.spinnerSim.selectedItemPosition.coerceIn(0, simSubIds.lastIndex)
         Prefs.setPreferredSubId(this, simSubIds[selectedSimIdx])
 
-        if (binding.cardSecondaryGateway.isVisible) {
+        if (binding.cardSecondaryGateway.visibility == View.VISIBLE) {
             val secGwId = binding.spinnerSecondaryGatewayId.selectedItem?.toString().orEmpty()
             Prefs.setSecondaryGatewayId(this, if (secGwId == "(none)") "" else secGwId)
             val secSimIdx = binding.spinnerSecondarySim.selectedItemPosition.coerceIn(0, simSubIds.lastIndex)
@@ -154,7 +157,6 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         Prefs.setGatewayId(this, gatewayId)
-        Prefs.setBackendUrl(this, backendUrl)
         Prefs.setAutoStartOnBoot(this, binding.switchAutoStart.isChecked)
 
         Toast.makeText(this, "Saved. Restart service to apply changes.", Toast.LENGTH_LONG).show()
@@ -264,10 +266,13 @@ class SettingsActivity : AppCompatActivity() {
     private fun unlockAdminSection() {
         binding.layoutAdminContent.visibility = View.VISIBLE
         refreshAdminLockRow()
+        binding.etBackendUrl.setText(Prefs.getBackendUrl(this))
         binding.etAdminApiKey.setText(Prefs.getAdminApiKey(this))
+        binding.btnTestConnection.setOnClickListener { testConnection() }
         binding.btnSaveAdminKey.setOnClickListener {
+            Prefs.setBackendUrl(this, binding.etBackendUrl.text.toString().trim())
             Prefs.setAdminApiKey(this, binding.etAdminApiKey.text.toString().trim())
-            Toast.makeText(this, "Admin key saved.", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Admin settings saved.", Toast.LENGTH_SHORT).show()
             binding.layoutAdminContent.visibility = View.GONE
             refreshAdminLockRow()
         }

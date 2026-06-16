@@ -79,156 +79,11 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- ══ PHONE SETUP ══ -->
+            <!-- ══ GATEWAY SETUP (collapsible, no PIN) ══ -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="PHONE SETUP"
-                android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel"
-                android:layout_marginBottom="8dp"
-                android:layout_marginStart="4dp" />
-
-            <!-- Gateway ID -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="@color/bg_card"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:strokeColor="@color/divider"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="18dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Gateway ID"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="12sp"
-                        android:layout_marginBottom="10dp" />
-
-                    <Spinner
-                        android:id="@+id/spinnerGatewayId"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:background="@drawable/bg_card_elevated"
-                        android:paddingHorizontal="12dp" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- SIM Card -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="@color/bg_card"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:strokeColor="@color/divider"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="18dp">
-
-                    <TextView
-                        android:id="@+id/tvSimHint"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Select which SIM sends operator SMS"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="12sp"
-                        android:layout_marginBottom="10dp" />
-
-                    <Spinner
-                        android:id="@+id/spinnerSim"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:background="@drawable/bg_card_elevated"
-                        android:paddingHorizontal="12dp" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Dual SIM second gateway (visible only when 2+ SIMs) -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardSecondaryGateway"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                android:visibility="gone"
-                app:cardBackgroundColor="@color/bg_card"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:strokeColor="@color/accent_muted"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="18dp">
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="SECOND SIM — DUAL GATEWAY"
-                        android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel"
-                        android:layout_marginBottom="6dp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Two SIMs detected. Configure a second gateway ID for the other SIM, or leave as (none) to use only one."
-                        android:textColor="@color/text_secondary"
-                        android:textSize="12sp"
-                        android:layout_marginBottom="16dp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Second Gateway ID"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="12sp"
-                        android:layout_marginBottom="8dp" />
-
-                    <Spinner
-                        android:id="@+id/spinnerSecondaryGatewayId"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:background="@drawable/bg_card_elevated"
-                        android:paddingHorizontal="12dp"
-                        android:layout_marginBottom="16dp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Second SIM"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="12sp"
-                        android:layout_marginBottom="8dp" />
-
-                    <Spinner
-                        android:id="@+id/spinnerSecondarySim"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:background="@drawable/bg_card_elevated"
-                        android:paddingHorizontal="12dp" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- ══ CONNECTION ══ -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="CONNECTION"
+                android:text="GATEWAY SETUP"
                 android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel"
                 android:layout_marginBottom="8dp"
                 android:layout_marginStart="4dp" />
@@ -236,7 +91,7 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="16dp"
                 app:cardBackgroundColor="@color/bg_card"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
@@ -246,82 +101,19 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="18dp">
+                    android:orientation="vertical">
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="VPS / Backend URL"
-                        app:helperText="e.g. http://45.77.240.195:3000 — leave blank to auto-discover on Wi-Fi"
-                        app:helperTextEnabled="true"
-                        android:layout_marginBottom="16dp">
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etBackendUrl"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:inputType="textUri"
-                            android:singleLine="true"
-                            android:textColor="@color/text_primary" />
-                    </com.google.android.material.textfield.TextInputLayout>
-
+                    <!-- Tap-to-toggle header -->
                     <LinearLayout
+                        android:id="@+id/btnToggleGatewaySetup"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
-                        android:gravity="center_vertical">
-
-                        <com.google.android.material.button.MaterialButton
-                            android:id="@+id/btnTestConnection"
-                            style="@style/Widget.SmsGateway.Button.Outlined"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Test Connection" />
-
-                        <TextView
-                            android:id="@+id/tvConnectionResult"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="12dp"
-                            android:fontFamily="monospace"
-                            android:text=""
-                            android:textColor="@color/text_secondary"
-                            android:textSize="12sp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- ══ BEHAVIOUR ══ -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="BEHAVIOUR"
-                android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel"
-                android:layout_marginBottom="8dp"
-                android:layout_marginStart="4dp" />
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                app:cardBackgroundColor="@color/bg_card"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="0dp"
-                app:strokeColor="@color/divider"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="18dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical">
+                        android:gravity="center_vertical"
+                        android:padding="18dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:background="?attr/selectableItemBackground">
 
                         <LinearLayout
                             android:layout_width="0dp"
@@ -332,32 +124,193 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Auto-start on boot"
+                                android:text="SIM &amp; Identity"
                                 android:textColor="@color/text_primary"
                                 android:textSize="14sp" />
 
                             <TextView
+                                android:id="@+id/tvGatewaySetupHint"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
-                                android:text="Restart gateway automatically after phone reboot"
+                                android:text="Gateway ID, SIM slot, auto-start"
                                 android:textColor="@color/text_secondary"
                                 android:textSize="12sp" />
                         </LinearLayout>
 
-                        <com.google.android.material.materialswitch.MaterialSwitch
-                            android:id="@+id/switchAutoStart"
+                        <TextView
+                            android:id="@+id/tvGatewaySetupChevron"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:checked="true"
-                            android:textOn=""
-                            android:textOff=""
-                            app:showText="false" />
+                            android:text="▲"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <!-- Collapsible content — expanded by default -->
+                    <LinearLayout
+                        android:id="@+id/layoutGatewaySetupContent"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="visible"
+                        android:paddingStart="18dp"
+                        android:paddingEnd="18dp"
+                        android:paddingBottom="18dp">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/divider"
+                            android:layout_marginBottom="16dp" />
+
+                        <!-- Gateway ID -->
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Gateway ID"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp"
+                            android:layout_marginBottom="8dp" />
+
+                        <Spinner
+                            android:id="@+id/spinnerGatewayId"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:background="@drawable/bg_card_elevated"
+                            android:paddingHorizontal="12dp"
+                            android:layout_marginBottom="16dp" />
+
+                        <!-- Primary SIM -->
+                        <TextView
+                            android:id="@+id/tvSimHint"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Select which SIM sends operator SMS"
+                            android:textColor="@color/text_secondary"
+                            android:textSize="12sp"
+                            android:layout_marginBottom="8dp" />
+
+                        <Spinner
+                            android:id="@+id/spinnerSim"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp"
+                            android:background="@drawable/bg_card_elevated"
+                            android:paddingHorizontal="12dp"
+                            android:layout_marginBottom="16dp" />
+
+                        <!-- Dual SIM second gateway (gone unless 2+ SIMs detected) -->
+                        <LinearLayout
+                            android:id="@+id/cardSecondaryGateway"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/divider"
+                                android:layout_marginBottom="14dp" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="SECOND SIM — DUAL GATEWAY"
+                                android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel"
+                                android:layout_marginBottom="6dp" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Two SIMs detected. Set a second gateway ID for the other SIM, or leave as (none) to use only one."
+                                android:textColor="@color/text_secondary"
+                                android:textSize="12sp"
+                                android:layout_marginBottom="12dp" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Second Gateway ID"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="12sp"
+                                android:layout_marginBottom="8dp" />
+
+                            <Spinner
+                                android:id="@+id/spinnerSecondaryGatewayId"
+                                android:layout_width="match_parent"
+                                android:layout_height="48dp"
+                                android:background="@drawable/bg_card_elevated"
+                                android:paddingHorizontal="12dp"
+                                android:layout_marginBottom="12dp" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Second SIM"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="12sp"
+                                android:layout_marginBottom="8dp" />
+
+                            <Spinner
+                                android:id="@+id/spinnerSecondarySim"
+                                android:layout_width="match_parent"
+                                android:layout_height="48dp"
+                                android:background="@drawable/bg_card_elevated"
+                                android:paddingHorizontal="12dp"
+                                android:layout_marginBottom="16dp" />
+                        </LinearLayout>
+
+                        <!-- Auto-start -->
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@color/divider"
+                            android:layout_marginBottom="14dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Auto-start on boot"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="14sp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="Restart gateway automatically after phone reboot"
+                                    android:textColor="@color/text_secondary"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
+
+                            <com.google.android.material.materialswitch.MaterialSwitch
+                                android:id="@+id/switchAutoStart"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checked="true"
+                                android:textOn=""
+                                android:textOff=""
+                                app:showText="false" />
+                        </LinearLayout>
+
                     </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- ══ SAVE (phone settings) ══ -->
+            <!-- Save phone settings -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSave"
                 style="@style/Widget.SmsGateway.Button.Hero"
@@ -366,11 +319,11 @@
                 android:layout_marginBottom="28dp"
                 android:text="Save Settings" />
 
-            <!-- ══ ADMIN (API key — PIN locked) ══ -->
+            <!-- ══ ADMIN SETUP (PIN locked) ══ -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="ADMIN"
+                android:text="ADMIN SETUP"
                 android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel"
                 android:layout_marginBottom="8dp"
                 android:layout_marginStart="4dp" />
@@ -405,7 +358,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Admin API Key"
+                            android:text="Backend &amp; API Key"
                             android:textColor="@color/text_primary"
                             android:textSize="14sp" />
 
@@ -414,7 +367,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="PIN required — only needed on the admin monitoring phone"
+                            android:text="Tap to unlock — enter PIN to configure"
                             android:textColor="@color/text_secondary"
                             android:textSize="12sp" />
 
@@ -439,6 +392,67 @@
                 android:orientation="vertical"
                 android:visibility="gone">
 
+                <!-- Backend URL -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardBackgroundColor="@color/bg_card"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/divider"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="18dp">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="VPS / Backend URL"
+                            app:helperText="e.g. http://45.77.240.195:3000"
+                            app:helperTextEnabled="true"
+                            android:layout_marginBottom="16dp">
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:id="@+id/etBackendUrl"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="textUri"
+                                android:singleLine="true"
+                                android:textColor="@color/text_primary" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:gravity="center_vertical">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnTestConnection"
+                                style="@style/Widget.SmsGateway.Button.Outlined"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Test Connection" />
+
+                            <TextView
+                                android:id="@+id/tvConnectionResult"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:layout_marginStart="12dp"
+                                android:fontFamily="monospace"
+                                android:text=""
+                                android:textColor="@color/text_secondary"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Admin API Key -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -484,7 +498,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:layout_marginBottom="24dp"
-                    android:text="Save Admin Key" />
+                    android:text="Save Admin Settings" />
 
             </LinearLayout> <!-- end layoutAdminContent -->
 
