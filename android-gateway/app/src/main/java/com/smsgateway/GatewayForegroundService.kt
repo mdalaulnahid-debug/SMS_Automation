@@ -84,6 +84,7 @@ class GatewayForegroundService : Service() {
 
     private var networkCallback: ConnectivityManager.NetworkCallback? = null
     @Volatile private var hasInternet = true
+    private var smsWatchdog: SmsWatchdog? = null
 
 
 
@@ -210,6 +211,7 @@ class GatewayForegroundService : Service() {
                 startPollLoop()
 
                 registerNetworkMonitor()
+                registerSmsWatchdog()
 
                 UpdateChecker.checkInBackground(this@GatewayForegroundService)
 
@@ -404,11 +406,29 @@ class GatewayForegroundService : Service() {
         networkCallback = cb
     }
 
+    private fun registerSmsWatchdog() {
+        val backendUrl = Prefs.getBackendUrl(this)
+        val gatewayId  = Prefs.getGatewayId(this)
+        val secret     = Prefs.getApiKey(this)
+        if (backendUrl.isBlank() || gatewayId.isBlank()) return
+        val watchdog = SmsWatchdog(this, gatewayId, backendUrl, secret)
+        contentResolver.registerContentObserver(
+            android.net.Uri.parse("content://sms/sent"), true, watchdog
+        )
+        smsWatchdog = watchdog
+        Log.d(TAG, "SMS watchdog registered")
+    }
+
     private fun stopGateway(removeForeground: Boolean) {
 
         pollActive = false
         pollThread?.interrupt()
         pollThread = null
+
+        smsWatchdog?.let {
+            try { contentResolver.unregisterContentObserver(it) } catch (_: Exception) {}
+        }
+        smsWatchdog = null
 
         networkCallback?.let {
             try { getSystemService(ConnectivityManager::class.java)?.unregisterNetworkCallback(it) }

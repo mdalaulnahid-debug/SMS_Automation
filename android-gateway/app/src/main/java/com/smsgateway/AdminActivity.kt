@@ -237,11 +237,13 @@ class AdminActivity : AppCompatActivity() {
         val view = LayoutInflater.from(this).inflate(R.layout.item_audit_entry, null)
 
         val tvActor = view.findViewById<TextView>(R.id.tvAuditActor)
-        tvActor.text = entry.actor.uppercase()
+        val isWatchdog = entry.actor.lowercase() == "watchdog"
+        tvActor.text = if (isWatchdog) "⚠️ WATCHDOG" else entry.actor.uppercase()
         val (actorFg, actorBg) = when (entry.actor.lowercase()) {
-            "admin" -> getColor(R.color.accent) to getColor(R.color.accent_muted)
-            "system" -> getColor(R.color.warning) to Color.parseColor("#332800")
-            else -> getColor(R.color.text_secondary) to getColor(R.color.bg_card_elevated)
+            "admin"     -> getColor(R.color.accent)        to getColor(R.color.accent_muted)
+            "system"    -> getColor(R.color.warning)       to Color.parseColor("#332800")
+            "watchdog"  -> getColor(R.color.danger)        to Color.parseColor("#330000")
+            else        -> getColor(R.color.text_secondary) to getColor(R.color.bg_card_elevated)
         }
         tvActor.setTextColor(actorFg)
         tvActor.setBackgroundColor(actorBg)
@@ -250,7 +252,17 @@ class AdminActivity : AppCompatActivity() {
         view.findViewById<TextView>(R.id.tvAuditTime).text = formatRelative(entry.timestamp)
 
         val tvReqId = view.findViewById<TextView>(R.id.tvAuditRequestId)
-        if (entry.requestId.isNotBlank() && entry.requestId != "null") {
+        if (isWatchdog && entry.details.isNotBlank() && entry.details != "{}") {
+            // Show the recipient + snippet from details JSON if available
+            val detailText = try {
+                val j = org.json.JSONObject(entry.details)
+                val recipient = j.optString("gatewayId", "") + " → " + entry.requestId
+                val snippet = j.optString("snippet", "")
+                if (snippet.isNotBlank()) "$recipient | \"$snippet\"" else recipient
+            } catch (_: Exception) { entry.details.take(60) }
+            tvReqId.text = detailText
+            tvReqId.visibility = View.VISIBLE
+        } else if (entry.requestId.isNotBlank() && entry.requestId != "null") {
             tvReqId.text = entry.requestId.take(16)
             tvReqId.visibility = View.VISIBLE
         } else {

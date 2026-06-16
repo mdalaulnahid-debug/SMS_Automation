@@ -255,6 +255,16 @@ function createApp(options = {}) {
         });
         return json(res, 200, { ok: true });
       }
+      if (req.method === 'POST' && req.url === '/api/gateway/watchdog') {
+        const body = await readJson(req);
+        if (!isAdmin(req, authConfig) && !isValidGateway(req, body.gatewayId, store, authConfig)) {
+          return json(res, 401, { error: 'Invalid or missing gateway secret.' });
+        }
+        const { gatewayId, recipient, messageSnippet } = body;
+        console.warn(`[WATCHDOG] ⚠️  Unauthorized SMS from ${gatewayId} → ${recipient}: "${messageSnippet}"`);
+        store.audit('watchdog', 'UNAUTHORIZED_SMS_SEND', recipient, { gatewayId, snippet: messageSnippet });
+        return json(res, 200, { ok: true });
+      }
       if (req.method === 'GET' && req.url === '/api/users') {
         if (!requireAdmin(req, res)) return undefined;
         return json(res, 200, { users: store.listUsers() });

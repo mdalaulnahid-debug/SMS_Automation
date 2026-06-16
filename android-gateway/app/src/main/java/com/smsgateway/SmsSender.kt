@@ -29,6 +29,7 @@ object SmsSender {
         val smsManager: SmsManager = resolveSmsManager(context, subId)
 
         val localId = "sms_${System.currentTimeMillis()}"
+        DispatchTracker.record(to)  // mark as authorized before send so watchdog doesn't flag it
         Log.d(TAG, "Sending SMS to=$to subId=$subId requestId=$requestId id=$localId len=${message.length}")
 
         val sentPi = makePendingIntent(context, ACTION_SMS_SENT, localId, requestId, operator)

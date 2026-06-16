@@ -304,7 +304,8 @@ object BackendClient {
         val actor: String,
         val action: String,
         val requestId: String,
-        val timestamp: String
+        val timestamp: String,
+        val details: String = ""
     )
 
     data class DashboardSnapshot(
@@ -354,7 +355,8 @@ object BackendClient {
                             actor = e.optString("actor"),
                             action = e.optString("action"),
                             requestId = e.optString("requestId"),
-                            timestamp = e.optString("timestamp")
+                            timestamp = e.optString("timestamp"),
+                            details = e.optJSONObject("details")?.toString() ?: ""
                         )
                     }
                 } else emptyList()
@@ -437,6 +439,33 @@ object BackendClient {
             }
         } catch (e: Exception) {
             Result.failure(e)
+        }
+    }
+
+    fun reportUnauthorizedSend(
+        backendUrl: String,
+        gatewayId: String,
+        secret: String,
+        recipient: String,
+        snippet: String
+    ) {
+        val base = backendUrl.trim().trimEnd('/')
+        if (base.isBlank()) return
+        val payload = JSONObject().apply {
+            put("gatewayId", gatewayId)
+            put("recipient", recipient)
+            put("messageSnippet", snippet)
+        }.toString()
+        try {
+            val builder = Request.Builder()
+                .url("$base/api/gateway/watchdog")
+                .post(payload.toRequestBody(JSON))
+            if (secret.isNotBlank()) builder.header("x-gateway-secret", secret)
+            client.newCall(builder.build()).execute().use { r ->
+                Log.w(TAG, "Unauthorized send reported to backend: ${r.code}")
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "reportUnauthorizedSend failed: ${e.message}")
         }
     }
 
