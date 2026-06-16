@@ -1,13 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  Allow cleartext HTTP to the local backend server.
-  The backend runs on a private LAN (192.168.x.x) over plain HTTP.
-  This config permits cleartext only — all other traffic uses HTTPS.
+  Network security policy for the SMS Gateway app.
+
+  HTTPS is required for all internet/VPS traffic. Cleartext HTTP is only permitted
+  for private LAN addresses so a locally-hosted backend (e.g. on 192.168.x.x) still
+  works during initial setup. Once your VPS has SSL (scripts/setup-ssl.sh), update the
+  backend URL in Settings to https:// and LAN cleartext is no longer used.
+
+  SETUP ORDER:
+    1. Run scripts/setup-ssl.sh on the VPS to get a valid TLS certificate.
+    2. In Settings → ADMIN SETUP, change the Backend URL to https://your-domain.com
+    3. Tap "Test Connection" to verify. Done — all traffic is now encrypted end-to-end.
 -->
 <network-security-config>
-    <base-config cleartextTrafficPermitted="true">
+
+    <!-- Private LAN ranges: allow cleartext for local backend during setup -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">localhost</domain>
+        <domain includeSubdomains="true">10.0.0.1</domain>
+        <domain includeSubdomains="true">10.0.0.2</domain>
+        <domain includeSubdomains="true">192.168.0.1</domain>
+        <domain includeSubdomains="true">192.168.1.1</domain>
+        <domain includeSubdomains="true">172.16.0.1</domain>
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="user" />
+        </trust-anchors>
+    </domain-config>
+
+    <!-- Everything else (VPS, internet): HTTPS only, system CAs -->
+    <base-config cleartextTrafficPermitted="false">
         <trust-anchors>
             <certificates src="system" />
         </trust-anchors>
     </base-config>
+
 </network-security-config>

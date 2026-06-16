@@ -3,6 +3,7 @@
 const { readFile, stat, createReadStream } = require('node:fs');
 const { readFile: readFileAsync } = require('node:fs/promises');
 const { join } = require('node:path');
+const https = require('node:https');
 const { AutomationStore } = require('./store');
 const { OperatorQueue } = require('./queue');
 const { SmsGatewayClient } = require('./smsGateway');
@@ -10,6 +11,57 @@ const { AutomationService } = require('./service');
 const { loadGatewayConfig, loadAuthConfig, loadTelegramConfig } = require('./config');
 const { isAdmin, isValidGateway } = require('./auth');
 const { getBackendUrls, getLanAddresses, getPreferredLanIp } = require('./network');
+
+// Sliding-window per-requester rate limiter.
+// Admin API key requests are never rate-limited (id will be null/blank).
+class RateLimiter {
+  constructor(maxPerWindow = 30, windowMs = 60_000) {
+    this.maxPerWindow = maxPerWindow;
+    this.windowMs = windowMs;
+    this.buckets = new Map();
+    setInterval(() => this._prune(), 5 * 60_000).unref();
+  }
+
+  check(id) {
+    if (!id) return true;
+    const now = Date.now();
+    const timestamps = (this.buckets.get(id) || []).filter((t) => now - t < this.windowMs);
+    if (timestamps.length >= this.maxPerWindow) return false;
+    timestamps.push(now);
+    this.buckets.set(id, timestamps);
+    return true;
+  }
+
+  _prune() {
+    const cutoff = Date.now() - this.windowMs;
+    for (const [id, ts] of this.buckets) {
+      const rem = ts.filter((t) => t > cutoff);
+      if (!rem.length) this.buckets.delete(id);
+      else this.buckets.set(id, rem);
+    }
+  }
+}
+
+const requestRateLimiter = new RateLimiter(30, 60_000);
+
+// Fire-and-forget Telegram alert to the admin/watchdog chat when an unauthorized send is detected.
+function sendTelegramWatchdogAlert(telegramConfig, { gatewayId, recipient, snippet }) {
+  const botToken = telegramConfig.botToken;
+  const chatId = telegramConfig.watchdogAlertChatId || telegramConfig.groupChatId;
+  if (!botToken || !chatId) return;
+  const text = `⚠️ <b>UNAUTHORIZED SMS DETECTED</b>\n\nGateway: <code>${gatewayId}</code>\nRecipient: <code>${recipient}</code>\nMessage: "<i>${snippet}</i>"\n\nCheck the admin AUDIT tab immediately.`;
+  const payload = JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML' });
+  const options = {
+    hostname: 'api.telegram.org',
+    path: `/bot${botToken}/sendMessage`,
+    method: 'POST',
+    headers: { 'content-type': 'application/json', 'content-length': Buffer.byteLength(payload) }
+  };
+  const req = https.request(options, (res) => { res.resume(); });
+  req.on('error', (err) => console.warn('[watchdog-alert] Telegram notify failed:', err.message));
+  req.write(payload);
+  req.end();
+}
 
 function createApp(options = {}) {
   const gatewayConfig = options.gatewayConfig || loadGatewayConfig();
@@ -201,6 +253,11 @@ function createApp(options = {}) {
         if (!isAdmin(req, authConfig) && !isValidGateway(req, body.gatewayId, store, authConfig)) {
           return json(res, 401, { error: 'Authentication required to submit requests.' });
         }
+        // Per-requester rate limit: 30 requests per 60s. Admin key bypasses (id = blank).
+        const requesterId = isAdmin(req, authConfig) ? null : body.requesterWhatsappId;
+        if (!requestRateLimiter.check(requesterId)) {
+          return json(res, 429, { error: 'Too many requests. Please wait a moment before submitting again.' });
+        }
         const result = await service.submitWhatsAppRequest(body);
         return json(res, result.ok ? 201 : 400, result);
       }
@@ -263,6 +320,7 @@ function createApp(options = {}) {
         const { gatewayId, recipient, messageSnippet } = body;
         console.warn(`[WATCHDOG] ⚠️  Unauthorized SMS from ${gatewayId} → ${recipient}: "${messageSnippet}"`);
         store.audit('watchdog', 'UNAUTHORIZED_SMS_SEND', recipient, { gatewayId, snippet: messageSnippet });
+        sendTelegramWatchdogAlert(telegramConfig, { gatewayId, recipient, snippet: messageSnippet });
         return json(res, 200, { ok: true });
       }
       if (req.method === 'GET' && req.url === '/api/users') {

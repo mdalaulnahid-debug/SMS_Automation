@@ -50,6 +50,11 @@ import java.io.IOException
 
 import java.util.concurrent.atomic.AtomicBoolean
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.cancel
+
 
 
 class GatewayForegroundService : Service() {
@@ -85,6 +90,26 @@ class GatewayForegroundService : Service() {
     private var networkCallback: ConnectivityManager.NetworkCallback? = null
     @Volatile private var hasInternet = true
     private var smsWatchdog: SmsWatchdog? = null
+
+    // Supervised scope for watchdog coroutines — cancelled when gateway stops.
+    private var watchdogScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
+    // Poll-thread self-healing: last timestamp updated inside the loop body.
+    @Volatile private var lastPollAtMs = 0L
+    private val pollWatchdogRunnable = object : Runnable {
+        override fun run() {
+            if (pollActive) {
+                val lag = System.currentTimeMillis() - lastPollAtMs
+                if (lastPollAtMs > 0 && lag > 30_000) {
+                    Log.w(TAG, "Poll thread appears dead (${lag}ms since last tick) — restarting")
+                    pollThread?.interrupt()
+                    pollThread = null
+                    startPollLoop()
+                }
+                mainHandler.postDelayed(this, 15_000)
+            }
+        }
+    }
 
 
 
@@ -348,9 +373,11 @@ class GatewayForegroundService : Service() {
     private fun startPollLoop() {
         if (pollActive) return
         pollActive = true
+        lastPollAtMs = System.currentTimeMillis()
         pollThread = Thread({
             Log.d(TAG, "Poll loop started")
             while (pollActive) {
+                lastPollAtMs = System.currentTimeMillis()
                 try {
                     val backendUrl = Prefs.getBackendUrl(this)
                     val secret = Prefs.getApiKey(this)
@@ -377,6 +404,8 @@ class GatewayForegroundService : Service() {
             Log.d(TAG, "Poll loop stopped")
         }, "gateway-poll").also { it.isDaemon = true }
         pollThread?.start()
+        // Start poll-thread watchdog — checks every 15s that the thread is still making progress.
+        mainHandler.postDelayed(pollWatchdogRunnable, 15_000)
     }
 
     private fun registerNetworkMonitor() {
@@ -411,7 +440,9 @@ class GatewayForegroundService : Service() {
         val gatewayId  = Prefs.getGatewayId(this)
         val secret     = Prefs.getApiKey(this)
         if (backendUrl.isBlank() || gatewayId.isBlank()) return
-        val watchdog = SmsWatchdog(this, gatewayId, backendUrl, secret)
+        // Fresh scope each time so it can be cancelled cleanly on stop.
+        watchdogScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+        val watchdog = SmsWatchdog(this, gatewayId, backendUrl, secret, watchdogScope)
         contentResolver.registerContentObserver(
             android.net.Uri.parse("content://sms/sent"), true, watchdog
         )
@@ -422,9 +453,11 @@ class GatewayForegroundService : Service() {
     private fun stopGateway(removeForeground: Boolean) {
 
         pollActive = false
+        mainHandler.removeCallbacks(pollWatchdogRunnable)
         pollThread?.interrupt()
         pollThread = null
 
+        watchdogScope.cancel()
         smsWatchdog?.let {
             try { contentResolver.unregisterContentObserver(it) } catch (_: Exception) {}
         }

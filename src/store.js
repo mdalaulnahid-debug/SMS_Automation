@@ -353,14 +353,34 @@ class AutomationStore {
 
   // Atomically claim all PENDING_PICKUP jobs for a gateway and return them.
   claimPendingJobs(gatewayId) {
+    const claimedAt = nowIso();
     const jobs = this.smsOutbox.filter(
       (row) => row.gatewayId === gatewayId && row.sentStatus === 'PENDING_PICKUP'
     );
     jobs.forEach((job) => {
       job.sentStatus = 'CLAIMED';
-      if (this.persistence) this.persistence.updateOutboxStatus(job.id, 'CLAIMED', null);
+      job.claimedAt = claimedAt;
+      if (this.persistence) this.persistence.updateOutboxStatus(job.id, 'CLAIMED', null, claimedAt);
     });
     return jobs;
+  }
+
+  // Reset any CLAIMED job that has not been ACKed within maxAgeMs (default 90s).
+  // Guards against phones that crash or restart between claim and ACK.
+  reclaimStaleClaimedJobs(maxAgeMs = 90_000) {
+    const cutoff = new Date(Date.now() - maxAgeMs).toISOString();
+    const stale = this.smsOutbox.filter(
+      (row) => row.sentStatus === 'CLAIMED' && row.claimedAt && row.claimedAt < cutoff
+    );
+    stale.forEach((job) => {
+      job.sentStatus = 'PENDING_PICKUP';
+      job.claimedAt = null;
+      if (this.persistence) this.persistence.updateOutboxStatus(job.id, 'PENDING_PICKUP', null, null);
+      this.audit('system', 'SMS_JOB_RECLAIMED', job.requestId, {
+        outboxId: job.id, gatewayId: job.gatewayId, reason: 'stale CLAIMED'
+      });
+    });
+    return stale;
   }
 
   // Phone reports result for a claimed job.
@@ -401,10 +421,6 @@ class AutomationStore {
     if (input.phoneNumber) gateway.phoneNumber = String(input.phoneNumber).trim();
     if (this.persistence) this.persistence.upsertGateway(gateway);
     return gateway;
-  }
-
-  listGateways() {
-    return Array.from(this.gateways.values());
   }
 
   getGatewayByOperator(operatorKey) {

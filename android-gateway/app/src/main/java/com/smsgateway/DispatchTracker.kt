@@ -25,6 +25,12 @@ object DispatchTracker {
         dispatches.entries.removeAll { it.value < now }
     }
 
-    private fun normalize(number: String) =
-        number.replace(Regex("[^0-9+]"), "").trimStart('+')
+    private fun normalize(number: String): String {
+        val digits = number.replace(Regex("[^0-9]"), "")
+        // Convert +880XXXXXXXXXX or 880XXXXXXXXXX (BD country code) → 0XXXXXXXXXX
+        return when {
+            digits.startsWith("880") && digits.length >= 12 -> "0${digits.drop(3)}"
+            else -> digits
+        }
+    }
 }

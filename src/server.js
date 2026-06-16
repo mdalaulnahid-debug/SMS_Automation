@@ -46,6 +46,16 @@ http.createServer(app.handle).listen(port, host, () => {
       .catch((error) => {
         console.error(`Timeout sweep failed: ${error.message}`);
       });
+
+    // Reset jobs that were claimed by a phone but never ACKed (phone crashed mid-send).
+    try {
+      const reclaimed = app.store.reclaimStaleClaimedJobs(90_000);
+      if (reclaimed.length) {
+        console.warn(`[reclaim] Reset ${reclaimed.length} stale CLAIMED job(s) to PENDING_PICKUP`);
+      }
+    } catch (err) {
+      console.error(`Stale-job reclaim failed: ${err.message}`);
+    }
   }, timeoutSweepMs).unref();
 });
 

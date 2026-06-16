@@ -79,7 +79,8 @@ CREATE TABLE IF NOT EXISTS sms_outbox (
   message_body TEXT,
   sent_status TEXT NOT NULL,
   send_result TEXT,
-  sent_at TEXT
+  sent_at TEXT,
+  claimed_at TEXT
 );
 CREATE TABLE IF NOT EXISTS sms_inbox (
   id TEXT PRIMARY KEY,
@@ -135,6 +136,8 @@ class Persistence {
     this.db = new DatabaseSync(dbPath);
     this.db.exec('PRAGMA journal_mode = WAL;');
     this.db.exec(SCHEMA);
+    // Migrate existing DBs that predate the claimed_at column.
+    try { this.db.exec('ALTER TABLE sms_outbox ADD COLUMN claimed_at TEXT'); } catch (_) {}
   }
 
   close() {
@@ -204,10 +207,16 @@ class Persistence {
       );
   }
 
-  updateOutboxStatus(outboxId, status, sendResult) {
-    this.db
-      .prepare('UPDATE sms_outbox SET sent_status = ?, send_result = ? WHERE id = ?')
-      .run(status, j(sendResult), outboxId);
+  updateOutboxStatus(outboxId, status, sendResult, claimedAt = undefined) {
+    if (claimedAt !== undefined) {
+      this.db
+        .prepare('UPDATE sms_outbox SET sent_status = ?, send_result = ?, claimed_at = ? WHERE id = ?')
+        .run(status, j(sendResult), claimedAt, outboxId);
+    } else {
+      this.db
+        .prepare('UPDATE sms_outbox SET sent_status = ?, send_result = ? WHERE id = ?')
+        .run(status, j(sendResult), outboxId);
+    }
   }
 
   insertOutbox(row) {
@@ -215,12 +224,13 @@ class Persistence {
       .prepare(
         `INSERT OR REPLACE INTO sms_outbox
          (id, request_id, gateway_id, operator, silent_reference, destination_number,
-          message_body, sent_status, send_result, sent_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+          message_body, sent_status, send_result, sent_at, claimed_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
       )
       .run(
         row.id, row.requestId, row.gatewayId, row.operator, nz(row.silentReference),
-        nz(row.destinationNumber), nz(row.messageBody), row.sentStatus, j(row.sendResult), nz(row.sentAt)
+        nz(row.destinationNumber), nz(row.messageBody), row.sentStatus, j(row.sendResult),
+        nz(row.sentAt), nz(row.claimedAt)
       );
   }
 
@@ -340,7 +350,8 @@ class Persistence {
         messageBody: o.message_body,
         sentStatus: o.sent_status,
         sendResult: p(o.send_result, null),
-        sentAt: o.sent_at
+        sentAt: o.sent_at,
+        claimedAt: o.claimed_at || null
       })),
       smsInbox: all('SELECT * FROM sms_inbox ORDER BY rowid').map((i) => ({
         id: i.id,
