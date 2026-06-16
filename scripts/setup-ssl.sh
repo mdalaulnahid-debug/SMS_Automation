@@ -1,7 +1,7 @@
 #!/bin/bash
 # scripts/setup-ssl.sh
 # Run on the VPS as root:
-#   ssh root@45.77.240.195 "bash /opt/sms-backend/scripts/setup-ssl.sh your-domain.duckdns.org"
+#   ssh root@45.77.240.195 "bash /opt/sms-backend/scripts/setup-ssl.sh your-domain.duckdns.org your-wifi-ip"
 #
 # PREREQUISITES
 #   1. A domain/subdomain A-record pointing at your VPS IP.
@@ -13,14 +13,18 @@
 set -euo pipefail
 
 DOMAIN="${1:-}"
+ADMIN_IP="${2:-}"
 REMOTE="/opt/sms-backend"
-EMAIL="${2:-noreply@${DOMAIN}}"
+EMAIL="${3:-noreply@${DOMAIN}}"
 
-if [ -z "$DOMAIN" ]; then
-    echo "Usage: bash setup-ssl.sh <your-domain.com> [admin-email]"
+if [ -z "$DOMAIN" ] || [ -z "$ADMIN_IP" ]; then
+    echo "Usage: bash setup-ssl.sh <your-domain.com> <admin-wifi-ip> [admin-email]"
     echo ""
-    echo "Example:  bash setup-ssl.sh sms-gateway.duckdns.org"
+    echo "Example:  bash setup-ssl.sh licbarishal.duckdns.org 114.130.180.43"
     echo "Free domain: https://www.duckdns.org"
+    echo ""
+    echo "ADMIN_IP is your WiFi IP — only this IP can access the dashboard."
+    echo "Find it with: curl -s ifconfig.me"
     exit 1
 fi
 
@@ -81,7 +85,8 @@ certbot certonly \
 echo "==> Certificate obtained at /etc/letsencrypt/live/$DOMAIN/"
 
 # ── PHASE 2: Full TLS nginx config ───────────────────────────────────────────
-sed "s/YOUR_DOMAIN/$DOMAIN/g" "$REMOTE/nginx/sms-backend.conf" \
+sed -e "s/YOUR_DOMAIN/$DOMAIN/g" -e "s/ADMIN_IP/$ADMIN_IP/g" \
+    "$REMOTE/nginx/sms-backend.conf" \
     > /etc/nginx/sites-available/sms-backend
 
 nginx -t
