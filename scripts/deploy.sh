@@ -18,10 +18,14 @@ scp src/service.js      "$VPS:$REMOTE/src/service.js"
 scp src/parser.js       "$VPS:$REMOTE/src/parser.js"
 scp src/auth.js         "$VPS:$REMOTE/src/auth.js"
 
-# Copy web dashboard
+# Copy web dashboard (mobile user app + desktop admin console, see docs/design-system.md)
 echo "==> Copying dashboard..."
 scp public/index.html        "$VPS:$REMOTE/public/index.html"
 scp public/app.js            "$VPS:$REMOTE/public/app.js"
+scp public/admin.html        "$VPS:$REMOTE/public/admin.html"
+scp public/admin.js          "$VPS:$REMOTE/public/admin.js"
+scp public/theme.css         "$VPS:$REMOTE/public/theme.css"
+scp public/shared.js         "$VPS:$REMOTE/public/shared.js"
 scp public/app-version.json  "$VPS:$REMOTE/public/app-version.json"
 
 # Copy Telegram bridge files
