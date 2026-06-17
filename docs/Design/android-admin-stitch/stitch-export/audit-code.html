@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin Command | Audit Log</title>
+<script type='text/javascript' nonce='G9xIcYQP/A4RZySaBpDIJg==' src='https://contribution.usercontent.google.com/0Yeij0hXKObydiiLUQav_AK9JKDM_y4xp5CyCOTrAWD8zpJkZJydmyEKCtGXfI2F03XofzIQ__70o4fhvC0swOrkKZBHZ6CbHhSzJ7SLiujIlOiI0HllQvRGz-AS2IWtK7vzZoOb31cfau8a_jtKhU_m3XmiYX3BJ9oaQKIG5xw6Et3d8Bczm1jkaaOEJAu7kUXKLCO945wAjVEExgiK-brpfR_BPy9TMz6N0hpEponk81weKtmh2CZzLiFMSJ0K65Ae4YwDH2wnpqWo_3NO1LWAaTFeFifFtTGA0QsnLJoOv0660jSTXBpjv1igUjL5KUgzKk0_bA_L7P-1YOuIBDKeDCamBk1loI2ecKvIfp_UisGQ4_0yT02i8yXU8uJ-D1udPpkoWal_3BlEJwkwJ2C5gWhnSNmi6JmbB9gQSnFu5Q_KNpXk2-W142cGQ8uxenev6FcxGBfDY1z7klojgaVwiOCUdY0isEVt8QnIfAs8s_KAgVxXhO-LeZxG59jIHQv_gz0LrVAO08Qyb1FZH1m27nih3sg_miRCInkEiQaI22lVX3Z6oeNK-_fFjU_4mQIWVINOCTQ75EuJr1cv7oqO41_cMFF_R0BxCrpcf5G18TyezekSqNu1_ujLE3r7OexRD6vUoKPdhBqOZ_AtdMuNrcOzyzAG_U0w9d39D99upGK0PXjf90la7_6ffm0I8s2IbRcfu61Efk0VVqIQX0arO6Vuoui6a09kFNzpm18XsT6aQMHKZt8PknUww8h3gpqA3vlgv3codsTU4I5dImZK1SJae47uUVTGxA'></script><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&amp;family=Geist:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Use the provided Tailwind Config -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-container": "#384b5c",
+                    "primary-fixed": "#c9e6ff",
+                    "on-secondary-fixed-variant": "#354959",
+                    "tertiary-fixed": "#f5dfca",
+                    "surface-container-lowest": "#0c0e11",
+                    "on-tertiary": "#3b2e20",
+                    "tertiary-container": "#a08e7b",
+                    "primary-container": "#5e97bf",
+                    "on-tertiary-container": "#34271a",
+                    "on-secondary-container": "#a6bbce",
+                    "outline-variant": "#41484e",
+                    "secondary": "#b4c9dd",
+                    "on-secondary-fixed": "#071d2c",
+                    "surface-container": "#1d2022",
+                    "on-primary": "#00344e",
+                    "surface": "#111416",
+                    "inverse-primary": "#256489",
+                    "on-primary-fixed": "#001e2f",
+                    "on-background": "#e1e2e6",
+                    "surface-container-low": "#191c1e",
+                    "surface-variant": "#323538",
+                    "surface-dim": "#111416",
+                    "surface-bright": "#37393c",
+                    "on-error-container": "#ffdad6",
+                    "error-container": "#93000a",
+                    "primary": "#95cdf8",
+                    "on-primary-container": "#002d44",
+                    "error": "#ffb4ab",
+                    "tertiary-fixed-dim": "#d8c3af",
+                    "on-surface-variant": "#c1c7cf",
+                    "on-secondary": "#1e3242",
+                    "background": "#111416",
+                    "secondary-fixed-dim": "#b4c9dd",
+                    "on-tertiary-fixed-variant": "#534435",
+                    "surface-container-high": "#282a2d",
+                    "inverse-on-surface": "#2e3133",
+                    "inverse-surface": "#e1e2e6",
+                    "tertiary": "#d8c3af",
+                    "on-primary-fixed-variant": "#004b6f",
+                    "on-error": "#690005",
+                    "surface-container-highest": "#323538",
+                    "secondary-fixed": "#d0e5fa",
+                    "on-surface": "#e1e2e6",
+                    "outline": "#8b9199",
+                    "on-tertiary-fixed": "#24190d",
+                    "primary-fixed-dim": "#95cdf8",
+                    "surface-tint": "#95cdf8"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "md": "16px",
+                    "margin-mobile": "16px",
+                    "lg": "24px",
+                    "base": "4px",
+                    "margin-desktop": "32px",
+                    "gutter": "12px",
+                    "xs": "4px",
+                    "sm": "8px",
+                    "xl": "32px"
+            },
+            "fontFamily": {
+                    "mono-data": ["JetBrains Mono"],
+                    "metric-md": ["Geist"],
+                    "headline-sm": ["Geist"],
+                    "metric-lg": ["Geist"],
+                    "body-md": ["Geist"],
+                    "label-caps": ["Geist"]
+            },
+            "fontSize": {
+                    "mono-data": ["13px", {"lineHeight": "1.5", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "metric-md": ["32px", {"lineHeight": "1.1", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "headline-sm": ["18px", {"lineHeight": "1.4", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                    "metric-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["14px", {"lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "label-caps": ["11px", {"lineHeight": "1", "letterSpacing": "0.15em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      body {
+        background-color: #111416;
+        color: #e1e2e6;
+        font-family: 'Geist', sans-serif;
+        -webkit-font-smoothing: antialiased;
+      }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        font-size: 20px;
+      }
+      /* Custom high-density table styling */
+      .signal-rail {
+        border-left: 1px solid #41484e;
+      }
+      .active-signal {
+        box-shadow: 0 0 8px rgba(149, 205, 248, 0.2);
+        border-color: rgba(149, 205, 248, 0.4);
+      }
+      .terminal-input:focus {
+        outline: none;
+        border-bottom: 1px solid #95cdf8;
+        box-shadow: 0 4px 8px -4px rgba(149, 205, 248, 0.3);
+      }
+      ::-webkit-scrollbar { width: 6px; height: 6px; }
+      ::-webkit-scrollbar-track { background: #111416; }
+      ::-webkit-scrollbar-thumb { background: #323538; border-radius: 3px; }
+      ::-webkit-scrollbar-thumb:hover { background: #41484e; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-surface border-b border-outline-variant dark:border-outline-variant flex justify-between items-center w-full px-margin-mobile h-14 sticky top-0 z-50">
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim">hub</span>
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary-fixed-dim">Admin Command</h1>
+</div>
+<div class="flex items-center gap-md">
+<button class="material-symbols-outlined text-primary dark:text-primary-fixed-dim hover:bg-surface-container-high transition-colors p-2 rounded-sm active:scale-95 duration-75">sync</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-grow flex flex-col w-full">
+<!-- Sub-Header / Filter Strip -->
+<section class="bg-surface-container-low border-b border-outline-variant px-md py-sm flex flex-wrap items-center gap-lg">
+<div class="flex items-center gap-sm">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase">Search Logs</span>
+<div class="relative">
+<input class="bg-transparent border-b border-outline-variant text-mono-data font-mono-data terminal-input py-1 px-2 w-64 text-primary" placeholder="QUERY_ID_OR_STRING..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-md signal-rail pl-md">
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-on-surface-variant">LEVEL</span>
+<select class="bg-transparent border-none text-mono-data font-mono-data text-secondary p-0 focus:ring-0 cursor-pointer">
+<option>ALL_EVENTS</option>
+<option>CRITICAL</option>
+<option>WARNING</option>
+<option>INFO</option>
+</select>
+</div>
+<div class="flex flex-col signal-rail pl-md">
+<span class="font-label-caps text-label-caps text-on-surface-variant">NODE</span>
+<select class="bg-transparent border-none text-mono-data font-mono-data text-secondary p-0 focus:ring-0 cursor-pointer">
+<option>CLUSTER_ALPHA</option>
+<option>CLUSTER_BETA</option>
+<option>EDGE_RELIANCE</option>
+</select>
+</div>
+</div>
+<div class="ml-auto flex gap-sm">
+<button class="font-label-caps text-label-caps px-md py-2 border border-outline-variant hover:bg-surface-container-high transition-colors flex items-center gap-sm active:scale-95 duration-75">
+<span class="material-symbols-outlined text-[14px]">download</span> EXPORT_CSV
+                </button>
+<button class="font-label-caps text-label-caps px-md py-2 bg-primary text-on-primary hover:opacity-90 transition-opacity flex items-center gap-sm active:scale-95 duration-75">
+<span class="material-symbols-outlined text-[14px]">filter_list</span> APPLY_FILTERS
+                </button>
+</div>
+</section>
+<!-- High-Density Data Header -->
+<div class="grid grid-cols-[180px_140px_1fr_120px_100px] bg-surface-container-high border-b border-outline-variant text-on-surface-variant px-md py-2">
+<div class="font-label-caps text-label-caps flex items-center gap-xs">TIMESTAMP <span class="material-symbols-outlined text-[12px]">expand_more</span></div>
+<div class="font-label-caps text-label-caps signal-rail pl-sm">USER ID</div>
+<div class="font-label-caps text-label-caps signal-rail pl-sm">ACTION</div>
+<div class="font-label-caps text-label-caps signal-rail pl-sm">RESULT</div>
+<div class="font-label-caps text-label-caps signal-rail pl-sm">LATENCY</div>
+</div>
+<!-- Scrollable Table Body -->
+<section class="flex-grow overflow-y-auto bg-surface">
+<!-- Row 1 -->
+<div class="grid grid-cols-[180px_140px_1fr_120px_100px] border-b border-outline-variant hover:bg-surface-container-low transition-colors group px-md py-2.5">
+<div class="font-mono-data text-mono-data text-on-surface-variant">2023-10-24 14:02:11.452</div>
+<div class="font-mono-data text-mono-data text-primary signal-rail pl-sm">usr_882910</div>
+<div class="font-mono-data text-mono-data text-on-surface signal-rail pl-sm flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary text-[16px]">key</span>
+                    AUTH_SESSION_GENERATE
+                </div>
+<div class="font-mono-data text-mono-data signal-rail pl-sm text-green-400">SUCCESS</div>
+<div class="font-mono-data text-mono-data text-on-surface-variant signal-rail pl-sm">12ms</div>
+</div>
+<!-- Row 2 -->
+<div class="grid grid-cols-[180px_140px_1fr_120px_100px] border-b border-outline-variant hover:bg-surface-container-low transition-colors group px-md py-2.5">
+<div class="font-mono-data text-mono-data text-on-surface-variant">2023-10-24 14:02:10.001</div>
+<div class="font-mono-data text-mono-data text-primary signal-rail pl-sm">sys_kernel</div>
+<div class="font-mono-data text-mono-data text-on-surface signal-rail pl-sm flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary text-[16px]">database</span>
+                    DB_SHARD_REBALANCE
+                </div>
+<div class="font-mono-data text-mono-data signal-rail pl-sm text-on-surface-variant">PENDING</div>
+<div class="font-mono-data text-mono-data text-on-surface-variant signal-rail pl-sm">--</div>
+</div>
+<!-- Row 3 - Warning State -->
+<div class="grid grid-cols-[180px_140px_1fr_120px_100px] border-b border-outline-variant hover:bg-surface-container-low transition-colors group px-md py-2.5 bg-error-container/5">
+<div class="font-mono-data text-mono-data text-error">2023-10-24 14:01:55.210</div>
+<div class="font-mono-data text-mono-data text-primary signal-rail pl-sm">usr_441223</div>
+<div class="font-mono-data text-mono-data text-on-surface signal-rail pl-sm flex items-center gap-sm">
+<span class="material-symbols-outlined text-error text-[16px]">security</span>
+                    SUDO_ACCESS_DENIED
+                </div>
+<div class="font-mono-data text-mono-data signal-rail pl-sm text-error">FAILURE</div>
+<div class="font-mono-data text-mono-data text-on-surface-variant signal-rail pl-sm">4ms</div>
+</div>
+<!-- Row 4 -->
+<div class="grid grid-cols-[180px_140px_1fr_120px_100px] border-b border-outline-variant hover:bg-surface-container-low transition-colors group px-md py-2.5">
+<div class="font-mono-data text-mono-data text-on-surface-variant">2023-10-24 14:01:42.991</div>
+<div class="font-mono-data text-mono-data text-primary signal-rail pl-sm">usr_882910</div>
+<div class="font-mono-data text-mono-data text-on-surface signal-rail pl-sm flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary text-[16px]">terminal</span>
+                    CONFIG_PUSH_PROD_02
+                </div>
+<div class="font-mono-data text-mono-data signal-rail pl-sm text-green-400">SUCCESS</div>
+<div class="font-mono-data text-mono-data text-on-surface-variant signal-rail pl-sm">458ms</div>
+</div>
+<!-- Row 5 -->
+<div class="grid grid-cols-[180px_140px_1fr_120px_100px] border-b border-outline-variant hover:bg-surface-container-low transition-colors group px-md py-2.5">
+<div class="font-mono-data text-mono-data text-on-surface-variant">2023-10-24 14:01:30.123</div>
+<div class="font-mono-data text-mono-data text-primary signal-rail pl-sm">api_svc_sync</div>
+<div class="font-mono-data text-mono-data text-on-surface signal-rail pl-sm flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary text-[16px]">sync_alt</span>
+                    RESOURCE_SYNC_EXTERNAL
+                </div>
+<div class="font-mono-data text-mono-data signal-rail pl-sm text-green-400">SUCCESS</div>
+<div class="font-mono-data text-mono-data text-on-surface-variant signal-rail pl-sm">1.2s</div>
+</div>
+<!-- Row 6 -->
+<div class="grid grid-cols-[180px_140px_1fr_120px_100px] border-b border-outline-variant hover:bg-surface-container-low transition-colors group px-md py-2.5">
+<div class="font-mono-data text-mono-data text-on-surface-variant">2023-10-24 14:01:22.004</div>
+<div class="font-mono-data text-mono-data text-primary signal-rail pl-sm">usr_882910</div>
+<div class="font-mono-data text-mono-data text-on-surface signal-rail pl-sm flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary text-[16px]">logout</span>
+                    SESSION_TERMINATED
+                </div>
+<div class="font-mono-data text-mono-data signal-rail pl-sm text-green-400">SUCCESS</div>
+<div class="font-mono-data text-mono-data text-on-surface-variant signal-rail pl-sm">2ms</div>
+</div>
+<!-- Row 7 - Warning State -->
+<div class="grid grid-cols-[180px_140px_1fr_120px_100px] border-b border-outline-variant hover:bg-surface-container-low transition-colors group px-md py-2.5 bg-tertiary-container/5">
+<div class="font-mono-data text-mono-data text-tertiary">2023-10-24 14:00:59.882</div>
+<div class="font-mono-data text-mono-data text-primary signal-rail pl-sm">sys_monitor</div>
+<div class="font-mono-data text-mono-data text-on-surface signal-rail pl-sm flex items-center gap-sm">
+<span class="material-symbols-outlined text-tertiary text-[16px]">warning</span>
+                    CPU_USAGE_THRESHOLD_EXCEEDED
+                </div>
+<div class="font-mono-data text-mono-data signal-rail pl-sm text-tertiary">WARN</div>
+<div class="font-mono-data text-mono-data text-on-surface-variant signal-rail pl-sm">--</div>
+</div>
+<!-- Row 8 -->
+<div class="grid grid-cols-[180px_140px_1fr_120px_100px] border-b border-outline-variant hover:bg-surface-container-low transition-colors group px-md py-2.5">
+<div class="font-mono-data text-mono-data text-on-surface-variant">2023-10-24 14:00:15.551</div>
+<div class="font-mono-data text-mono-data text-primary signal-rail pl-sm">usr_102931</div>
+<div class="font-mono-data text-mono-data text-on-surface signal-rail pl-sm flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary text-[16px]">edit</span>
+                    USER_PROFILE_UPDATE
+                </div>
+<div class="font-mono-data text-mono-data signal-rail pl-sm text-green-400">SUCCESS</div>
+<div class="font-mono-data text-mono-data text-on-surface-variant signal-rail pl-sm">82ms</div>
+</div>
+<!-- Row 9 -->
+<div class="grid grid-cols-[180px_140px_1fr_120px_100px] border-b border-outline-variant hover:bg-surface-container-low transition-colors group px-md py-2.5">
+<div class="font-mono-data text-mono-data text-on-surface-variant">2023-10-24 13:59:44.009</div>
+<div class="font-mono-data text-mono-data text-primary signal-rail pl-sm">usr_102931</div>
+<div class="font-mono-data text-mono-data text-on-surface signal-rail pl-sm flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary text-[16px]">login</span>
+                    LDAP_AUTH_CHALLENGE
+                </div>
+<div class="font-mono-data text-mono-data signal-rail pl-sm text-green-400">SUCCESS</div>
+<div class="font-mono-data text-mono-data text-on-surface-variant signal-rail pl-sm">211ms</div>
+</div>
+<!-- Row 10 -->
+<div class="grid grid-cols-[180px_140px_1fr_120px_100px] border-b border-outline-variant hover:bg-surface-container-low transition-colors group px-md py-2.5">
+<div class="font-mono-data text-mono-data text-on-surface-variant">2023-10-24 13:58:12.665</div>
+<div class="font-mono-data text-mono-data text-primary signal-rail pl-sm">auto_scaler</div>
+<div class="font-mono-data text-mono-data text-on-surface signal-rail pl-sm flex items-center gap-sm">
+<span class="material-symbols-outlined text-secondary text-[16px]">add_circle</span>
+                    NODE_PROVISION_REQUEST
+                </div>
+<div class="font-mono-data text-mono-data signal-rail pl-sm text-green-400">SUCCESS</div>
+<div class="font-mono-data text-mono-data text-on-surface-variant signal-rail pl-sm">4.2s</div>
+</div>
+</section>
+<!-- Dynamic Status Bar -->
+<footer class="bg-surface-container-lowest border-t border-outline-variant px-md h-8 flex items-center justify-between">
+<div class="flex items-center gap-lg">
+<div class="flex items-center gap-xs">
+<div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+<span class="font-label-caps text-[10px] text-on-surface-variant uppercase">System Live</span>
+</div>
+<span class="font-label-caps text-[10px] text-on-surface-variant uppercase">Cluster: us-east-grid-01</span>
+<span class="font-label-caps text-[10px] text-on-surface-variant uppercase">Storage: 42.1% used</span>
+</div>
+<div class="flex items-center gap-md">
+<span class="font-mono-data text-[10px] text-secondary">PAGE 1 OF 254</span>
+<div class="flex gap-1">
+<button class="material-symbols-outlined text-[14px] hover:text-primary">chevron_left</button>
+<button class="material-symbols-outlined text-[14px] hover:text-primary">chevron_right</button>
+</div>
+</div>
+</footer>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-xs pb-safe h-16 bg-surface-container dark:bg-surface-container border-t border-outline-variant dark:border-outline-variant md:hidden">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant pt-1 hover:bg-surface-container-highest transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-caps text-label-caps">Overview</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant pt-1 hover:bg-surface-container-highest transition-colors" href="#">
+<span class="material-symbols-outlined">fact_check</span>
+<span class="font-label-caps text-label-caps">Approvals</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant pt-1 hover:bg-surface-container-highest transition-colors" href="#">
+<span class="material-symbols-outlined">router</span>
+<span class="font-label-caps text-label-caps">Gateways</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant pt-1 hover:bg-surface-container-highest transition-colors" href="#">
+<span class="material-symbols-outlined">warning</span>
+<span class="font-label-caps text-label-caps">Incidents</span>
+</a>
+<!-- ACTIVE TAB: Audit -->
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed-dim border-t-2 border-primary pt-1 hover:bg-surface-container-highest transition-colors" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-caps text-label-caps">Audit</span>
+</a>
+</nav>
+<!-- Desktop Sidebar/Nav (Hidden on Mobile) -->
+<aside class="hidden md:flex fixed left-0 top-14 bottom-0 w-16 bg-surface-container-low border-r border-outline-variant flex-col items-center py-md gap-lg">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">dashboard</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">fact_check</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">router</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">warning</button>
+<button class="material-symbols-outlined text-primary bg-primary-container/10 p-2 rounded-sm border-l-2 border-primary">history</button>
+<div class="mt-auto flex flex-col gap-lg">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">settings</button>
+<button class="material-symbols-outlined text-on-surface-variant hover:text-primary transition-colors">logout</button>
+</div>
+</aside>
+<script>
+        // Micro-interaction: Update timestamp live simulation
+        document.addEventListener('DOMContentLoaded', () => {
+            const timeDisplay = document.querySelector('footer div:first-child');
+            // This could be used for dynamic logic if needed.
+            
+            // Simulation for interactive rows
+            const rows = document.querySelectorAll('main section div.grid');
+            rows.forEach(row => {
+                row.addEventListener('click', () => {
+                    // Logic for selecting a row and showing details in a side panel
+                    // For now just toggle a subtle glow
+                    rows.forEach(r => r.classList.remove('active-signal'));
+                    row.classList.add('active-signal');
+                });
+            });
+        });
+    </script>
+</body></html>

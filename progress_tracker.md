@@ -1,95 +1,96 @@
 # Progress Tracker
 
-Last updated: **2026-06-15 — Admin monitoring dashboard + dual-SIM A16 fix (v2.6.1)**
+Last updated: **2026-06-18 - Android admin app command-center redesign + Stitch handoff**
 
 ---
 
 ## Current Stage
 
-**ALL THREE OPERATORS WORKING END-TO-END. GP, Banglalink, Robi confirmed on VPS. System is fully operational.**
+**Backend and production operator flow remain live. A separate Android admin app now exists and connects to the backend, but its UI is still mid-redesign.**
 
-Deploy is now one command from Git Bash: `bash scripts/deploy.sh` (passwordless via SSH key).
+Git is current through commit `ad76496` on `main`.
 
 ## Documentation Baseline
 
-Before new coding work, the Markdown docs should be treated as the continuity baseline for working
-from home or office PCs.
+Before new coding work, treat these Markdown files as the continuity baseline:
 
-Current documented reality:
-
-- `README.md` explains the any-PC workflow and separates Git-tracked files from local secrets
-- `architecture.md` reflects the current SQLite-backed store instead of the old future-state wording
-- `docs/system-design-v2.md` defines the target enterprise system split and role model
-- `docs/ui-design-guide-v2.md` defines the stronger visual/product direction for future UI work
-- this tracker remains the live session handoff and deployment note
+- `README.md`
+- `progress_tracker.md`
+- `docs/CHANGELOG-2026-06-18.md`
+- `docs/system-design-v2.md`
+- `docs/ui-design-guide-v2.md`
+- `docs/Design/android-admin-stitch/README.md`
+- `docs/Design/android-admin-stitch/DESIGN.md`
 
 Important portability note:
 
 - pulling from Git is enough to continue code, UI, and docs work
-- running the full system on another PC still requires restoring `config/auth.json`,
-  `config/gateways.json`, and `config/telegram.json`
+- running the full system on another PC still requires restoring `config/auth.json`, `config/gateways.json`, and `config/telegram.json`
 - local `data/automation.db` is not auto-synced between PCs
 
 ---
 
-## Session Handoff (2026-06-15) — Read This First
+## Session Handoff (2026-06-18) - Read This First
 
 ### What was accomplished this session
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Settings split | Done | Theme/display/about/help freely accessible; admin config (URL, gateway ID, API key) behind PIN in "Gateway & Connection" submenu |
-| About section | Done | Collapsible card with chevron; shows version inline in header |
-| Help section | Done | Collapsible; stripped of all backend/admin info — only shows "contact your administrator" |
-| Admin phone monitoring (A55) | Done | AdminActivity rebuilt as 5-tab dashboard: OVERVIEW, GATEWAYS, REQUESTS, AUDIT, PUBLISH |
-| Auto-refresh | Done | Dashboard auto-refreshes every 30s using `repeatOnLifecycle` + coroutine loop |
-| Request status colour coding | Done | WAITING=blue, QUEUED/RETRY=yellow, COMPLETED=green, FAILED/TIMED_OUT=red |
-| Audit log actor badges | Done | ADMIN=cyan, SYSTEM=yellow, others=grey |
-| Backend health dot | Done | Green/red dot on OVERVIEW tab with live URL display |
-| OTA deploy fix | Done | `scripts/deploy.sh` was missing `app-version.json` copy — now included |
-| **A16 dual-SIM label fix** | **Done** | Samsung A16 returned "GP" for both SIM slots; labels now come from gateway ID only; "SIM 2" fallback when unconfigured |
-| **A16 dual-SIM visibility fix** | **Done** | `isDualSimHardware()` now checks `TelephonyManager.phoneCount` first (no permission needed) — switcher no longer hides on A16 |
+| Android admin app live backend connectivity | Done | Uses saved backend URL + admin API key and reads real backend admin endpoints |
+| Android admin app shell redesign | Done | Header, live strip, overview posture framing, and settings access reworked |
+| Dedicated admin app settings surface | Done | Backend URL and admin key moved out of overview into a separate settings panel |
+| Android admin overview redesign | Done | Overview now focuses on posture, KPI signal, fleet snapshot, and recent escalations |
+| Android admin bottom nav refresh | Done | Custom vector icons plus compact tags |
+| Stitch design handoff organization | Done | Design screenshots, brief, and raw exports collected under `docs/Design/android-admin-stitch/` |
+| Git handoff for the UI pass | Done | Pushed to `main` in commit `ad76496` |
 
-### Key bugs fixed this session
+### Current caution
 
-| Bug | Fix |
-|-----|-----|
-| All settings hidden behind PIN | Split: display/help/about free; only admin config gated |
-| Samsung A16: both SIM labels show "GP" | Labels derived from gateway ID only, not `SubscriptionInfo.displayName` |
-| Samsung A16: Banglalink SIM option gone | `isDualSimHardware()` now checks modem count before permission-gated APIs |
-| `scripts/deploy.sh` missing version JSON | Added `scp public/app-version.json` to deploy script |
-| A16 secondary gateway ID never set by QR | QR only sets primary — must configure secondary via Admin Setup manually |
+- The Android admin app is functional and connected, but the UI still needs another fidelity pass to better match the Stitch references.
+- Backend workflow logic was intentionally not changed during this redesign pass.
+
+### Important files for the current session
+
+- `android-gateway/adminapp/src/main/java/com/smsgateway/admin/AdminMainActivity.java`
+- `android-gateway/adminapp/src/main/java/com/smsgateway/admin/AdminBackendClient.java`
+- `android-gateway/adminapp/src/main/java/com/smsgateway/admin/AdminDesignSystem.java`
+- `android-gateway/adminapp/src/main/res/layout/activity_admin_main.xml`
+- `android-gateway/adminapp/src/main/res/layout/include_admin_overview.xml`
+- `android-gateway/adminapp/src/main/res/layout/include_admin_settings.xml`
+- `docs/CHANGELOG-2026-06-18.md`
+- `docs/Design/android-admin-stitch/README.md`
+- `docs/Design/android-admin-stitch/DESIGN.md`
 
 ### Current versions
 
-| Version | Code | Notes |
-|---------|------|-------|
-| Backend v2.4.0 | — | Multi-operator live posting (NID-MS, IMEI-MS) |
-| Android v2.6.1 | 47 | A16 dual-SIM label + visibility fix |
-| Android v2.6.0 | 46 | 5-tab admin monitoring dashboard |
-| Android v2.3.0 | 41 | Previous stable (SIM phone number) |
+| Surface | State | Notes |
+|---------|-------|-------|
+| Backend | Live | Production backend is running; verify VPS sync against `ad76496` if needed |
+| Android gateway app | Existing | Not reworked in this session |
+| Android admin app | Debug build active | Separate supervisor app with live API integration and redesign in progress |
 
-### Pending on A16 gateway phone (action required)
+### Deployment / continuity notes
 
-After installing v2.6.1, the A16 user must configure the secondary gateway manually:
-1. Open app → Settings → **Gateway & Connection** → enter PIN
-2. Set **Secondary Gateway ID** = `BANGLALINK_PHONE_01`
-3. Set **Secondary SIM** = SIM 2
-4. Tap **Save**
+- GitHub `main` includes the latest admin app redesign commit: `ad76496`
+- The VPS backend was not updated in the final step from this workstation because direct SSH auth failed here
+- Safe VPS update commands are recorded in `docs/CHANGELOG-2026-06-18.md`
 
-Until this is done, SIM 2 shows as "SIM 2" (unconfigured) and dispatches won't route to Banglalink.
+### Recommended next step
+
+1. Pull latest `main` on the VPS and restart PM2 if not already updated
+2. Continue Android admin UI refinement against Stitch references
+3. Then move to the web admin and web operations V2 surfaces
 
 ---
 
-## Environment (Current — VPS Production)
+## Environment
 
 | Component | Location | Notes |
 |-----------|----------|-------|
-| Backend | `45.77.240.195:3000` | Vultr Singapore VPS, PM2 `sms-backend` |
-| Telegram bridge | `45.77.240.195` | PM2 `sms-bridge` on same VPS |
-| A16 gateway phone | Samsung A16 (`R9TY808NKZL`) | SIM 1 = GP, SIM 2 = Banglalink; v2.6.1 |
-| Admin phone | Samsung A55 (`RRCXA03MTRA`) | 5-tab monitoring dashboard; v2.6.0+ |
-| Robi phone | Samsung (`f0c7c672`) | v2.3.0 installed, Robi SIM confirmed |
+| Backend | `45.77.240.195:3000` | Vultr Singapore VPS |
+| Public host | `https://licbarishal.duckdns.org` | Admin API reachable here |
+| Admin phone | Samsung A55 (`RRCXA03MTRA`) | Android admin app tested and installed over USB |
+| Gateway phones | Existing production phones | Left unchanged in this session |
 
 ### VPS credentials
 
@@ -97,90 +98,39 @@ See `config/vps.md` (gitignored).
 
 ---
 
-## How to Deploy (One Command)
-
-```bash
-bash scripts/deploy.sh
-```
-
-Copies `src/`, `telegram-bridge/`, and `config/telegram.json` directly via SCP, then restarts PM2. No git credentials needed on the VPS.
-
----
-
-## How to Update the Android App
-
-1. Make code changes on PC
-2. Build release APK: `cd android-gateway && .\gradlew assembleRelease`
-3. Install via USB: `adb -s <device-id> install -r app/build/outputs/apk/release/app-release.apk`
-4. Or publish OTA via Admin Panel on A55 → gateway phones auto-update
-
----
-
-## Known Issues / Gotchas
-
-### 1. Telegram group chat ID changes when bot becomes admin
-- Making bot admin upgrades group to supergroup — chat ID changes
-- Update `groupChatId` in `config/telegram.json` and run `bash scripts/deploy.sh`
-
-### 2. SIM phone number often blank in Bangladesh
-- Carriers don't provision phone number into SIM chip — `SubscriptionInfo.number` returns empty
-- Admin card shows number when available; hidden when blank (no UI breakage)
-
-### 3. MS-NID for unknown prefix (e.g. Teletalk 010x)
-- `operatorForMsisdn` returns null — request fails validation with a clear error message
-- Teletalk not in domain.js OPERATORS — add when needed
-
-### 4. VPS deploy: config/telegram.json is gitignored
-- `scripts/deploy.sh` handles this by SCP-copying it directly
-- Do NOT edit telegram.json on VPS manually unless necessary — deploy script will overwrite it
-
----
-
 ## Completed (Cumulative)
 
 ### Backend
-- Request parsing, operator routing, per-operator queues
-- Silent references, trusted-sender filter, reply matching
-- Content-based reply disambiguation, payload-in-reply matching
-- Non-blocking concurrent dispatch
-- Training data (144 xlsx samples)
-- Dashboard review actions (reject, retry, manual match)
-- SQLite persistence (WAL, boot-restore)
-- Admin API key, gateway secrets, audit chain
-- OTA update endpoints
-- `/setup` web page for first-time admin key creation
-- VPS deployment — PM2, Node 22, UFW firewall
-- Telegram offset persistence
-- **MS-NID: routes to single operator by MSISDN prefix**
-- **Late reply matching: 6-hour window for NEEDS_MANUAL_REVIEW requests**
-- **Late reply re-posting: updates existing draft instead of dropping reply**
-- **Gateway registration stores SIM phone number**
 
-### Telegram Bridge
-- Long polling, intake loop, posting loop
-- Threaded replies, text_mention tags
-- autoApprove, timeout notifications
-- **Open-group auth: any group member can submit**
+- Request parsing, operator routing, per-operator queues
+- Trusted-sender filter and reply matching
+- Dashboard review actions (reject, retry, manual match)
+- SQLite persistence
+- Admin API key, gateway secrets, audit chain
+- Telegram bridge integration
+- VPS deployment with PM2
 
 ### Android Gateway App
-- NanoHTTPD, SMS send/receive, webhook, WorkManager retry, Room DB
+
+- NanoHTTPD, SMS send/receive, webhook, retry, Room DB
 - Foreground service, boot receiver, permissions flow
-- SIM picker, dual-SIM support
-- OTA update checker + installer
-- Admin Panel (AdminActivity) — gateway health, publish APK
-- Settings: secondary gateway, admin API key, SIM assignment
-- **v2.3.0: SIM phone number read and sent to backend; shown in admin card**
-- **Admin app dark theme redesign: stat hero row, operator circles**
-- **SIM switcher: two-line stacked, cyan/amethyst color identity**
-- **Web dashboard: dark navy theme**
-- **v2.6.0: Settings split (theme/help/about free; admin config PIN-gated); 5-tab admin monitoring dashboard with auto-refresh**
-- **v2.6.1: A16 dual-SIM label fix (Samsung returns "GP" for both slots); modem-count-first dual-SIM detection**
+- SIM picker and dual-SIM support
+- OTA update checker and installer
+
+### Android Admin App
+
+- Separate app from the gateway APK
+- Live overview, approvals, gateways, incidents, and audit surfaces
+- Saved backend URL and admin API key connectivity
+- Command-center theme primitives and drawables
+- Dedicated settings surface
+- Custom bottom nav icons and compact tags
 
 ---
 
 ## Next Milestone
 
-1. **[TOMORROW] Release gateway phone settings from PIN lock** — Backend URL, Gateway ID, SIM slot should be editable without PIN; only admin key, secondary gateway config, and PIN management stay gated
-2. **Configure A16 secondary gateway** — set `BANGLALINK_PHONE_01` / SIM 2 via Admin Setup on A16
-3. **Nightly DB backup on VPS** — cron job
-4. **compileSdk/targetSdk bump** to 35
+1. Increase Android admin app visual fidelity against the Stitch package
+2. Refine nav, rows, and per-screen modules so the app feels less boxy
+3. Sync VPS backend with latest `main` if still behind
+4. Resume V2 work on web admin and web operations surfaces

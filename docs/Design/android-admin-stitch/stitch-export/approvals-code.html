@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script type='text/javascript' nonce='JDdUx68dh/UsiFkAagOKvw==' src='https://contribution.usercontent.google.com/HsjNDCJPLGx96tdMiG3PcZ-bV8PT4ppwYImQqmEMB7iufrGYWsRttcX_0QjWNRaQbhm2Ho4zd1uTcEKkIRKem_yuGwN1QpEbGKfwq1y8lpigc1NI55xObYMsWirhjhwKp7qHrbtvlhKMUWIuub80TfIZWy5BH63gQK7wLhZJXkAph-4YImg1BXX28CpR3YveAIne1FgihY4X7Yi1YWx69CjYLT0YpJDGd-wu1toz_EWqFLGznyF716g2q7XeIaYFHhgtfn3wqMZz8c2Df37BLLlt0MgFMD9c1burWQFCgPlmVVpCN-dcVmFNynkxo4iPxiXY6F207lMhLR7TdkIDgY2fQqbRAErl0SNOdSgalBv6xg8GBQnArk03_-2qh1DtMKoL7H0_3yhUwEK3dKw0SrPOw8v6XqRsIVX0CJT4z7iH6OTfF0yQ7XeKf3lGJAGLsD3y44yTHB5lTWce-f7FXSkigVDporpzdGeX0g1r11Wtbs6fm6OL0IYgj1aV0D-uQtYUu4uYq4BdtUJibEz5WMotJUmr7kHjaEMbhX_qb3OWJfa1az46y7wpz4MYiW_yDNrXs3x4RJriEJ30xprQX8JuzxKZbBwAd_kzGgeGOPnjZoZQZ0pnJnMpdMoFZ_ZsF-ufCFNGLJhU-luj1zoEw6-uwxe8iEYubXpOksaUioFTKSSnjBFxk9pKQgbrRQJkbUyxWFr6GjuXrS66jPJrARl8znpRoF0XII93_o9TbkAcc6rStJ35Vzm_s8b1vKaHmY4c0ICWMFF61pbS4Lo8dg7w08I7rUFkffj-3g'></script><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&amp;family=Geist:wght@400;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            background-color: #111416;
+            color: #e1e2e6;
+            font-family: 'Geist', sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .severity-rail-high {
+            box-shadow: inset 2px 0 0 0 #ffb4ab, 4px 0 12px -2px rgba(255, 180, 171, 0.2);
+        }
+        .severity-rail-low {
+            box-shadow: inset 2px 0 0 0 #41484e;
+        }
+        .signal-glow-active {
+            box-shadow: 0 0 8px 0 rgba(149, 205, 248, 0.2);
+        }
+        /* Custom scrollbar for technical density */
+        ::-webkit-scrollbar { width: 4px; height: 4px; }
+        ::-webkit-scrollbar-track { background: #111416; }
+        ::-webkit-scrollbar-thumb { background: #323538; border-radius: 2px; }
+        ::-webkit-scrollbar-thumb:hover { background: #8b9199; }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-container": "#384b5c",
+                        "primary-fixed": "#c9e6ff",
+                        "on-secondary-fixed-variant": "#354959",
+                        "tertiary-fixed": "#f5dfca",
+                        "surface-container-lowest": "#0c0e11",
+                        "on-tertiary": "#3b2e20",
+                        "tertiary-container": "#a08e7b",
+                        "primary-container": "#5e97bf",
+                        "on-tertiary-container": "#34271a",
+                        "on-secondary-container": "#a6bbce",
+                        "outline-variant": "#41484e",
+                        "secondary": "#b4c9dd",
+                        "on-secondary-fixed": "#071d2c",
+                        "surface-container": "#1d2022",
+                        "on-primary": "#00344e",
+                        "surface": "#111416",
+                        "inverse-primary": "#256489",
+                        "on-primary-fixed": "#001e2f",
+                        "on-background": "#e1e2e6",
+                        "surface-container-low": "#191c1e",
+                        "surface-variant": "#323538",
+                        "surface-dim": "#111416",
+                        "surface-bright": "#37393c",
+                        "on-error-container": "#ffdad6",
+                        "error-container": "#93000a",
+                        "primary": "#95cdf8",
+                        "on-primary-container": "#002d44",
+                        "error": "#ffb4ab",
+                        "tertiary-fixed-dim": "#d8c3af",
+                        "on-surface-variant": "#c1c7cf",
+                        "on-secondary": "#1e3242",
+                        "background": "#111416",
+                        "secondary-fixed-dim": "#b4c9dd",
+                        "on-tertiary-fixed-variant": "#534435",
+                        "surface-container-high": "#282a2d",
+                        "inverse-on-surface": "#2e3133",
+                        "inverse-surface": "#e1e2e6",
+                        "tertiary": "#d8c3af",
+                        "on-primary-fixed-variant": "#004b6f",
+                        "on-error": "#690005",
+                        "surface-container-highest": "#323538",
+                        "secondary-fixed": "#d0e5fa",
+                        "on-surface": "#e1e2e6",
+                        "outline": "#8b9199",
+                        "on-tertiary-fixed": "#24190d",
+                        "primary-fixed-dim": "#95cdf8",
+                        "surface-tint": "#95cdf8"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "md": "16px",
+                        "margin-mobile": "16px",
+                        "lg": "24px",
+                        "base": "4px",
+                        "margin-desktop": "32px",
+                        "gutter": "12px",
+                        "xs": "4px",
+                        "sm": "8px",
+                        "xl": "32px"
+                    },
+                    "fontFamily": {
+                        "mono-data": ["JetBrains Mono"],
+                        "metric-md": ["Geist"],
+                        "headline-sm": ["Geist"],
+                        "metric-lg": ["Geist"],
+                        "body-md": ["Geist"],
+                        "label-caps": ["Geist"]
+                    },
+                    "fontSize": {
+                        "mono-data": ["13px", {"lineHeight": "1.5", "letterSpacing": "0em", "fontWeight": "400"}],
+                        "metric-md": ["32px", {"lineHeight": "1.1", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                        "headline-sm": ["18px", {"lineHeight": "1.4", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                        "metric-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["14px", {"lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400"}],
+                        "label-caps": ["11px", {"lineHeight": "1", "letterSpacing": "0.15em", "fontWeight": "600"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="docked full-width top-0 z-40 bg-surface border-b border-outline-variant flex justify-between items-center w-full px-margin-mobile h-14">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary" data-icon="hub">hub</span>
+<span class="font-headline-sm text-headline-sm font-bold text-primary">Admin Command</span>
+</div>
+<div class="flex items-center gap-md">
+<button class="hover:bg-surface-container-high transition-colors p-sm rounded active:scale-95 duration-75 text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="sync">sync</span>
+</button>
+</div>
+</header>
+<main class="flex-grow pb-24 md:pb-0">
+<!-- Compact Monospaced Header Strip -->
+<section class="bg-surface-container-low border-b border-outline-variant px-margin-mobile py-base flex items-center justify-between overflow-x-auto whitespace-nowrap">
+<div class="flex gap-lg items-center">
+<div class="flex gap-sm items-center">
+<span class="font-label-caps text-label-caps text-on-surface-variant">TOTAL_PENDING</span>
+<span class="font-mono-data text-mono-data text-primary">042</span>
+</div>
+<div class="w-px h-3 bg-outline-variant"></div>
+<div class="flex gap-sm items-center">
+<span class="font-label-caps text-label-caps text-on-surface-variant">HIGH_SEVERITY</span>
+<span class="font-mono-data text-mono-data text-error">12</span>
+</div>
+<div class="w-px h-3 bg-outline-variant"></div>
+<div class="flex gap-sm items-center">
+<span class="font-label-caps text-label-caps text-on-surface-variant">SYSTEM_GATEWAYS</span>
+<span class="font-mono-data text-mono-data text-secondary">ONLINE</span>
+</div>
+</div>
+<div class="flex gap-md items-center">
+<span class="font-mono-data text-mono-data text-on-surface-variant opacity-50">STABLE_SIGNAL_204-A</span>
+</div>
+</section>
+<!-- Grouped Row List (The Queue) -->
+<section class="flex flex-col">
+<!-- List Header (Hidden on Mobile) -->
+<div class="hidden md:grid grid-cols-12 gap-gutter px-margin-mobile py-sm border-b border-outline-variant bg-surface-container-lowest">
+<div class="col-span-1 font-label-caps text-label-caps text-on-surface-variant">PRIORITY</div>
+<div class="col-span-2 font-label-caps text-label-caps text-on-surface-variant">REQUEST_ID</div>
+<div class="col-span-2 font-label-caps text-label-caps text-on-surface-variant">TYPE</div>
+<div class="col-span-2 font-label-caps text-label-caps text-on-surface-variant">REQUESTER</div>
+<div class="col-span-3 font-label-caps text-label-caps text-on-surface-variant">TIMESTAMP</div>
+<div class="col-span-2 text-right font-label-caps text-label-caps text-on-surface-variant">ACTION</div>
+</div>
+<!-- Row Item: High Severity -->
+<div class="grid grid-cols-12 gap-gutter px-margin-mobile py-md border-b border-outline-variant items-center severity-rail-high hover:bg-surface-container-high transition-colors group">
+<div class="col-span-6 md:col-span-1 flex items-center gap-sm">
+<span class="font-mono-data text-mono-data text-error">H-01</span>
+</div>
+<div class="col-span-6 md:col-span-2">
+<span class="font-mono-data text-mono-data text-primary">REQ-29440-X</span>
+</div>
+<div class="col-span-6 md:col-span-2 mt-sm md:mt-0">
+<span class="font-mono-data text-mono-data text-on-surface">GATEWAY_FLUSH</span>
+</div>
+<div class="col-span-6 md:col-span-2 mt-sm md:mt-0">
+<span class="font-mono-data text-mono-data text-on-secondary-container">SYS_ADMIN_ALPHA</span>
+</div>
+<div class="col-span-8 md:col-span-3 mt-sm md:mt-0">
+<span class="font-mono-data text-mono-data text-on-surface-variant">2023-10-24 14:02:11.04</span>
+</div>
+<div class="col-span-4 md:col-span-2 flex justify-end">
+<button class="px-md py-sm bg-primary text-on-primary font-label-caps text-label-caps rounded border border-primary hover:bg-primary-container hover:text-on-primary-container transition-all signal-glow-active active:scale-95">
+                        REVIEW
+                    </button>
+</div>
+</div>
+<!-- Row Item: Low Severity -->
+<div class="grid grid-cols-12 gap-gutter px-margin-mobile py-md border-b border-outline-variant items-center severity-rail-low hover:bg-surface-container-high transition-colors group">
+<div class="col-span-6 md:col-span-1 flex items-center gap-sm">
+<span class="font-mono-data text-mono-data text-on-surface-variant">L-04</span>
+</div>
+<div class="col-span-6 md:col-span-2">
+<span class="font-mono-data text-mono-data text-primary">REQ-30112-C</span>
+</div>
+<div class="col-span-6 md:col-span-2 mt-sm md:mt-0">
+<span class="font-mono-data text-mono-data text-on-surface">LOG_ROTATION</span>
+</div>
+<div class="col-span-6 md:col-span-2 mt-sm md:mt-0">
+<span class="font-mono-data text-mono-data text-on-secondary-container">AUTOMATION_SVC</span>
+</div>
+<div class="col-span-8 md:col-span-3 mt-sm md:mt-0">
+<span class="font-mono-data text-mono-data text-on-surface-variant">2023-10-24 14:05:44.22</span>
+</div>
+<div class="col-span-4 md:col-span-2 flex justify-end">
+<button class="px-md py-sm border border-outline text-on-surface font-label-caps text-label-caps rounded hover:bg-surface-container-highest transition-all active:scale-95">
+                        REVIEW
+                    </button>
+</div>
+</div>
+<!-- Row Item: High Severity -->
+<div class="grid grid-cols-12 gap-gutter px-margin-mobile py-md border-b border-outline-variant items-center severity-rail-high hover:bg-surface-container-high transition-colors group">
+<div class="col-span-6 md:col-span-1 flex items-center gap-sm">
+<span class="font-mono-data text-mono-data text-error">H-02</span>
+</div>
+<div class="col-span-6 md:col-span-2">
+<span class="font-mono-data text-mono-data text-primary">REQ-30291-K</span>
+</div>
+<div class="col-span-6 md:col-span-2 mt-sm md:mt-0">
+<span class="font-mono-data text-mono-data text-on-surface">ENCRYPTION_KEY_REVOKE</span>
+</div>
+<div class="col-span-6 md:col-span-2 mt-sm md:mt-0">
+<span class="font-mono-data text-mono-data text-on-secondary-container">SECURITY_OPS</span>
+</div>
+<div class="col-span-8 md:col-span-3 mt-sm md:mt-0">
+<span class="font-mono-data text-mono-data text-on-surface-variant">2023-10-24 14:10:02.99</span>
+</div>
+<div class="col-span-4 md:col-span-2 flex justify-end">
+<button class="px-md py-sm bg-primary text-on-primary font-label-caps text-label-caps rounded border border-primary hover:bg-primary-container hover:text-on-primary-container transition-all signal-glow-active active:scale-95">
+                        REVIEW
+                    </button>
+</div>
+</div>
+<!-- Row Item: Low Severity -->
+<div class="grid grid-cols-12 gap-gutter px-margin-mobile py-md border-b border-outline-variant items-center severity-rail-low hover:bg-surface-container-high transition-colors group">
+<div class="col-span-6 md:col-span-1 flex items-center gap-sm">
+<span class="font-mono-data text-mono-data text-on-surface-variant">L-05</span>
+</div>
+<div class="col-span-6 md:col-span-2">
+<span class="font-mono-data text-mono-data text-primary">REQ-30442-P</span>
+</div>
+<div class="col-span-6 md:col-span-2 mt-sm md:mt-0">
+<span class="font-mono-data text-mono-data text-on-surface">UI_ASSET_CACHE_CLEAR</span>
+</div>
+<div class="col-span-6 md:col-span-2 mt-sm md:mt-0">
+<span class="font-mono-data text-mono-data text-on-secondary-container">FE_DEV_USER_09</span>
+</div>
+<div class="col-span-8 md:col-span-3 mt-sm md:mt-0">
+<span class="font-mono-data text-mono-data text-on-surface-variant">2023-10-24 14:12:15.55</span>
+</div>
+<div class="col-span-4 md:col-span-2 flex justify-end">
+<button class="px-md py-sm border border-outline text-on-surface font-label-caps text-label-caps rounded hover:bg-surface-container-highest transition-all active:scale-95">
+                        REVIEW
+                    </button>
+</div>
+</div>
+<!-- Row Item: Low Severity -->
+<div class="grid grid-cols-12 gap-gutter px-margin-mobile py-md border-b border-outline-variant items-center severity-rail-low hover:bg-surface-container-high transition-colors group">
+<div class="col-span-6 md:col-span-1 flex items-center gap-sm">
+<span class="font-mono-data text-mono-data text-on-surface-variant">L-06</span>
+</div>
+<div class="col-span-6 md:col-span-2">
+<span class="font-mono-data text-mono-data text-primary">REQ-30500-Z</span>
+</div>
+<div class="col-span-6 md:col-span-2 mt-sm md:mt-0">
+<span class="font-mono-data text-mono-data text-on-surface">API_RATE_LIMIT_ADJ</span>
+</div>
+<div class="col-span-6 md:col-span-2 mt-sm md:mt-0">
+<span class="font-mono-data text-mono-data text-on-secondary-container">PLATFORM_ENG</span>
+</div>
+<div class="col-span-8 md:col-span-3 mt-sm md:mt-0">
+<span class="font-mono-data text-mono-data text-on-surface-variant">2023-10-24 14:15:30.01</span>
+</div>
+<div class="col-span-4 md:col-span-2 flex justify-end">
+<button class="px-md py-sm border border-outline text-on-surface font-label-caps text-label-caps rounded hover:bg-surface-container-highest transition-all active:scale-95">
+                        REVIEW
+                    </button>
+</div>
+</div>
+</section>
+<!-- Signal Visualizations (Atmospheric Decor) -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter p-margin-mobile">
+<div class="h-48 border border-outline-variant bg-surface-container-low relative overflow-hidden flex items-center justify-center">
+<div class="absolute inset-0 opacity-20 pointer-events-none">
+<!-- Minimal CSS Pattern to simulate scanlines/grid -->
+<div class="w-full h-full" style="background-image: radial-gradient(#41484e 0.5px, transparent 0.5px); background-size: 16px 16px;"></div>
+</div>
+<div class="z-10 flex flex-col items-center">
+<span class="font-label-caps text-label-caps text-on-surface-variant mb-sm">QUEUE_THROUGHPUT</span>
+<div class="flex items-end gap-xs h-16">
+<div class="w-1 bg-primary h-4"></div>
+<div class="w-1 bg-primary h-6"></div>
+<div class="w-1 bg-primary h-10"></div>
+<div class="w-1 bg-primary h-8"></div>
+<div class="w-1 bg-primary h-12"></div>
+<div class="w-1 bg-primary h-4"></div>
+<div class="w-1 bg-primary h-9 animate-pulse"></div>
+</div>
+</div>
+</div>
+<div class="h-48 border border-outline-variant bg-surface-container-low relative overflow-hidden p-md flex flex-col justify-between">
+<div>
+<span class="font-label-caps text-label-caps text-on-surface-variant">INCIDENT_CANVAS_STREAM</span>
+<div class="mt-sm font-mono-data text-mono-data text-[10px] text-primary opacity-60 leading-tight">
+                        &gt; 14:15:30 REQ-30500-Z DISPATCHED<br/>
+                        &gt; 14:15:31 SECURITY_OPS VERIFIED<br/>
+                        &gt; 14:15:32 LATENCY_THRESHOLD_MET: 12ms
+                    </div>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-mono-data text-mono-data text-on-surface-variant">NODE_88-DELTA</span>
+<div class="flex gap-xs">
+<div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+<div class="w-2 h-2 rounded-full bg-outline-variant"></div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 flex justify-around items-center px-xs pb-safe h-16 bg-surface-container border-t border-outline-variant">
+<div class="flex flex-col items-center justify-center text-on-surface-variant pt-1 hover:bg-surface-container-highest transition-colors flex-1 h-full cursor-pointer">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-caps text-label-caps mt-1">Overview</span>
+</div>
+<div class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed-dim border-t-2 border-primary pt-1 hover:bg-surface-container-highest transition-colors flex-1 h-full cursor-pointer">
+<span class="material-symbols-outlined" data-icon="fact_check">fact_check</span>
+<span class="font-label-caps text-label-caps mt-1">Approvals</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant pt-1 hover:bg-surface-container-highest transition-colors flex-1 h-full cursor-pointer">
+<span class="material-symbols-outlined" data-icon="router">router</span>
+<span class="font-label-caps text-label-caps mt-1">Gateways</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant pt-1 hover:bg-surface-container-highest transition-colors flex-1 h-full cursor-pointer">
+<span class="material-symbols-outlined" data-icon="warning">warning</span>
+<span class="font-label-caps text-label-caps mt-1">Incidents</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant pt-1 hover:bg-surface-container-highest transition-colors flex-1 h-full cursor-pointer">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-label-caps text-label-caps mt-1">Audit</span>
+</div>
+</nav>
+<!-- Navigation Rail for Desktop (Standard Pattern for Admin Interfaces) -->
+<aside class="hidden md:flex fixed left-0 top-14 bottom-0 w-16 bg-surface border-r border-outline-variant flex-col items-center py-md z-30">
+<div class="flex flex-col gap-xl">
+<div class="p-sm text-on-surface-variant hover:text-primary transition-colors cursor-pointer" title="Overview">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+</div>
+<div class="p-sm text-primary transition-colors cursor-pointer border-r-2 border-primary" title="Approvals">
+<span class="material-symbols-outlined" data-icon="fact_check">fact_check</span>
+</div>
+<div class="p-sm text-on-surface-variant hover:text-primary transition-colors cursor-pointer" title="Gateways">
+<span class="material-symbols-outlined" data-icon="router">router</span>
+</div>
+<div class="p-sm text-on-surface-variant hover:text-primary transition-colors cursor-pointer" title="Incidents">
+<span class="material-symbols-outlined" data-icon="warning">warning</span>
+</div>
+<div class="p-sm text-on-surface-variant hover:text-primary transition-colors cursor-pointer" title="Audit">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+</div>
+</div>
+</aside>
+<script>
+        // Micro-interaction: Active state feedback for review buttons
+        document.querySelectorAll('button').forEach(button => {
+            button.addEventListener('mousedown', () => {
+                button.classList.add('scale-95');
+            });
+            button.addEventListener('mouseup', () => {
+                button.classList.remove('scale-95');
+            });
+            button.addEventListener('mouseleave', () => {
+                button.classList.remove('scale-95');
+            });
+        });
+
+        // Simulating live data updates
+        setInterval(() => {
+            const statusNode = document.querySelector('.animate-pulse');
+            if (statusNode) {
+                const randomHeight = Math.floor(Math.random() * 16) + 4;
+                statusNode.style.height = `${randomHeight * 4}px`;
+            }
+        }, 1500);
+    </script>
+</body></html>

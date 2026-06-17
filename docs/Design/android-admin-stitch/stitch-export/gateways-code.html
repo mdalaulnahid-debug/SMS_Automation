@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script type='text/javascript' nonce='ULWUuexyOr9eR4TH4rc8yQ==' src='https://contribution.usercontent.google.com/k7VnpaV7VxoyEYHllxWua2zWgCqFiTEezovhoSQubQSrV7x0gs4bZk69MGn2n3ktmyIlPn9oS_cH2KtQOyOLTjQTMgDz8u7NQzu4R6sD9mAekY_-KsscQsp0HkOYDWkv1nTzCVWtVUJonOujMerzmI2fWxuvKWltefDGwCDcafRATf_fH4-S_4iHPERKdGGmXASS85QlBI6VagzLsnnfC5tRHVvRPPR_KoNqiwM3uOpM8XCLFTgBmxMXgKYzW4xvuBJ3U0Doo1gUqeOjyXVnFHmIpxskKtN7XHQnVQR6lIvC4N5ANfhYRrQVri5TATuD3ywWOyLO7gY--9_c9bdIJi8m1WWsFh8PjYjNHB5yMc860WVjqqB-eBh2tZJyenG_U09uoaSJmUuZ-tEHYKF_OMUXML1BXth2W98ZQes-JwuUAQrHt9nF1Z9RR-Jul7llV1cG3cZKYx7jwhglBsq7PVMHZ90si8gmXdn-SdxOzssjtH9fiC0snkT1hC6uVeRQZwOVlJU9AORxT3MVDYcNvOM7ATIpUcsV01trRZe3s_k89aN7mfmxhXj5NRf5mOhXg-iC5L3wLEplUCuy5KHe3GGrzPH0aBR6ZDP02pzdxG-w-UCuZ0Sgt5gfivtknYZqAjkyW2PzEd8_nVm3ALt-KDBiKKx-maDCKx3jgrT0BV6VQzj05SCPR1S_I7mxb-ZU9YM3p_jHsi7ZfAY4JkfZVFEll_kzGuLfbe8G401t-vBc_XkT7S6aCufUjrCdS541InLq7iqUkB0dwwdMJOv-KAa94MQqEgd3dXAThA'></script><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&amp;family=Geist:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .signal-glow {
+            box-shadow: 0 0 8px 2px rgba(149, 205, 248, 0.15);
+        }
+        .active-glow {
+            box-shadow: 0 0 12px 2px rgba(149, 205, 248, 0.3);
+        }
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #111416;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #323538;
+        }
+        .grid-mesh {
+            background-image: radial-gradient(circle, #41484e 1px, transparent 1px);
+            background-size: 24px 24px;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-container": "#384b5c",
+                    "primary-fixed": "#c9e6ff",
+                    "on-secondary-fixed-variant": "#354959",
+                    "tertiary-fixed": "#f5dfca",
+                    "surface-container-lowest": "#0c0e11",
+                    "on-tertiary": "#3b2e20",
+                    "tertiary-container": "#a08e7b",
+                    "primary-container": "#5e97bf",
+                    "on-tertiary-container": "#34271a",
+                    "on-secondary-container": "#a6bbce",
+                    "outline-variant": "#41484e",
+                    "secondary": "#b4c9dd",
+                    "on-secondary-fixed": "#071d2c",
+                    "surface-container": "#1d2022",
+                    "on-primary": "#00344e",
+                    "surface": "#111416",
+                    "inverse-primary": "#256489",
+                    "on-primary-fixed": "#001e2f",
+                    "on-background": "#e1e2e6",
+                    "surface-container-low": "#191c1e",
+                    "surface-variant": "#323538",
+                    "surface-dim": "#111416",
+                    "surface-bright": "#37393c",
+                    "on-error-container": "#ffdad6",
+                    "error-container": "#93000a",
+                    "primary": "#95cdf8",
+                    "on-primary-container": "#002d44",
+                    "error": "#ffb4ab",
+                    "tertiary-fixed-dim": "#d8c3af",
+                    "on-surface-variant": "#c1c7cf",
+                    "on-secondary": "#1e3242",
+                    "background": "#111416",
+                    "secondary-fixed-dim": "#b4c9dd",
+                    "on-tertiary-fixed-variant": "#534435",
+                    "surface-container-high": "#282a2d",
+                    "inverse-on-surface": "#2e3133",
+                    "inverse-surface": "#e1e2e6",
+                    "tertiary": "#d8c3af",
+                    "on-primary-fixed-variant": "#004b6f",
+                    "on-error": "#690005",
+                    "surface-container-highest": "#323538",
+                    "secondary-fixed": "#d0e5fa",
+                    "on-surface": "#e1e2e6",
+                    "outline": "#8b9199",
+                    "on-tertiary-fixed": "#24190d",
+                    "primary-fixed-dim": "#95cdf8",
+                    "surface-tint": "#95cdf8"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "md": "16px",
+                    "margin-mobile": "16px",
+                    "lg": "24px",
+                    "base": "4px",
+                    "margin-desktop": "32px",
+                    "gutter": "12px",
+                    "xs": "4px",
+                    "sm": "8px",
+                    "xl": "32px"
+            },
+            "fontFamily": {
+                    "mono-data": ["JetBrains Mono"],
+                    "metric-md": ["Geist"],
+                    "headline-sm": ["Geist"],
+                    "metric-lg": ["Geist"],
+                    "body-md": ["Geist"],
+                    "label-caps": ["Geist"]
+            },
+            "fontSize": {
+                    "mono-data": ["13px", {"lineHeight": "1.5", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "metric-md": ["32px", {"lineHeight": "1.1", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "headline-sm": ["18px", {"lineHeight": "1.4", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                    "metric-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["14px", {"lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400"}],
+                    "label-caps": ["11px", {"lineHeight": "1", "letterSpacing": "0.15em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top AppBar (Admin Command Shell) -->
+<header class="fixed top-0 w-full z-50 bg-surface text-primary border-b border-outline-variant flex justify-between items-center px-margin-mobile md:px-margin-desktop h-14">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary" data-icon="hub">hub</span>
+<span class="font-headline-sm text-headline-sm font-bold text-primary">Admin Command</span>
+</div>
+<div class="flex items-center gap-md">
+<button class="flex items-center gap-xs font-label-caps text-label-caps text-on-surface-variant hover:bg-surface-container-high transition-colors px-sm py-xs active:scale-95 duration-75">
+<span class="material-symbols-outlined text-[16px]" data-icon="sync">sync</span>
+<span>SYNC_STATUS</span>
+</button>
+<div class="hidden md:flex items-center gap-lg">
+<nav class="flex gap-md">
+<a class="font-label-caps text-label-caps text-primary border-b-2 border-primary pb-base transition-colors" href="#">OVERVIEW</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors pb-base" href="#">GATEWAYS</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors pb-base" href="#">AUDIT</a>
+</nav>
+</div>
+</div>
+</header>
+<main class="pt-14 pb-16 min-h-screen md:pb-0 overflow-x-hidden">
+<!-- Fleet Performance Signal Rail -->
+<div class="w-full px-margin-mobile md:px-margin-desktop py-md grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Key Metrics Rail -->
+<section class="md:col-span-3 flex flex-col gap-lg border-r border-outline-variant/30 pr-gutter">
+<div>
+<span class="font-label-caps text-label-caps text-on-surface-variant">ACTIVE_NODES</span>
+<div class="flex items-baseline gap-xs">
+<span class="font-metric-lg text-metric-lg text-primary">1,248</span>
+<span class="font-mono-data text-mono-data text-primary/60">/ 1,250</span>
+</div>
+<div class="w-full h-1 bg-surface-container-highest mt-sm">
+<div class="h-full bg-primary active-glow" style="width: 98.8%"></div>
+</div>
+</div>
+<div>
+<span class="font-label-caps text-label-caps text-on-surface-variant">THROUGHPUT_AVG</span>
+<div class="flex items-baseline gap-xs">
+<span class="font-metric-lg text-metric-lg text-on-surface">42.4</span>
+<span class="font-mono-data text-mono-data text-on-surface-variant">GB/S</span>
+</div>
+</div>
+<div class="mt-auto">
+<span class="font-label-caps text-label-caps text-on-surface-variant">FLEET_HEALTH</span>
+<div class="flex items-center gap-sm mt-xs">
+<span class="w-3 h-3 rounded-full bg-primary signal-glow"></span>
+<span class="font-mono-data text-mono-data text-primary uppercase tracking-widest">NOMINAL</span>
+</div>
+</div>
+</section>
+<!-- Fleet Signal Map -->
+<section class="md:col-span-9 flex flex-col">
+<div class="flex justify-between items-end mb-md">
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-on-surface-variant">VISUAL_ARRAY</span>
+<h2 class="font-headline-sm text-headline-sm uppercase tracking-tighter text-on-surface">Fleet Signal Map</h2>
+</div>
+<div class="flex gap-sm">
+<button class="bg-primary text-on-primary font-label-caps text-label-caps px-md py-sm hover:opacity-90 active:scale-95 transition-all">
+                            RE-SCAN ARRAY
+                        </button>
+<button class="border border-outline-variant text-on-surface-variant font-label-caps text-label-caps px-md py-sm hover:bg-surface-container-high transition-colors">
+                            FILTER
+                        </button>
+</div>
+</div>
+<!-- Dense Signal Grid (No Boxes, just tonal separation) -->
+<div class="grid-mesh p-sm flex flex-wrap gap-[2px] bg-surface-container-low min-h-[320px] content-start">
+<!-- JS will populate these indicators -->
+<script>
+                        document.addEventListener('DOMContentLoaded', () => {
+                            const container = document.querySelector('.grid-mesh');
+                            for (let i = 0; i < 500; i++) {
+                                const indicator = document.createElement('div');
+                                const status = Math.random();
+                                let colorClass = 'bg-primary';
+                                if (status > 0.95) colorClass = 'bg-error';
+                                else if (status > 0.85) colorClass = 'bg-tertiary';
+                                
+                                indicator.className = `w-3 h-3 ${colorClass} opacity-40 hover:opacity-100 transition-opacity cursor-crosshair`;
+                                if (colorClass === 'bg-error') indicator.classList.add('animate-pulse', 'opacity-100');
+                                container.appendChild(indicator);
+                            }
+                        });
+                    </script>
+</div>
+<div class="mt-sm flex justify-between">
+<span class="font-mono-data text-[10px] text-on-surface-variant/40">GEO_ZONE: GLOBAL_NORTH</span>
+<div class="flex gap-md">
+<div class="flex items-center gap-xs">
+<span class="w-2 h-2 bg-primary"></span>
+<span class="font-label-caps text-[10px] text-on-surface-variant">ACTIVE</span>
+</div>
+<div class="flex items-center gap-xs">
+<span class="w-2 h-2 bg-tertiary"></span>
+<span class="font-label-caps text-[10px] text-on-surface-variant">STALE</span>
+</div>
+<div class="flex items-center gap-xs">
+<span class="w-2 h-2 bg-error"></span>
+<span class="font-label-caps text-[10px] text-on-surface-variant">CRITICAL</span>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Audit Trail Section -->
+<section class="w-full bg-surface-container-low/50 border-t border-outline-variant/30 mt-lg">
+<div class="px-margin-mobile md:px-margin-desktop py-md">
+<div class="flex justify-between items-center mb-md">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary text-[20px]" data-icon="history">history</span>
+<h2 class="font-headline-sm text-headline-sm uppercase tracking-tighter text-on-surface">Audit Trail</h2>
+</div>
+<div class="flex items-center gap-md">
+<span class="font-label-caps text-label-caps text-primary animate-pulse">LIVE_FEED</span>
+<span class="text-outline-variant">|</span>
+<button class="font-label-caps text-label-caps text-on-surface-variant hover:text-on-surface transition-colors">EXPORT_CSV</button>
+</div>
+</div>
+<!-- Audit Log Feed -->
+<div class="space-y-[1px] font-mono-data text-mono-data">
+<div class="grid grid-cols-12 gap-md py-sm border-b border-outline-variant/10 text-on-surface-variant/60 font-label-caps text-[10px]">
+<div class="col-span-2">TIMESTAMP</div>
+<div class="col-span-2">NODE_ID</div>
+<div class="col-span-1 text-center">STATUS</div>
+<div class="col-span-5">ACTION_METRIC</div>
+<div class="col-span-2 text-right">LATENCY</div>
+</div>
+<!-- Entry 1 -->
+<div class="grid grid-cols-12 gap-md py-xs hover:bg-surface-container transition-colors group">
+<div class="col-span-2 text-on-surface-variant">14:22:01.004</div>
+<div class="col-span-2 text-primary group-hover:underline cursor-pointer">GW-OSLO-492</div>
+<div class="col-span-1 flex justify-center items-center">
+<span class="w-1.5 h-1.5 rounded-full bg-primary signal-glow"></span>
+</div>
+<div class="col-span-5 text-on-surface truncate">Link optimization routine completed - Mesh Layer 4</div>
+<div class="col-span-2 text-right text-primary">12ms</div>
+</div>
+<!-- Entry 2 -->
+<div class="grid grid-cols-12 gap-md py-xs hover:bg-surface-container transition-colors group">
+<div class="col-span-2 text-on-surface-variant">14:21:58.212</div>
+<div class="col-span-2 text-primary group-hover:underline cursor-pointer">GW-SIN-012</div>
+<div class="col-span-1 flex justify-center items-center">
+<span class="w-1.5 h-1.5 rounded-full bg-tertiary"></span>
+</div>
+<div class="col-span-5 text-on-surface truncate">Handshake sequence delayed - Retrying (1/3)</div>
+<div class="col-span-2 text-right text-tertiary">442ms</div>
+</div>
+<!-- Entry 3 -->
+<div class="grid grid-cols-12 gap-md py-xs hover:bg-surface-container transition-colors group">
+<div class="col-span-2 text-on-surface-variant">14:21:55.981</div>
+<div class="col-span-2 text-primary group-hover:underline cursor-pointer">GW-NYC-109</div>
+<div class="col-span-1 flex justify-center items-center">
+<span class="w-1.5 h-1.5 rounded-full bg-primary signal-glow"></span>
+</div>
+<div class="col-span-5 text-on-surface truncate">Heartbeat received - Signal strength 98%</div>
+<div class="col-span-2 text-right text-primary">4ms</div>
+</div>
+<!-- Entry 4 (Error) -->
+<div class="grid grid-cols-12 gap-md py-xs hover:bg-surface-container transition-colors group bg-error-container/5">
+<div class="col-span-2 text-error">14:21:52.440</div>
+<div class="col-span-2 text-error font-bold">GW-LND-882</div>
+<div class="col-span-1 flex justify-center items-center">
+<span class="w-1.5 h-1.5 rounded-full bg-error animate-ping"></span>
+</div>
+<div class="col-span-5 text-on-error-container truncate font-bold italic">CRITICAL: Unresponsive gateway terminal detected</div>
+<div class="col-span-2 text-right text-error">TIMEOUT</div>
+</div>
+<!-- Entry 5 -->
+<div class="grid grid-cols-12 gap-md py-xs hover:bg-surface-container transition-colors group">
+<div class="col-span-2 text-on-surface-variant">14:21:50.002</div>
+<div class="col-span-2 text-primary group-hover:underline cursor-pointer">GW-TK-221</div>
+<div class="col-span-1 flex justify-center items-center">
+<span class="w-1.5 h-1.5 rounded-full bg-primary signal-glow"></span>
+</div>
+<div class="col-span-5 text-on-surface truncate">Automated port-forwarding reconfiguration successful</div>
+<div class="col-span-2 text-right text-primary">28ms</div>
+</div>
+</div>
+<!-- Bottom Decoration / Visual Density -->
+<div class="mt-lg flex justify-between items-center border-t border-outline-variant/30 pt-sm opacity-50">
+<div class="flex gap-lg">
+<div class="flex flex-col">
+<span class="font-label-caps text-[9px]">ENCRYPTION_LEVEL</span>
+<span class="font-mono-data text-[11px] text-primary">AES_256_GCM</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-caps text-[9px]">SESSION_TOKEN</span>
+<span class="font-mono-data text-[11px]">8f-22-a1-c9</span>
+</div>
+</div>
+<div class="text-right">
+<span class="font-label-caps text-[9px]">CONNECTED_OPERATOR</span>
+<div class="font-mono-data text-[11px] uppercase">Root_Terminal_Alpha</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Bottom Navigation (Mobile Only) -->
+<nav class="md:hidden fixed bottom-0 w-full z-50 bg-surface-container border-t border-outline-variant flex justify-around items-center px-xs pb-safe h-16">
+<button class="flex flex-col items-center justify-center text-primary border-t-2 border-primary pt-1 w-1/5 tap:opacity-80 transition-opacity">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-caps text-label-caps">Overview</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant pt-1 w-1/5 tap:opacity-80 transition-opacity">
+<span class="material-symbols-outlined" data-icon="fact_check">fact_check</span>
+<span class="font-label-caps text-label-caps">Approvals</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant pt-1 w-1/5 tap:opacity-80 transition-opacity">
+<span class="material-symbols-outlined" data-icon="router">router</span>
+<span class="font-label-caps text-label-caps">Gateways</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant pt-1 w-1/5 tap:opacity-80 transition-opacity">
+<span class="material-symbols-outlined" data-icon="warning">warning</span>
+<span class="font-label-caps text-label-caps">Incidents</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant pt-1 w-1/5 tap:opacity-80 transition-opacity">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-label-caps text-label-caps">Audit</span>
+</button>
+</nav>
+<!-- Visual Signal Rails Overlay (Atmospheric) -->
+<div class="fixed top-0 right-0 w-[1px] h-full bg-outline-variant/20 hidden md:block z-0 pointer-events-none"></div>
+<div class="fixed top-0 left-0 w-[1px] h-full bg-outline-variant/20 hidden md:block z-0 pointer-events-none"></div>
+<script>
+        // Micro-interactions for live audit feel
+        setInterval(() => {
+            const logs = document.querySelector('.space-y-\\[1px\\]');
+            const nodes = ['GW-OSLO-492', 'GW-NYC-109', 'GW-TK-221', 'GW-BER-001', 'GW-LON-202'];
+            const actions = ['Buffer clearing routine...', 'Packet inspection protocol 9...', 'Signal oscillation check', 'Gateway pulse detected', 'Handshake optimization'];
+            
+            const firstChild = logs.children[1];
+            const clone = firstChild.cloneNode(true);
+            
+            const now = new Date();
+            clone.querySelector('.col-span-2').innerText = now.toTimeString().split(' ')[0] + '.' + now.getMilliseconds();
+            clone.querySelector('.col-span-2.text-primary').innerText = nodes[Math.floor(Math.random() * nodes.length)];
+            clone.querySelector('.col-span-5').innerText = actions[Math.floor(Math.random() * actions.length)];
+            clone.querySelector('.col-span-2.text-right').innerText = Math.floor(Math.random() * 50) + 'ms';
+            
+            logs.insertBefore(clone, logs.children[1]);
+            if (logs.children.length > 20) {
+                logs.removeChild(logs.lastElementChild);
+            }
+        }, 3000);
+    </script>
+</body></html>

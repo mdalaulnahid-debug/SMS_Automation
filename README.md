@@ -2,12 +2,13 @@
 
 Lawful operator push-pull SMS automation bridge for Bangladesh mobile operators (GP, Robi, Banglalink). Authorized users submit formatted requests via Telegram; the backend routes them through Android gateway phones; operator replies are matched and the Telegram bridge posts the result back to the group.
 
-This repo has **two main parts**:
+This repo now has **three actively relevant application surfaces**:
 
 | Part | Path | Role |
 |------|------|------|
 | **Backend** | `src/` | Node.js server: parse requests, queue per operator, call phone gateways, match replies, post replies via Telegram bridge |
-| **Android Gateway** | `android-gateway/` | Kotlin app on each operator phone: HTTP server for outbound SMS, SMS receiver for inbound, webhook forward to backend |
+| **Android Gateway App** | `android-gateway/app/` | Kotlin gateway runtime app on each operator phone: HTTP server for outbound SMS, SMS receiver for inbound, webhook forward to backend |
+| **Android Admin App** | `android-gateway/adminapp/` | Separate Android supervisor console for overview, approvals, gateways, incidents, audit, and backend-admin connectivity |
 
 ## Work From Any PC
 
@@ -53,6 +54,12 @@ settings.
 Architecture direction for the next hardening phase lives in `docs/enterprise-architecture.md`.
 The enterprise target blueprint is in `docs/system-design-v2.md`, and the new visual direction is
 in `docs/ui-design-guide-v2.md`.
+
+For the latest Android admin redesign and handoff context, read:
+
+- `progress_tracker.md`
+- `docs/CHANGELOG-2026-06-18.md`
+- `docs/Design/android-admin-stitch/README.md`
 
 ---
 
@@ -129,6 +136,26 @@ build-apk.bat
 ```
 
 Requires JDK 17 and Android SDK API 34. See `android-gateway/README.md` for paths and troubleshooting.
+
+### 3b. Build the separate Android admin app
+
+```bat
+cd android-gateway
+gradlew.bat --offline :adminapp:assembleDebug
+```
+
+Debug APK output:
+
+```text
+android-gateway/adminapp/build/outputs/apk/debug/adminapp-debug.apk
+```
+
+Admin app notes:
+
+- separate app from the gateway APK
+- uses saved backend URL + admin API key
+- reads live backend admin endpoints
+- should preserve backend workflow authority
 
 ### 4. Phone app setup
 
@@ -321,9 +348,13 @@ When continuing this project:
 4. Restore gitignored config files if switching PCs: `config/auth.json`, `config/gateways.json`, `config/telegram.json`
 5. Test flow: `testDestination` on `POST /api/requests` — see `src/smsGateway.js`, `src/service.js`
 6. Phone matching: `normalizePhoneNumber()` in `src/domain.js`
-7. Android source: `android-gateway/app/src/main/java/com/smsgateway/`
-8. Build APK: `android-gateway/build-apk.bat` or `gradle assembleRelease`
-9. Start backend: `start-backend.bat` from repo root or run `setup-workstation.bat` first on a fresh PC
-10. Tests: `node --test`
+7. Android gateway source: `android-gateway/app/src/main/java/com/smsgateway/`
+8. Android admin source: `android-gateway/adminapp/src/main/java/com/smsgateway/admin/`
+9. Stitch handoff package: `docs/Design/android-admin-stitch/`
+10. Latest handoff log: `docs/CHANGELOG-2026-06-18.md`
+11. Build gateway APK: `android-gateway/build-apk.bat` or `gradle assembleRelease`
+12. Build admin APK: `cd android-gateway && gradlew.bat --offline :adminapp:assembleDebug`
+13. Start backend: `start-backend.bat` from repo root or run `setup-workstation.bat` first on a fresh PC
+14. Tests: `node --test`
 
 Safety principles (from `vision.md`): never alter operator SMS commands; only trust configured senders; manual review before posting reply; one active request per operator phone unless reference matching is reliable.

@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tactical Command Overview</title>
+<script type='text/javascript' nonce='ttJ7l6K9aPv3GCnj1idRBw==' src='https://contribution.usercontent.google.com/3jfGUJuUBSXDSdzSq8n3VNCV_O1MXiUuR78LzUyj2PObWIAemqD8CfsJNt421pN7B6TESE6Q0g-MDO6Y-XWgswzV4owMM0sO79T88cJ6NTEwH6w6gxf8BbPn0ZqIRouUvvZNL5zk3KJbxcIC29D98sq7b6h5-XNJLFCAqJHCU68zJQTEu1ucc6x6iusEfI5cCYjrQXWeWPAYuMlnBD60J5bQBSs4aTk3nzl-KH2oX07i-X0ygRz4t66YXXt6wIlUc5z73NOV8mZuxMasFhcMqu9rsVMv2Kqv1dO2Fu8lN9x4pdikOkYxQY-hc0rl-CwmOn6fIye0rMCpMgdFr896iEuahgi3mKWpQh6pmfhp7fNI_TXX1mtDj8HLWSK4-9WYLfRw_8ZV78GrPxhdmxKiNU-ev0-IBKnBbhLxdo1JiRF1dLkmatv1cI0pIuZwMSgEj4q6muYGN04JTBwj6HrmG0yyX75u9A6n4RjUu08K4Rzq9tFecdNt4Kz-5cMbvbYSsmwihaAJJh3e4jHwDoV-eRCyItrmYp5VapvIqTOML5qRmEP0SeailUo7Si3n0dryCDgpqQeRvLJXfeh90ma-t4NC9zpbTPajdjAFUsz0CXKnHkTM-0CSefcbelti7tZGC-KmrqqRxB3d4bK9kHdCNs8BrkNGCEJ-vcXZT7FGzi31GOk4xqh1BbigGJpyZgKNej8DXaIkNYuHYa3s4C30ydBk15eub3d4mvUGXR3Cu3V3NLajP_2IF8iF3PtI819B0ZVXQbz8eaF2_sg23C5klQvNoatS794lqGqTsA'></script><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&amp;family=Geist:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Tactical Glow Effects */
+        .glow-primary {
+            box-shadow: 0 0 15px rgba(149, 205, 248, 0.3);
+        }
+        .glow-error {
+            box-shadow: 0 0 15px rgba(255, 180, 171, 0.4);
+        }
+        
+        /* Scanline Overlay */
+        .scanline-overlay {
+            background: linear-gradient(
+                to bottom,
+                rgba(18, 16, 16, 0) 50%,
+                rgba(0, 0, 0, 0.1) 50%
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+        }
+
+        /* Signal Rail Animation */
+        @keyframes flow {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(100%); }
+        }
+        .signal-flow {
+            animation: flow 3s linear infinite;
+        }
+
+        /* Custom Scrollbar for Logs */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #1d2022;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #41484e;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-container": "#384b5c",
+                      "primary-fixed": "#c9e6ff",
+                      "on-secondary-fixed-variant": "#354959",
+                      "tertiary-fixed": "#f5dfca",
+                      "surface-container-lowest": "#0c0e11",
+                      "on-tertiary": "#3b2e20",
+                      "tertiary-container": "#a08e7b",
+                      "primary-container": "#5e97bf",
+                      "on-tertiary-container": "#34271a",
+                      "on-secondary-container": "#a6bbce",
+                      "outline-variant": "#41484e",
+                      "secondary": "#b4c9dd",
+                      "on-secondary-fixed": "#071d2c",
+                      "surface-container": "#1d2022",
+                      "on-primary": "#00344e",
+                      "surface": "#111416",
+                      "inverse-primary": "#256489",
+                      "on-primary-fixed": "#001e2f",
+                      "on-background": "#e1e2e6",
+                      "surface-container-low": "#191c1e",
+                      "surface-variant": "#323538",
+                      "surface-dim": "#111416",
+                      "surface-bright": "#37393c",
+                      "on-error-container": "#ffdad6",
+                      "error-container": "#93000a",
+                      "primary": "#95cdf8",
+                      "on-primary-container": "#002d44",
+                      "error": "#ffb4ab",
+                      "tertiary-fixed-dim": "#d8c3af",
+                      "on-surface-variant": "#c1c7cf",
+                      "on-secondary": "#1e3242",
+                      "background": "#111416",
+                      "secondary-fixed-dim": "#b4c9dd",
+                      "on-tertiary-fixed-variant": "#534435",
+                      "surface-container-high": "#282a2d",
+                      "inverse-on-surface": "#2e3133",
+                      "inverse-surface": "#e1e2e6",
+                      "tertiary": "#d8c3af",
+                      "on-primary-fixed-variant": "#004b6f",
+                      "on-error": "#690005",
+                      "surface-container-highest": "#323538",
+                      "secondary-fixed": "#d0e5fa",
+                      "on-surface": "#e1e2e6",
+                      "outline": "#8b9199",
+                      "on-tertiary-fixed": "#24190d",
+                      "primary-fixed-dim": "#95cdf8",
+                      "surface-tint": "#95cdf8"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "md": "16px",
+                      "margin-mobile": "16px",
+                      "lg": "24px",
+                      "base": "4px",
+                      "margin-desktop": "32px",
+                      "gutter": "12px",
+                      "xs": "4px",
+                      "sm": "8px",
+                      "xl": "32px"
+              },
+              "fontFamily": {
+                      "mono-data": ["JetBrains Mono"],
+                      "metric-md": ["Geist"],
+                      "headline-sm": ["Geist"],
+                      "metric-lg": ["Geist"],
+                      "body-md": ["Geist"],
+                      "label-caps": ["Geist"]
+              },
+              "fontSize": {
+                      "mono-data": ["13px", {"lineHeight": "1.5", "letterSpacing": "0em", "fontWeight": "400"}],
+                      "metric-md": ["32px", {"lineHeight": "1.1", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "headline-sm": ["18px", {"lineHeight": "1.4", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                      "metric-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-md": ["14px", {"lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400"}],
+                      "label-caps": ["11px", {"lineHeight": "1", "letterSpacing": "0.15em", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface font-body-md selection:bg-primary/30 min-h-screen flex flex-col overflow-hidden">
+<!-- TOP NAVIGATION SHELL -->
+<header class="bg-surface text-primary border-b border-outline-variant font-headline-sm text-headline-sm docked full-width top-0 flex justify-between items-center w-full px-margin-mobile h-14 z-50">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: &#39;FILL&#39; 1;">hub</span>
+<span class="font-headline-sm text-headline-sm font-bold text-primary">ADMIN COMMAND</span>
+</div>
+<div class="flex items-center gap-md">
+<div class="flex items-center gap-xs text-on-surface-variant">
+<span class="font-label-caps text-label-caps">SYSTEM UPTIME:</span>
+<span class="font-mono-data text-mono-data text-primary">99.98%</span>
+</div>
+<button class="material-symbols-outlined hover:bg-surface-container-high transition-colors p-sm rounded-full Active: scale-95 duration-75">sync</button>
+</div>
+</header>
+<main class="flex-1 relative flex flex-col overflow-hidden">
+<!-- Integrated Background with WebGL-like Shader -->
+<div class="absolute inset-0 opacity-10 pointer-events-none">
+
+</div>
+<div class="scanline-overlay absolute inset-0"></div>
+<!-- TOP SECTION: GIANT METRICS & STATUS STRIP -->
+<section class="relative z-10 px-margin-desktop py-xl border-b border-outline-variant/30 bg-surface/40 backdrop-blur-sm">
+<div class="flex flex-col md:flex-row items-end justify-between gap-xl">
+<div class="flex flex-col gap-xs">
+<span class="font-label-caps text-label-caps text-on-surface-variant">TOTAL ACTIVE REQUESTS</span>
+<div class="flex items-center gap-lg">
+<h1 class="font-mono-data text-[120px] leading-none font-bold text-primary drop-shadow-[0_0_20px_rgba(149,205,248,0.4)]">
+                            2,841
+                        </h1>
+<!-- Glowing Radial Indicator -->
+<div class="relative w-32 h-32 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-variant" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-width="2"></circle>
+<circle class="text-primary glow-primary" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-dasharray="364.4" stroke-dashoffset="100" stroke-width="6"></circle>
+</svg>
+<div class="absolute flex flex-col items-center">
+<span class="font-mono-data text-headline-sm text-primary">74%</span>
+<span class="font-label-caps text-[8px] text-on-surface-variant">LOAD</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Status Strip -->
+<div class="w-full md:w-auto flex-1 max-w-2xl bg-surface-container-low border border-outline-variant h-14 flex items-center px-md overflow-hidden relative">
+<div class="absolute inset-y-0 left-0 w-1 bg-primary glow-primary"></div>
+<div class="grid grid-cols-4 w-full divide-x divide-outline-variant">
+<div class="px-md">
+<p class="font-label-caps text-[10px] text-on-surface-variant">KERNAL</p>
+<p class="font-mono-data text-primary">STABLE</p>
+</div>
+<div class="px-md">
+<p class="font-label-caps text-[10px] text-on-surface-variant">LATENCY</p>
+<p class="font-mono-data text-primary">12ms</p>
+</div>
+<div class="px-md">
+<p class="font-label-caps text-[10px] text-on-surface-variant">QUEUE</p>
+<p class="font-mono-data text-primary">0.02s</p>
+</div>
+<div class="px-md">
+<p class="font-label-caps text-[10px] text-on-surface-variant">SEC-LINK</p>
+<p class="font-mono-data text-primary">ENCRYPTED</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- MIDDLE: FLEET TELEMETRY SIGNAL RAILS -->
+<section class="flex-1 relative z-10 overflow-hidden flex flex-col">
+<div class="px-margin-desktop py-md flex items-center justify-between">
+<span class="font-label-caps text-label-caps text-secondary">FLEET TELEMETRY: REAL-TIME OPERATIONAL DATA</span>
+<span class="font-mono-data text-mono-data text-on-surface-variant">REFRESH: 500MS</span>
+</div>
+<!-- Segmented Signal Rails -->
+<div class="flex-1 flex flex-col justify-around px-margin-desktop space-y-gutter">
+<!-- Rail: GP Operator -->
+<div class="relative h-24 bg-surface-container-lowest border border-outline-variant/30 flex items-center overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-16 bg-surface-container-high border-r border-outline flex items-center justify-center z-20">
+<span class="font-label-caps text-label-caps -rotate-90 whitespace-nowrap text-on-surface">GP-01</span>
+</div>
+<div class="flex-1 px-xl flex items-center gap-xl relative z-10">
+<div class="flex-1 h-px bg-outline-variant relative overflow-hidden">
+<div class="absolute inset-0 signal-flow bg-gradient-to-r from-transparent via-primary/50 to-transparent w-1/3"></div>
+</div>
+<div class="flex flex-col">
+<span class="font-mono-data text-metric-md text-primary">842.1</span>
+<span class="font-label-caps text-[9px] text-on-surface-variant">PACKETS/SEC</span>
+</div>
+<div class="w-48 h-12">
+<canvas class="w-full h-full" id="sparkline-1"></canvas>
+</div>
+<div class="flex flex-col items-end">
+<span class="px-sm py-xs bg-primary-container/20 border border-primary/30 text-primary font-mono-data text-[10px]">OPERATIONAL</span>
+</div>
+</div>
+</div>
+<!-- Severity Rail: BREAKING LAYOUT -->
+<div class="h-10 bg-error-container/20 border-y border-error/50 flex items-center relative overflow-hidden group">
+<div class="absolute inset-0 bg-error/5 opacity-10 animate-pulse"></div>
+<div class="px-margin-desktop flex items-center gap-md w-full relative z-10">
+<span class="material-symbols-outlined text-error" style="font-variation-settings: &#39;FILL&#39; 1;">warning</span>
+<span class="font-label-caps text-label-caps text-error font-bold">CRITICAL ALERT: RB OPERATOR NODE 04 TIMEOUT EXCEEDED</span>
+<div class="flex-1 border-b border-error/30 border-dashed"></div>
+<span class="font-mono-data text-mono-data text-error">[ERR_402: CON_DROP]</span>
+</div>
+</div>
+<!-- Rail: RB Operator -->
+<div class="relative h-24 bg-surface-container-lowest border border-outline-variant/30 flex items-center overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-16 bg-surface-container-high border-r border-outline flex items-center justify-center z-20">
+<span class="font-label-caps text-label-caps -rotate-90 whitespace-nowrap text-on-surface">RB-09</span>
+</div>
+<div class="flex-1 px-xl flex items-center gap-xl relative z-10 opacity-50">
+<div class="flex-1 h-px bg-error-container relative"></div>
+<div class="flex flex-col">
+<span class="font-mono-data text-metric-md text-error">0.0</span>
+<span class="font-label-caps text-[9px] text-on-surface-variant">PACKETS/SEC</span>
+</div>
+<div class="w-48 h-12 flex items-center justify-center">
+<span class="font-mono-data text-error text-[10px]">NO_SIGNAL</span>
+</div>
+<div class="flex flex-col items-end">
+<span class="px-sm py-xs bg-error-container/40 border border-error/50 text-error font-mono-data text-[10px]">OFFLINE</span>
+</div>
+</div>
+</div>
+<!-- Rail: BL Operator -->
+<div class="relative h-24 bg-surface-container-lowest border border-outline-variant/30 flex items-center overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-16 bg-surface-container-high border-r border-outline flex items-center justify-center z-20">
+<span class="font-label-caps text-label-caps -rotate-90 whitespace-nowrap text-on-surface">BL-42</span>
+</div>
+<div class="flex-1 px-xl flex items-center gap-xl relative z-10">
+<div class="flex-1 h-px bg-outline-variant relative overflow-hidden">
+<div class="absolute inset-0 signal-flow bg-gradient-to-r from-transparent via-tertiary/50 to-transparent w-1/4" style="animation-duration: 1.5s;"></div>
+</div>
+<div class="flex flex-col">
+<span class="font-mono-data text-metric-md text-tertiary">1,124.8</span>
+<span class="font-label-caps text-[9px] text-on-surface-variant">PACKETS/SEC</span>
+</div>
+<div class="w-48 h-12">
+<canvas class="w-full h-full" id="sparkline-2"></canvas>
+</div>
+<div class="flex flex-col items-end">
+<span class="px-sm py-xs bg-tertiary-container/20 border border-tertiary/30 text-tertiary font-mono-data text-[10px]">PEAK_SYNC</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- BOTTOM: LIVE SYSTEM FEED & NETWORK STREAM -->
+<section class="h-64 border-t border-outline-variant/50 bg-surface-container-lowest flex relative z-20 overflow-hidden">
+<!-- Scrolling Logs -->
+<div class="w-1/2 border-r border-outline-variant p-md flex flex-col">
+<div class="flex items-center justify-between mb-sm">
+<span class="font-label-caps text-label-caps text-on-surface-variant">LIVE SYSTEM FEED</span>
+<span class="text-[8px] font-mono-data text-primary animate-pulse">LIVE TRANSMISSION</span>
+</div>
+<div class="flex-1 overflow-y-auto font-mono-data text-[10px] space-y-1 custom-scrollbar text-on-surface-variant" id="log-container">
+<p><span class="text-outline">[14:22:01.04]</span> INITIALIZING GLOBAL POOL SHARD_04...</p>
+<p><span class="text-outline">[14:22:01.08]</span> <span class="text-primary">OK</span> AUTHENTICATION HANDSHAKE COMPLETE.</p>
+<p><span class="text-outline">[14:22:01.12]</span> SYNCING VECTOR ASSETS FOR SECTOR G-9...</p>
+<p><span class="text-outline">[14:22:01.44]</span> <span class="text-error">WARN</span> PACKET DELAY OBSERVED ON ROUTE 412.</p>
+<p><span class="text-outline">[14:22:01.52]</span> STREAMING TELEMETRY TO PRIMARY NODE...</p>
+<p><span class="text-outline">[14:22:01.60]</span> <span class="text-primary">OK</span> DATA_INGEST: 42.1GB/S</p>
+<p><span class="text-outline">[14:22:01.64]</span> COMPRESSING LOG_ARCHIVE_A01...</p>
+</div>
+</div>
+<!-- Technical Network Stream Graph -->
+<div class="w-1/2 p-md flex flex-col">
+<div class="flex items-center justify-between mb-sm">
+<span class="font-label-caps text-label-caps text-on-surface-variant">NETWORK TRAFFIC STREAM</span>
+<div class="flex gap-md">
+<span class="font-label-caps text-[9px] flex items-center gap-xs"><span class="w-1.5 h-1.5 bg-primary rounded-full"></span>INGRESS</span>
+<span class="font-label-caps text-[9px] flex items-center gap-xs"><span class="w-1.5 h-1.5 bg-tertiary rounded-full"></span>EGRESS</span>
+</div>
+</div>
+<div class="flex-1 relative border border-outline-variant/30 bg-surface/30">
+<canvas class="w-full h-full" id="network-graph"></canvas>
+</div>
+</div>
+</section>
+</main>
+<!-- BOTTOM NAVBAR (Mandatory Shell Component) -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-xs pb-safe h-16 bg-surface-container border-t border-outline-variant">
+<button class="flex flex-col items-center justify-center text-primary border-t-2 border-primary pt-1 hover:bg-surface-container-highest transition-colors Tap: opacity-80 transition-opacity">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-caps text-label-caps">OVERVIEW</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant pt-1 hover:bg-surface-container-highest transition-colors Tap: opacity-80 transition-opacity">
+<span class="material-symbols-outlined">fact_check</span>
+<span class="font-label-caps text-label-caps">APPROVALS</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant pt-1 hover:bg-surface-container-highest transition-colors Tap: opacity-80 transition-opacity">
+<span class="material-symbols-outlined">router</span>
+<span class="font-label-caps text-label-caps">GATEWAYS</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant pt-1 hover:bg-surface-container-highest transition-colors Tap: opacity-80 transition-opacity">
+<span class="material-symbols-outlined">warning</span>
+<span class="font-label-caps text-label-caps">INCIDENTS</span>
+</button>
+<button class="flex flex-col items-center justify-center text-on-surface-variant pt-1 hover:bg-surface-container-highest transition-colors Tap: opacity-80 transition-opacity">
+<span class="material-symbols-outlined">history</span>
+<span class="font-label-caps text-label-caps">AUDIT</span>
+</button>
+</nav>
+<script>
+        // Micro-interactions & Visual Effects
+        
+        // Log Generator
+        const logContainerElement = document.getElementById('log-container');
+        const logs = [
+            "OPTIMIZING BUFFER FOR SECTOR 7...",
+            "RECOGNIZING OPERATOR CREDENTIALS...",
+            "OK HANDSHAKE VERIFIED: NODE_81",
+            "WARN LATENCY SPIKE DETECTED IN SOUTH CLUSTER",
+            "OK DATA_PURGE: TEMP_STORAGE CLEANED",
+            "UPDATING GLOBAL ROUTING TABLES...",
+            "OK SYNC COMPLETE: 12.1MS",
+            "CHECKING SECURITY PERIMETER...",
+            "OK ALL SYSTEMS NOMINAL"
+        ];
+        
+        setInterval(() => {
+            const logEntry = document.createElement('p');
+            const now = new Date();
+            const timestamp = `${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}.${Math.floor(Math.random() * 99)}`;
+            const randomLog = logs[Math.floor(Math.random() * logs.length)];
+            
+            let statusClass = 'text-outline';
+            if (randomLog.includes('OK')) statusClass = 'text-primary';
+            if (randomLog.includes('WARN')) statusClass = 'text-error';
+            
+            logEntry.innerHTML = `<span class="text-outline">[${timestamp}]</span> ${randomLog}`;
+            logContainerElement.appendChild(logEntry);
+            logContainerElement.scrollTop = logContainerElement.scrollHeight;
+            if (logContainerElement.children.length > 50) logContainerElement.removeChild(logContainerElement.firstChild);
+        }, 2000);
+
+        // Simple Sparkline Drawer
+        function drawSparkline(id, color) {
+            const canvas = document.getElementById(id);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            let points = Array.from({length: 20}, () => Math.random() * height);
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                ctx.beginPath();
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 2;
+                
+                points.shift();
+                points.push(Math.random() * height);
+
+                ctx.moveTo(0, points[0]);
+                for (let i = 1; i < points.length; i++) {
+                    const x = (i / (points.length - 1)) * width;
+                    ctx.lineTo(x, points[i]);
+                }
+                ctx.stroke();
+                
+                // Area fill
+                ctx.lineTo(width, height);
+                ctx.lineTo(0, height);
+                ctx.fillStyle = color.replace('1)', '0.1)');
+                ctx.fill();
+
+                setTimeout(() => requestAnimationFrame(animate), 200);
+            }
+            animate();
+        }
+
+        drawSparkline('sparkline-1', 'rgba(149, 205, 248, 1)');
+        drawSparkline('sparkline-2', 'rgba(216, 195, 175, 1)');
+
+        // Network Stream Graph (Simple scrolling lines)
+        const netCanvas = document.getElementById('network-graph');
+        const netCtx = netCanvas.getContext('2d');
+        let netPoints = Array.from({length: 40}, () => ({in: Math.random() * 50, out: Math.random() * 50}));
+
+        function drawNetwork() {
+            const w = netCanvas.width;
+            const h = netCanvas.height;
+            netCtx.clearRect(0, 0, w, h);
+            
+            // Grid Lines
+            netCtx.strokeStyle = 'rgba(139, 145, 153, 0.1)';
+            netCtx.lineWidth = 1;
+            for(let i=0; i<w; i+=20) {
+                netCtx.beginPath(); netCtx.moveTo(i, 0); netCtx.lineTo(i, h); netCtx.stroke();
+            }
+            for(let j=0; j<h; j+=20) {
+                netCtx.beginPath(); netCtx.moveTo(0, j); netCtx.lineTo(w, j); netCtx.stroke();
+            }
+
+            // Ingress
+            netCtx.beginPath();
+            netCtx.strokeStyle = '#95cdf8';
+            netCtx.moveTo(0, h - netPoints[0].in);
+            for(let i=1; i<netPoints.length; i++) {
+                netCtx.lineTo((i/netPoints.length)*w, h - netPoints[i].in);
+            }
+            netCtx.stroke();
+
+            // Egress
+            netCtx.beginPath();
+            netCtx.strokeStyle = '#d8c3af';
+            netCtx.moveTo(0, h - netPoints[0].out);
+            for(let i=1; i<netPoints.length; i++) {
+                netCtx.lineTo((i/netPoints.length)*w, h - netPoints[i].out);
+            }
+            netCtx.stroke();
+
+            netPoints.shift();
+            netPoints.push({in: Math.random() * 60 + 10, out: Math.random() * 40 + 5});
+            
+            setTimeout(() => requestAnimationFrame(drawNetwork), 150);
+        }
+        drawNetwork();
+
+    </script>
+</body></html>

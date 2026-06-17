@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Admin Command | Incident Management</title>
+<script type='text/javascript' nonce='osiJPtHjwQuLYQPP2unZ+A==' src='https://contribution.usercontent.google.com/u4EOatEXtQ5BxdtqwvDTc2B-aDb12uAGaYUzS4TXOys9VnUBW6E-9RtsFkFkSaJsMwsRiZItjmWK0CpdoU1LkK5KyrDbR0zCEQaW2VI8-peKCXqh_BUDG0pai50nLNsVfVKIyzY-lEeqAeuq0pDoK3qo97t1oyiz-eNTx0v6Lm6sbS62QFoG_-4IsWeuzwA8mmNtrt9wcv2cDhqxvnwwF-q-tOZl2Z8KaPphJ2uuqIsnlv8cx_bB6RAlAHhMOOqejwMfIGaozsxkSYEpj9EgSTffwQd2FOptXDva4ssuVRMOuDeR8jhSfmWNXem6q_IdwnBTtsdeRlo5umWcTIreK86ehhVLx0fPDKo4Mc5Jtoe_cfx5Lf3-AoKAkJXRyU8mPRsZZ4HBzEBx8Y0NC05g19uTsb-k_OpBCb9DOUByLi8TslJtSaNtzt9OcFivOkeLt3-rTSCPNjs7xPYKnucijzlc2wJ9vk3kbb3VvB03YpBNRkv3IFu3hrlsHil9VTkjp8IroiVe3umYX61AvCA5PRjZPrgUdM0UZ2c5PGICOKwQhsB5iW21FM079tzypMMkxR-DUvXjGlvq6KF62NwtmSnJMHbPk6yBKhrj9wWPQvUKbeLHwlyDx8SyRDc_fJiGZxzS0mlQEwq74MP2aoZzca7xmpRBl8n62hG9yOUUIBBEMMRMwpZWBeP7tpWbiw6upwUdnnUS5U4kRv4x-SiExhm2tfbJ_a3H8KqujG6v5edoKlHvGquYkcEO0e052ikY3BoxvdTGiJRFuhy6wO6ngiOqSAkYsbBK6PgEmw'></script><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&amp;family=Geist:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        @layer base {
+            .material-symbols-outlined {
+                font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+                vertical-align: middle;
+            }
+        }
+        
+        body {
+            background-color: #111416;
+            color: #e1e2e6;
+            font-family: 'Geist', sans-serif;
+            overflow-x: hidden;
+        }
+
+        .signal-rail-active {
+            box-shadow: 0 0 12px rgba(149, 205, 248, 0.15);
+        }
+
+        .incident-critical {
+            background: linear-gradient(90deg, rgba(147, 0, 10, 0.2) 0%, rgba(147, 0, 10, 0.05) 100%);
+            border-left: 4px solid #ffb4ab;
+        }
+
+        .incident-resolved {
+            opacity: 0.6;
+            filter: grayscale(1);
+        }
+
+        .terminal-scroll::-webkit-scrollbar {
+            width: 4px;
+        }
+        .terminal-scroll::-webkit-scrollbar-track {
+            background: #0c0e11;
+        }
+        .terminal-scroll::-webkit-scrollbar-thumb {
+            background: #41484e;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-container": "#384b5c",
+                      "primary-fixed": "#c9e6ff",
+                      "on-secondary-fixed-variant": "#354959",
+                      "tertiary-fixed": "#f5dfca",
+                      "surface-container-lowest": "#0c0e11",
+                      "on-tertiary": "#3b2e20",
+                      "tertiary-container": "#a08e7b",
+                      "primary-container": "#5e97bf",
+                      "on-tertiary-container": "#34271a",
+                      "on-secondary-container": "#a6bbce",
+                      "outline-variant": "#41484e",
+                      "secondary": "#b4c9dd",
+                      "on-secondary-fixed": "#071d2c",
+                      "surface-container": "#1d2022",
+                      "on-primary": "#00344e",
+                      "surface": "#111416",
+                      "inverse-primary": "#256489",
+                      "on-primary-fixed": "#001e2f",
+                      "on-background": "#e1e2e6",
+                      "surface-container-low": "#191c1e",
+                      "surface-variant": "#323538",
+                      "surface-dim": "#111416",
+                      "surface-bright": "#37393c",
+                      "on-error-container": "#ffdad6",
+                      "error-container": "#93000a",
+                      "primary": "#95cdf8",
+                      "on-primary-container": "#002d44",
+                      "error": "#ffb4ab",
+                      "tertiary-fixed-dim": "#d8c3af",
+                      "on-surface-variant": "#c1c7cf",
+                      "on-secondary": "#1e3242",
+                      "background": "#111416",
+                      "secondary-fixed-dim": "#b4c9dd",
+                      "on-tertiary-fixed-variant": "#534435",
+                      "surface-container-high": "#282a2d",
+                      "inverse-on-surface": "#2e3133",
+                      "inverse-surface": "#e1e2e6",
+                      "tertiary": "#d8c3af",
+                      "on-primary-fixed-variant": "#004b6f",
+                      "on-error": "#690005",
+                      "surface-container-highest": "#323538",
+                      "secondary-fixed": "#d0e5fa",
+                      "on-surface": "#e1e2e6",
+                      "outline": "#8b9199",
+                      "on-tertiary-fixed": "#24190d",
+                      "primary-fixed-dim": "#95cdf8",
+                      "surface-tint": "#95cdf8"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "md": "16px",
+                      "margin-mobile": "16px",
+                      "lg": "24px",
+                      "base": "4px",
+                      "margin-desktop": "32px",
+                      "gutter": "12px",
+                      "xs": "4px",
+                      "sm": "8px",
+                      "xl": "32px"
+              },
+              "fontFamily": {
+                      "mono-data": ["JetBrains Mono"],
+                      "metric-md": ["Geist"],
+                      "headline-sm": ["Geist"],
+                      "metric-lg": ["Geist"],
+                      "body-md": ["Geist"],
+                      "label-caps": ["Geist"]
+              },
+              "fontSize": {
+                      "mono-data": ["13px", {"lineHeight": "1.5", "letterSpacing": "0em", "fontWeight": "400"}],
+                      "metric-md": ["32px", {"lineHeight": "1.1", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                      "headline-sm": ["18px", {"lineHeight": "1.4", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                      "metric-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-md": ["14px", {"lineHeight": "1.6", "letterSpacing": "0em", "fontWeight": "400"}],
+                      "label-caps": ["11px", {"lineHeight": "1", "letterSpacing": "0.15em", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+      </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="flex flex-col min-h-screen">
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-margin-mobile h-14 bg-surface dark:bg-surface border-b border-outline-variant dark:border-outline-variant sticky top-0 z-50">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary" data-icon="hub">hub</span>
+<span class="font-headline-sm text-headline-sm font-bold text-primary">Admin Command</span>
+</div>
+<div class="flex items-center gap-md">
+<button class="flex items-center gap-xs px-md py-sm bg-primary text-on-primary font-label-caps text-label-caps hover:opacity-90 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[14px]" data-icon="done_all">done_all</span>
+                ACKNOWLEDGE ALL
+            </button>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer hover:bg-surface-container-high transition-colors p-base" data-icon="sync">sync</span>
+</div>
+</header>
+<!-- Main Content: Continuous Diagnostic Panel -->
+<main class="flex-grow flex flex-col w-full pb-16">
+<!-- Summary Strip -->
+<section class="w-full grid grid-cols-2 md:grid-cols-4 border-b border-outline-variant bg-surface-container-low">
+<div class="p-md border-r border-outline-variant">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-xs">ACTIVE INCIDENTS</p>
+<div class="flex items-baseline gap-xs">
+<span class="font-metric-md text-metric-md text-error">12</span>
+<span class="font-mono-data text-mono-data text-on-surface-variant">CRITICAL</span>
+</div>
+</div>
+<div class="p-md border-r border-outline-variant">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-xs">MTTR (24H)</p>
+<div class="flex items-baseline gap-xs">
+<span class="font-metric-md text-metric-md text-primary">14m</span>
+<span class="font-mono-data text-mono-data text-on-surface-variant">SEC</span>
+</div>
+</div>
+<div class="p-md border-r border-outline-variant">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-xs">NODES AFFECTED</p>
+<div class="flex items-baseline gap-xs">
+<span class="font-metric-md text-metric-md text-tertiary">142</span>
+<span class="font-mono-data text-mono-data text-on-surface-variant">ISOLATED</span>
+</div>
+</div>
+<div class="p-md">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-xs">SIGNAL STATUS</p>
+<div class="flex items-center gap-sm mt-sm">
+<div class="h-1 flex-grow bg-outline-variant relative overflow-hidden">
+<div class="absolute inset-0 bg-primary w-2/3 animate-pulse"></div>
+</div>
+<span class="font-mono-data text-mono-data text-primary">NOMINAL</span>
+</div>
+</div>
+</section>
+<!-- Incident Rails -->
+<section class="flex flex-col">
+<!-- CRITICAL INCIDENT 01 -->
+<div class="incident-critical border-b border-outline-variant p-md md:p-lg flex flex-col md:flex-row gap-lg">
+<div class="flex-grow">
+<div class="flex items-center gap-md mb-sm">
+<span class="font-label-caps text-label-caps px-sm py-xs bg-error text-on-error">CRITICAL</span>
+<span class="font-mono-data text-mono-data text-error">ID: 0x882A_FAILURE</span>
+<span class="font-mono-data text-mono-data text-on-surface-variant opacity-50">14:22:01 UTC</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-sm">GATEWAY_CONNECTION_TIMEOUT: NORTH_ATL_HUB</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-3xl mb-md">
+                        Primary telemetry uplink for the North Atlantic corridor has reached the maximum retry threshold. 
+                        Packet loss detected at 88.4%. Handshake failure persisting across secondary fiber rails.
+                    </p>
+<div class="flex flex-wrap gap-md">
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-on-surface-variant">AFFECTING NODES</span>
+<span class="font-mono-data text-mono-data text-primary">NA-ATL-01, NA-ATL-05, NA-NY-12</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-on-surface-variant">SERVICE IMPACT</span>
+<span class="font-mono-data text-mono-data text-tertiary">EDGE_ROUTING, CORE_DATABASE</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col justify-end gap-sm min-w-[200px]">
+<button class="w-full border border-error text-error font-label-caps text-label-caps py-sm hover:bg-error/10 transition-colors active:scale-95">ACKNOWLEDGE</button>
+<button class="w-full bg-surface-container-highest text-on-surface font-label-caps text-label-caps py-sm hover:bg-surface-variant transition-colors active:scale-95">VIEW SIGNAL LOGS</button>
+</div>
+</div>
+<!-- CRITICAL INCIDENT 02 -->
+<div class="incident-critical border-b border-outline-variant p-md md:p-lg flex flex-col md:flex-row gap-lg">
+<div class="flex-grow">
+<div class="flex items-center gap-md mb-sm">
+<span class="font-label-caps text-label-caps px-sm py-xs bg-error text-on-error">CRITICAL</span>
+<span class="font-mono-data text-mono-data text-error">ID: 0x99FF_OVERLOAD</span>
+<span class="font-mono-data text-mono-data text-on-surface-variant opacity-50">14:18:45 UTC</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface font-bold mb-sm">STORAGE_QUOTA_EXCEEDED: CLUSTER_EPSILON</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-3xl mb-md">
+                        Automated cleanup protocols failed due to locked database handles. Cluster is rejecting all incoming write operations. 
+                        Data integrity currently maintained in read-only mode.
+                    </p>
+<div class="flex flex-wrap gap-md">
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-on-surface-variant">AFFECTING NODES</span>
+<span class="font-mono-data text-mono-data text-primary">EPSILON-SHARD-A..D</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-on-surface-variant">METRIC</span>
+<span class="font-mono-data text-mono-data text-error">DISK_USAGE: 99.8%</span>
+</div>
+</div>
+</div>
+<div class="flex flex-col justify-end gap-sm min-w-[200px]">
+<button class="w-full border border-error text-error font-label-caps text-label-caps py-sm hover:bg-error/10 transition-colors active:scale-95">ACKNOWLEDGE</button>
+<button class="w-full bg-surface-container-highest text-on-surface font-label-caps text-label-caps py-sm hover:bg-surface-variant transition-colors active:scale-95">PURGE CACHE</button>
+</div>
+</div>
+<!-- RESOLVED INCIDENTS (DIM) -->
+<div class="incident-resolved border-b border-outline-variant p-md flex items-center gap-lg bg-surface-container-lowest">
+<div class="w-24 shrink-0 flex flex-col items-center">
+<span class="material-symbols-outlined text-outline" data-icon="check_circle">check_circle</span>
+<span class="font-label-caps text-[9px] text-outline mt-xs">RESOLVED</span>
+</div>
+<div class="flex-grow">
+<div class="flex gap-md mb-xs">
+<span class="font-mono-data text-mono-data text-outline">ID: 0x44B1</span>
+<span class="font-mono-data text-mono-data text-outline opacity-50">13:05:12 UTC</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">API_AUTH_LATENCY: Auth response times normalized after shard rebalancing.</p>
+</div>
+<div class="hidden md:block">
+<span class="font-mono-data text-mono-data text-outline">MTTR: 04m 22s</span>
+</div>
+</div>
+<div class="incident-resolved border-b border-outline-variant p-md flex items-center gap-lg bg-surface-container-lowest">
+<div class="w-24 shrink-0 flex flex-col items-center">
+<span class="material-symbols-outlined text-outline" data-icon="check_circle">check_circle</span>
+<span class="font-label-caps text-[9px] text-outline mt-xs">RESOLVED</span>
+</div>
+<div class="flex-grow">
+<div class="flex gap-md mb-xs">
+<span class="font-mono-data text-mono-data text-outline">ID: 0x11C2</span>
+<span class="font-mono-data text-mono-data text-outline opacity-50">12:45:33 UTC</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">DNS_PROPAGATION_DELAY: Secondary provider route finalized.</p>
+</div>
+<div class="hidden md:block">
+<span class="font-mono-data text-mono-data text-outline">MTTR: 12m 10s</span>
+</div>
+</div>
+<!-- ASYMMETRIC VISUAL DATA -->
+<div class="grid grid-cols-1 md:grid-cols-3 border-b border-outline-variant">
+<div class="md:col-span-2 p-lg border-r border-outline-variant bg-surface">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-md">CLUSTER SIGNAL HEATMAP</h3>
+<div class="h-48 w-full flex items-end gap-1">
+<!-- Simulated Sparklines/Heatmap -->
+<script>
+                            document.write(Array(48).fill(0).map(() => {
+                                const height = Math.floor(Math.random() * 100);
+                                const color = height > 80 ? 'bg-error' : (height > 50 ? 'bg-tertiary' : 'bg-primary-container');
+                                return `<div class="${color} flex-grow" style="height: ${height}%"></div>`;
+                            }).join(''));
+                        </script>
+</div>
+<div class="flex justify-between mt-xs font-mono-data text-[10px] text-on-surface-variant">
+<span>T - 120 MIN</span>
+<span>T - 60 MIN</span>
+<span>NOW</span>
+</div>
+</div>
+<div class="p-lg bg-surface-container-low flex flex-col justify-between">
+<div>
+<h3 class="font-label-caps text-label-caps text-on-surface-variant mb-md">DIAGNOSTIC STATUS</h3>
+<ul class="space-y-sm">
+<li class="flex justify-between font-mono-data text-mono-data border-b border-outline-variant/30 pb-xs">
+<span class="text-on-surface-variant">SEC_KERNEL</span>
+<span class="text-primary">OK</span>
+</li>
+<li class="flex justify-between font-mono-data text-mono-data border-b border-outline-variant/30 pb-xs">
+<span class="text-on-surface-variant">M_PLANE_01</span>
+<span class="text-primary">OK</span>
+</li>
+<li class="flex justify-between font-mono-data text-mono-data border-b border-outline-variant/30 pb-xs">
+<span class="text-on-surface-variant">L_BALANCER</span>
+<span class="text-error">WARN</span>
+</li>
+<li class="flex justify-between font-mono-data text-mono-data border-b border-outline-variant/30 pb-xs">
+<span class="text-on-surface-variant">CRON_SCHED</span>
+<span class="text-primary">OK</span>
+</li>
+</ul>
+</div>
+<div class="mt-lg">
+<div class="w-full h-32 bg-cover bg-center border border-outline-variant" data-alt="A technical monochrome schematic of a global network grid, rendered in dark slate grey and steel blue with glowing nodes and fine vector lines. The aesthetic is naval console instrument cluster, featuring no shadows, high information density, and industrial precision." style="background-image: url(&#39;https://lh3.googleusercontent.com/aida-public/AB6AXuDK5pzssKqhVhvGC427dMA_5lVxuTDNiZTFPvjraSqcOOrRphVjLNzlDTKpSWwq4IWZ8WiPJaVsB0UYzYP9qPSeqqneLShmdQLJ8G7Tk85uxOZnYUNHTy_2D7wE5ov3gG52VviPzwN5B3zILaqMSZLwT40XZfHAnUtSxJKDJwZFAfTQMdm8q0uoJDjA0-NDJlvzGvo34oRqKU-UvYhfRJte9XN83uF1aZ3Si31kloR579Ss4fKynbeoY0J0ZokuiqAAbN4baGFKi-Q&#39;)"></div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 w-full z-50 flex justify-around items-center px-xs pb-safe h-16 bg-surface-container dark:bg-surface-container border-t border-outline-variant dark:border-outline-variant">
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant pt-1 hover:bg-surface-container-highest transition-colors flex-1" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-label-caps text-label-caps">Overview</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant pt-1 hover:bg-surface-container-highest transition-colors flex-1" href="#">
+<span class="material-symbols-outlined" data-icon="fact_check">fact_check</span>
+<span class="font-label-caps text-label-caps">Approvals</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant pt-1 hover:bg-surface-container-highest transition-colors flex-1" href="#">
+<span class="material-symbols-outlined" data-icon="router">router</span>
+<span class="font-label-caps text-label-caps">Gateways</span>
+</a>
+<a class="flex flex-col items-center justify-center text-primary dark:text-primary-fixed-dim border-t-2 border-primary pt-1 flex-1" href="#">
+<span class="material-symbols-outlined" data-icon="warning">warning</span>
+<span class="font-label-caps text-label-caps">Incidents</span>
+</a>
+<a class="flex flex-col items-center justify-center text-on-surface-variant dark:text-on-surface-variant pt-1 hover:bg-surface-container-highest transition-colors flex-1" href="#">
+<span class="material-symbols-outlined" data-icon="history">history</span>
+<span class="font-label-caps text-label-caps">Audit</span>
+</a>
+</nav>
+<script>
+        // Micro-interactions for operational feel
+        document.querySelectorAll('button').forEach(btn => {
+            btn.addEventListener('mousedown', () => {
+                btn.style.transform = 'scale(0.98)';
+            });
+            btn.addEventListener('mouseup', () => {
+                btn.style.transform = 'scale(1)';
+            });
+        });
+
+        // Background Atmosphere: Light pulse effect on critical items
+        setInterval(() => {
+            document.querySelectorAll('.incident-critical').forEach(el => {
+                el.style.transition = 'background 2s ease-in-out';
+                el.style.backgroundColor = 'rgba(147, 0, 10, 0.25)';
+                setTimeout(() => {
+                    el.style.backgroundColor = 'rgba(147, 0, 10, 0.15)';
+                }, 1000);
+            });
+        }, 3000);
+    </script>
+</body></html>
