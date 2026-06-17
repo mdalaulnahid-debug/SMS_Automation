@@ -1,0 +1,152 @@
+/* Shared design tokens + primitives — see docs/design-system.md.
+   Linked by both public/index.html (mobile user app) and public/admin.html
+   (desktop admin console). Keep page-specific layout out of this file. */
+
+:root {
+  --bg-page:    #fdf7ff;
+  --bg-surface: #ffffff;
+  --bg-card:    #f3edf7;
+  --bg-card-el: #ece6f0;
+  --text-primary:   #1d1b20;
+  --text-secondary: #49454f;
+  --text-muted:     #79747e;
+  --divider:        #cac4d0;
+  --accent:         #6750a4;
+  --accent-on:      #ffffff;
+  --accent-bg:      #eaddff;
+  --success:        #2e7d32;
+  --success-bg:     #e8f5e9;
+  --danger:         #b3261e;
+  --danger-bg:      #fce8e6;
+  --warning:        #e37400;
+  --warning-bg:     #fef7e0;
+  --pulse-rgb:      46, 125, 50;
+}
+[data-theme="dark"] {
+  --bg-page:    #141317;
+  --bg-surface: #1c1b1f;
+  --bg-card:    #2b2930;
+  --bg-card-el: #36343b;
+  --text-primary:   #e6e1e5;
+  --text-secondary: #cac4d0;
+  --text-muted:     #938f99;
+  --divider:        #49454f;
+  --accent:         #d0bcff;
+  --accent-on:      #381e72;
+  --accent-bg:      #4a4458;
+  --success:        #81c784;
+  --success-bg:     #1b3d1c;
+  --danger:         #f2b8b5;
+  --danger-bg:      #601410;
+  --warning:        #f9c74f;
+  --warning-bg:     #3b2700;
+  --pulse-rgb:      129, 199, 132;
+}
+
+/* ── RESET ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-family: 'Inter', system-ui, sans-serif; font-size: 14px; }
+body { background: var(--bg-page); color: var(--text-primary); }
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+  user-select: none;
+}
+
+/* ── ICON BUTTON ── */
+.icon-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--text-secondary); padding: 8px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s;
+}
+.icon-btn:hover { background: var(--bg-card); }
+.icon-btn .material-symbols-outlined { font-size: 22px; }
+
+/* ── STATUS PULSE ── */
+.header-status { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; color: var(--success); }
+.pulse-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--success);
+  animation: pulse-ring 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+.pulse-dot.offline { background: var(--danger); animation: none; }
+@keyframes pulse-ring {
+  0%   { box-shadow: 0 0 0 0 rgba(var(--pulse-rgb), 0.5); }
+  70%  { box-shadow: 0 0 0 6px rgba(var(--pulse-rgb), 0); }
+  100% { box-shadow: 0 0 0 0 rgba(var(--pulse-rgb), 0); }
+}
+
+/* ── CHIPS ── */
+.chip {
+  display: inline-flex; align-items: center;
+  padding: 3px 10px; border-radius: 999px;
+  font-size: 11px; font-weight: 700;
+  letter-spacing: 0.05em; text-transform: uppercase; white-space: nowrap;
+}
+.chip-success { background: var(--success-bg); color: var(--success); }
+.chip-danger  { background: var(--danger-bg);  color: var(--danger); }
+.chip-warning { background: var(--warning-bg); color: var(--warning); }
+.chip-accent  { background: var(--accent-bg);  color: var(--accent); }
+.chip-muted   { background: var(--bg-card-el); color: var(--text-muted); }
+
+/* ── STAT CARD ── */
+.stat-card { background: var(--bg-card); border-radius: 16px; padding: 14px 16px; }
+.stat-num { font-size: 28px; font-weight: 800; line-height: 1.1; color: var(--text-primary); }
+.stat-num.success { color: var(--success); }
+.stat-num.danger  { color: var(--danger); }
+.stat-num.accent  { color: var(--accent); }
+.stat-lbl { font-size: 11px; font-weight: 600; color: var(--text-muted); margin-top: 4px; }
+
+/* ── GATEWAY CARD ── */
+.gw-card {
+  background: var(--bg-surface); border: 1px solid var(--divider);
+  border-left: 4px solid var(--divider); border-radius: 16px;
+  padding: 14px 16px; display: flex; align-items: center; gap: 12px;
+}
+.gw-card.online  { border-left-color: var(--success); }
+.gw-card.offline { border-left-color: var(--danger); }
+.gw-card.mock    { border-left-color: var(--text-muted); }
+.gw-icon {
+  width: 40px; height: 40px; border-radius: 12px;
+  background: var(--bg-card); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.gw-icon .material-symbols-outlined { font-size: 20px; color: var(--text-secondary); }
+.gw-info { flex: 1; min-width: 0; }
+.gw-name { font-size: 14px; font-weight: 700; }
+.gw-id   { font-size: 11px; color: var(--text-muted); font-family: monospace; margin-top: 1px; }
+.gw-meta { font-size: 11px; color: var(--text-muted); margin-top: 3px; }
+
+/* ── BANNER ── */
+.banner {
+  border-radius: 12px; padding: 10px 14px;
+  font-size: 12px; font-weight: 600;
+  display: flex; align-items: center; gap: 8px;
+}
+.banner .material-symbols-outlined { font-size: 16px; }
+.banner-ok   { background: var(--success-bg); color: var(--success); }
+.banner-warn { background: var(--warning-bg); color: var(--warning); }
+
+/* ── BUTTONS ── */
+.btn-sm {
+  padding: 6px 14px; border-radius: 20px;
+  font-size: 12px; font-weight: 600; font-family: inherit;
+  cursor: pointer; border: none; transition: opacity 0.15s;
+}
+.btn-sm:hover { opacity: 0.85; }
+.btn-primary { background: var(--accent); color: var(--accent-on); }
+.btn-danger  { background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger); }
+.btn-retry   { background: var(--warning-bg); color: var(--warning); }
+
+/* ── DISPATCH BADGES ── */
+.dispatch-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.dispatch-badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 6px; letter-spacing: 0.04em; }
+.dispatch-ok      { background: var(--success-bg); color: var(--success); }
+.dispatch-err     { background: var(--danger-bg);  color: var(--danger); }
+.dispatch-pending { background: var(--accent-bg);  color: var(--accent); }
+
+/* ── MISC ── */
+.empty { color: var(--text-muted); font-size: 13px; padding: 16px 0; text-align: center; }
+.error-text { color: var(--danger); font-size: 12px; margin-top: 6px; }
+code { font-family: 'SF Mono', 'Consolas', monospace; font-size: 11px; color: var(--accent); }

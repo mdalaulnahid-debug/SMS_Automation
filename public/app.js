@@ -1,242 +1,160 @@
 'use strict';
+/* Mobile user app — relies on shared.js (loaded first) for theme, auth,
+   apiFetch/postJson, relativeTime/esc/statusChipClass/renderDispatches,
+   pollHealth, CSV/QR helpers. See docs/design-system.md. */
 
-/* ── Auth ── */
-function authHeaders() {
-  const key = localStorage.getItem('adminApiKey');
-  return key ? { 'x-api-key': key } : {};
-}
-
+/* ── Auth overlay (this page's 401 handler) ── */
 function showAuthDialog() {
   const overlay = document.getElementById('authOverlay');
-  const input = document.getElementById('authKeyInput');
+  const input   = document.getElementById('authKeyInput');
   input.value = localStorage.getItem('adminApiKey') || '';
   overlay.classList.add('visible');
   input.focus();
 }
+window.onAuthRequired = showAuthDialog;
 
 function submitAuthKey() {
   const val = document.getElementById('authKeyInput').value.trim();
-  if (val) localStorage.setItem('adminApiKey', val);
+  if (val) {
+    localStorage.setItem('adminApiKey', val);
+    const si = document.getElementById('settingsApiKey');
+    if (si) si.value = val;
+  }
   document.getElementById('authOverlay').classList.remove('visible');
+  updateAdminVisibility();
   refresh();
 }
 
-// Allow Enter key to submit auth dialog
-document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('authKeyInput').addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') submitAuthKey();
-    if (e.key === 'Escape') document.getElementById('authOverlay').classList.remove('visible');
-  });
+document.getElementById('authKeyInput').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') submitAuthKey();
+  if (e.key === 'Escape') document.getElementById('authOverlay').classList.remove('visible');
 });
 
-async function apiFetch(url, options = {}, retried = false) {
-  const response = await fetch(url, {
-    ...options,
-    headers: { ...(options.headers || {}), ...authHeaders() }
+function updateAdminVisibility() {
+  const unlocked = isAdminUnlocked();
+  document.querySelectorAll('.admin-only').forEach((el) => {
+    el.style.display = unlocked ? 'block' : 'none';
   });
-  if (response.status === 401 && !retried) {
-    showAuthDialog();
-    // Resolve only after user saves their key (overlay close triggers refresh)
-    return new Promise(() => {}); // intentionally pending — refresh() re-runs after auth
-  }
-  return response;
+  renderSettingsApiKeyStatus();
 }
 
-async function postJson(url, payload) {
-  const response = await apiFetch(url, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json' },
-    body: JSON.stringify(payload)
-  });
-  const body = await response.json();
-  if (!response.ok && response.status !== 202) {
-    throw new Error(body.error || JSON.stringify(body));
-  }
-  return body;
+function renderSettingsApiKeyStatus() {
+  const el = document.getElementById('apiKeyStatus');
+  if (!el) return;
+  const key = localStorage.getItem('adminApiKey');
+  el.textContent = key ? `Set (${key.slice(0, 4)}…)` : 'Not set';
+  el.style.color = key ? 'var(--success)' : 'var(--text-muted)';
 }
 
-/* ── Tabs ── */
-document.querySelectorAll('.tab-btn').forEach((btn) => {
+/* ── Settings API key — live save on input ── */
+const _settingsApiKey = document.getElementById('settingsApiKey');
+_settingsApiKey.value = localStorage.getItem('adminApiKey') || '';
+_settingsApiKey.addEventListener('input', () => {
+  const val = _settingsApiKey.value.trim();
+  if (val) localStorage.setItem('adminApiKey', val);
+  else localStorage.removeItem('adminApiKey');
+  updateAdminVisibility();
+});
+
+/* ── Backend URL (read-only, shows current origin) ── */
+const _urlDisplay = document.getElementById('backendUrlDisplay');
+if (_urlDisplay) _urlDisplay.textContent = window.location.origin;
+
+/* ── Provision URL pre-fill ── */
+const _provUrl = document.getElementById('provUrl');
+if (_provUrl && !_provUrl.value) _provUrl.value = window.location.origin;
+
+/* ── Bottom Nav ── */
+document.querySelectorAll('.nav-item').forEach((btn) => {
   btn.addEventListener('click', () => {
-    document.querySelectorAll('.tab-btn').forEach((b) => b.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach((b) => b.classList.remove('active'));
     document.querySelectorAll('.tab-panel').forEach((p) => p.classList.remove('active'));
     btn.classList.add('active');
     document.getElementById(`panel-${btn.dataset.tab}`).classList.add('active');
     localStorage.setItem('activeTab', btn.dataset.tab);
+    if (btn.dataset.tab === 'logs') renderLogs();
   });
 });
 
-// Restore last active tab
-(function () {
+(function restoreTab() {
   const saved = localStorage.getItem('activeTab');
   if (saved) {
-    const btn = document.querySelector(`.tab-btn[data-tab="${saved}"]`);
+    const btn = document.querySelector(`.nav-item[data-tab="${saved}"]`);
     if (btn) btn.click();
   }
 })();
 
-/* ── Sub-tabs (SMS Monitor) ── */
-document.querySelectorAll('.sub-tab-btn').forEach((btn) => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.sub-tab-btn').forEach((b) => b.classList.remove('active'));
-    document.querySelectorAll('.subpanel').forEach((p) => p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById(`subpanel-${btn.dataset.sub}`).classList.add('active');
-  });
-});
-
-/* ── Refresh ── */
-async function refresh() {
-  try {
-    const [dashRes, unmatchedRes, gatewayRes] = await Promise.all([
-      apiFetch('/api/dashboard'),
-      apiFetch('/api/sms/unmatched'),
-      apiFetch('/api/gateways')
-    ]);
-    const data = await dashRes.json();
-    const unmatchedData = await unmatchedRes.json();
-    const gatewayData = gatewayRes.ok ? await gatewayRes.json() : { gateways: data.gateways };
-    const unmatched = unmatchedData.unmatched || [];
-
-    window._lastAuditLogs = data.auditLogs || [];
-
-    renderStats(data.requests || []);
-    renderGateways(gatewayData.gateways || []);
-    renderQueues(data.queues || []);
-    renderRequests(data.requests || []);
-    renderOutbox(data.smsOutbox || []);
-    renderInbox(data.smsInbox || [], unmatched);
-    renderReplies(data.replyDrafts || [], data.requests || []);
-    renderUnmatched(unmatched, data.requests || []);
-    renderAudit(data.auditLogs || []);
-
-    document.getElementById('lastRefresh').textContent = `Refreshed ${new Date().toLocaleTimeString()}`;
-  } catch (err) {
-    console.error('refresh failed:', err);
-  }
-}
-
-/* ── Stats Row ── */
+/* ── Home: Stats ── */
 function renderStats(requests) {
   const today = new Date().toDateString();
   const todayCount = requests.filter((r) => new Date(r.createdAt).toDateString() === today).length;
-  const activeStatuses = ['RECEIVED', 'VALIDATED', 'QUEUED', 'SMS_SENT', 'WAITING_OPERATOR_REPLY', 'NEEDS_MANUAL_REVIEW'];
-  const active = requests.filter((r) => activeStatuses.includes(r.status)).length;
+  const active    = requests.filter((r) => ['RECEIVED','VALIDATED','QUEUED','SMS_SENT','WAITING_OPERATOR_REPLY','NEEDS_MANUAL_REVIEW'].includes(r.status)).length;
   const completed = requests.filter((r) => r.status === 'COMPLETED').length;
-  const failed = requests.filter((r) => ['FAILED', 'TIMEOUT'].includes(r.status)).length;
+  const failed    = requests.filter((r) => ['FAILED','TIMEOUT'].includes(r.status)).length;
 
-  document.getElementById('statsRow').innerHTML = `
+  document.getElementById('statsGrid').innerHTML = `
     <div class="stat-card">
       <div class="stat-num">${todayCount}</div>
-      <div class="stat-label">Today</div>
+      <div class="stat-lbl">Today</div>
     </div>
     <div class="stat-card">
-      <div class="stat-num" style="color:var(--accent)">${active}</div>
-      <div class="stat-label">Active</div>
+      <div class="stat-num accent">${active}</div>
+      <div class="stat-lbl">Active</div>
     </div>
     <div class="stat-card">
-      <div class="stat-num" style="color:var(--success)">${completed}</div>
-      <div class="stat-label">Completed</div>
+      <div class="stat-num success">${completed}</div>
+      <div class="stat-lbl">Completed</div>
     </div>
     <div class="stat-card">
-      <div class="stat-num" style="color:${failed > 0 ? 'var(--danger)' : 'var(--text-muted)'}">${failed}</div>
-      <div class="stat-label">Failed / Timeout</div>
-    </div>
-  `;
+      <div class="stat-num ${failed > 0 ? 'danger' : ''}">${failed}</div>
+      <div class="stat-lbl">Failed</div>
+    </div>`;
 }
 
-/* ── Helpers ── */
-function relativeTime(iso) {
-  if (!iso) return '—';
-  const diffMs = Date.now() - new Date(iso).getTime();
-  if (diffMs < 60000) return `${Math.floor(diffMs / 1000)}s ago`;
-  if (diffMs < 3600000) return `${Math.floor(diffMs / 60000)}m ago`;
-  if (diffMs < 86400000) return `${Math.floor(diffMs / 3600000)}h ago`;
-  return new Date(iso).toLocaleString();
-}
-
-function statusClass(status) {
-  if (status === 'COMPLETED') return 'status status-ok';
-  if (['FAILED', 'TIMEOUT'].includes(status)) return 'status status-err';
-  if (status === 'NEEDS_MANUAL_REVIEW') return 'status status-warn';
-  return 'status';
-}
-
-function renderDispatches(dispatches) {
-  if (!dispatches || !dispatches.length) return '';
-  const badges = dispatches.map((d) => {
-    const cls = d.status === 'REPLY_RECEIVED' ? 'dispatch-ok'
-      : ['TIMEOUT', 'FAILED'].includes(d.status) ? 'dispatch-err'
-      : 'dispatch-pending';
-    const icon = d.status === 'REPLY_RECEIVED' ? '✓'
-      : ['TIMEOUT', 'FAILED'].includes(d.status) ? '✗'
-      : '…';
-    return `<span class="dispatch-badge ${cls}">${d.operator} ${icon}</span>`;
-  }).join('');
-  return `<div class="dispatch-row">${badges}</div>`;
-}
-
-function esc(str) {
-  return String(str || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-}
-
-/* ── Gateways ── */
-function renderGateways(gateways) {
-  document.querySelector('#gateways').innerHTML = gateways.map((gw) => {
-    const isMock = gw.status === 'MOCK';
+/* ── Home: Gateway Cards ── */
+function renderGatewayCards(gateways) {
+  document.getElementById('gatewayCards').innerHTML = gateways.map((gw) => {
+    const isMock   = gw.status === 'MOCK';
     const stateKey = isMock ? 'mock' : (gw.online ? 'online' : 'offline');
-    const statusLabel = isMock ? 'MOCK' : (gw.online ? 'ONLINE' : 'OFFLINE');
-    const statusCls = isMock ? '' : (gw.online ? 'status-ok' : 'status-err');
+    const chipCls  = isMock ? 'chip-muted' : (gw.online ? 'chip-success' : 'chip-danger');
+    const label    = isMock ? 'MOCK' : (gw.online ? 'ONLINE' : 'OFFLINE');
     const lastSeen = gw.lastSeenAt ? relativeTime(gw.lastSeenAt) : 'never';
     return `
-      <div class="card card-gw ${stateKey}">
-        <div style="display:flex;align-items:center;gap:4px;flex-wrap:wrap">
-          <span class="gw-dot ${stateKey}"></span>
-          <strong>${esc(gw.operatorName)}</strong>
-          <span class="status ${statusCls}">${statusLabel}</span>
+      <div class="gw-card ${stateKey}">
+        <div class="gw-icon">
+          <span class="material-symbols-outlined">cell_tower</span>
         </div>
-        <p style="font-family:monospace;font-size:12px;margin-top:6px;color:var(--text-muted)">${esc(gw.id)}</p>
-        <p>Last seen: <strong>${lastSeen}</strong></p>
-        ${gw.gatewayUrl ? `<p style="font-size:12px">URL: ${esc(gw.gatewayUrl)}</p>` : '<p style="font-size:12px;color:var(--text-muted)">Mock — no phone configured</p>'}
-        <p style="font-size:12px">Trusted: ${(gw.trustedSenders || []).join(', ') || 'None'}</p>
+        <div class="gw-info">
+          <div class="gw-name">${esc(gw.operatorName || gw.id)}</div>
+          <div class="gw-id">${esc(gw.id)}</div>
+          <div class="gw-meta">Last seen: ${lastSeen}</div>
+        </div>
+        <span class="chip ${chipCls}">${label}</span>
       </div>`;
-  }).join('') || '<p class="empty">No gateways registered.</p>';
+  }).join('') || '<p class="empty">No gateways configured.</p>';
 }
 
-/* ── Queues ── */
-function renderQueues(queues) {
-  document.querySelector('#queues').innerHTML = queues.map((queue) => `
-    <div class="card">
-      <strong>${esc(queue.operator)}</strong>
-      <p>Active: ${queue.active ? `<code>${esc(queue.active.requestId)}</code>` : 'None'}</p>
-      <p>Waiting: ${queue.waiting.length ? queue.waiting.map((r) => `<code>${esc(r.requestId)}</code>`).join(', ') : 'None'}</p>
-    </div>
-  `).join('') || '<p class="empty">No queues.</p>';
-}
-
-/* ── Requests ── */
+/* ── Admin: Active Requests ── */
 function renderRequests(requests) {
-  document.querySelector('#requests').innerHTML = requests.slice().reverse().map((req) => {
+  document.getElementById('requests').innerHTML = requests.slice().reverse().map((req) => {
     const canReject = req.status === 'NEEDS_MANUAL_REVIEW';
-    const canRetry = ['NEEDS_MANUAL_REVIEW', 'FAILED', 'TIMEOUT'].includes(req.status);
+    const canRetry  = ['NEEDS_MANUAL_REVIEW','FAILED','TIMEOUT'].includes(req.status);
     return `
-      <div class="card">
-        <div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px">
-          <strong>${esc(req.requestId)}</strong>
-          <span class="${statusClass(req.status)}">${req.status}</span>
+      <div class="req-card">
+        <div class="req-row">
+          <span class="req-id">${esc(req.requestId)}</span>
+          <span class="${statusChipClass(req.status)}">${req.status}</span>
         </div>
-        <p>${esc(req.requestType)}: <strong>${esc(req.payload)}</strong>
-          ${(req.targetOperators || []).length ? ` → ${req.targetOperators.join(', ')}` : ''}</p>
+        <div class="req-type">${esc(req.requestType)}: <strong>${esc(req.payload)}</strong>${(req.targetOperators||[]).length ? ` → ${req.targetOperators.join(', ')}` : ''}</div>
         ${renderDispatches(req.dispatches)}
-        <p>Requester: <strong>@${esc(req.requesterName)}</strong>${req.channel !== 'manual' ? ` via ${req.channel}` : ''}</p>
-        <p style="font-size:12px;color:var(--text-muted)">${relativeTime(req.createdAt)}</p>
-        ${req.failedReason ? `<p class="error-text">Reason: ${esc(req.failedReason)}</p>` : ''}
-        <div class="actions">
-          ${canReject ? `<button class="btn-danger" data-reject="${esc(req.requestId)}">Reject</button>` : ''}
-          ${canRetry  ? `<button class="btn-retry"  data-retry="${esc(req.requestId)}">Retry</button>`  : ''}
+        <div class="req-meta">@${esc(req.requesterName)}${req.channel !== 'manual' ? ` via ${req.channel}` : ''} · ${relativeTime(req.createdAt)}</div>
+        ${req.failedReason ? `<div class="error-text">Reason: ${esc(req.failedReason)}</div>` : ''}
+        <div class="req-actions">
+          ${canReject ? `<button class="btn-sm btn-danger" data-reject="${esc(req.requestId)}">Reject</button>` : ''}
+          ${canRetry  ? `<button class="btn-sm btn-retry"  data-retry="${esc(req.requestId)}">Retry</button>`  : ''}
         </div>
       </div>`;
-  }).join('') || '<p class="empty">No requests yet.</p>';
+  }).join('') || '<p class="empty">No active requests.</p>';
 
   document.querySelectorAll('[data-reject]').forEach((btn) => {
     btn.addEventListener('click', async () => {
@@ -256,52 +174,21 @@ function renderRequests(requests) {
   });
 }
 
-/* ── Outbox ── */
-function renderOutbox(rows) {
-  document.querySelector('#outbox').innerHTML = rows.slice().reverse().map((row) => `
-    <div class="card">
-      <strong>${esc(row.requestId)}</strong>
-      <span class="status">${esc(row.sentStatus)}</span>
-      <p>${esc(row.gatewayId)} → <code>${esc(row.destinationNumber)}</code></p>
-      <pre>${esc(row.messageBody)}</pre>
-      <p style="font-size:12px;color:var(--text-muted)">Mode: ${esc(row.sendResult?.mode || 'unknown')}
-        ${row.sentAt ? ` · ${relativeTime(row.sentAt)}` : ''}</p>
-      ${row.sendResult?.error ? `<p class="error-text">${esc(row.sendResult.error)}</p>` : ''}
-    </div>
-  `).join('') || '<p class="empty">No outbound SMS yet.</p>';
-}
-
-/* ── Inbox ── */
-function renderInbox(inbox, unmatched) {
-  const unmatchedIds = new Set((unmatched || []).map((u) => u.id));
-  document.querySelector('#inbox').innerHTML = inbox.slice().reverse().map((entry) => {
-    const isUnmatched = unmatchedIds.has(entry.id);
-    return `
-      <div class="card">
-        <strong>${esc(entry.senderNumber || entry.from || '?')}</strong>
-        <span class="status ${isUnmatched ? 'status-warn' : 'status-ok'}">${isUnmatched ? 'UNMATCHED' : 'MATCHED'}</span>
-        <p style="font-size:12px;color:var(--text-muted)">${esc(entry.gatewayId)}</p>
-        <pre>${esc(entry.messageBody)}</pre>
-        <p style="font-size:12px;color:var(--text-muted)">${relativeTime(entry.receivedAt)}</p>
-        ${entry.requestId ? `<p>Matched to: <code>${esc(entry.requestId)}</code></p>` : ''}
-      </div>`;
-  }).join('') || '<p class="empty">No received SMS yet.</p>';
-}
-
-/* ── Reply Drafts ── */
+/* ── Admin: Reply Drafts ── */
 function renderReplies(replies, requests) {
   const requestById = new Map(requests.map((r) => [r.requestId, r]));
-  document.querySelector('#replies').innerHTML = replies.slice().reverse().map((reply) => {
-    const request = requestById.get(reply.requestId);
+  document.getElementById('replies').innerHTML = replies.slice().reverse().map((reply) => {
+    const request    = requestById.get(reply.requestId);
     const canApprove = reply.sentStatus === 'DRAFT' && request?.status === 'NEEDS_MANUAL_REVIEW';
-    const isLive = ['POSTED_LIVE', 'APPROVED_FOR_EDIT'].includes(reply.sentStatus);
     return `
-      <div class="card">
-        <strong>${esc(reply.requestId)}</strong>
-        <span class="status ${reply.sentStatus === 'POSTED' ? 'status-ok' : isLive ? 'status-warn' : ''}">${esc(reply.sentStatus)}</span>
-        <pre>${esc(reply.replyText)}</pre>
-        ${reply.postedMessageId ? `<p style="font-size:12px;color:var(--text-muted)">Telegram msg: ${esc(reply.postedMessageId)}</p>` : ''}
-        ${canApprove ? `<button data-approve="${esc(reply.requestId)}">Approve &amp; Post</button>` : ''}
+      <div class="draft-card">
+        <div class="req-row">
+          <span class="req-id">${esc(reply.requestId)}</span>
+          <span class="chip ${reply.sentStatus === 'POSTED' ? 'chip-success' : 'chip-accent'}">${esc(reply.sentStatus)}</span>
+        </div>
+        <div class="draft-text">${esc(reply.replyText)}</div>
+        ${reply.postedMessageId ? `<div class="req-meta">Telegram msg: ${esc(reply.postedMessageId)}</div>` : ''}
+        ${canApprove ? `<div class="req-actions"><button class="btn-sm btn-primary" data-approve="${esc(reply.requestId)}">Approve &amp; Post</button></div>` : ''}
       </div>`;
   }).join('') || '<p class="empty">No reply drafts.</p>';
 
@@ -314,12 +201,12 @@ function renderReplies(replies, requests) {
   });
 }
 
-/* ── Unmatched SMS ── */
+/* ── Admin: Unmatched SMS ── */
 function renderUnmatched(unmatched, requests) {
   const waitingRequests = requests.filter((r) =>
-    ['WAITING_OPERATOR_REPLY', 'NEEDS_MANUAL_REVIEW', 'TIMEOUT'].includes(r.status)
+    ['WAITING_OPERATOR_REPLY','NEEDS_MANUAL_REVIEW','TIMEOUT'].includes(r.status)
   );
-  const container = document.querySelector('#unmatched');
+  const container = document.getElementById('unmatched');
   if (!unmatched.length) {
     container.innerHTML = '<p class="empty">No unmatched SMS.</p>';
     return;
@@ -329,24 +216,25 @@ function renderUnmatched(unmatched, requests) {
       `<option value="${esc(r.requestId)}">${esc(r.requestId)} (${esc(r.requestType)} ${esc(r.payload)})</option>`
     ).join('');
     return `
-      <div class="card">
-        <strong>${esc(inbox.senderNumber)}</strong>
-        <span class="status status-warn">UNMATCHED</span>
-        <p style="font-size:12px;color:var(--text-muted)">${esc(inbox.gatewayId)}</p>
-        <pre>${esc(inbox.messageBody)}</pre>
-        <p style="font-size:12px;color:var(--text-muted)">${relativeTime(inbox.receivedAt)}</p>
+      <div class="req-card">
+        <div class="req-row">
+          <span class="req-id">${esc(inbox.senderNumber)}</span>
+          <span class="chip chip-warning">UNMATCHED</span>
+        </div>
+        <div class="req-meta">${esc(inbox.gatewayId)} · ${relativeTime(inbox.receivedAt)}</div>
+        <div class="draft-text">${esc(inbox.messageBody)}</div>
         ${waitingRequests.length ? `
           <div class="match-form">
             <select data-inbox-id="${esc(inbox.id)}">${options}</select>
-            <button class="btn-match" data-match-inbox="${esc(inbox.id)}">Match</button>
-          </div>` : '<p style="color:var(--text-muted);font-size:12px;margin-top:8px">No waiting requests to match.</p>'}
+            <button class="btn-sm btn-primary" data-match-inbox="${esc(inbox.id)}">Match</button>
+          </div>` : '<p class="req-meta" style="margin-top:8px">No waiting requests to match.</p>'}
       </div>`;
   }).join('');
 
   document.querySelectorAll('[data-match-inbox]').forEach((btn) => {
     btn.addEventListener('click', async () => {
       const inboxId = btn.dataset.matchInbox;
-      const select = document.querySelector(`select[data-inbox-id="${inboxId}"]`);
+      const select  = document.querySelector(`select[data-inbox-id="${inboxId}"]`);
       if (!select) return;
       try { await postJson('/api/manual-match', { inboxId, requestId: select.value }); }
       catch (e) { alert(e.message); }
@@ -355,117 +243,214 @@ function renderUnmatched(unmatched, requests) {
   });
 }
 
-/* ── Audit Log ── */
+/* ── Logs: unified feed ── */
+let _unifiedFeed  = [];
+let _logPage      = 0;
+let _activeFilter = 'all';
+let _activeSearch = '';
+const LOG_PAGE_SIZE = 20;
+
+function buildUnifiedFeed(outbox, inbox, auditLogs) {
+  const feed = [];
+
+  outbox.forEach((row) => {
+    const isFailed = ['FAILED','ERROR'].includes(row.sentStatus) || row.sendResult?.ok === false;
+    feed.push({
+      type:  isFailed ? 'failed' : 'sent',
+      time:  row.sentAt || row.createdAt || '',
+      title: row.messageBody || '(no message)',
+      meta:  `${row.gatewayId} → ${row.destinationNumber} · ${relativeTime(row.sentAt)}`
+    });
+  });
+
+  inbox.forEach((row) => {
+    feed.push({
+      type:  'received',
+      time:  row.receivedAt || '',
+      title: row.messageBody || '(empty)',
+      meta:  `From ${row.senderNumber || row.from || '?'} · ${row.gatewayId} · ${relativeTime(row.receivedAt)}`
+    });
+  });
+
+  auditLogs.forEach((log) => {
+    feed.push({
+      type:  'system',
+      time:  log.timestamp || '',
+      title: log.action,
+      meta:  `${log.actor || 'system'}${log.requestId ? ' · ' + log.requestId : ''} · ${relativeTime(log.timestamp)}`
+    });
+  });
+
+  feed.sort((a, b) => new Date(b.time) - new Date(a.time));
+  return feed;
+}
+
+function computeSuccessRate(outbox) {
+  if (!outbox.length) return '—';
+  const ok = outbox.filter((r) => !['FAILED','ERROR'].includes(r.sentStatus) && r.sendResult?.ok !== false).length;
+  return Math.round((ok / outbox.length) * 100) + '%';
+}
+
+function renderLogStats(outbox, feed) {
+  const today      = new Date().toDateString();
+  const todayItems = feed.filter((f) => f.time && new Date(f.time).toDateString() === today).length;
+  const failed     = feed.filter((f) => f.type === 'failed').length;
+  const successRate = computeSuccessRate(outbox);
+  const uptimeMins  = Math.floor((Date.now() - window._bootTime) / 60000);
+  const uptime      = uptimeMins < 60 ? `${uptimeMins}m` : `${Math.floor(uptimeMins / 60)}h`;
+
+  document.getElementById('logStatsGrid').innerHTML = `
+    <div class="log-stat-card">
+      <div class="log-stat-num">${todayItems}</div>
+      <div class="log-stat-lbl">Today</div>
+    </div>
+    <div class="log-stat-card">
+      <div class="log-stat-num success">${successRate}</div>
+      <div class="log-stat-lbl">Success</div>
+    </div>
+    <div class="log-stat-card">
+      <div class="log-stat-num ${failed > 0 ? 'danger' : ''}">${failed}</div>
+      <div class="log-stat-lbl">Failed</div>
+    </div>
+    <div class="log-stat-card">
+      <div class="log-stat-num">${uptime}</div>
+      <div class="log-stat-lbl">Uptime</div>
+    </div>`;
+}
+
+function applyLogFilter() {
+  _activeSearch = document.getElementById('logSearch').value.toLowerCase();
+  _logPage = 0;
+  renderLogs();
+}
+
+function loadMoreLogs() {
+  _logPage++;
+  renderLogs();
+}
+
+function renderLogs() {
+  const filtered = _unifiedFeed.filter((entry) => {
+    if (_activeFilter !== 'all' && entry.type !== _activeFilter) return false;
+    if (_activeSearch) {
+      const haystack = (entry.title + ' ' + entry.meta).toLowerCase();
+      if (!haystack.includes(_activeSearch)) return false;
+    }
+    return true;
+  });
+
+  const end     = (_logPage + 1) * LOG_PAGE_SIZE;
+  const visible = filtered.slice(0, end);
+  const feedEl  = document.getElementById('logFeed');
+  if (!feedEl) return;
+
+  feedEl.innerHTML = visible.map((entry) => `
+    <div class="log-entry">
+      <div class="log-dot ${entry.type}"></div>
+      <div class="log-body">
+        <div class="log-title">${esc(entry.title)}</div>
+        <div class="log-meta">${esc(entry.meta)}</div>
+      </div>
+      <span class="log-badge ${entry.type}">${entry.type}</span>
+    </div>`
+  ).join('') || '<p class="empty">No log entries match.</p>';
+
+  const btn = document.getElementById('loadMoreBtn');
+  if (btn) btn.style.display = filtered.length > end ? 'block' : 'none';
+}
+
+document.getElementById('filterChips').querySelectorAll('.filter-chip').forEach((chip) => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.filter-chip').forEach((c) => c.classList.remove('active'));
+    chip.classList.add('active');
+    _activeFilter = chip.dataset.filter;
+    _logPage = 0;
+    renderLogs();
+  });
+});
+
+/* ── Admin: Audit Log ── */
 function renderAudit(logs) {
   const banner = document.getElementById('chainIntegrity');
-  if (!logs.length) {
-    banner.className = 'integrity-banner integrity-ok';
-    banner.textContent = 'No audit entries yet.';
-  } else {
-    banner.className = 'integrity-banner integrity-ok';
-    banner.textContent = `Chain intact — ${logs.length} entries in view (last 100 shown)`;
+  if (banner) {
+    banner.className = 'banner banner-ok';
+    banner.innerHTML = `<span class="material-symbols-outlined">verified</span> Chain intact — ${logs.length} entries`;
   }
 
-  document.querySelector('#audit').innerHTML = logs.slice().reverse().map((log) => {
+  const el = document.getElementById('auditFeed');
+  if (!el) return;
+  el.innerHTML = logs.slice().reverse().slice(0, 50).map((log) => {
     const detail = log.detail ? JSON.stringify(log.detail) : '';
     return `
-      <div class="card">
-        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-          <strong>${esc(log.action)}</strong>
-          <span class="status" style="margin-left:0">${esc(log.actor || 'system')}</span>
-          ${log.requestId ? `<code style="font-size:11px;color:var(--text-muted)">${esc(log.requestId)}</code>` : ''}
+      <div class="log-entry">
+        <div class="log-dot system"></div>
+        <div class="log-body">
+          <div class="log-title">${esc(log.action)}</div>
+          <div class="log-meta">${esc(log.actor || 'system')}${log.requestId ? ' · ' + esc(log.requestId) : ''} · ${relativeTime(log.timestamp)}</div>
+          ${detail ? `<div style="font-size:11px;color:var(--text-muted);margin-top:4px;font-family:monospace;word-break:break-all">${esc(detail.slice(0, 120))}${detail.length > 120 ? '…' : ''}</div>` : ''}
         </div>
-        <p style="font-size:12px;color:var(--text-muted)">${relativeTime(log.timestamp)}</p>
-        ${detail ? `<pre style="font-size:11px;margin-top:6px">${esc(detail)}</pre>` : ''}
       </div>`;
-  }).join('') || '<p class="empty">No audit entries yet.</p>';
+  }).join('') || '<p class="empty">No audit entries.</p>';
 }
 
-/* ── CSV Export ── */
 function exportAuditCsv() {
-  const logs = window._lastAuditLogs || [];
-  const header = 'timestamp,actor,action,requestId,detail\n';
-  const rows = logs.map((l) =>
-    ['timestamp', 'actor', 'action', 'requestId'].map((k) => `"${String(l[k] || '').replace(/"/g, '""')}"`).concat(
-      [`"${JSON.stringify(l.detail || {}).replace(/"/g, '""')}"`]
-    ).join(',')
-  ).join('\n');
-  const blob = new Blob([header + rows], { type: 'text/csv' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `audit-log-${new Date().toISOString().slice(0, 10)}.csv`;
-  a.click();
-  URL.revokeObjectURL(url);
+  downloadCsv(`audit-log-${new Date().toISOString().slice(0, 10)}.csv`, auditLogsToCsv(window._lastAuditLogs || []));
 }
 
-/* ── Form handlers ── */
-document.querySelector('#requestForm').addEventListener('submit', async (event) => {
-  event.preventDefault();
-  const form = new FormData(event.target);
-  try {
-    await postJson('/api/requests', Object.fromEntries(form.entries()));
-    await refresh();
-  } catch (e) {
-    alert(e.message);
-  }
+/* ── Dev Tools forms ── */
+document.getElementById('requestForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = new FormData(e.target);
+  try { await postJson('/api/requests', Object.fromEntries(form.entries())); await refresh(); }
+  catch (e2) { alert(e2.message); }
 });
 
-document.querySelector('#smsForm').addEventListener('submit', async (event) => {
-  event.preventDefault();
-  const form = new FormData(event.target);
-  try {
-    await postJson('/api/sms/inbound', Object.fromEntries(form.entries()));
-    await refresh();
-  } catch (e) {
-    alert(e.message);
-  }
+document.getElementById('smsForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const form = new FormData(e.target);
+  try { await postJson('/api/sms/inbound', Object.fromEntries(form.entries())); await refresh(); }
+  catch (e2) { alert(e2.message); }
 });
 
-/* ── QR Provisioning ── */
-let _lastProvPayload = '';
-
-async function generateProvisionQr() {
-  const gwId   = document.getElementById('provGwId').value;
-  const url    = document.getElementById('provUrl').value.trim();
-  const pin    = document.getElementById('provPin').value.trim();
-  const secret = document.getElementById('provSecret').value.trim();
-  const errEl  = document.getElementById('provError');
-  const resEl  = document.getElementById('provResult');
-
-  errEl.style.display = 'none';
-  resEl.style.display = 'none';
-
-  if (!url) { errEl.textContent = 'Backend URL is required.'; errEl.style.display = 'block'; return; }
-  if (!pin)  { errEl.textContent = 'PIN is required (it will lock Settings on the phone).'; errEl.style.display = 'block'; return; }
-
+/* ── Main refresh ── */
+async function refresh() {
   try {
-    const data = await postJson('/api/admin/generate-qr', { gwId, url, pin, secret });
-    _lastProvPayload = data.payload || '';
-    document.getElementById('provQrImg').src = data.dataUrl;
-    resEl.style.display = 'block';
-  } catch (e) {
-    errEl.textContent = `Error: ${e.message}`;
-    errEl.style.display = 'block';
+    const [dashRes, unmatchedRes, gatewayRes] = await Promise.all([
+      apiFetch('/api/dashboard'),
+      apiFetch('/api/sms/unmatched'),
+      apiFetch('/api/gateways')
+    ]);
+    const data          = await dashRes.json();
+    const unmatchedData = await unmatchedRes.json();
+    const gatewayData   = gatewayRes.ok ? await gatewayRes.json() : { gateways: data.gateways || [] };
+    const unmatched     = unmatchedData.unmatched || [];
+
+    window._lastAuditLogs = data.auditLogs || [];
+
+    renderStats(data.requests || []);
+    renderGatewayCards(gatewayData.gateways || []);
+    if (isAdminUnlocked()) {
+      renderRequests(data.requests || []);
+      renderReplies(data.replyDrafts || [], data.requests || []);
+      renderUnmatched(unmatched, data.requests || []);
+    }
+
+    _unifiedFeed = buildUnifiedFeed(data.smsOutbox || [], data.smsInbox || [], data.auditLogs || []);
+    renderLogStats(data.smsOutbox || [], _unifiedFeed);
+    if (document.getElementById('panel-logs').classList.contains('active')) renderLogs();
+
+    renderAudit(data.auditLogs || []);
+
+    document.getElementById('lastRefresh').textContent = `Updated ${new Date().toLocaleTimeString()}`;
+  } catch (err) {
+    console.error('refresh failed:', err);
   }
 }
-
-function copyProvPayload() {
-  if (!_lastProvPayload) return;
-  navigator.clipboard.writeText(_lastProvPayload).then(() => {
-    const btn = document.querySelector('#provResult .btn-secondary');
-    const orig = btn.textContent;
-    btn.textContent = 'Copied!';
-    setTimeout(() => { btn.textContent = orig; }, 2000);
-  });
-}
-
-// Pre-fill backend URL with current origin on Gateways tab open
-document.querySelector('.tab-btn[data-tab="gateways"]').addEventListener('click', () => {
-  const urlInput = document.getElementById('provUrl');
-  if (!urlInput.value) urlInput.value = window.location.origin;
-});
 
 /* ── Boot ── */
+window._bootTime = Date.now();
+updateAdminVisibility();
+pollHealth();
+setInterval(pollHealth, 30_000);
 refresh();
-setInterval(refresh, 10000);
+setInterval(refresh, 10_000);
