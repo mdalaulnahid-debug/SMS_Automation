@@ -1,542 +1,266 @@
 <!doctype html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>SMS Gateway</title>
+    <title>SMS Automation · Operations</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,500,0,0" rel="stylesheet" />
     <link rel="stylesheet" href="/theme.css" />
     <style>
-      /* Page-specific layout only — shared tokens/components live in /theme.css */
-      :root { --nav-height: 72px; --header-height: 64px; }
-      body { min-height: 100dvh; max-width: 480px; margin: 0 auto; }
-
-      /* ── TOP APP BAR ── */
+      :root { --header-height: 72px; --nav-height: 78px; }
+      body { max-width: 480px; margin: 0 auto; position: relative; }
       #app-header {
-        position: fixed;
-        top: 0; left: 50%; transform: translateX(-50%);
-        width: 100%; max-width: 480px;
-        height: var(--header-height);
-        background: var(--bg-surface);
-        border-bottom: 1px solid var(--divider);
-        display: flex; align-items: center;
-        justify-content: space-between;
+        position: fixed; top: 0; left: 50%; transform: translateX(-50%);
+        width: 100%; max-width: 480px; height: var(--header-height);
+        display: flex; align-items: center; justify-content: space-between;
         padding: 0 16px; z-index: 20;
+        background: rgba(8, 17, 31, 0.86); backdrop-filter: blur(18px);
+        border-bottom: 1px solid var(--divider);
       }
-      .header-brand { display: flex; align-items: center; gap: 10px; }
-      .header-brand .material-symbols-outlined { font-size: 22px; color: var(--accent); }
-      .header-brand h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.02em; }
-      .header-right { display: flex; align-items: center; gap: 6px; }
-
-      /* ── MAIN / TABS ── */
-      main {
-        padding-top: var(--header-height);
-        padding-bottom: calc(var(--nav-height) + 8px);
-        min-height: 100dvh;
-      }
+      .brand-block { display: flex; flex-direction: column; gap: 3px; }
+      .brand-kicker { color: var(--accent); font-size: 10px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; }
+      .brand-title { font-size: 20px; font-weight: 800; letter-spacing: -0.03em; }
+      .brand-sub { color: var(--text-muted); font-size: 12px; }
+      main { padding: calc(var(--header-height) + 12px) 14px calc(var(--nav-height) + 14px); }
       .tab-panel { display: none; }
       .tab-panel.active { display: block; }
-      .panel-content { padding: 16px; }
-
-      /* ── BOTTOM NAV ── */
+      .ops-stack { display: grid; gap: 14px; }
+      .posture-banner { padding: 18px; border-radius: 20px; }
+      .posture-top { display: flex; justify-content: space-between; align-items: start; gap: 12px; }
+      .posture-title { margin-top: 8px; font-size: 24px; font-weight: 800; line-height: 1.05; letter-spacing: -0.04em; }
+      .posture-sub { margin-top: 8px; color: var(--text-secondary); font-size: 13px; line-height: 1.5; }
+      .quick-actions, .filter-row { display: flex; gap: 8px; flex-wrap: wrap; }
+      .quick-actions button, .quick-actions a, .filter-chip {
+        display: inline-flex; align-items: center; gap: 6px; min-height: 40px; padding: 0 12px;
+        border-radius: 12px; border: 1px solid var(--divider); background: var(--bg-panel-2);
+        color: var(--text-secondary); text-decoration: none; cursor: pointer;
+      }
+      .quick-actions .primary-link { background: var(--accent-bg); border-color: var(--accent-border); color: var(--accent); }
+      .kpi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+      .operator-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+      .operator-mini { border-radius: 14px; background: var(--bg-panel); border: 1px solid var(--divider); overflow: hidden; }
+      .operator-mini .head { height: 3px; background: var(--operator-color, var(--accent)); }
+      .operator-mini .body { padding: 12px; }
+      .operator-name { font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+      .operator-state { margin-top: 12px; font-size: 18px; font-weight: 800; }
+      .operator-meta { margin-top: 6px; color: var(--text-muted); font-size: 11px; }
+      .attention-grid { display: grid; gap: 10px; }
+      .attention-card { padding: 14px; border-radius: 16px; }
+      .attention-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+      .attention-title { font-size: 13px; font-weight: 800; }
+      .attention-value { font-size: 26px; font-weight: 800; line-height: 1; }
+      .attention-detail { margin-top: 8px; font-size: 12px; color: var(--text-secondary); }
+      .activity-list { display: grid; gap: 10px; }
+      .search-wrap { position: relative; }
+      .search-wrap input {
+        width: 100%; border: 1px solid var(--divider); border-radius: 14px; background: var(--bg-panel);
+        color: var(--text-primary); padding: 12px 14px 12px 42px;
+      }
+      .search-wrap .material-symbols-outlined {
+        position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 20px;
+      }
+      .filter-chip.active { background: var(--accent-bg); border-color: var(--accent-border); color: var(--accent); }
+      .summary-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+      .summary-item { padding: 12px; border-radius: 14px; background: var(--bg-panel); border: 1px solid var(--divider); }
+      .summary-value { font-size: 18px; font-weight: 800; }
+      .summary-label { margin-top: 4px; color: var(--text-muted); font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; }
+      .settings-cluster { display: grid; gap: 12px; }
+      .setting-panel { padding: 16px; border-radius: 18px; background: var(--bg-panel); border: 1px solid var(--divider); }
+      .setting-row { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+      .setting-title { font-size: 13px; font-weight: 800; }
+      .setting-note { margin-top: 6px; font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
+      .setting-pill { padding: 6px 10px; border-radius: 999px; background: var(--accent-bg); color: var(--accent); font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+      .setting-panel input { margin-top: 12px; }
+      .admin-access { border-left: 3px solid var(--warning); }
+      .details-shell { margin-top: 12px; display: grid; gap: 10px; }
+      details.command-fold { border: 1px solid var(--divider); border-radius: 14px; background: var(--bg-panel-2); overflow: hidden; }
+      details.command-fold summary {
+        list-style: none; cursor: pointer; padding: 14px 16px; display: flex; align-items: center; justify-content: space-between;
+        font-weight: 800;
+      }
+      details.command-fold summary::-webkit-details-marker { display: none; }
+      .fold-body { padding: 0 16px 16px; border-top: 1px solid var(--divider); }
+      .fold-grid { display: grid; gap: 10px; margin-top: 12px; }
+      .fold-grid label { font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); display: grid; gap: 6px; }
+      .prov-result { display: none; flex-direction: column; align-items: center; gap: 12px; margin-top: 16px; }
+      .prov-result img { width: 180px; border-radius: 16px; background: #fff; padding: 8px; }
       .bottom-nav {
-        position: fixed;
-        bottom: 0; left: 50%; transform: translateX(-50%);
-        width: 100%; max-width: 480px;
-        height: var(--nav-height);
-        background: var(--bg-surface);
-        border-top: 1px solid var(--divider);
-        display: flex; z-index: 20;
+        position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
+        width: 100%; max-width: 480px; height: var(--nav-height); padding: 8px 12px 12px;
+        display: flex; gap: 8px; background: rgba(8, 17, 31, 0.92); backdrop-filter: blur(18px);
+        border-top: 1px solid var(--divider); z-index: 20;
       }
       .nav-item {
-        flex: 1; display: flex; flex-direction: column;
-        align-items: center; justify-content: center; gap: 4px;
-        background: none; border: none; cursor: pointer;
-        color: var(--text-muted); font-family: inherit;
-        font-size: 11px; font-weight: 500; letter-spacing: 0.03em;
-        padding: 8px 0 12px; position: relative;
-        transition: color 0.15s;
+        flex: 1; border: 1px solid var(--divider); border-radius: 16px; background: var(--bg-panel);
+        color: var(--text-muted); display: flex; flex-direction: column; align-items: center; justify-content: center;
+        gap: 4px; cursor: pointer;
       }
-      .nav-item .material-symbols-outlined { font-size: 24px; position: relative; z-index: 1; }
-      .nav-item > span:last-child { position: relative; z-index: 1; }
-      .nav-indicator {
-        position: absolute; top: 6px;
-        width: 64px; height: 32px;
-        background: var(--accent-bg); border-radius: 16px;
-        opacity: 0; transition: opacity 0.2s;
-      }
-      .nav-item.active { color: var(--accent); }
-      .nav-item.active .nav-indicator { opacity: 1; }
-
-      /* ── SECTION LABEL ── */
-      .section-label {
-        font-size: 11px; font-weight: 700;
-        letter-spacing: 0.1em; text-transform: uppercase;
-        color: var(--text-muted); margin: 20px 0 10px;
-      }
-      .section-label:first-child { margin-top: 4px; }
-
-      /* ── STATS GRID (2-up, mobile) ── */
-      .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 4px; }
-      .gw-card { margin-bottom: 10px; }
-      .gw-card:last-child { margin-bottom: 0; }
-
-      /* ── LOG FEED ── */
-      .search-bar { position: relative; margin-bottom: 12px; }
-      .search-bar input {
-        width: 100%; padding: 10px 12px 10px 40px;
-        background: var(--bg-card); border: 1px solid var(--divider);
-        border-radius: 28px; color: var(--text-primary);
-        font-size: 14px; font-family: inherit; outline: none; transition: border-color 0.15s;
-      }
-      .search-bar input:focus { border-color: var(--accent); }
-      .search-bar input::placeholder { color: var(--text-muted); }
-      .search-bar .material-symbols-outlined {
-        position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
-        font-size: 20px; color: var(--text-muted); pointer-events: none;
-      }
-
-      .filter-chips {
-        display: flex; gap: 8px; overflow-x: auto;
-        scrollbar-width: none; padding-bottom: 4px; margin-bottom: 14px;
-      }
-      .filter-chips::-webkit-scrollbar { display: none; }
-      .filter-chip {
-        display: inline-flex; align-items: center;
-        padding: 6px 14px; border-radius: 999px;
-        border: 1px solid var(--divider); background: var(--bg-surface);
-        color: var(--text-secondary); font-size: 12px; font-weight: 600;
-        cursor: pointer; white-space: nowrap; font-family: inherit;
-        transition: all 0.15s; flex-shrink: 0;
-      }
-      .filter-chip.active { background: var(--accent-bg); border-color: var(--accent); color: var(--accent); }
-
-      .log-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
-      .log-stat-card { background: var(--bg-card); border-radius: 12px; padding: 10px 8px; }
-      .log-stat-num { font-size: 18px; font-weight: 800; line-height: 1.1; color: var(--text-primary); }
-      .log-stat-num.success { color: var(--success); }
-      .log-stat-num.danger  { color: var(--danger); }
-      .log-stat-lbl { font-size: 10px; font-weight: 600; color: var(--text-muted); margin-top: 3px; }
-
-      .log-surface { background: var(--bg-surface); border: 1px solid var(--divider); border-radius: 16px; overflow: hidden; }
-      .log-entry { display: flex; align-items: flex-start; gap: 12px; padding: 12px 14px; border-bottom: 1px solid var(--divider); }
-      .log-entry:last-child { border-bottom: none; }
-      .log-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
-      .log-dot.sent     { background: var(--accent); }
-      .log-dot.received { background: var(--success); }
-      .log-dot.failed   { background: var(--danger); }
-      .log-dot.system   { background: var(--text-muted); }
-      .log-body { flex: 1; min-width: 0; }
-      .log-title { font-size: 13px; font-weight: 600; word-break: break-all; }
-      .log-meta  { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-      .log-badge {
-        font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px;
-        letter-spacing: 0.05em; text-transform: uppercase; flex-shrink: 0; align-self: flex-start;
-      }
-      .log-badge.sent     { background: var(--accent-bg); color: var(--accent); }
-      .log-badge.received { background: var(--success-bg); color: var(--success); }
-      .log-badge.failed   { background: var(--danger-bg);  color: var(--danger); }
-      .log-badge.system   { background: var(--bg-card-el); color: var(--text-muted); }
-
-      .load-more-btn {
-        width: 100%; padding: 12px; background: none;
-        border: 1px solid var(--divider); border-radius: 12px;
-        color: var(--accent); font-size: 13px; font-weight: 600;
-        font-family: inherit; cursor: pointer; margin-top: 10px;
-        transition: background 0.15s;
-      }
-      .load-more-btn:hover { background: var(--accent-bg); }
-
-      /* ── SETTINGS ── */
-      .settings-group { background: var(--bg-surface); border: 1px solid var(--divider); border-radius: 16px; overflow: hidden; margin-bottom: 12px; }
-      .settings-row { display: flex; align-items: center; padding: 14px 16px; border-bottom: 1px solid var(--divider); gap: 12px; }
-      .settings-row:last-child { border-bottom: none; }
-      .settings-row-icon {
-        width: 36px; height: 36px; border-radius: 10px; background: var(--accent-bg); flex-shrink: 0;
-        display: flex; align-items: center; justify-content: center;
-      }
-      .settings-row-icon .material-symbols-outlined { font-size: 18px; color: var(--accent); }
-      .settings-row-body { flex: 1; min-width: 0; }
-      .settings-row-label { font-size: 13px; font-weight: 600; }
-      .settings-row-value { font-size: 11px; color: var(--text-muted); margin-top: 1px; word-break: break-all; }
-      .settings-link-row {
-        display: flex; align-items: center; gap: 12px; padding: 14px 16px;
-        text-decoration: none; color: inherit; cursor: pointer;
-      }
-      .settings-link-row .material-symbols-outlined.chevron { margin-left: auto; color: var(--text-muted); font-size: 20px; }
-
-      .settings-input {
-        width: 100%; padding: 10px 12px;
-        background: var(--bg-card); border: 1px solid var(--divider);
-        border-radius: 10px; color: var(--text-primary);
-        font-size: 13px; font-family: inherit; outline: none;
-        transition: border-color 0.15s; margin-top: 4px;
-      }
-      .settings-input:focus { border-color: var(--accent); }
-
-      .toggle { position: relative; display: inline-block; width: 44px; height: 24px; }
-      .toggle input { opacity: 0; width: 0; height: 0; }
-      .toggle-slider { position: absolute; inset: 0; background: var(--divider); border-radius: 12px; cursor: pointer; transition: background 0.2s; }
-      .toggle-slider::before {
-        content: ''; position: absolute; width: 18px; height: 18px; border-radius: 50%;
-        background: white; top: 3px; left: 3px; transition: transform 0.2s;
-      }
-      .toggle input:checked + .toggle-slider { background: var(--accent); }
-      .toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
-
-      /* ── ADMIN SECTION ── */
-      .admin-only { display: none; }
-      .admin-header {
-        display: flex; align-items: center; gap: 8px; margin: 20px 0 10px;
-        font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
-        color: var(--warning);
-      }
-      .admin-header .material-symbols-outlined { font-size: 16px; }
-
-      /* ── REQ / DRAFT CARDS ── */
-      .req-card, .draft-card { background: var(--bg-surface); border: 1px solid var(--divider); border-radius: 12px; padding: 14px; margin-bottom: 8px; }
-      .req-card:last-child, .draft-card:last-child { margin-bottom: 0; }
-      .req-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 5px; }
-      .req-id   { font-size: 12px; font-weight: 700; font-family: monospace; }
-      .req-type { font-size: 12px; color: var(--text-secondary); margin-bottom: 3px; }
-      .req-meta { font-size: 11px; color: var(--text-muted); }
-      .req-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
-      .draft-text {
-        font-size: 12px; color: var(--text-secondary); background: var(--bg-card); border-radius: 8px;
-        padding: 8px 10px; margin: 8px 0; white-space: pre-wrap; word-break: break-word;
-        font-family: 'SF Mono', 'Consolas', monospace;
-      }
-
-      /* ── COLLAPSIBLE ── */
-      details.collapsible { background: var(--bg-surface); border: 1px solid var(--divider); border-radius: 12px; margin-bottom: 10px; overflow: hidden; }
-      details.collapsible summary {
-        padding: 14px 16px; font-size: 13px; font-weight: 600; cursor: pointer; list-style: none;
-        display: flex; align-items: center; gap: 8px;
-      }
-      details.collapsible summary::-webkit-details-marker { display: none; }
-      details.collapsible summary > .material-symbols-outlined:first-child { font-size: 18px; color: var(--accent); }
-      details.collapsible summary .chevron { margin-left: auto; font-size: 18px; color: var(--text-muted); transition: transform 0.2s; }
-      details.collapsible[open] summary .chevron { transform: rotate(180deg); }
-      .detail-inner { padding: 0 16px 16px; border-top: 1px solid var(--divider); }
-      .detail-inner label {
-        display: block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
-        color: var(--text-muted); margin: 12px 0 4px;
-      }
-      .detail-inner input, .detail-inner textarea, .detail-inner select {
-        width: 100%; padding: 10px 12px; background: var(--bg-card); border: 1px solid var(--divider);
-        border-radius: 10px; color: var(--text-primary); font-size: 13px; font-family: inherit;
-        outline: none; transition: border-color 0.15s;
-      }
-      .detail-inner input:focus, .detail-inner textarea:focus, .detail-inner select:focus { border-color: var(--accent); }
-      .detail-inner textarea { min-height: 72px; resize: vertical; }
-      .detail-inner .action-btn {
-        display: block; width: 100%; margin-top: 12px; padding: 12px;
-        background: var(--accent); color: var(--accent-on); border: none; border-radius: 24px;
-        font-size: 14px; font-weight: 700; font-family: inherit; cursor: pointer; transition: opacity 0.15s;
-      }
-      .detail-inner .action-btn:hover { opacity: 0.88; }
-      .detail-inner .action-btn.secondary { background: var(--bg-card); color: var(--text-secondary); border: 1px solid var(--divider); }
-      .prov-result { margin-top: 12px; text-align: center; }
-      .prov-result img { max-width: 200px; border-radius: 12px; background: #fff; padding: 8px; }
-
-      /* ── MATCH FORM ── */
-      .match-form { display: flex; gap: 8px; align-items: center; margin-top: 10px; }
-      .match-form select {
-        flex: 1; padding: 8px 10px; background: var(--bg-card); border: 1px solid var(--divider);
-        border-radius: 8px; color: var(--text-primary); font-size: 12px; font-family: inherit; outline: none;
-      }
-
-      /* ── AUTH OVERLAY ── */
-      #authOverlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; align-items: center; justify-content: center; }
-      #authOverlay.visible { display: flex; }
-      .auth-box { background: var(--bg-surface); border: 1px solid var(--divider); border-radius: 20px; padding: 24px; width: min(320px, 90vw); }
-      .auth-box h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
-      .auth-box p { font-size: 13px; color: var(--text-secondary); margin-bottom: 16px; }
-      .auth-row { display: flex; gap: 8px; }
-      .auth-row input {
-        flex: 1; padding: 10px 12px; background: var(--bg-card); border: 1px solid var(--divider);
-        border-radius: 10px; color: var(--text-primary); font-size: 14px; font-family: inherit; outline: none;
-      }
-      .auth-row input:focus { border-color: var(--accent); }
-      .auth-row button {
-        padding: 10px 16px; background: var(--accent); color: var(--accent-on); border: none; border-radius: 10px;
-        font-size: 14px; font-weight: 600; font-family: inherit; cursor: pointer;
-      }
-
-      /* ── MISC ── */
-      .refresh-lbl { font-size: 11px; color: var(--text-muted); text-align: center; padding: 12px 0 0; }
-      .settings-footer { text-align: center; font-size: 11px; color: var(--text-muted); padding: 20px 0 4px; }
-      .detail-label { font-size: 12px; color: var(--text-muted); margin-top: 12px; }
+      .nav-item.active { color: var(--accent); border-color: var(--accent-border); background: var(--accent-bg); }
+      .nav-item span:last-child { font-size: 11px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; }
     </style>
   </head>
   <body>
-
-    <!-- ── TOP APP BAR ── -->
     <header id="app-header">
-      <div class="header-brand">
-        <span class="material-symbols-outlined">hub</span>
-        <h1>SMS Gateway</h1>
+      <div class="brand-block">
+        <div class="brand-kicker">Operations Surface</div>
+        <div class="brand-title">SMS Automation</div>
+        <div class="brand-sub">Field monitoring and light-touch action</div>
       </div>
-      <div class="header-right">
+      <div style="display:flex;align-items:center;gap:10px">
         <div class="header-status">
           <div class="pulse-dot" id="pulseIndicator"></div>
-          <span id="statusLabel">Checking…</span>
+          <span id="statusLabel">Checking</span>
         </div>
         <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
-          <span class="material-symbols-outlined" id="themeIcon">dark_mode</span>
+          <span class="material-symbols-outlined" id="themeIcon">light_mode</span>
         </button>
       </div>
     </header>
 
     <main>
-
-      <!-- ══ HOME TAB ══ -->
-      <div id="panel-home" class="tab-panel active">
-        <div class="panel-content">
-
-          <p class="section-label">Overview</p>
-          <div class="stats-grid" id="statsGrid"></div>
-
-          <p class="section-label">Active Gateways</p>
-          <div id="gatewayCards"></div>
-
-          <!-- Admin — hidden until API key is set -->
-          <div class="admin-only" id="adminHome">
-            <div class="admin-header">
-              <span class="material-symbols-outlined">admin_panel_settings</span>
-              Active Requests
+      <section id="panel-home" class="tab-panel active">
+        <div class="ops-stack">
+          <section id="opsPosture" class="posture-banner glass-panel status-strip"></section>
+          <section class="data-surface">
+            <div class="surface-header">
+              <div>
+                <div class="surface-title">Fleet Status</div>
+                <div class="surface-subtitle">Live posture by operator</div>
+              </div>
             </div>
-            <div id="requests"></div>
-
-            <div class="admin-header">
-              <span class="material-symbols-outlined">rate_review</span>
-              Reply Drafts
+            <div class="operator-strip" id="operatorStrip" style="padding:16px"></div>
+          </section>
+          <section class="data-surface">
+            <div class="surface-header">
+              <div>
+                <div class="surface-title">Needs Attention</div>
+                <div class="surface-subtitle">Pending approvals, failures, and exception load</div>
+              </div>
             </div>
-            <div id="replies"></div>
-
-            <div class="admin-header">
-              <span class="material-symbols-outlined">help_outline</span>
-              Unmatched SMS
+            <div class="attention-grid" id="attentionGrid" style="padding:16px"></div>
+          </section>
+          <section class="data-surface">
+            <div class="surface-header">
+              <div>
+                <div class="surface-title">Recent Activity</div>
+                <div class="surface-subtitle">Operator replies, dispatches, and alerts</div>
+              </div>
             </div>
-            <p style="font-size:12px;color:var(--text-muted);margin-bottom:8px">
-              Inbound SMS that did not match any pending request.
-            </p>
-            <div id="unmatched"></div>
-          </div>
-
-          <p class="refresh-lbl" id="lastRefresh"></p>
+            <div id="opsActivity" class="activity-list" style="padding:16px"></div>
+          </section>
         </div>
-      </div>
+      </section>
 
-      <!-- ══ LOGS TAB ══ -->
-      <div id="panel-logs" class="tab-panel">
-        <div class="panel-content">
-
-          <div class="search-bar">
-            <span class="material-symbols-outlined">search</span>
-            <input type="text" id="logSearch" placeholder="Search logs…" oninput="applyLogFilter()" />
-          </div>
-
-          <div class="filter-chips" id="filterChips">
-            <button class="filter-chip active" data-filter="all">All</button>
-            <button class="filter-chip" data-filter="sent">Sent</button>
-            <button class="filter-chip" data-filter="received">Received</button>
-            <button class="filter-chip" data-filter="failed">Failed</button>
-            <button class="filter-chip" data-filter="system">System</button>
-          </div>
-
-          <div class="log-stats-grid" id="logStatsGrid"></div>
-
-          <div class="log-surface">
-            <div id="logFeed"></div>
-          </div>
-          <button class="load-more-btn" id="loadMoreBtn" onclick="loadMoreLogs()" style="display:none">
-            Load more
-          </button>
-
+      <section id="panel-activity" class="tab-panel">
+        <div class="ops-stack">
+          <section class="data-surface">
+            <div class="surface-header">
+              <div>
+                <div class="surface-title">Activity Console</div>
+                <div class="surface-subtitle">Searchable event stream with severity filters</div>
+              </div>
+            </div>
+            <div class="table-toolbar" style="display:grid;gap:10px">
+              <div class="search-wrap">
+                <span class="material-symbols-outlined">search</span>
+                <input id="activitySearch" type="text" placeholder="Search events, requests, senders, operators…" />
+              </div>
+              <div class="filter-row" id="activityFilters">
+                <button class="filter-chip active" data-filter="all">All</button>
+                <button class="filter-chip" data-filter="critical">Critical</button>
+                <button class="filter-chip" data-filter="warning">Warnings</button>
+                <button class="filter-chip" data-filter="success">Success</button>
+                <button class="filter-chip" data-filter="info">Info</button>
+              </div>
+              <div class="summary-strip" id="activitySummary"></div>
+            </div>
+            <div id="activityFeed" class="timeline" style="padding:16px"></div>
+          </section>
         </div>
-      </div>
+      </section>
 
-      <!-- ══ SETTINGS TAB ══ -->
-      <div id="panel-settings" class="tab-panel">
-        <div class="panel-content">
-
-          <p class="section-label">Connection</p>
-          <div class="settings-group">
-            <div class="settings-row">
-              <div class="settings-row-icon">
-                <span class="material-symbols-outlined">dns</span>
+      <section id="panel-settings" class="tab-panel">
+        <div class="settings-cluster">
+          <section class="setting-panel">
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">Session theme</div>
+                <div class="setting-note">Keep this surface readable in vehicles, offices, and field conditions.</div>
               </div>
-              <div class="settings-row-body">
-                <div class="settings-row-label">Backend URL</div>
-                <div class="settings-row-value" id="backendUrlDisplay"></div>
-              </div>
-            </div>
-            <div class="settings-row" style="flex-direction:column;align-items:stretch">
-              <div style="display:flex;align-items:center;gap:12px">
-                <div class="settings-row-icon">
-                  <span class="material-symbols-outlined">key</span>
-                </div>
-                <div class="settings-row-body">
-                  <div class="settings-row-label">Admin API Key</div>
-                  <div class="settings-row-value" id="apiKeyStatus">Not set</div>
-                </div>
-              </div>
-              <input type="password" class="settings-input" id="settingsApiKey"
-                     placeholder="Paste API key to unlock admin features…" autocomplete="off" />
-            </div>
-          </div>
-
-          <p class="section-label">Appearance</p>
-          <div class="settings-group">
-            <div class="settings-row">
-              <div class="settings-row-icon">
-                <span class="material-symbols-outlined">dark_mode</span>
-              </div>
-              <div class="settings-row-body">
-                <div class="settings-row-label">Dark theme</div>
-              </div>
-              <label class="toggle">
-                <input type="checkbox" id="themeToggle" onchange="toggleThemeCheckbox(this)" />
-                <span class="toggle-slider"></span>
+              <label class="setting-pill">
+                <input id="themeToggle" type="checkbox" class="visually-hidden" onchange="toggleThemeCheckbox(this)" />
+                Dark
               </label>
             </div>
-          </div>
+          </section>
 
-          <p class="section-label">More</p>
-          <div class="settings-group">
-            <a class="settings-link-row" href="/admin">
-              <div class="settings-row-icon">
-                <span class="material-symbols-outlined">admin_panel_settings</span>
+          <section class="setting-panel">
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">Backend connection</div>
+                <div class="setting-note" id="backendUrlDisplay"></div>
               </div>
-              <div class="settings-row-body">
-                <div class="settings-row-label">Open Admin Console</div>
-                <div class="settings-row-value">Desktop view for heavier review work</div>
+              <span class="setting-pill">Ops link</span>
+            </div>
+          </section>
+
+          <section class="setting-panel admin-access">
+            <div class="setting-row">
+              <div>
+                <div class="setting-title">Escalation access</div>
+                <div class="setting-note">Supervisor and compliance actions stay in the admin command center.</div>
               </div>
-              <span class="material-symbols-outlined chevron">chevron_right</span>
-            </a>
-          </div>
+              <a href="/admin" class="quick-actions primary-link">Open admin</a>
+            </div>
+            <input id="settingsApiKey" class="input-field" type="password" placeholder="Paste admin API key to unlock local admin widgets" autocomplete="off" />
+            <div class="setting-note" id="apiKeyStatus">Not set</div>
+          </section>
 
-          <!-- Admin tools — visible only when API key is saved -->
-          <div class="admin-only" id="adminSettings">
-
-            <p class="section-label" style="color:var(--warning)">Admin</p>
-
-            <details class="collapsible">
-              <summary>
-                <span class="material-symbols-outlined">qr_code_scanner</span>
-                Provision Gateway Phone
-                <span class="material-symbols-outlined chevron">expand_more</span>
-              </summary>
-              <div class="detail-inner">
-                <label>Gateway ID
-                  <select id="provGwId">
-                    <option>GP_PHONE_01</option>
-                    <option>ROBI_PHONE_01</option>
-                    <option>BANGLALINK_PHONE_01</option>
-                  </select>
-                </label>
-                <label>Backend URL (what the phone will connect to)
-                  <input id="provUrl" type="url" placeholder="https://…" />
-                </label>
-                <label>Admin PIN (4+ digits)
-                  <input id="provPin" type="password" placeholder="e.g. 1234" autocomplete="new-password" />
-                </label>
-                <label>Gateway secret (optional)
-                  <input id="provSecret" type="text" placeholder="gateway-secret" />
-                </label>
-                <button class="action-btn" onclick="generateProvisionQr()">Generate QR</button>
-                <div class="prov-result" id="provResult" style="display:none">
-                  <img id="provQrImg" alt="Provisioning QR" />
-                  <p style="font-size:12px;color:var(--text-muted);margin-top:8px">
-                    Scan with gateway phone → Scan QR to Set Up
-                  </p>
-                  <button class="action-btn secondary" onclick="copyProvPayload('#provResult .action-btn.secondary')" style="margin-top:8px">
-                    Copy JSON Payload
-                  </button>
+          <section class="setting-panel admin-only" id="adminToolsPanel" style="display:none">
+            <div class="setting-title">Restricted tools</div>
+            <div class="setting-note">These remain available, but intentionally demoted from the normal operations path.</div>
+            <div class="details-shell">
+              <details class="command-fold">
+                <summary><span>Provision gateway</span><span class="material-symbols-outlined">qr_code_2</span></summary>
+                <div class="fold-body">
+                  <div class="fold-grid">
+                    <label>Gateway ID<select id="provGwId" class="select-field"><option>GP_PHONE_01</option><option>ROBI_PHONE_01</option><option>BANGLALINK_PHONE_01</option></select></label>
+                    <label>Backend URL<input id="provUrl" class="input-field" type="url" /></label>
+                    <label>Admin PIN<input id="provPin" class="input-field" type="password" autocomplete="new-password" /></label>
+                    <label>Gateway secret<input id="provSecret" class="input-field" type="text" /></label>
+                    <button class="btn-primary" onclick="generateProvisionQr()">Generate QR</button>
+                    <div id="provError" class="error-text" style="display:none"></div>
+                    <div class="prov-result" id="provResult">
+                      <img id="provQrImg" alt="Provisioning QR" />
+                      <button class="btn-secondary" onclick="copyProvPayload('#provResult button')">Copy payload</button>
+                    </div>
+                  </div>
                 </div>
-                <div class="error-text" id="provError" style="display:none"></div>
-              </div>
-            </details>
-
-            <details class="collapsible">
-              <summary>
-                <span class="material-symbols-outlined">receipt_long</span>
-                Audit Log
-                <span class="material-symbols-outlined chevron">expand_more</span>
-              </summary>
-              <div class="detail-inner">
-                <div id="chainIntegrity" class="banner banner-ok" style="margin-top:12px"></div>
-                <div id="auditFeed"></div>
-                <button class="action-btn secondary" onclick="exportAuditCsv()" style="margin-top:8px">
-                  Export CSV
-                </button>
-              </div>
-            </details>
-
-            <details class="collapsible">
-              <summary>
-                <span class="material-symbols-outlined">code</span>
-                Dev Tools
-                <span class="material-symbols-outlined chevron">expand_more</span>
-              </summary>
-              <div class="detail-inner">
-                <p class="detail-label">Submit Request</p>
-                <form id="requestForm">
-                  <label>Requester name <input name="requesterName" value="Officer Rahim" /></label>
-                  <label>Requester Telegram ID <input name="requesterId" value="8801700000000" /></label>
-                  <label>Chat ID <input name="chatId" value="operations-group" /></label>
-                  <label>Request text <textarea name="text">LRL 01712345678</textarea></label>
-                  <button type="submit" class="action-btn">Queue and Send SMS</button>
-                </form>
-                <p class="detail-label" style="margin-top:20px">Simulate Operator Reply</p>
-                <form id="smsForm">
-                  <label>Gateway ID <input name="gatewayId" value="GP_PHONE_01" /></label>
-                  <label>From short code <input name="from" value="12345" /></label>
-                  <label>SMS body <textarea name="body">LRL cell location</textarea></label>
-                  <button type="submit" class="action-btn">Receive SMS Webhook</button>
-                </form>
-              </div>
-            </details>
-
-          </div><!-- /adminSettings -->
-
-          <div class="settings-footer">SMS Gateway · Police Investigation Support</div>
+              </details>
+            </div>
+          </section>
         </div>
-      </div>
-
+      </section>
     </main>
 
-    <!-- ── BOTTOM NAV ── -->
     <nav class="bottom-nav">
-      <button class="nav-item active" data-tab="home">
-        <span class="nav-indicator"></span>
-        <span class="material-symbols-outlined">home</span>
-        <span>Home</span>
-      </button>
-      <button class="nav-item" data-tab="logs">
-        <span class="nav-indicator"></span>
-        <span class="material-symbols-outlined">list_alt</span>
-        <span>Logs</span>
-      </button>
-      <button class="nav-item" data-tab="settings">
-        <span class="nav-indicator"></span>
-        <span class="material-symbols-outlined">settings</span>
-        <span>Settings</span>
-      </button>
+      <button class="nav-item active" data-tab="home"><span class="material-symbols-outlined">radar</span><span>Home</span></button>
+      <button class="nav-item" data-tab="activity"><span class="material-symbols-outlined">timeline</span><span>Activity</span></button>
+      <button class="nav-item" data-tab="settings"><span class="material-symbols-outlined">tune</span><span>Access</span></button>
     </nav>
 
-    <!-- ── AUTH OVERLAY (programmatic 401 fallback) ── -->
-    <div id="authOverlay">
-      <div class="auth-box">
-        <h3>Authentication Required</h3>
-        <p>Enter your admin API key from <code>config/auth.json</code>.</p>
-        <div class="auth-row">
-          <input id="authKeyInput" type="password" placeholder="Admin API key" autocomplete="off" />
-          <button onclick="submitAuthKey()">Save</button>
+    <div id="authOverlay" style="display:none;position:fixed;inset:0;background:var(--bg-overlay);z-index:40;align-items:center;justify-content:center;padding:20px">
+      <div class="data-surface" style="width:min(360px,100%);padding:22px">
+        <div class="section-eyebrow">Restricted Access</div>
+        <div style="margin-top:8px;font-size:22px;font-weight:800;letter-spacing:-0.03em">Admin key required</div>
+        <div style="margin-top:8px;color:var(--text-secondary);line-height:1.5">Use the supervisor API key to unlock protected review actions from this device.</div>
+        <input id="authKeyInput" class="input-field" type="password" style="margin-top:16px" placeholder="Admin API key" autocomplete="off" />
+        <div style="display:flex;gap:10px;margin-top:14px">
+          <button class="btn-primary" onclick="submitAuthKey()">Save key</button>
+          <button class="btn-secondary" onclick="document.getElementById('authOverlay').style.display='none'">Cancel</button>
         </div>
       </div>
     </div>

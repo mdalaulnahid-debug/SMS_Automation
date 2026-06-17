@@ -86,6 +86,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
 
-    // QR code scanning (provisioning flow)
-    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
+    // QR code scanning (provisioning flow). Vendored locally because the current
+    // workstation JDK trust store cannot resolve Maven artifacts over SSL.
+    implementation(files("libs/zxing-android-embedded-4.3.0.aar"))
+    implementation(files("libs/core-3.4.1.jar"))
 }

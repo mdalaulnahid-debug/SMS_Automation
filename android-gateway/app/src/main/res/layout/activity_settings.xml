@@ -36,6 +36,48 @@
             android:paddingHorizontal="16dp"
             android:paddingTop="16dp">
 
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                app:cardBackgroundColor="@color/bg_card"
+                app:cardCornerRadius="18dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/accent"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="18dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="DEVICE ROLE"
+                        android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel"
+                        android:textColor="@color/accent" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="This phone is the gateway runtime. Keep service state, SIM routing, and backend reachability easy to verify at a glance."
+                        android:textColor="@color/text_primary"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Supervisor review and approval work should happen in the separate Android Admin app, not here."
+                        android:textColor="@color/text_secondary"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
             <!-- ══ DISPLAY ══ -->
             <TextView
                 android:layout_width="match_parent"
@@ -83,7 +125,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="GATEWAY SETUP"
+                android:text="GATEWAY RUNTIME"
                 android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel"
                 android:layout_marginBottom="8dp"
                 android:layout_marginStart="4dp" />
@@ -124,7 +166,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="SIM &amp; Identity"
+                                android:text="SIM, identity, and boot behavior"
                                 android:textColor="@color/text_primary"
                                 android:textSize="14sp" />
 
@@ -133,7 +175,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
-                                android:text="Gateway ID, SIM slot, auto-start"
+                                android:text="Gateway ID, active SIM, startup mode"
                                 android:textColor="@color/text_secondary"
                                 android:textSize="12sp" />
                         </LinearLayout>
@@ -142,7 +184,7 @@
                             android:id="@+id/tvGatewaySetupChevron"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="▲"
+                            android:text="^"
                             android:textColor="@color/text_secondary"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -216,7 +258,7 @@
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="SECOND SIM — DUAL GATEWAY"
+                                android:text="SECOND SIM / DUAL GATEWAY"
                                 android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel"
                                 android:layout_marginBottom="6dp" />
 
@@ -323,7 +365,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="ADMIN SETUP"
+                android:text="BACKEND LINK"
                 android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel"
                 android:layout_marginBottom="8dp"
                 android:layout_marginStart="4dp" />
@@ -358,7 +400,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Backend &amp; API Key"
+                            android:text="Backend connectivity"
                             android:textColor="@color/text_primary"
                             android:textSize="14sp" />
 
@@ -367,7 +409,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="Tap to unlock — enter PIN to configure"
+                            android:text="Advanced connection settings"
                             android:textColor="@color/text_secondary"
                             android:textSize="12sp" />
 
@@ -472,7 +514,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Leave blank on gateway phones. Setting this unlocks the Control Center on this device."
+                                android:text="Keep this phone focused on gateway runtime. Only add an admin key here if this device must temporarily act as a supervisor fallback."
                             android:textColor="@color/text_secondary"
                             android:textSize="12sp"
                             android:layout_marginBottom="14dp" />
@@ -556,7 +598,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
-                                android:text="—"
+                                android:text="-"
                                 android:textColor="@color/text_secondary"
                                 android:textSize="12sp"
                                 android:fontFamily="monospace" />
@@ -566,7 +608,7 @@
                             android:id="@+id/tvAboutChevron"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="▼"
+                            android:text="v"
                             android:textColor="@color/text_secondary"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -604,7 +646,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:fontFamily="monospace"
-                                android:text="—"
+                                android:text="-"
                                 android:textColor="@color/text_secondary"
                                 android:textSize="13sp" />
                         </LinearLayout>
@@ -650,7 +692,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="HELP"
+                android:text="FIELD NOTES"
                 android:textAppearance="@style/TextAppearance.SmsGateway.SectionLabel"
                 android:layout_marginBottom="8dp"
                 android:layout_marginStart="4dp" />
@@ -685,7 +727,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="How to use this app"
+                            android:text="Gateway operation notes"
                             android:textColor="@color/text_primary"
                             android:textSize="14sp" />
 
@@ -693,7 +735,7 @@
                             android:id="@+id/tvHelpChevron"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="▼"
+                            android:text="v"
                             android:textColor="@color/text_secondary"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -717,7 +759,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Starting the Service"
+                            android:text="Service posture"
                             android:textColor="@color/accent"
                             android:textSize="12sp"
                             android:textStyle="bold"
@@ -726,7 +768,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Tap Start Service on the main screen. The status ring turns green when the app is active. Keep it running at all times — the notification in the status bar confirms it is alive."
+                            android:text="Tap Start Service on the main screen. The status ring turns green when the gateway is active. Keep the persistent notification visible so the runtime state is easy to verify."
                             android:textColor="@color/text_secondary"
                             android:textSize="13sp"
                             android:lineSpacingMultiplier="1.4"
@@ -765,7 +807,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Troubleshooting"
+                            android:text="Recovery checks"
                             android:textColor="@color/accent"
                             android:textSize="12sp"
                             android:textStyle="bold"
@@ -774,7 +816,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Service keeps stopping — go to phone Settings → Apps → SMS Gateway → Battery → set to Unrestricted.\n\nSMS not working — make sure all permissions are granted under phone Settings → Apps → SMS Gateway → Permissions."
+                            android:text="If service keeps stopping, open phone Settings > Apps > SMS Gateway > Battery and set it to Unrestricted.\n\nIf SMS is not working, confirm all requested permissions are granted under phone Settings > Apps > SMS Gateway > Permissions."
                             android:textColor="@color/text_secondary"
                             android:textSize="13sp"
                             android:lineSpacingMultiplier="1.4"
@@ -789,7 +831,7 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:text="Support"
+                            android:text="Escalation"
                             android:textColor="@color/accent"
                             android:textSize="12sp"
                             android:textStyle="bold"

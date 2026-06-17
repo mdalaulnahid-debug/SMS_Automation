@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#14253D"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BACKEND CONNECTION"
+            android:textColor="#7F91AF"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/etBackendUrl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="#1C304B"
+            android:hint="https://server.example.com"
+            android:inputType="textUri"
+            android:padding="12dp"
+            android:textColor="#EBF3FF"
+            android:textColorHint="#7F91AF" />
+
+        <EditText
+            android:id="@+id/etAdminApiKey"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="#1C304B"
+            android:hint="Admin API key"
+            android:inputType="textPassword"
+            android:padding="12dp"
+            android:textColor="#EBF3FF"
+            android:textColorHint="#7F91AF" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btnSaveConnection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save" />
+
+            <Button
+                android:id="@+id/btnRefreshData"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="Refresh Live Data" />
+
+            <TextView
+                android:id="@+id/tvConnectionState"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:text="Not connected"
+                android:textColor="#B2C0D9"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvOverviewSummary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="#14253D"
+        android:padding="16dp"
+        android:text="Waiting for live backend data."
+        android:textColor="#EBF3FF"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tvOverviewKpis"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="#14253D"
+        android:padding="16dp"
+        android:textColor="#B2C0D9"
+        android:textSize="13sp" />
+
+    <TextView
+        android:id="@+id/tvOverviewEscalations"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="#14253D"
+        android:padding="16dp"
+        android:textColor="#B2C0D9"
+        android:textSize="13sp" />
+</LinearLayout>

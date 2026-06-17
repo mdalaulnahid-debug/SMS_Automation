@@ -11,12 +11,12 @@
         android:id="@+id/action_logs"
         android:icon="@drawable/ic_log"
         android:title="Activity Log"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_settings"
         android:icon="@drawable/ic_settings"
         android:title="Settings"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
 
 </menu>

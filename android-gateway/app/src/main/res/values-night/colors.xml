@@ -1,45 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Dark theme — mirrors docs/design-system.md [data-theme="dark"] tokens -->
-    <color name="bg_primary">#141317</color>
-    <color name="bg_surface">#1C1B1F</color>
-    <color name="bg_card">#2B2930</color>
-    <color name="bg_card_elevated">#36343B</color>
+    <color name="bg_primary">#08111F</color>
+    <color name="bg_surface">#0F1D31</color>
+    <color name="bg_card">#14253D</color>
+    <color name="bg_card_elevated">#1C304B</color>
 
-    <!-- MD3 purple accent (dark) -->
-    <color name="accent">#D0BCFF</color>
-    <color name="accent_muted">#B69DF8</color>
-    <color name="accent_dim">#4A4458</color>
-    <color name="accent_on">#381E72</color>
+    <color name="accent">#3DD7FF</color>
+    <color name="accent_muted">#7C8CFF</color>
+    <color name="accent_dim">#15303A</color>
+    <color name="accent_on">#041018</color>
 
-    <!-- Text hierarchy -->
-    <color name="text_primary">#E6E1E5</color>
-    <color name="text_secondary">#CAC4D0</color>
-    <color name="text_muted">#938F99</color>
+    <color name="text_primary">#EBF3FF</color>
+    <color name="text_secondary">#B2C0D9</color>
+    <color name="text_muted">#7F91AF</color>
 
-    <!-- Status colours -->
-    <color name="success">#81C784</color>
-    <color name="success_dim">#1B3D1C</color>
-    <color name="danger">#F2B8B5</color>
-    <color name="danger_dim">#601410</color>
-    <color name="warning">#F9C74F</color>
-    <color name="warning_dim">#3B2700</color>
+    <color name="success">#56D88B</color>
+    <color name="success_dim">#112F23</color>
+    <color name="danger">#FF6D7F</color>
+    <color name="danger_dim">#3A1620</color>
+    <color name="warning">#FFBF5F</color>
+    <color name="warning_dim">#3A2A12</color>
 
-    <!-- SIM 2 identity — MD3 tertiary (dark) -->
-    <color name="sim2_color">#EFB8C8</color>
-    <color name="sim2_dim">#492532</color>
+    <color name="sim2_color">#9D8CFF</color>
+    <color name="sim2_dim">#2C2552</color>
 
-    <!-- Structural -->
-    <color name="divider">#49454F</color>
+    <color name="divider">#243A57</color>
     <color name="chip_running_bg">@color/success_dim</color>
     <color name="chip_stopped_bg">@color/danger_dim</color>
 
-    <!-- Animated ring glows — alpha-tinted status colours -->
-    <color name="status_running_glow">#3381C784</color>
-    <color name="status_stopped_glow">#33F2B8B5</color>
-    <color name="status_connecting_glow">#33F9C74F</color>
+    <color name="status_running_glow">#3356D88B</color>
+    <color name="status_stopped_glow">#33FF6D7F</color>
+    <color name="status_connecting_glow">#33FFBF5F</color>
 
-    <!-- Stats -->
     <color name="stat_value">@color/text_primary</color>
     <color name="stat_label">@color/text_muted</color>
 </resources>

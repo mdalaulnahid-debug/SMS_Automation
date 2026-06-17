@@ -14,3 +14,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "SmsGateway"
 include(":app")
+include(":adminapp")

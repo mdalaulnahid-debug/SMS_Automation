@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#091321"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#0F1D31"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:letterSpacing="0.12"
+            android:text="ANDROID ADMIN APP"
+            android:textColor="#FFBF5F"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="SMS Automation Command Center"
+            android:textColor="#EBF3FF"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Separate mobile supervisor surface for approvals, fleet health, incidents, and audit lookup."
+            android:textColor="#B2C0D9"
+            android:textSize="13sp" />
+    </LinearLayout>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#122038"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="10dp">
+
+            <TextView
+                android:id="@+id/tabOverview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#203757"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="10dp"
+                android:text="Overview"
+                android:textColor="#EBF3FF"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tabApprovals"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:background="#203757"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="10dp"
+                android:text="Approvals"
+                android:textColor="#EBF3FF"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tabGateways"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:background="#203757"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="10dp"
+                android:text="Gateways"
+                android:textColor="#EBF3FF"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tabIncidents"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:background="#203757"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="10dp"
+                android:text="Incidents"
+                android:textColor="#EBF3FF"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tabAudit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:background="#203757"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="10dp"
+                android:text="Audit"
+                android:textColor="#EBF3FF"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="16dp">
+
+        <ScrollView
+            android:id="@+id/panelOverview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <include layout="@layout/include_admin_overview" />
+        </ScrollView>
+
+        <ScrollView
+            android:id="@+id/panelApprovals"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+            <include layout="@layout/include_admin_approvals" />
+        </ScrollView>
+
+        <ScrollView
+            android:id="@+id/panelGateways"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+            <include layout="@layout/include_admin_gateways" />
+        </ScrollView>
+
+        <ScrollView
+            android:id="@+id/panelIncidents"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+            <include layout="@layout/include_admin_incidents" />
+        </ScrollView>
+
+        <ScrollView
+            android:id="@+id/panelAudit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+            <include layout="@layout/include_admin_audit" />
+        </ScrollView>
+    </FrameLayout>
+
+</LinearLayout>

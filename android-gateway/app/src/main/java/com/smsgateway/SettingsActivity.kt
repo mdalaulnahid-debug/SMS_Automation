@@ -39,7 +39,7 @@ class SettingsActivity : AppCompatActivity() {
         setupAdminLock()
     }
 
-    // ── Display settings (theme — no PIN) ─────────────────────────────────────
+    // Display settings (theme only).
 
     private fun initDisplaySettings() {
         val themeLabels = arrayOf("Follow System", "Dark", "Light")
@@ -61,36 +61,36 @@ class SettingsActivity : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
 
-        val version = try { packageManager.getPackageInfo(packageName, 0).versionName } catch (_: Exception) { "—" }
+        val version = try { packageManager.getPackageInfo(packageName, 0).versionName } catch (_: Exception) { "-" }
         binding.tvAboutVersion.text = "v$version"
         binding.tvAboutVersionInline.text = "v$version"
         binding.tvAboutGatewayId.text = Prefs.getGatewayId(this)
 
         binding.btnCheckUpdate.setOnClickListener {
-            Toast.makeText(this, "Checking for updates…", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "Checking for updates...", Toast.LENGTH_SHORT).show()
             UpdateChecker.checkInBackground(this, showResult = true)
         }
 
         binding.btnToggleGatewaySetup.setOnClickListener {
             val expanded = binding.layoutGatewaySetupContent.isVisible
             binding.layoutGatewaySetupContent.visibility = if (expanded) View.GONE else View.VISIBLE
-            binding.tvGatewaySetupChevron.text = if (expanded) "▼" else "▲"
+            binding.tvGatewaySetupChevron.text = if (expanded) "v" else "^"
         }
 
         binding.btnToggleAbout.setOnClickListener {
             val expanded = binding.layoutAboutContent.isVisible
             binding.layoutAboutContent.visibility = if (expanded) View.GONE else View.VISIBLE
-            binding.tvAboutChevron.text = if (expanded) "▼" else "▲"
+            binding.tvAboutChevron.text = if (expanded) "v" else "^"
         }
 
         binding.btnToggleHelp.setOnClickListener {
             val expanded = binding.layoutHelpContent.isVisible
             binding.layoutHelpContent.visibility = if (expanded) View.GONE else View.VISIBLE
-            binding.tvHelpChevron.text = if (expanded) "▼" else "▲"
+            binding.tvHelpChevron.text = if (expanded) "v" else "^"
         }
     }
 
-    // ── Phone settings (gateway ID, SIM, backend URL, behaviour — no PIN) ────
+    // Phone settings for the runtime device surface.
 
     private fun initPhoneSettings() {
         binding.spinnerGatewayId.adapter =
@@ -173,7 +173,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         binding.btnTestConnection.isEnabled = false
-        binding.tvConnectionResult.text = "Connecting…"
+        binding.tvConnectionResult.text = "Connecting..."
         binding.tvConnectionResult.setTextColor(getColor(R.color.text_secondary))
 
         lifecycleScope.launch {
@@ -183,16 +183,16 @@ class SettingsActivity : AppCompatActivity() {
 
             binding.btnTestConnection.isEnabled = true
             if (ok) {
-                binding.tvConnectionResult.text = "✓ Connected (${ms}ms)"
+                binding.tvConnectionResult.text = "Connected (${ms}ms)"
                 binding.tvConnectionResult.setTextColor(getColor(R.color.success))
             } else {
-                binding.tvConnectionResult.text = "✗ Not reachable"
+                binding.tvConnectionResult.text = "Not reachable"
                 binding.tvConnectionResult.setTextColor(getColor(R.color.danger))
             }
         }
     }
 
-    // ── Admin API key lock row ─────────────────────────────────────────────────
+    // Advanced backend/admin section.
 
     private fun setupAdminLock() {
         refreshAdminLockRow()
@@ -210,13 +210,13 @@ class SettingsActivity : AppCompatActivity() {
 
     private fun refreshAdminLockRow() {
         val unlocked = binding.layoutAdminContent.isVisible
-        binding.tvAdminLockIcon.text = if (unlocked) "⚙️" else "🔒"
+        binding.tvAdminLockIcon.text = if (unlocked) "OPEN" else "LOCK"
         binding.tvAdminLockHint.text = if (unlocked)
             "Tap to collapse"
         else if (Prefs.hasPinSet(this))
-            "PIN required — only needed on the admin monitoring phone"
+            "PIN required. Only use this on a supervisor device."
         else
-            "Tap to set Admin API Key"
+            "Tap to configure backend link"
     }
 
     private fun showPinGate() {
@@ -235,7 +235,7 @@ class SettingsActivity : AppCompatActivity() {
         var attempts = 0
         val dialog = AlertDialog.Builder(this)
             .setTitle("Admin Access")
-            .setMessage("Enter your PIN to access the Admin API Key.")
+            .setMessage("Enter your PIN to access advanced backend settings.")
             .setView(frame)
             .setCancelable(true)
             .setPositiveButton("Unlock", null)
@@ -255,7 +255,7 @@ class SettingsActivity : AppCompatActivity() {
                         dialog.dismiss()
                         Toast.makeText(this, "Too many wrong attempts.", Toast.LENGTH_LONG).show()
                     } else {
-                        input.error = "Wrong PIN — ${5 - attempts} attempt${if (5 - attempts == 1) "" else "s"} left"
+                        input.error = "Wrong PIN. ${5 - attempts} attempt${if (5 - attempts == 1) "" else "s"} left"
                     }
                 }
             }

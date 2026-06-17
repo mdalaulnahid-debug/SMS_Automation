@@ -43,6 +43,189 @@ class RateLimiter {
 }
 
 const requestRateLimiter = new RateLimiter(30, 60_000);
+const ONLINE_THRESHOLD_MS = 5 * 60 * 1000;
+
+function decorateGatewayHealth(store) {
+  const now = Date.now();
+  return store.listGateways().map((gw) => {
+    const lastSeenMs = gw.lastSeenAt ? new Date(gw.lastSeenAt).getTime() : 0;
+    const online = gw.status === 'CONFIGURED' && now - lastSeenMs < ONLINE_THRESHOLD_MS;
+    return { ...gw, online };
+  });
+}
+
+function summarizeAlerts(store, requests, gateways, unmatched) {
+  const pendingApprovals = requests.filter((r) => r.status === 'NEEDS_MANUAL_REVIEW').length;
+  const failed = requests.filter((r) => ['FAILED', 'TIMEOUT'].includes(r.status)).length;
+  const offlineGateways = gateways.filter((g) => !g.online && g.status !== 'MOCK').length;
+  return {
+    pendingApprovals,
+    failedRequests: failed,
+    unmatchedSms: unmatched.length,
+    offlineGateways,
+    total: pendingApprovals + failed + unmatched.length + offlineGateways
+  };
+}
+
+function buildActivityFeed(store, requests, gateways) {
+  const requestById = new Map(requests.map((r) => [r.requestId, r]));
+  const events = [];
+
+  store.smsOutbox.slice(-80).forEach((row) => {
+    const request = requestById.get(row.requestId);
+    events.push({
+      id: row.id,
+      type: ['FAILED', 'ERROR'].includes(row.sentStatus) || row.sendResult?.ok === false ? 'dispatch_failed' : 'dispatch_sent',
+      severity: ['FAILED', 'ERROR'].includes(row.sentStatus) || row.sendResult?.ok === false ? 'critical' : 'info',
+      occurredAt: row.sentAt || row.createdAt,
+      operator: row.operator,
+      gatewayId: row.gatewayId,
+      title: ['FAILED', 'ERROR'].includes(row.sentStatus) || row.sendResult?.ok === false ? 'Dispatch failed' : 'Dispatch sent',
+      summary: request ? `${request.requestType} ${request.payload}` : row.messageBody,
+      meta: {
+        requestId: row.requestId,
+        destinationNumber: row.destinationNumber,
+        sentStatus: row.sentStatus
+      }
+    });
+  });
+
+  store.smsInbox.slice(-80).forEach((row) => {
+    events.push({
+      id: row.id,
+      type: row.matchedRequestId ? 'reply_received' : 'unmatched_sms',
+      severity: row.matchedRequestId ? 'success' : 'warning',
+      occurredAt: row.receivedAt,
+      operator: store.operatorForGateway(row.gatewayId),
+      gatewayId: row.gatewayId,
+      title: row.matchedRequestId ? 'Reply received' : 'Unmatched SMS',
+      summary: row.messageBody,
+      meta: {
+        requestId: row.matchedRequestId,
+        senderNumber: row.senderNumber
+      }
+    });
+  });
+
+  store.auditLogs.slice(-120).forEach((row) => {
+    const severity = /FAILED|TIMEOUT|UNAUTHORIZED/i.test(row.action)
+      ? 'critical'
+      : /APPROVED|POSTED|COMPLETED|REPLY/i.test(row.action)
+        ? 'success'
+        : 'info';
+    events.push({
+      id: row.id,
+      type: 'audit',
+      severity,
+      occurredAt: row.timestamp,
+      operator: null,
+      gatewayId: row.details?.gatewayId || null,
+      title: row.action.replaceAll('_', ' '),
+      summary: row.requestId || row.actor || 'system',
+      meta: {
+        requestId: row.requestId,
+        actor: row.actor
+      }
+    });
+  });
+
+  gateways
+    .filter((g) => !g.online && g.status !== 'MOCK')
+    .forEach((gateway) => {
+      events.push({
+        id: `offline-${gateway.id}`,
+        type: 'gateway_offline',
+        severity: 'critical',
+        occurredAt: gateway.lastSeenAt,
+        operator: gateway.operator,
+        gatewayId: gateway.id,
+        title: 'Gateway offline',
+        summary: gateway.operatorName || gateway.id,
+        meta: {
+          lastSeenAt: gateway.lastSeenAt
+        }
+      });
+    });
+
+  return events
+    .filter((event) => event.occurredAt)
+    .sort((a, b) => new Date(b.occurredAt) - new Date(a.occurredAt))
+    .slice(0, 120);
+}
+
+function buildAdminData(store, queue) {
+  const requests = store.listRequests();
+  const gateways = decorateGatewayHealth(store);
+  const unmatched = store.smsInbox.filter((row) => !row.matchedRequestId && !row.analysis?.ignored);
+  const alerts = summarizeAlerts(store, requests, gateways, unmatched);
+  const activity = buildActivityFeed(store, requests, gateways);
+  const today = new Date().toDateString();
+  const pendingApprovals = requests.filter((r) => r.status === 'NEEDS_MANUAL_REVIEW');
+  const failedRequests = requests.filter((r) => ['FAILED', 'TIMEOUT'].includes(r.status));
+
+  return {
+    generatedAt: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'production',
+    alerts,
+    queues: queue.snapshot(),
+    stats: {
+      activeRequests: requests.filter((r) => ['RECEIVED', 'VALIDATED', 'QUEUED', 'SMS_SENT', 'WAITING_OPERATOR_REPLY', 'NEEDS_MANUAL_REVIEW'].includes(r.status)).length,
+      pendingApprovals: pendingApprovals.length,
+      failedOrTimedOut: failedRequests.length,
+      unmatchedInbound: unmatched.length,
+      onlineGateways: gateways.filter((g) => g.online).length,
+      todayRequests: requests.filter((r) => new Date(r.createdAt).toDateString() === today).length,
+      completedToday: requests.filter((r) => r.status === 'COMPLETED' && new Date(r.createdAt).toDateString() === today).length
+    },
+    activity,
+    gatewayHealth: gateways.map((gateway) => ({
+      id: gateway.id,
+      operator: gateway.operator,
+      operatorName: gateway.operatorName,
+      online: gateway.online,
+      status: gateway.status,
+      lastSeenAt: gateway.lastSeenAt,
+      gatewayUrl: gateway.gatewayUrl,
+      phoneNumber: gateway.phoneNumber || '',
+      trustedSendersCount: (gateway.trustedSenders || []).length
+    })),
+    requests,
+    replyDrafts: store.listReplyDrafts(),
+    unmatched,
+    auditLogs: store.auditLogs.slice(-250),
+    smsOutbox: store.smsOutbox.slice(-120),
+    smsInbox: store.smsInbox.slice(-120)
+  };
+}
+
+function buildOpsData(store, queue) {
+  const admin = buildAdminData(store, queue);
+  return {
+    generatedAt: admin.generatedAt,
+    alerts: admin.alerts,
+    posture: {
+      backendReachable: true,
+      summary: admin.alerts.total
+        ? `${admin.alerts.total} alert${admin.alerts.total === 1 ? '' : 's'} need attention`
+        : 'All monitored surfaces nominal'
+    },
+    operators: admin.gatewayHealth.map((gateway) => ({
+      operator: gateway.operator,
+      operatorName: gateway.operatorName,
+      online: gateway.online,
+      state: gateway.status === 'MOCK' ? 'MOCK' : gateway.online ? 'ONLINE' : 'OFFLINE',
+      gatewayId: gateway.id,
+      lastSeenAt: gateway.lastSeenAt
+    })),
+    stats: admin.stats,
+    queuePressure: admin.queues.map((queueRow) => ({
+      operator: queueRow.operator,
+      activeRequestId: queueRow.active?.requestId || null,
+      waitingCount: queueRow.waiting.length
+    })),
+    activity: admin.activity.slice(0, 40)
+  };
+}
 
 // Fire-and-forget Telegram alert to the admin/watchdog chat when an unauthorized send is detected.
 function sendTelegramWatchdogAlert(telegramConfig, { gatewayId, recipient, snippet }) {
@@ -215,14 +398,7 @@ function createApp(options = {}) {
 
       if (req.method === 'GET' && req.url === '/api/gateways') {
         if (!requireAdmin(req, res)) return undefined;
-        const ONLINE_THRESHOLD_MS = 5 * 60 * 1000; // 5 min
-        const now = Date.now();
-        const gateways = store.listGateways().map((gw) => {
-          const lastSeenMs = gw.lastSeenAt ? new Date(gw.lastSeenAt).getTime() : 0;
-          const online = gw.status === 'CONFIGURED' && now - lastSeenMs < ONLINE_THRESHOLD_MS;
-          return { ...gw, online };
-        });
-        return json(res, 200, { gateways });
+        return json(res, 200, { gateways: decorateGatewayHealth(store) });
       }
       if (req.method === 'POST' && req.url === '/api/gateways/register') {
         const body = await readJson(req);
@@ -249,6 +425,61 @@ function createApp(options = {}) {
         return json(res, 200, {
           ...store.snapshot(),
           queues: queue.snapshot()
+        });
+      }
+      if (req.method === 'GET' && req.url === '/api/ops/overview') {
+        return json(res, 200, buildOpsData(store, queue));
+      }
+      if (req.method === 'GET' && req.url === '/api/ops/activity') {
+        const ops = buildOpsData(store, queue);
+        return json(res, 200, {
+          generatedAt: ops.generatedAt,
+          alerts: ops.alerts,
+          activity: ops.activity
+        });
+      }
+      if (req.method === 'GET' && req.url === '/api/ops/gateways') {
+        const ops = buildOpsData(store, queue);
+        return json(res, 200, {
+          generatedAt: ops.generatedAt,
+          operators: ops.operators,
+          queuePressure: ops.queuePressure
+        });
+      }
+      if (req.method === 'GET' && req.url === '/api/admin/overview') {
+        if (!requireAdmin(req, res)) return undefined;
+        const admin = buildAdminData(store, queue);
+        return json(res, 200, {
+          generatedAt: admin.generatedAt,
+          environment: admin.environment,
+          alerts: admin.alerts,
+          stats: admin.stats,
+          gatewayHealth: admin.gatewayHealth,
+          queues: admin.queues,
+          activity: admin.activity.slice(0, 60)
+        });
+      }
+      if (req.method === 'GET' && req.url === '/api/admin/requests') {
+        if (!requireAdmin(req, res)) return undefined;
+        const admin = buildAdminData(store, queue);
+        return json(res, 200, { requests: admin.requests });
+      }
+      if (req.method === 'GET' && req.url === '/api/admin/replies') {
+        if (!requireAdmin(req, res)) return undefined;
+        const admin = buildAdminData(store, queue);
+        return json(res, 200, { replyDrafts: admin.replyDrafts });
+      }
+      if (req.method === 'GET' && req.url === '/api/admin/unmatched') {
+        if (!requireAdmin(req, res)) return undefined;
+        const admin = buildAdminData(store, queue);
+        return json(res, 200, { unmatched: admin.unmatched, requests: admin.requests });
+      }
+      if (req.method === 'GET' && req.url === '/api/admin/audit') {
+        if (!requireAdmin(req, res)) return undefined;
+        const admin = buildAdminData(store, queue);
+        return json(res, 200, {
+          auditLogs: admin.auditLogs,
+          integrity: store.verifyAuditChain()
         });
       }
       if (req.method === 'POST' && req.url === '/api/requests') {
