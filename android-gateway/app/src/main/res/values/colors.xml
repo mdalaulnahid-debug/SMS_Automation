@@ -1,44 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Backgrounds — deep command-center navy -->
-    <color name="bg_primary">#060D1A</color>
-    <color name="bg_surface">#091422</color>
-    <color name="bg_card">#0F1E33</color>
-    <color name="bg_card_elevated">#162840</color>
+    <!-- Light theme — mirrors docs/design-system.md tokens (web app default theme) -->
+    <color name="bg_primary">#FDF7FF</color>
+    <color name="bg_surface">#FFFFFF</color>
+    <color name="bg_card">#F3EDF7</color>
+    <color name="bg_card_elevated">#ECE6F0</color>
 
-    <!-- Electric cyan accent -->
-    <color name="accent">#22D3EE</color>
-    <color name="accent_muted">#0891B2</color>
-    <color name="accent_dim">#0C3A52</color>
+    <!-- MD3 purple accent -->
+    <color name="accent">#6750A4</color>
+    <color name="accent_muted">#7C6BAE</color>
+    <color name="accent_dim">#EADDFF</color>
+    <color name="accent_on">#FFFFFF</color>
 
     <!-- Text hierarchy -->
-    <color name="text_primary">#EFF6FF</color>
-    <color name="text_secondary">#7FA3C4</color>
-    <color name="text_muted">#3D5A7A</color>
+    <color name="text_primary">#1D1B20</color>
+    <color name="text_secondary">#49454F</color>
+    <color name="text_muted">#79747E</color>
 
     <!-- Status colours -->
-    <color name="success">#10D9A0</color>
-    <color name="success_dim">#043D2B</color>
-    <color name="danger">#F87171</color>
-    <color name="danger_dim">#4D1A1A</color>
-    <color name="warning">#FBBF24</color>
-    <color name="warning_dim">#4A3000</color>
+    <color name="success">#2E7D32</color>
+    <color name="success_dim">#E8F5E9</color>
+    <color name="danger">#B3261E</color>
+    <color name="danger_dim">#FCE8E6</color>
+    <color name="warning">#E37400</color>
+    <color name="warning_dim">#FEF7E0</color>
 
-    <!-- SIM 2 amethyst identity -->
-    <color name="sim2_color">#C084FC</color>
-    <color name="sim2_dim">#2D1B50</color>
+    <!-- SIM 2 identity — MD3 tertiary, distinct from primary accent -->
+    <color name="sim2_color">#7D5260</color>
+    <color name="sim2_dim">#FFD9E3</color>
 
     <!-- Structural -->
-    <color name="divider">#1A2E4A</color>
-    <color name="chip_running_bg">#043D2B</color>
-    <color name="chip_stopped_bg">#4D1A1A</color>
+    <color name="divider">#CAC4D0</color>
+    <color name="chip_running_bg">@color/success_dim</color>
+    <color name="chip_stopped_bg">@color/danger_dim</color>
 
-    <!-- Animated ring glows -->
-    <color name="status_running_glow">#3010D9A0</color>
-    <color name="status_stopped_glow">#30F87171</color>
-    <color name="status_connecting_glow">#30FBBF24</color>
+    <!-- Animated ring glows — alpha-tinted status colours -->
+    <color name="status_running_glow">#332E7D32</color>
+    <color name="status_stopped_glow">#33B3261E</color>
+    <color name="status_connecting_glow">#33E37400</color>
 
     <!-- Stats -->
-    <color name="stat_value">#EFF6FF</color>
-    <color name="stat_label">#3D5A7A</color>
+    <color name="stat_value">@color/text_primary</color>
+    <color name="stat_label">@color/text_muted</color>
 </resources>

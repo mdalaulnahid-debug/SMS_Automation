@@ -32,6 +32,7 @@ class SettingsActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        BottomNavHelper.setup(this, binding.bottomNav, NavDestination.SETTINGS)
 
         initDisplaySettings()
         initPhoneSettings()

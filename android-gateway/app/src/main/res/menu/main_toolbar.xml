@@ -18,16 +18,4 @@
         android:id="@+id/action_check_update"
         android:title="Check for Update"
         app:showAsAction="never" />
-
-    <item
-        android:id="@+id/action_logs"
-        android:icon="@drawable/ic_log"
-        android:title="Activity Log"
-        app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/action_settings"
-        android:icon="@drawable/ic_settings"
-        android:title="Settings"
-        app:showAsAction="ifRoom" />
 </menu>

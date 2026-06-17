@@ -85,6 +85,8 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnToggleService.setOnClickListener { toggleService() }
 
+        BottomNavHelper.setup(this, binding.bottomNav, NavDestination.HOME)
+
         observeActivityLog()
         requestPermissions()
 
@@ -129,14 +131,6 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.action_admin -> {
                 startActivity(Intent(this, AdminActivity::class.java))
-                true
-            }
-            R.id.action_settings -> {
-                startActivity(Intent(this, SettingsActivity::class.java))
-                true
-            }
-            R.id.action_logs -> {
-                startActivity(Intent(this, LogActivity::class.java))
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -230,22 +224,22 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun updateSimVisuals() {
-        val dark      = getColor(R.color.bg_primary)
+        val onAccent  = getColor(R.color.accent_on)
         val secondary = getColor(R.color.text_secondary)
         val cyan      = getColor(R.color.accent)
         val violet    = getColor(R.color.sim2_color)
 
         if (selectedSimIndex == 0) {
             binding.btnSim1.setBackgroundResource(R.drawable.bg_sim1_active)
-            binding.tvSim1Slot.setTextColor(dark)
-            binding.tvSim1Name.setTextColor(dark)
+            binding.tvSim1Slot.setTextColor(onAccent)
+            binding.tvSim1Name.setTextColor(onAccent)
             binding.btnSim2.setBackgroundResource(R.drawable.bg_sim2_inactive)
             binding.tvSim2Slot.setTextColor(violet)
             binding.tvSim2Name.setTextColor(secondary)
         } else {
             binding.btnSim2.setBackgroundResource(R.drawable.bg_sim2_active)
-            binding.tvSim2Slot.setTextColor(dark)
-            binding.tvSim2Name.setTextColor(dark)
+            binding.tvSim2Slot.setTextColor(onAccent)
+            binding.tvSim2Name.setTextColor(onAccent)
             binding.btnSim1.setBackgroundResource(R.drawable.bg_sim1_inactive)
             binding.tvSim1Slot.setTextColor(cyan)
             binding.tvSim1Name.setTextColor(secondary)

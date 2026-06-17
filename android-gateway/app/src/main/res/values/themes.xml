@@ -3,17 +3,28 @@
     <style name="Theme.SmsGateway" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/accent</item>
         <item name="colorPrimaryVariant">@color/accent_muted</item>
-        <item name="colorOnPrimary">@color/bg_primary</item>
+        <item name="colorOnPrimary">@color/accent_on</item>
         <item name="colorSecondary">@color/accent</item>
-        <item name="colorOnSecondary">@color/bg_primary</item>
+        <item name="colorOnSecondary">@color/accent_on</item>
         <item name="android:windowBackground">@color/bg_primary</item>
         <item name="android:statusBarColor">@color/bg_primary</item>
         <item name="android:navigationBarColor">@color/bg_primary</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightNavigationBar">true</item>
         <item name="android:textColorPrimary">@color/text_primary</item>
         <item name="android:textColorSecondary">@color/text_secondary</item>
         <item name="materialButtonStyle">@style/Widget.SmsGateway.Button</item>
         <item name="textInputStyle">@style/Widget.SmsGateway.TextInputLayout</item>
         <item name="tabStyle">@style/Widget.SmsGateway.TabLayout</item>
+        <item name="bottomNavigationStyle">@style/Widget.SmsGateway.BottomNav</item>
+    </style>
+
+    <style name="Widget.SmsGateway.BottomNav" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="android:background">@color/bg_surface</item>
+        <item name="elevation">0dp</item>
+        <item name="itemIconTint">@color/bottom_nav_tint</item>
+        <item name="itemTextColor">@color/bottom_nav_tint</item>
+        <item name="itemRippleColor">@color/accent_dim</item>
     </style>
 
     <style name="Widget.SmsGateway.Button" parent="Widget.MaterialComponents.Button">

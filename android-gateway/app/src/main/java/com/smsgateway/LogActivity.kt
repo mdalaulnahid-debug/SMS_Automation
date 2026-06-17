@@ -27,6 +27,7 @@ class LogActivity : AppCompatActivity() {
         setContentView(binding.root)
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        BottomNavHelper.setup(this, binding.bottomNav, NavDestination.LOGS)
 
         val adapter = LogAdapter()
         binding.recyclerView.apply {

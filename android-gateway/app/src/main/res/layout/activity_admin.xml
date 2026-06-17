@@ -17,15 +17,48 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/bg_surface"
-            app:title="CONTROL CENTER"
             app:titleTextColor="@color/text_primary"
-            app:subtitleTextColor="@color/accent" />
+            app:subtitleTextColor="@color/accent">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Control Center"
+                    android:textColor="@color/text_primary"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.01" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:paddingHorizontal="9dp"
+                    android:paddingVertical="2dp"
+                    android:background="@drawable/bg_badge_admin"
+                    android:text="ADMIN"
+                    android:textColor="@color/warning"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.08" />
+            </LinearLayout>
+        </com.google.android.material.appbar.MaterialToolbar>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
             style="@style/Widget.SmsGateway.TabLayout"
             android:layout_width="match_parent"
-            android:layout_height="48dp" />
+            android:layout_height="48dp"
+            app:tabMode="scrollable"
+            app:tabGravity="start"
+            app:tabPaddingStart="14dp"
+            app:tabPaddingEnd="14dp" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
