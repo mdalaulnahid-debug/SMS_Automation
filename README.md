@@ -9,7 +9,50 @@ This repo has **two main parts**:
 | **Backend** | `src/` | Node.js server: parse requests, queue per operator, call phone gateways, match replies, post replies via Telegram bridge |
 | **Android Gateway** | `android-gateway/` | Kotlin app on each operator phone: HTTP server for outbound SMS, SMS receiver for inbound, webhook forward to backend |
 
+## Work From Any PC
+
+You can pull this repo on a home or office PC and continue work quickly, but there are two
+different kinds of project state:
+
+- **Tracked in Git:** source code, Android app, web UI, scripts, tests, docs
+- **Not tracked in Git:** private config and secrets in `config/*.json`
+
+### New PC checklist
+
+1. Install **Node.js 18+**
+2. Clone the repo
+3. Run `npm install`
+4. Restore these private files into `config/`
+   - `auth.json`
+   - `gateways.json`
+   - `telegram.json`
+5. Start the backend with `start-backend.bat`
+6. If using Telegram intake/posting, start the bridge with `npm run start:telegram`
+
+### If the private files are missing
+
+Bootstrap from the examples:
+
+```powershell
+Copy-Item config\auth.example.json config\auth.json
+Copy-Item config\gateways.example.json config\gateways.json
+Copy-Item config\telegram.example.json config\telegram.json
+```
+
+Then replace the placeholder values with the real admin key, gateway secrets, and Telegram bot
+settings.
+
+### Important limits
+
+- `data/automation.db` is local SQLite state, not auto-synced between PCs
+- Android SDK, ADB, signing, and USB setup are still machine-specific
+- pulling from Git is enough for **code and docs**, but not enough by itself for **production run**
+
 **Continuing work?** Read `progress_tracker.md` first (session handoff, test results, known issues). Day-to-day tasks: `todo.md`.
+
+Architecture direction for the next hardening phase lives in `docs/enterprise-architecture.md`.
+The enterprise target blueprint is in `docs/system-design-v2.md`, and the new visual direction is
+in `docs/ui-design-guide-v2.md`.
 
 ---
 
@@ -255,9 +298,9 @@ npm run organize:training  # → Training Data/Organized/
 
 ## Current Limitations
 
-- ~~Backend storage is in-memory~~ **Persistent** via SQLite (`data/automation.db`, `node:sqlite`,
-  WAL). Restart restores requests, drafts, audit log, queues, and registered gateway URLs;
-  in-flight requests keep waiting. See `src/persistence.js` and `docs/telegram-bridge.md`.
+- **Persistent** via SQLite (`data/automation.db`, `node:sqlite`, WAL). Restart restores requests,
+  drafts, audit log, queues, and registered gateway URLs; in-flight requests keep waiting. See
+  `src/persistence.js` and `docs/telegram-bridge.md`.
 - Reply analysis uses keyword/pattern matching, not structured field extractors yet
 - Intake and reply posting are via Telegram (see `docs/telegram-bridge.md`); dashboard is admin-only
 - Backend API auth exists (Phase 2): admin API key + per-gateway secrets + deny-by-default users +
@@ -273,13 +316,14 @@ npm run organize:training  # → Training Data/Organized/
 When continuing this project:
 
 1. Read **`progress_tracker.md`** (latest session), then `architecture.md`, `vision.md`, `todo.md`
-2. Backend contract: `docs/PHONE_GATEWAY_CONTRACT.md`
-3. Gateway config: `config/gateways.json` (gitignored; example in `config/gateways.example.json`)
-4. Test flow: `testDestination` on `POST /api/requests` — see `src/smsGateway.js`, `src/service.js`
-5. Phone matching: `normalizePhoneNumber()` in `src/domain.js`
-6. Android source: `android-gateway/app/src/main/java/com/smsgateway/`
-7. Build APK: `android-gateway/build-apk.bat` or `gradle assembleRelease`
-8. Start backend: `start-backend.bat` from repo root
-9. Tests: `node --test` (18 tests)
+2. Review `docs/enterprise-architecture.md` for the target product structure
+3. Backend contract: `docs/PHONE_GATEWAY_CONTRACT.md`
+4. Restore gitignored config files if switching PCs: `config/auth.json`, `config/gateways.json`, `config/telegram.json`
+5. Test flow: `testDestination` on `POST /api/requests` — see `src/smsGateway.js`, `src/service.js`
+6. Phone matching: `normalizePhoneNumber()` in `src/domain.js`
+7. Android source: `android-gateway/app/src/main/java/com/smsgateway/`
+8. Build APK: `android-gateway/build-apk.bat` or `gradle assembleRelease`
+9. Start backend: `start-backend.bat` from repo root or run `setup-workstation.bat` first on a fresh PC
+10. Tests: `node --test`
 
 Safety principles (from `vision.md`): never alter operator SMS commands; only trust configured senders; manual review before posting reply; one active request per operator phone unless reference matching is reliable.

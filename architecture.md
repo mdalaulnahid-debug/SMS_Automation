@@ -48,7 +48,7 @@ All HTTP traffic is LAN-only (PC and phones on the same Wi-Fi). SMS to operators
 | `domain.js` | Operators, request types, status machine, phone normalization |
 | `queue.js` | Per-operator FIFO; one active request per operator phone |
 | `smsGateway.js` | HTTP client to phone gateways (mock mode when no URL) |
-| `store.js` | Data store (currently in-memory; target: SQLite per `db/schema.sql`) |
+| `store.js` | In-memory working set with SQLite-backed restore/write-through via `persistence.js` |
 | `replyAnalyzer.js` | Reply pattern matching against training data + fallback regexes |
 | `config.js` | Loads `config/gateways.json` (gitignored) |
 
@@ -79,9 +79,18 @@ Snapshot view of gateways, requests, outbox/inbox, drafts, audit log; approve ac
 
 ## 5. Data Model
 
-### Current (in-memory) and `db/schema.sql`
+### Current implementation
 
-`users`, `operator_gateways`, `requests`, `sms_outbox`, `sms_inbox`, `whatsapp_replies`, `audit_logs`.
+The live runtime is **not** pure in-memory anymore. `store.js` remains the active in-memory working
+set, but persistence is already implemented through `src/persistence.js` and `data/automation.db`
+using `node:sqlite` with WAL mode.
+
+On boot, the backend restores users, requests, dispatches, inbox/outbox rows, reply drafts, audit
+rows, gateway registrations, and request-id sequence state into memory. New mutations are written
+through immediately.
+
+`db/schema.sql` is now best treated as a reference artifact, while the active schema lives in
+`src/persistence.js`.
 
 ### Per-operator dispatches (implemented, Phase 1)
 
@@ -183,7 +192,7 @@ Invariants (from `vision.md`):
 |---------|------------------------------|
 | Phone unreachable | Send fails, request FAILED → retry with backoff, alert, keep queued |
 | Backend down when SMS arrives | Phone WorkManager retries webhook (done) |
-| Backend restart | All state lost → SQLite persistence, request-ID sequence restored from DB |
+| Backend restart | Requests, drafts, queues, audit chain, dispatches, and request-ID sequence restore from SQLite |
 | Operator never replies | Manual `/api/timeouts/run` → scheduled timeout sweep + auto-dispatch next |
 | Reply from unknown sender | Ignored + audited (done) |
 | Multiple pending on one phone | Match refuses ambiguity → manual review (done; keep) |
@@ -197,3 +206,18 @@ Invariants (from `vision.md`):
 - Unit/integration: `node --test` over the service harness (`test/workflow.test.js`) — keep growing with every defect fixed.
 - Extractor tests generated from training-data rows (expected fields per real reply).
 - End-to-end test mode: `testDestination` on `POST /api/requests` sends to a real phone you control, which replies manually; its number is added to `trustedSenders`. This validates the full loop without touching operator shortcodes.
+
+## 14. Workstation portability
+
+The repo is portable enough to continue development from multiple PCs, but the portability boundary
+is important:
+
+- **Portable by Git:** source code, scripts, tests, docs, Android project, web UI
+- **Portable only by secure manual copy:** `config/auth.json`, `config/gateways.json`,
+  `config/telegram.json`, and any local admin/VPS notes
+
+Practical meaning:
+
+1. Pulling the repo on another PC is enough to continue coding and review work.
+2. Running the full system from that PC also requires restoring the gitignored config files.
+3. Local SQLite state in `data/automation.db` is machine-local unless you explicitly move or sync it.

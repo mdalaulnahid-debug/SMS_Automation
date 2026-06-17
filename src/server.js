@@ -2,6 +2,7 @@
 
 const http = require('node:http');
 const { createApp } = require('./app');
+const { createMaintenanceCoordinator } = require('./maintenance');
 
 const host = process.env.HOST || '0.0.0.0';
 const port = Number(process.env.PORT || 3000);
@@ -19,6 +20,12 @@ try {
   process.exit(1);
 }
 
+const maintenance = createMaintenanceCoordinator({
+  service: app.service,
+  store: app.store,
+  timeoutSweepMs
+});
+
 http.createServer(app.handle).listen(port, host, () => {
   console.log(`SMS/WhatsApp automation server listening on http://${host}:${port}`);
   console.log(`Open dashboard at http://localhost:${port}`);
@@ -34,29 +41,7 @@ http.createServer(app.handle).listen(port, host, () => {
       if (results.length) console.log(`Recovery dispatched ${results.length} queued request(s)`);
     })
     .catch((error) => console.error(`Recovery failed: ${error.message}`));
-
-  setInterval(() => {
-    app.service
-      .timeoutWaitingRequests()
-      .then((timedOut) => {
-        if (timedOut.length) {
-          console.log(`Timeout sweep marked ${timedOut.length} request(s) as TIMEOUT`);
-        }
-      })
-      .catch((error) => {
-        console.error(`Timeout sweep failed: ${error.message}`);
-      });
-
-    // Reset jobs that were claimed by a phone but never ACKed (phone crashed mid-send).
-    try {
-      const reclaimed = app.store.reclaimStaleClaimedJobs(90_000);
-      if (reclaimed.length) {
-        console.warn(`[reclaim] Reset ${reclaimed.length} stale CLAIMED job(s) to PENDING_PICKUP`);
-      }
-    } catch (err) {
-      console.error(`Stale-job reclaim failed: ${err.message}`);
-    }
-  }, timeoutSweepMs).unref();
+  maintenance.start();
 });
 
 // Optional internet tunnel via localtunnel (npm i -g localtunnel, then start with --tunnel).

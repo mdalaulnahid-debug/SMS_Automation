@@ -24,6 +24,16 @@ if not defined LAN_IP set "LAN_IP=YOUR_PC_IP"
 
 powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\ensure-firewall-3000.ps1" >nul 2>&1
 
+echo Preparing workstation files...
+powershell -NoProfile -ExecutionPolicy Bypass -File "%~dp0scripts\setup-workstation.ps1"
+if errorlevel 1 (
+  echo.
+  echo ERROR: workstation bootstrap failed.
+  echo.
+  pause
+  exit /b 1
+)
+
 if not exist "node_modules\" (
   echo Installing npm dependencies...
   call npm install
@@ -34,17 +44,6 @@ if not exist "node_modules\" (
     pause
     exit /b 1
   )
-)
-
-if not exist "config\gateways.json" (
-  echo Creating config\gateways.json from example...
-  copy /Y "config\gateways.example.json" "config\gateways.json" >nul
-  echo.
-  echo  ACTION REQUIRED before testing:
-  echo  1. Edit config\gateways.json
-  echo  2. Set GP gatewayUrl to your phone IP, e.g. http://192.168.0.172:8080
-  echo  3. Add your test reply phone numbers to trustedSenders
-  echo.
 )
 
 set "HOST=0.0.0.0"

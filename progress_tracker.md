@@ -10,6 +10,26 @@ Last updated: **2026-06-15 — Admin monitoring dashboard + dual-SIM A16 fix (v2
 
 Deploy is now one command from Git Bash: `bash scripts/deploy.sh` (passwordless via SSH key).
 
+## Documentation Baseline
+
+Before new coding work, the Markdown docs should be treated as the continuity baseline for working
+from home or office PCs.
+
+Current documented reality:
+
+- `README.md` explains the any-PC workflow and separates Git-tracked files from local secrets
+- `architecture.md` reflects the current SQLite-backed store instead of the old future-state wording
+- `docs/system-design-v2.md` defines the target enterprise system split and role model
+- `docs/ui-design-guide-v2.md` defines the stronger visual/product direction for future UI work
+- this tracker remains the live session handoff and deployment note
+
+Important portability note:
+
+- pulling from Git is enough to continue code, UI, and docs work
+- running the full system on another PC still requires restoring `config/auth.json`,
+  `config/gateways.json`, and `config/telegram.json`
+- local `data/automation.db` is not auto-synced between PCs
+
 ---
 
 ## Session Handoff (2026-06-15) — Read This First

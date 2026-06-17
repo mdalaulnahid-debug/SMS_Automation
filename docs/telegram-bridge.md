@@ -57,6 +57,13 @@ default) is unchanged: Approve completes in one step because the reviewer pastes
    - `authorizedUsers` — map each member's **numeric Telegram user id** to a name (deny-by-default;
      anyone not listed is rejected). A user's id appears in the bridge log when they post.
 
+### Working from another PC
+
+If you pull this repo on a second machine, the bridge code comes with Git, but
+`config/telegram.json` does not. Restore that file first, or recreate it from
+`config/telegram.example.json` with the real bot token, target group chat id, backend URL, and
+authorized users.
+
 ## Run
 
 ```bash
