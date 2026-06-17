@@ -6,10 +6,10 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,12 +29,25 @@ public class AdminMainActivity extends Activity {
     private View panelGateways;
     private View panelIncidents;
     private View panelAudit;
+    private View panelSettings;
     private EditText etBackendUrl;
     private EditText etAdminApiKey;
+    private TextView tvTopStatus;
+    private TextView btnHeaderSettings;
+    private TextView tvHeaderSubtitle;
     private TextView tvConnectionState;
     private TextView tvOverviewSummary;
+    private TextView tvOverviewPostureNote;
     private TextView tvOverviewKpis;
-    private TextView tvOverviewEscalations;
+    private TextView tvKpiActive;
+    private TextView tvKpiActiveLabel;
+    private TextView tvKpiPending;
+    private TextView tvKpiFailed;
+    private TextView tvKpiUnmatched;
+    private TextView tvKpiGateways;
+    private TextView tvSettingsSummary;
+    private LinearLayout layoutOverviewFleet;
+    private LinearLayout layoutOverviewEscalations;
     private LinearLayout layoutApprovalsList;
     private LinearLayout layoutGatewaysList;
     private LinearLayout layoutIncidentsList;
@@ -50,13 +63,26 @@ public class AdminMainActivity extends Activity {
         panelGateways = findViewById(R.id.panelGateways);
         panelIncidents = findViewById(R.id.panelIncidents);
         panelAudit = findViewById(R.id.panelAudit);
+        panelSettings = findViewById(R.id.panelSettings);
 
         etBackendUrl = findViewById(R.id.etBackendUrl);
         etAdminApiKey = findViewById(R.id.etAdminApiKey);
+        tvTopStatus = findViewById(R.id.tvTopStatus);
+        btnHeaderSettings = findViewById(R.id.btnHeaderSettings);
+        tvHeaderSubtitle = findViewById(R.id.tvHeaderSubtitle);
         tvConnectionState = findViewById(R.id.tvConnectionState);
         tvOverviewSummary = findViewById(R.id.tvOverviewSummary);
+        tvOverviewPostureNote = findViewById(R.id.tvOverviewPostureNote);
         tvOverviewKpis = findViewById(R.id.tvOverviewKpis);
-        tvOverviewEscalations = findViewById(R.id.tvOverviewEscalations);
+        tvKpiActive = findViewById(R.id.tvKpiActive);
+        tvKpiActiveLabel = findViewById(R.id.tvKpiActiveLabel);
+        tvKpiPending = findViewById(R.id.tvKpiPending);
+        tvKpiFailed = findViewById(R.id.tvKpiFailed);
+        tvKpiUnmatched = findViewById(R.id.tvKpiUnmatched);
+        tvKpiGateways = findViewById(R.id.tvKpiGateways);
+        tvSettingsSummary = findViewById(R.id.tvSettingsSummary);
+        layoutOverviewFleet = findViewById(R.id.layoutOverviewFleet);
+        layoutOverviewEscalations = findViewById(R.id.layoutOverviewEscalations);
         layoutApprovalsList = findViewById(R.id.layoutApprovalsList);
         layoutGatewaysList = findViewById(R.id.layoutGatewaysList);
         layoutIncidentsList = findViewById(R.id.layoutIncidentsList);
@@ -80,6 +106,7 @@ public class AdminMainActivity extends Activity {
         findViewById(R.id.tabGateways).setOnClickListener(v -> showPanel(2));
         findViewById(R.id.tabIncidents).setOnClickListener(v -> showPanel(3));
         findViewById(R.id.tabAudit).setOnClickListener(v -> showPanel(4));
+        btnHeaderSettings.setOnClickListener(v -> showPanel(5));
 
         showPanel(0);
         refreshLiveData();
@@ -91,10 +118,19 @@ public class AdminMainActivity extends Activity {
         if (baseUrl.isEmpty() || apiKey.isEmpty()) {
             tvConnectionState.setText("Backend URL and admin key required");
             tvConnectionState.setTextColor(Color.parseColor("#FFBF5F"));
+            tvOverviewSummary.setText("Configuration required before live supervision can start.");
+            tvOverviewPostureNote.setText("Open Settings, add the backend authority URL and admin key, then refresh.");
+            tvTopStatus.setText("LINK REQUIRED");
+            tvHeaderSubtitle.setText("Open Settings and add the backend authority link.");
+            tvSettingsSummary.setText("Missing connection details. Add the backend URL and admin key, save, then refresh.");
             return;
         }
-        tvConnectionState.setText("Refreshing live backend data…");
+        tvConnectionState.setText("Refreshing live backend data...");
         tvConnectionState.setTextColor(Color.parseColor("#B2C0D9"));
+        tvOverviewPostureNote.setText("Polling overview, queue, gateways, incidents, and audit feeds from the backend.");
+        tvTopStatus.setText("SYNCING");
+        tvHeaderSubtitle.setText("Checking command posture, approvals, gateways, incidents, and audit state.");
+        tvSettingsSummary.setText("Refreshing live data from " + baseUrl);
 
         new Thread(() -> {
             try {
@@ -105,8 +141,11 @@ public class AdminMainActivity extends Activity {
                 JSONObject audit = AdminBackendClient.getJson(baseUrl, "/api/admin/audit", apiKey);
 
                 runOnUiThread(() -> {
-                    tvConnectionState.setText("Connected · live data loaded");
+                    tvConnectionState.setText("Connected | live data loaded");
                     tvConnectionState.setTextColor(Color.parseColor("#56D88B"));
+                    tvTopStatus.setText("LIVE");
+                    tvHeaderSubtitle.setText("Connected to backend authority.");
+                    tvSettingsSummary.setText("Connected to " + baseUrl + "\nAdmin key accepted by backend authority.");
                     renderOverview(overview);
                     renderApprovals(requests.optJSONArray("requests"), replies.optJSONArray("replyDrafts"));
                     renderGateways(overview.optJSONArray("gatewayHealth"));
@@ -117,6 +156,11 @@ public class AdminMainActivity extends Activity {
                 runOnUiThread(() -> {
                     tvConnectionState.setText("Refresh failed: " + error.getMessage());
                     tvConnectionState.setTextColor(Color.parseColor("#FF6D7F"));
+                    tvOverviewSummary.setText("Backend connection fault");
+                    tvOverviewPostureNote.setText("Check the saved server address, API key, TLS reachability, and backend health.");
+                    tvTopStatus.setText("FAULT");
+                    tvHeaderSubtitle.setText("Connection failed. Inspect settings and backend reachability.");
+                    tvSettingsSummary.setText("Refresh failed.\n" + error.getMessage());
                 });
             }
         }).start();
@@ -127,44 +171,46 @@ public class AdminMainActivity extends Activity {
         JSONObject stats = overview.optJSONObject("stats");
         tvOverviewSummary.setText(alerts == null
             ? "No alert summary available."
-            : "Alert posture: " + AdminBackendClient.summarizeAlerts(alerts));
-        tvOverviewKpis.setText(stats == null
-            ? "No KPI data available."
-            : "Active: " + stats.optInt("activeRequests", 0)
-                + "\nPending approvals: " + stats.optInt("pendingApprovals", 0)
-                + "\nFailed / timed out: " + stats.optInt("failedOrTimedOut", 0)
-                + "\nUnmatched inbound: " + stats.optInt("unmatchedInbound", 0)
-                + "\nOnline gateways: " + stats.optInt("onlineGateways", 0));
+            : "Alert posture | " + AdminBackendClient.summarizeAlerts(alerts));
+
+        int active = stats == null ? 0 : stats.optInt("activeRequests", 0);
+        int pending = stats == null ? 0 : stats.optInt("pendingApprovals", 0);
+        int failed = stats == null ? 0 : stats.optInt("failedOrTimedOut", 0);
+        int unmatched = stats == null ? 0 : stats.optInt("unmatchedInbound", 0);
+        int gateways = stats == null ? 0 : stats.optInt("onlineGateways", 0);
+        tvKpiActive.setText(String.valueOf(active));
+        tvKpiActiveLabel.setText(active > 0 ? "COMMAND LOAD / ACTIVE FLOW" : "COMMAND LOAD / IDLE");
+        tvKpiPending.setText("PENDING " + pending);
+        tvKpiFailed.setText("FAILED " + failed);
+        tvKpiUnmatched.setText("UNMATCHED " + unmatched);
+        tvKpiGateways.setText("ONLINE GW " + gateways);
+        tvOverviewPostureNote.setText(buildOverviewPosture(active, pending, failed, unmatched, gateways));
+        tvOverviewKpis.setText(
+            "Queue pressure | " + active + " active | " + pending + " pending approvals"
+                + "\nExceptions | " + failed + " failed or timed out | " + unmatched + " unmatched inbound"
+                + "\nFleet posture | " + gateways + " online gateways reporting into the backend"
+        );
+
+        JSONArray gatewayHealth = overview.optJSONArray("gatewayHealth");
+        renderOverviewFleet(gatewayHealth);
 
         JSONArray activity = overview.optJSONArray("activity");
-        StringBuilder escalations = new StringBuilder("Latest escalations:\n");
-        if (activity != null) {
-            for (int i = 0; i < Math.min(activity.length(), 5); i++) {
-                JSONObject event = activity.optJSONObject(i);
-                if (event == null) continue;
-                escalations.append("• ")
-                    .append(event.optString("title", "Event"))
-                    .append(" — ")
-                    .append(event.optString("summary", ""))
-                    .append("\n");
-            }
-        }
-        tvOverviewEscalations.setText(escalations.toString().trim());
+        renderOverviewEscalations(activity);
     }
 
     private void renderApprovals(JSONArray requests, JSONArray replies) {
         layoutApprovalsList.removeAllViews();
         List<String> draftable = new ArrayList<>();
         if (replies != null) {
-          for (int i = 0; i < replies.length(); i++) {
-              JSONObject reply = replies.optJSONObject(i);
-              if (reply != null) {
-                  draftable.add(reply.optString("requestId", ""));
-              }
-          }
+            for (int i = 0; i < replies.length(); i++) {
+                JSONObject reply = replies.optJSONObject(i);
+                if (reply != null) {
+                    draftable.add(reply.optString("requestId", ""));
+                }
+            }
         }
         if (requests == null || requests.length() == 0) {
-            layoutApprovalsList.addView(infoCard("No requests available."));
+            layoutApprovalsList.addView(infoCard("CLEAR", "No requests available.", "No requests were returned by the backend."));
             return;
         }
         boolean any = false;
@@ -173,92 +219,98 @@ public class AdminMainActivity extends Activity {
             if (request == null) continue;
             if (!"NEEDS_MANUAL_REVIEW".equals(request.optString("status"))) continue;
             any = true;
-            String body = request.optString("requestType") + " " + request.optString("payload")
-                + "\nRequester: " + request.optString("requesterName")
-                + "\nDispatches: " + AdminBackendClient.flattenDispatches(request.optJSONArray("dispatches"))
-                + "\nDraft ready: " + (draftable.contains(request.optString("requestId")) ? "yes" : "no");
-            layoutApprovalsList.addView(infoCard(request.optString("requestId"), body));
+            layoutApprovalsList.addView(buildApprovalRow(
+                request.optString("requestId"),
+                request.optString("requestType") + " " + request.optString("payload"),
+                request.optString("requesterName"),
+                AdminBackendClient.flattenDispatches(request.optJSONArray("dispatches")),
+                draftable.contains(request.optString("requestId"))
+            ));
         }
-        if (!any) layoutApprovalsList.addView(infoCard("No pending approvals."));
+        if (!any) {
+            layoutApprovalsList.addView(infoCard("CLEAR", "No pending approvals.", "The review queue is empty right now."));
+        }
     }
 
     private void renderGateways(JSONArray gateways) {
         layoutGatewaysList.removeAllViews();
         if (gateways == null || gateways.length() == 0) {
-            layoutGatewaysList.addView(infoCard("No gateway health data."));
+            layoutGatewaysList.addView(infoCard("FLEET", "No gateway health data.", "No gateways reported health data."));
             return;
         }
         for (int i = 0; i < gateways.length(); i++) {
             JSONObject gateway = gateways.optJSONObject(i);
             if (gateway == null) continue;
-            String body = gateway.optString("id")
-                + "\nState: " + (gateway.optBoolean("online") ? "ONLINE" : gateway.optString("status"))
-                + "\nURL: " + gateway.optString("gatewayUrl", "(not registered)")
-                + "\nLast seen: " + gateway.optString("lastSeenAt", "unknown");
-            layoutGatewaysList.addView(infoCard(gateway.optString("operatorName"), body));
+            layoutGatewaysList.addView(buildSystemStatusRow(
+                gateway.optBoolean("online") ? "ONLINE" : "OFFLINE",
+                gateway.optString("operatorName"),
+                gateway.optString("id"),
+                gateway.optString("gatewayUrl", "(not registered)"),
+                gateway.optString("lastSeenAt", "unknown")
+            ));
         }
     }
 
     private void renderIncidents(JSONArray events, JSONObject alerts) {
         layoutIncidentsList.removeAllViews();
         if (alerts != null) {
-            layoutIncidentsList.addView(infoCard("Alert Totals", AdminBackendClient.summarizeAlerts(alerts)));
+            layoutIncidentsList.addView(infoCard("ALERTS", "Alert Totals", AdminBackendClient.summarizeAlerts(alerts)));
         }
         if (events == null || events.length() == 0) {
-            layoutIncidentsList.addView(infoCard("No incident activity available."));
+            layoutIncidentsList.addView(infoCard("CALM", "No incident activity available.", "No active incident feed rows are available."));
             return;
         }
         for (int i = 0; i < Math.min(events.length(), 12); i++) {
             JSONObject event = events.optJSONObject(i);
             if (event == null) continue;
-            String body = event.optString("summary", "")
-                + "\nSeverity: " + event.optString("severity", "info")
-                + "\nGateway: " + event.optString("gatewayId", "—")
-                + "\nWhen: " + event.optString("occurredAt", "—");
-            layoutIncidentsList.addView(infoCard(event.optString("title"), body));
+            layoutIncidentsList.addView(buildIncidentRow(
+                event.optString("severity", "INFO").toUpperCase(),
+                event.optString("title"),
+                event.optString("summary", ""),
+                event.optString("gatewayId", "-"),
+                event.optString("occurredAt", "-")
+            ));
         }
     }
 
     private void renderAudit(JSONArray logs) {
         layoutAuditList.removeAllViews();
         if (logs == null || logs.length() == 0) {
-            layoutAuditList.addView(infoCard("No audit records available."));
+            layoutAuditList.addView(infoCard("AUDIT", "No audit records available.", "No mobile audit rows were returned."));
             return;
         }
         for (int i = Math.max(0, logs.length() - 20); i < logs.length(); i++) {
             JSONObject log = logs.optJSONObject(i);
             if (log == null) continue;
             String body = "Actor: " + log.optString("actor", "system")
-                + "\nRequest: " + log.optString("requestId", "—")
-                + "\nTime: " + log.optString("timestamp", "—")
+                + "\nRequest: " + log.optString("requestId", "-")
+                + "\nTime: " + log.optString("timestamp", "-")
                 + "\nDetails: " + log.optJSONObject("details");
-            layoutAuditList.addView(infoCard(log.optString("action", "Audit Event"), body));
+            layoutAuditList.addView(infoCard("LEDGER", log.optString("action", "Audit Event"), body));
         }
     }
 
-    private View infoCard(String title) {
-        return infoCard(title, "");
-    }
+    private View infoCard(String eyebrow, String title, String body) {
+        LinearLayout card = baseCard(false);
 
-    private View infoCard(String title, String body) {
-        LinearLayout card = new LinearLayout(this);
-        card.setOrientation(LinearLayout.VERTICAL);
-        card.setPadding(16, 16, 16, 16);
-        card.setBackgroundColor(Color.parseColor("#14253D"));
-
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        );
-        params.bottomMargin = 12;
-        card.setLayoutParams(params);
+        if (!eyebrow.isEmpty()) {
+            TextView eyebrowView = new TextView(this);
+            eyebrowView.setText(eyebrow);
+            eyebrowView.setTextColor(colorForEyebrow(eyebrow));
+            eyebrowView.setTextSize(10f);
+            eyebrowView.setTypeface(eyebrowView.getTypeface(), android.graphics.Typeface.BOLD);
+            card.addView(eyebrowView);
+        }
 
         TextView titleView = new TextView(this);
         titleView.setText(title);
         titleView.setTextColor(Color.parseColor("#EBF3FF"));
-        titleView.setTextSize(15f);
+        titleView.setTextSize(17f);
         titleView.setGravity(Gravity.START);
         titleView.setTypeface(titleView.getTypeface(), android.graphics.Typeface.BOLD);
+        if (!eyebrow.isEmpty()) {
+            titleView.setPadding(0, 8, 0, 0);
+        }
         card.addView(titleView);
 
         if (!body.isEmpty()) {
@@ -266,10 +318,192 @@ public class AdminMainActivity extends Activity {
             bodyView.setText(body);
             bodyView.setTextColor(Color.parseColor("#B2C0D9"));
             bodyView.setTextSize(13f);
-            bodyView.setPadding(0, 10, 0, 0);
+            bodyView.setLineSpacing(0f, 1.2f);
+            bodyView.setPadding(0, 12, 0, 0);
             card.addView(bodyView);
         }
         return card;
+    }
+
+    private View buildApprovalRow(String requestId, String payload, String requester, String dispatches, boolean draftReady) {
+        LinearLayout card = baseCard(false);
+        card.addView(buildHeaderRow("REVIEW", requestId, draftReady ? "DRAFT READY" : "AWAITING DRAFT"));
+        card.addView(buildTitle(payload));
+        card.addView(buildBodyLine("Requester", requester));
+        card.addView(buildBodyLine("Dispatches", dispatches));
+
+        LinearLayout footer = new LinearLayout(this);
+        footer.setOrientation(LinearLayout.HORIZONTAL);
+        footer.setGravity(Gravity.END);
+        footer.setPadding(0, 16, 0, 0);
+        footer.addView(buildStatusChip(draftReady ? "READY" : "QUEUE", draftReady ? "#56D88B" : "#FFBF5F"));
+        card.addView(footer);
+        return card;
+    }
+
+    private View buildIncidentRow(String severity, String title, String summary, String gatewayId, String occurredAt) {
+        LinearLayout card = baseCard("CRITICAL".equals(severity) || "ERROR".equals(severity));
+        card.addView(buildHeaderRow(severity, title, occurredAt));
+        TextView summaryView = buildTitle(summary.isEmpty() ? title : summary);
+        summaryView.setTextSize(16f);
+        card.addView(summaryView);
+        card.addView(buildBodyLine("Gateway", gatewayId));
+        card.addView(buildBodyLine("Severity", severity));
+        return card;
+    }
+
+    private View buildSystemStatusRow(String status, String title, String systemId, String endpoint, String lastSeen) {
+        LinearLayout card = baseCard(false);
+        card.addView(buildHeaderRow(status, title, systemId));
+        card.addView(buildSystemMetricRow("Endpoint", endpoint));
+        card.addView(buildSystemMetricRow("Last Seen", lastSeen));
+        return card;
+    }
+
+    private void renderOverviewFleet(JSONArray gateways) {
+        layoutOverviewFleet.removeAllViews();
+        if (gateways == null || gateways.length() == 0) {
+            layoutOverviewFleet.addView(infoCard("FLEET", "No live gateways reported", "Gateway heartbeat and operator identity will appear here when devices check in."));
+            return;
+        }
+        for (int i = 0; i < Math.min(gateways.length(), 4); i++) {
+            JSONObject gateway = gateways.optJSONObject(i);
+            if (gateway == null) continue;
+            layoutOverviewFleet.addView(buildSystemStatusRow(
+                gateway.optBoolean("online") ? "ONLINE" : "OFFLINE",
+                gateway.optString("operatorName", "Gateway"),
+                gateway.optString("id", "-"),
+                gateway.optString("gatewayUrl", "(not registered)"),
+                gateway.optString("lastSeenAt", "unknown")
+            ));
+        }
+    }
+
+    private void renderOverviewEscalations(JSONArray activity) {
+        layoutOverviewEscalations.removeAllViews();
+        if (activity == null || activity.length() == 0) {
+            layoutOverviewEscalations.addView(infoCard("CALM", "No recent escalations", "Recent failures, dispatch issues, and unmatched spikes will appear here."));
+            return;
+        }
+        for (int i = 0; i < Math.min(activity.length(), 5); i++) {
+            JSONObject event = activity.optJSONObject(i);
+            if (event == null) continue;
+            layoutOverviewEscalations.addView(buildIncidentRow(
+                event.optString("severity", "INFO").toUpperCase(),
+                event.optString("title", "Event"),
+                event.optString("summary", ""),
+                event.optString("gatewayId", "-"),
+                event.optString("occurredAt", "-")
+            ));
+        }
+    }
+
+    private String buildOverviewPosture(int active, int pending, int failed, int unmatched, int gateways) {
+        if (failed > 0 || unmatched > 0) {
+            return "Exception posture elevated. Review failures and unmatched inbound items first.";
+        }
+        if (pending > 0) {
+            return "Supervisor review is waiting. Clear pending approvals to keep dispatch flow moving.";
+        }
+        if (active > 0) {
+            return "System is processing live work. Monitor fleet heartbeat and recent incident rows.";
+        }
+        if (gateways > 0) {
+            return "Fleet is online and standing by. No immediate exceptions reported.";
+        }
+        return "No gateways are currently reporting. Check fleet connectivity and backend registration.";
+    }
+
+    private LinearLayout baseCard(boolean critical) {
+        LinearLayout card = new LinearLayout(this);
+        card.setOrientation(LinearLayout.VERTICAL);
+        card.setPadding(20, 18, 20, 18);
+        card.setBackground(AdminDesignSystem.rowBackground(critical));
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        params.bottomMargin = 14;
+        card.setLayoutParams(params);
+        return card;
+    }
+
+    private View buildHeaderRow(String status, String title, String meta) {
+        LinearLayout row = new LinearLayout(this);
+        row.setOrientation(LinearLayout.HORIZONTAL);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+
+        row.addView(buildStatusChip(status, colorHexForEyebrow(status)));
+
+        TextView titleView = new TextView(this);
+        titleView.setText(title);
+        titleView.setTextColor(AdminDesignSystem.Palette.PRIMARY);
+        titleView.setTextSize(14f);
+        titleView.setTypeface(titleView.getTypeface(), android.graphics.Typeface.BOLD);
+        LinearLayout.LayoutParams titleParams = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+        titleParams.leftMargin = 12;
+        titleView.setLayoutParams(titleParams);
+        row.addView(titleView);
+
+        TextView metaView = new TextView(this);
+        metaView.setText(meta);
+        metaView.setTextColor(AdminDesignSystem.Palette.TEXT_DIM);
+        metaView.setTextSize(11f);
+        row.addView(metaView);
+        return row;
+    }
+
+    private TextView buildTitle(String text) {
+        TextView titleView = new TextView(this);
+        titleView.setText(text);
+        titleView.setTextColor(AdminDesignSystem.Palette.TEXT_PRIMARY);
+        titleView.setTextSize(17f);
+        titleView.setTypeface(titleView.getTypeface(), android.graphics.Typeface.BOLD);
+        titleView.setPadding(0, 12, 0, 0);
+        return titleView;
+    }
+
+    private View buildBodyLine(String label, String value) {
+        LinearLayout row = new LinearLayout(this);
+        row.setOrientation(LinearLayout.HORIZONTAL);
+        row.setPadding(0, 10, 0, 0);
+
+        TextView labelView = AdminDesignSystem.label(this, label.toUpperCase());
+        LinearLayout.LayoutParams labelParams = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.34f);
+        labelView.setLayoutParams(labelParams);
+        row.addView(labelView);
+
+        TextView valueView = AdminDesignSystem.value(this, value, AdminDesignSystem.Palette.TEXT_SECONDARY, 13f, false);
+        LinearLayout.LayoutParams valueParams = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 0.66f);
+        valueView.setLayoutParams(valueParams);
+        row.addView(valueView);
+        return row;
+    }
+
+    private View buildSystemMetricRow(String label, String value) {
+        return AdminDesignSystem.systemStatusRow(this, label, value);
+    }
+
+    private TextView buildStatusChip(String text, String colorHex) {
+        return AdminDesignSystem.statusChip(this, text, Color.parseColor(colorHex));
+    }
+
+    private int colorForEyebrow(String eyebrow) {
+        return Color.parseColor(colorHexForEyebrow(eyebrow));
+    }
+
+    private String colorHexForEyebrow(String eyebrow) {
+        if ("ONLINE".equals(eyebrow) || "CLEAR".equals(eyebrow) || "CALM".equals(eyebrow)) {
+            return "#56D88B";
+        }
+        if ("REVIEW".equals(eyebrow) || "ALERTS".equals(eyebrow)) {
+            return "#FFBF5F";
+        }
+        if ("OFFLINE".equals(eyebrow) || "CRITICAL".equals(eyebrow) || "ERROR".equals(eyebrow)) {
+            return "#FF6D7F";
+        }
+        return "#3DD7FF";
     }
 
     private void showPanel(int index) {
@@ -278,16 +512,54 @@ public class AdminMainActivity extends Activity {
         panelGateways.setVisibility(index == 2 ? View.VISIBLE : View.GONE);
         panelIncidents.setVisibility(index == 3 ? View.VISIBLE : View.GONE);
         panelAudit.setVisibility(index == 4 ? View.VISIBLE : View.GONE);
+        panelSettings.setVisibility(index == 5 ? View.VISIBLE : View.GONE);
 
         setTabSelected(R.id.tabOverview, index == 0);
         setTabSelected(R.id.tabApprovals, index == 1);
         setTabSelected(R.id.tabGateways, index == 2);
         setTabSelected(R.id.tabIncidents, index == 3);
         setTabSelected(R.id.tabAudit, index == 4);
+        btnHeaderSettings.setText(index == 5 ? "BACK TO OPS" : "SETTINGS");
+        btnHeaderSettings.setBackgroundResource(index == 5 ? R.drawable.admin_bg_tab_active : R.drawable.admin_bg_tab_idle);
+        if (index == 5) {
+            btnHeaderSettings.setOnClickListener(v -> showPanel(0));
+        } else {
+            btnHeaderSettings.setOnClickListener(v -> showPanel(5));
+        }
     }
 
     private void setTabSelected(int viewId, boolean selected) {
-        TextView tab = findViewById(viewId);
-        tab.setAlpha(selected ? 1f : 0.6f);
+        View tab = findViewById(viewId);
+        tab.setAlpha(selected ? 1f : 0.78f);
+        tab.setBackgroundResource(selected ? R.drawable.admin_bg_tab_active : R.drawable.admin_bg_tab_idle);
+
+        int textColor = Color.parseColor(selected ? "#EBF3FF" : "#B2C0D9");
+        int iconId = 0;
+        int labelId = 0;
+        if (viewId == R.id.tabOverview) {
+            iconId = R.id.iconOverview;
+            labelId = R.id.labelOverview;
+        } else if (viewId == R.id.tabApprovals) {
+            iconId = R.id.iconApprovals;
+            labelId = R.id.labelApprovals;
+        } else if (viewId == R.id.tabGateways) {
+            iconId = R.id.iconGateways;
+            labelId = R.id.labelGateways;
+        } else if (viewId == R.id.tabIncidents) {
+            iconId = R.id.iconIncidents;
+            labelId = R.id.labelIncidents;
+        } else if (viewId == R.id.tabAudit) {
+            iconId = R.id.iconAudit;
+            labelId = R.id.labelAudit;
+        }
+
+        if (iconId != 0) {
+            ImageView icon = findViewById(iconId);
+            icon.setColorFilter(textColor);
+        }
+        if (labelId != 0) {
+            TextView label = findViewById(labelId);
+            label.setTextColor(textColor);
+        }
     }
 }

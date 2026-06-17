@@ -3,15 +3,24 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:paddingBottom="16dp">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#14253D"
-        android:padding="16dp"
-        android:text="Search-first audit lookup for mobile review. Full export remains on the desktop admin console."
-        android:textColor="#B2C0D9"
+        android:text="AUDIT LEDGER"
+        android:textColor="@color/admin_text_dim"
+        android:textSize="11sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/admin_bg_panel"
+        android:padding="18dp"
+        android:text="Read-focused mobile ledger review. Deep exports and heavy investigation remain in the web admin console."
+        android:textColor="@color/admin_text_secondary"
         android:textSize="13sp" />
 
     <LinearLayout

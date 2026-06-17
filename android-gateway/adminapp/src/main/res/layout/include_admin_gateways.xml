@@ -3,15 +3,24 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:paddingBottom="16dp">
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#14253D"
-        android:padding="16dp"
-        android:text="Gateway fleet health, online/offline posture, and last heartbeat."
-        android:textColor="#B2C0D9"
+        android:text="FLEET HEALTH"
+        android:textColor="@color/admin_text_dim"
+        android:textSize="11sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/admin_bg_panel"
+        android:padding="18dp"
+        android:text="Operator identity, heartbeat, registration endpoint, and online posture stay compressed into field-readable system rows."
+        android:textColor="@color/admin_text_secondary"
         android:textSize="13sp" />
 
     <LinearLayout

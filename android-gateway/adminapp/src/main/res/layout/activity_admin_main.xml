@@ -2,122 +2,119 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#091321"
+    android:background="@drawable/admin_bg_screen"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#0F1D31"
-        android:orientation="vertical"
-        android:padding="20dp">
+        android:background="@color/admin_bg_panel"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="18dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="18dp"
+        android:paddingBottom="16dp">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:letterSpacing="0.12"
-            android:text="ANDROID ADMIN APP"
-            android:textColor="#FFBF5F"
-            android:textSize="11sp"
-            android:textStyle="bold" />
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:text="SMS Automation Command Center"
-            android:textColor="#EBF3FF"
-            android:textSize="24sp"
-            android:textStyle="bold" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:letterSpacing="0.18"
+                android:text="MOBILE SUPERVISOR"
+                android:textColor="@color/admin_primary"
+                android:textSize="11sp"
+                android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:text="Separate mobile supervisor surface for approvals, fleet health, incidents, and audit lookup."
-            android:textColor="#B2C0D9"
-            android:textSize="13sp" />
-    </LinearLayout>
-
-    <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="#122038"
-        android:scrollbars="none">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Admin Command Surface"
+                android:textColor="@color/admin_text_primary"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="10dp">
+            android:gravity="end"
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tabOverview"
+                android:id="@+id/tvTopStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="#203757"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="10dp"
-                android:text="Overview"
-                android:textColor="#EBF3FF"
+                android:background="@drawable/admin_bg_tab_idle"
+                android:paddingStart="12dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="8dp"
+                android:text="SYNC STATUS"
+                android:textColor="@color/admin_text_secondary"
+                android:textSize="11sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tabApprovals"
+                android:id="@+id/btnHeaderSettings"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:background="#203757"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="10dp"
-                android:text="Approvals"
-                android:textColor="#EBF3FF"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tabGateways"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:background="#203757"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="10dp"
-                android:text="Gateways"
-                android:textColor="#EBF3FF"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tabIncidents"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:background="#203757"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="10dp"
-                android:text="Incidents"
-                android:textColor="#EBF3FF"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tabAudit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:background="#203757"
-                android:paddingHorizontal="16dp"
-                android:paddingVertical="10dp"
-                android:text="Audit"
-                android:textColor="#EBF3FF"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/admin_bg_tab_active"
+                android:paddingStart="12dp"
+                android:paddingTop="8dp"
+                android:paddingEnd="12dp"
+                android:paddingBottom="8dp"
+                android:text="SETTINGS"
+                android:textColor="@color/admin_text_primary"
+                android:textSize="11sp"
                 android:textStyle="bold" />
         </LinearLayout>
-    </HorizontalScrollView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/admin_live_strip"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingStart="18dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="18dp"
+        android:paddingBottom="10dp">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="BACKEND AUTHORITY / LIVE MOBILE CONSOLE"
+            android:textColor="@color/admin_text_secondary"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvHeaderSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="CONNECTING"
+            android:textColor="@color/admin_primary"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:padding="16dp">
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:paddingBottom="14dp">
 
         <ScrollView
             android:id="@+id/panelOverview"
@@ -157,6 +154,166 @@
             android:visibility="gone">
             <include layout="@layout/include_admin_audit" />
         </ScrollView>
+
+        <ScrollView
+            android:id="@+id/panelSettings"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+            <include layout="@layout/include_admin_settings" />
+        </ScrollView>
     </FrameLayout>
+
+    <HorizontalScrollView
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:background="@color/admin_bg_panel"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:paddingStart="8dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="10dp">
+
+            <LinearLayout
+                android:id="@+id/tabOverview"
+                android:layout_width="96dp"
+                android:layout_height="match_parent"
+                android:background="@drawable/admin_bg_tab_active"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/iconOverview"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_admin_nav_overview"
+                    android:tint="@color/admin_text_primary" />
+
+                <TextView
+                    android:id="@+id/labelOverview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="OPS"
+                    android:textColor="@color/admin_text_primary"
+                    android:textSize="9sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/tabApprovals"
+                android:layout_width="96dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="6dp"
+                android:background="@drawable/admin_bg_tab_idle"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/iconApprovals"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_admin_nav_approvals"
+                    android:tint="@color/admin_text_secondary" />
+
+                <TextView
+                    android:id="@+id/labelApprovals"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="QUEUE"
+                    android:textColor="@color/admin_text_secondary"
+                    android:textSize="9sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/tabGateways"
+                android:layout_width="96dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="6dp"
+                android:background="@drawable/admin_bg_tab_idle"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/iconGateways"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_admin_nav_gateways"
+                    android:tint="@color/admin_text_secondary" />
+
+                <TextView
+                    android:id="@+id/labelGateways"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="FLEET"
+                    android:textColor="@color/admin_text_secondary"
+                    android:textSize="9sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/tabIncidents"
+                android:layout_width="96dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="6dp"
+                android:background="@drawable/admin_bg_tab_idle"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/iconIncidents"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_admin_nav_incidents"
+                    android:tint="@color/admin_text_secondary" />
+
+                <TextView
+                    android:id="@+id/labelIncidents"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="ALERTS"
+                    android:textColor="@color/admin_text_secondary"
+                    android:textSize="9sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/tabAudit"
+                android:layout_width="96dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="6dp"
+                android:background="@drawable/admin_bg_tab_idle"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/iconAudit"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_admin_nav_audit"
+                    android:tint="@color/admin_text_secondary" />
+
+                <TextView
+                    android:id="@+id/labelAudit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="LOG"
+                    android:textColor="@color/admin_text_secondary"
+                    android:textSize="9sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+    </HorizontalScrollView>
 
 </LinearLayout>

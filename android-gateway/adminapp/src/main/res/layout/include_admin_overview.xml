@@ -3,107 +3,202 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="8dp">
+    android:paddingBottom="16dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="LIVE POSTURE"
+        android:textColor="@color/admin_text_dim"
+        android:textSize="11sp"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#14253D"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/admin_bg_panel"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="18dp">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/tvConnectionState"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="BACKEND CONNECTION"
-            android:textColor="#7F91AF"
-            android:textSize="11sp"
+            android:text="Not connected"
+            android:textColor="@color/admin_text_primary"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/etBackendUrl"
+        <TextView
+            android:id="@+id/tvOverviewSummary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Waiting for live backend data."
+            android:textColor="@color/admin_primary"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvOverviewPostureNote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:background="#1C304B"
-            android:hint="https://server.example.com"
-            android:inputType="textUri"
-            android:padding="12dp"
-            android:textColor="#EBF3FF"
-            android:textColorHint="#7F91AF" />
+            android:text="No active backend posture available yet."
+            android:textColor="@color/admin_text_secondary"
+            android:textSize="13sp" />
+    </LinearLayout>
 
-        <EditText
-            android:id="@+id/etAdminApiKey"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:background="#1C304B"
-            android:hint="Admin API key"
-            android:inputType="textPassword"
-            android:padding="12dp"
-            android:textColor="#EBF3FF"
-            android:textColorHint="#7F91AF" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal">
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/btnSaveConnection"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Save" />
-
-            <Button
-                android:id="@+id/btnRefreshData"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:text="Refresh Live Data" />
+            android:layout_weight="1"
+            android:background="@drawable/admin_bg_panel"
+            android:orientation="vertical"
+            android:padding="18dp">
 
             <TextView
-                android:id="@+id/tvConnectionState"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_weight="1"
-                android:text="Not connected"
-                android:textColor="#B2C0D9"
-                android:textSize="12sp" />
+                android:text="ACTIVE REQUESTS"
+                android:textColor="@color/admin_text_dim"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvKpiActive"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:text="0"
+                android:textColor="@color/admin_primary"
+                android:textSize="52sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvKpiActiveLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="COMMAND LOAD"
+                android:textColor="@color/admin_text_dim"
+                android:textSize="10sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/admin_bg_panel"
+            android:orientation="vertical"
+            android:padding="18dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="QUEUE / EXCEPTIONS"
+                android:textColor="@color/admin_text_dim"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvKpiPending"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="PENDING 0"
+                android:textColor="@color/admin_warning"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvKpiFailed"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="FAILED 0"
+                android:textColor="@color/admin_danger"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvKpiUnmatched"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="UNMATCHED 0"
+                android:textColor="@color/admin_text_primary"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvKpiGateways"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="ONLINE GW 0"
+                android:textColor="@color/admin_success"
+                android:textSize="18sp"
+                android:textStyle="bold" />
         </LinearLayout>
     </LinearLayout>
 
     <TextView
-        android:id="@+id/tvOverviewSummary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:background="#14253D"
-        android:padding="16dp"
-        android:text="Waiting for live backend data."
-        android:textColor="#EBF3FF"
-        android:textSize="14sp" />
+        android:text="FLEET SNAPSHOT"
+        android:textColor="@color/admin_text_dim"
+        android:textSize="11sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:id="@+id/layoutOverviewFleet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:orientation="vertical" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="COMMAND SUMMARY"
+        android:textColor="@color/admin_text_dim"
+        android:textSize="11sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tvOverviewKpis"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:background="#14253D"
-        android:padding="16dp"
-        android:textColor="#B2C0D9"
-        android:textSize="13sp" />
+        android:layout_marginTop="10dp"
+        android:background="@drawable/admin_bg_panel"
+        android:padding="18dp"
+        android:textColor="@color/admin_text_secondary"
+        android:textSize="12sp" />
 
     <TextView
-        android:id="@+id/tvOverviewEscalations"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="RECENT ESCALATIONS"
+        android:textColor="@color/admin_text_dim"
+        android:textSize="11sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:id="@+id/layoutOverviewEscalations"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:background="#14253D"
-        android:padding="16dp"
-        android:textColor="#B2C0D9"
-        android:textSize="13sp" />
+        android:orientation="vertical" />
 </LinearLayout>

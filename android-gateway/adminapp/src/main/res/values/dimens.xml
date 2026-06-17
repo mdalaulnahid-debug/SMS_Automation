@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="admin_space_xs">4dp</dimen>
+    <dimen name="admin_space_sm">8dp</dimen>
+    <dimen name="admin_space_md">16dp</dimen>
+    <dimen name="admin_space_lg">24dp</dimen>
+    <dimen name="admin_radius_sm">4dp</dimen>
+    <dimen name="admin_radius_md">8dp</dimen>
+    <dimen name="admin_radius_lg">14dp</dimen>
+    <dimen name="admin_radius_xl">18dp</dimen>
+</resources>

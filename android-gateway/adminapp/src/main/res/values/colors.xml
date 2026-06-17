@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="admin_bg_root">#0B1017</color>
+    <color name="admin_bg_panel">#11161D</color>
+    <color name="admin_bg_panel_alt">#151B22</color>
+    <color name="admin_bg_panel_soft">#0F141B</color>
+    <color name="admin_bg_input">#161F29</color>
+    <color name="admin_bg_tab_idle">#111922</color>
+    <color name="admin_bg_tab_active">#172536</color>
+    <color name="admin_border">#2B3743</color>
+    <color name="admin_border_active">#87C7F8</color>
+    <color name="admin_text_primary">#DCE7F2</color>
+    <color name="admin_text_secondary">#9DA9B5</color>
+    <color name="admin_text_dim">#74808C</color>
+    <color name="admin_primary">#9ED3FF</color>
+    <color name="admin_success">#79D9AE</color>
+    <color name="admin_warning">#E1C19B</color>
+    <color name="admin_danger">#E29A97</color>
+    <color name="admin_chip_bg">#0C1218</color>
+    <color name="admin_incident_bg">#271316</color>
+    <color name="admin_live_strip">#0E161E</color>
+</resources>
