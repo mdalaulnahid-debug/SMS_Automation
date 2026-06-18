@@ -197,11 +197,14 @@ Telegram group / dashboard / app test panel
 |------|---------|-----------|
 | `LRL` | MSISDN (01xxxxxxxxx) | Operator matching prefix (GP 013/017, Robi 016/018, BL 014/019) |
 | `LCL` | MSISDN | Same as LRL |
-| `MS-NID` | MSISDN | GP + Robi + Banglalink |
-| `NID-MS` | NID | All three |
+| `MS-NID` | MSISDN | Operator matching prefix — same as LRL (mobile→NID, only the owning operator can answer) |
+| `NID-MS` | NID | All three (NID→mobile, could be on any network) |
 | `IMEI-MS` | IMEI | All three |
 
 Outbound SMS body is always exactly: `REQUEST_TYPE VALUE` (e.g. `LRL 01712345678`). No silent reference in the SMS.
+
+Multi-number batching per the official rule sheet is not implemented yet — see
+[`docs/multi-number-batching-plan.md`](docs/multi-number-batching-plan.md).
 
 ---
 
