@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="#14253D" />
+    <solid android:color="@color/admin_bg_panel" />
     <corners android:radius="18dp" />
     <stroke
         android:width="1dp"
-        android:color="#243A57" />
+        android:color="@color/admin_border" />
 </shape>

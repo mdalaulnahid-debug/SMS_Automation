@@ -42,9 +42,10 @@ SMS traffic, and approving reply drafts — one of four client surfaces
 | Android Admin App | `android-gateway/adminapp` | mobile supervisor, separate APK |
 
 This doc covers the first two in full, and the color-token relationship to
-the third. The fourth (Android Admin App) **intentionally** does not share
-this token system — see [Token parity](#token-parity-with-the-android-gateway-app)
-for why.
+the third and fourth — all four now share the same dark "Operations Surface"
+palette (`accent #3dd7ff`, `bg_primary #08111f`, etc.) so the Gateway App
+phone and the Admin App phone read as the same product. See
+[Token parity](#token-parity-with-the-android-gateway-app) for details.
 
 ## Structure: 3 tabs, bottom nav (Web Operations UI)
 
@@ -216,15 +217,23 @@ literal bordered cards, not rails/strips) — that's a known, tracked gap, not
 an oversight. Don't "fix" it by changing its colors again; the colors are
 already right, only the shapes need the same pass the web got.
 
-The **Android Admin App** (`android-gateway/adminapp`) is the one surface
-that intentionally does **not** share this palette — it targets the
-"Cybernetic Command" reference in
-[`docs/Design/android-admin-stitch/DESIGN.md`](Design/android-admin-stitch/DESIGN.md)
-(steel-blue `#95cdf8` on near-black `#111416`), a different palette for a
-deliberately separate app (`system-design-v2.md` §1, "Android admin must be
-a separate app from Android gateway/user app"). Don't try to converge it
-with the tokens above — that would violate the locked architecture
-decision, not fix an inconsistency.
+The **Android Admin App** (`android-gateway/adminapp`) was originally a
+distinct "Cybernetic Command" palette (steel-blue `#95cdf8` on near-black
+`#111416`, per [`docs/Design/android-admin-stitch/DESIGN.md`](Design/android-admin-stitch/DESIGN.md)).
+That diverged enough from the Gateway App that the two phones looked like
+different products, so its `colors.xml` and the duplicate constants in
+`AdminDesignSystem.Palette` were re-pointed to the same dark tokens as
+`android-gateway/app/src/main/res/values-night/colors.xml` (`admin_primary
+#3dd7ff`, `admin_bg_root #08111f`, `admin_border #243a57`, etc. — same
+values, `admin_`-prefixed names). The drawables in `adminapp/res/drawable/`
+(`admin_bg_panel`, `admin_bg_card`, `admin_bg_tab_*`, `admin_bg_kpi`, ...)
+were switched from hardcoded hex to `@color/admin_*` references so there's
+a single source of truth to keep in sync going forward.
+
+This is a **palette-only** change — the Admin App stays a separate APK
+(`system-design-v2.md` §1, "Android admin must be a separate app from
+Android gateway/user app"); only the colors converged, not the module
+boundary.
 
 ## What NOT to reintroduce
 

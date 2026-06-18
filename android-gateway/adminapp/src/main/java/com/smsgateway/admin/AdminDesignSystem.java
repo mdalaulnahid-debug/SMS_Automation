@@ -13,21 +13,23 @@ import android.widget.TextView;
 public final class AdminDesignSystem {
     private AdminDesignSystem() {}
 
+    // Synced to the Android Gateway App / web "Operations Surface" dark palette
+    // (android-gateway/app/src/main/res/values-night/colors.xml) so both phones match.
     public static final class Palette {
-        public static final int BG_PANEL = Color.parseColor("#11161D");
-        public static final int BG_PANEL_ALT = Color.parseColor("#151B22");
-        public static final int BG_SOFT = Color.parseColor("#0F141B");
-        public static final int BG_INCIDENT = Color.parseColor("#271316");
-        public static final int BG_CHIP = Color.parseColor("#0C1218");
-        public static final int BORDER = Color.parseColor("#2B3743");
-        public static final int BORDER_ACTIVE = Color.parseColor("#87C7F8");
-        public static final int TEXT_PRIMARY = Color.parseColor("#DCE7F2");
-        public static final int TEXT_SECONDARY = Color.parseColor("#9DA9B5");
-        public static final int TEXT_DIM = Color.parseColor("#74808C");
-        public static final int PRIMARY = Color.parseColor("#9ED3FF");
-        public static final int SUCCESS = Color.parseColor("#79D9AE");
-        public static final int WARNING = Color.parseColor("#E1C19B");
-        public static final int DANGER = Color.parseColor("#E29A97");
+        public static final int BG_PANEL = Color.parseColor("#14253D");
+        public static final int BG_PANEL_ALT = Color.parseColor("#1C304B");
+        public static final int BG_SOFT = Color.parseColor("#0F1D31");
+        public static final int BG_INCIDENT = Color.parseColor("#3A1620");
+        public static final int BG_CHIP = Color.parseColor("#08111F");
+        public static final int BORDER = Color.parseColor("#243A57");
+        public static final int BORDER_ACTIVE = Color.parseColor("#3DD7FF");
+        public static final int TEXT_PRIMARY = Color.parseColor("#EBF3FF");
+        public static final int TEXT_SECONDARY = Color.parseColor("#B2C0D9");
+        public static final int TEXT_DIM = Color.parseColor("#7F91AF");
+        public static final int PRIMARY = Color.parseColor("#3DD7FF");
+        public static final int SUCCESS = Color.parseColor("#56D88B");
+        public static final int WARNING = Color.parseColor("#FFBF5F");
+        public static final int DANGER = Color.parseColor("#FF6D7F");
     }
 
     public static GradientDrawable moduleBackground(boolean active) {

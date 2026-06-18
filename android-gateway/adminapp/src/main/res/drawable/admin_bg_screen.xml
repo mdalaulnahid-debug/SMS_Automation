@@ -2,6 +2,6 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <gradient
         android:angle="270"
-        android:endColor="#08111F"
-        android:startColor="#0D1A2D" />
+        android:endColor="@color/admin_bg_root"
+        android:startColor="@color/admin_bg_panel_soft" />
 </shape>
