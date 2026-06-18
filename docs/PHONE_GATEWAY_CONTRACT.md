@@ -72,48 +72,109 @@ Response:
 }
 ```
 
-Backend updates `gatewayUrl` **in memory**. Restart backend → phone must Start Service again (or set `gatewayUrl` manually in `config/gateways.json`).
+Backend updates `gatewayUrl` **in memory** (and displays it for diagnostics —
+gateway `status` shows `CONFIGURED` vs `MOCK` based on whether it's set). Restart
+backend → phone must Start Service again (or set `gatewayUrl` manually in
+`config/gateways.json`).
 
 `config/gateways.json` may use `"gatewayUrl": ""` for GP to rely on auto-registration.
 
----
+**`gatewayUrl`/`sendPath` are not actually used to send anything today.** The
+backend never makes an outbound HTTP call to the phone — see the poll-based
+contract below. These fields exist for the gateway health display only; an
+earlier "push" design called `POST http://<PHONE_IP>:8080/send-sms` directly,
+but that path is dead code on the backend side now.
 
-## Backend → Phone: Send SMS
+### Heartbeat (phone → PC)
 
 ```http
-POST http://<PHONE_IP>:8080/send-sms
+POST http://<PC_LAN_IP>:3000/api/gateway/heartbeat
 Content-Type: application/json
+x-gateway-secret: <per-gateway secret>
 
-{
-  "to": "01936759367",
-  "message": "LRL 01724761972",
-  "requestId": "REQ-20260610-0002-P94E",
-  "operator": "GP"
-}
+{ "gatewayId": "GP_PHONE_01" }
 ```
 
-- `message` must be sent **exactly** to the operator/test destination. No backend metadata appended.
-- In test mode, `to` is `testDestination` instead of operator shortcode `12345`.
+Response:
 
-Expected response (phone HTTP layer — **not carrier-confirmed**):
+```json
+{ "ok": true, "gateway": { "id": "GP_PHONE_01", "lastSeenAt": "2026-06-18T11:31:15.401Z" } }
+```
+
+Added so the dashboard's `lastSeenAt` (and the "online/offline" gateway health
+chip) stays current even when a gateway has no outgoing jobs to poll for —
+polling `/api/gateway/jobs` also refreshes `lastSeenAt` as a side effect, but a
+quiet operator with no pending requests could otherwise look stale/offline for
+no real reason. The Android app calls this every 30s from the same poll-loop
+thread that calls `/api/gateway/jobs` ([`GatewayForegroundService.kt`](../android-gateway/app/src/main/java/com/smsgateway/GatewayForegroundService.kt)).
+
+---
+
+## Backend ↔ Phone: Send SMS (poll-based — this is the real contract)
+
+The phone never receives a push from the backend. Instead it polls every 3
+seconds from a background thread inside the foreground service
+([`GatewayForegroundService.kt`](../android-gateway/app/src/main/java/com/smsgateway/GatewayForegroundService.kt)),
+claims any waiting jobs, sends them via `SmsManager`, then acks the result.
+
+### 1. Poll and claim (phone → PC)
+
+```http
+GET http://<PC_LAN_IP>:3000/api/gateway/jobs?gatewayId=GP_PHONE_01
+x-gateway-secret: <per-gateway secret>
+```
+
+Atomically claims every `PENDING_PICKUP` outbox row for that gateway (sets
+status `CLAIMED`, records `claimedAt`) and returns them:
 
 ```json
 {
-  "ok": true,
-  "providerMessageId": "sms_1781126748295"
+  "jobs": [
+    {
+      "outboxId": "outbox_8mrrs9xw",
+      "to": "01714054239",
+      "message": "LRL 01724761972 01799999999",
+      "requestId": "REQ-20260610-0002-P94E",
+      "operator": "GP"
+    }
+  ]
 }
 ```
 
-Error response:
+- `message` is the canonical dispatch text built by `src/parser.js` — sent
+  **exactly** as-is, no backend metadata appended. Since the multi-number
+  batching work, this may contain up to 5 space-separated identifiers in one
+  body (`LRL 0171... 0172...`), not just one.
+- In test mode, `to` is `testDestination` instead of the operator shortcode.
+- If a job is claimed but never acked within 90 seconds, a maintenance sweep
+  resets it back to `PENDING_PICKUP` so it gets retried on the next poll
+  (`store.reclaimStaleClaimedJobs`, see [`src/maintenance.js`](../src/maintenance.js)).
 
-```json
-{
-  "ok": false,
-  "error": "description"
-}
+### 2. Ack the result (phone → PC)
+
+```http
+POST http://<PC_LAN_IP>:3000/api/gateway/jobs/outbox_8mrrs9xw/ack
+Content-Type: application/json
+x-gateway-secret: <per-gateway secret>
+
+{ "gatewayId": "GP_PHONE_01", "ok": true, "providerMessageId": "sms_1781126748295" }
 ```
 
-**Known gap:** phone returns `ok: true` when `SmsManager` accepts the send. Carrier failure (e.g. dual-SIM wrong slot, no signal) may occur seconds later in the system SMS app. Target: sent-intent callbacks.
+Failure case: `{ "gatewayId": "GP_PHONE_01", "ok": false, "error": "description" }`.
+
+Response: `{ "ok": true, "sentStatus": "SENT" }` (or `"FAILED"`).
+
+The backend stamps `sendResult.confirmedAt` on ack — this is what starts the
+operator reply-window clock (not the original queue time), so a delayed
+phone doesn't lose reply-window time it never got to use. There's also a
+**send-confirmation grace period** before that: a job that's been claimed but
+not yet acked has its own shorter timeout window so a phone that claimed a
+job and then went silent doesn't leave the request hanging forever either.
+
+**Known gap:** the phone reports `ok: true` once `SmsManager` accepts the
+send, which is not carrier-confirmed — a dual-SIM wrong-slot or no-signal
+failure can surface seconds later in the system SMS app, after the ack
+already said success. Target: sent-intent callbacks.
 
 ---
 
@@ -171,7 +232,8 @@ Restart backend after editing `gateways.json`.
 ## Test Mode Flow (validated)
 
 1. App `POST /api/requests` with `testDestination: "01936759367"`
-2. Backend queues → `POST` phone `/send-sms` with `to: 01936759367`
+2. Backend queues a `PENDING_PICKUP` outbox job → phone polls
+   `GET /api/gateway/jobs`, claims it, and sends `to: 01936759367`
 3. Target phone receives `LRL <payload>`, replies manually
 4. Phone `SmsReceiver` → `POST /api/sms/inbound`
 5. Backend drafts reply → dashboard `NEEDS_MANUAL_REVIEW`

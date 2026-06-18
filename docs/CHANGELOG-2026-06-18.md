@@ -4,10 +4,17 @@ This file is the handoff log for another PC, another developer, or another codin
 
 ## What Changed
 
-- Implemented backend intake validation v2 in `src/parser.js`, `src/service.js`, and `src/domain.js`
-- Added canonical request normalization before queueing or dispatch
+- Implemented multi-number batching (1-5 identifiers per request) in `src/parser.js`, `src/service.js`, and `src/domain.js`, matching the official push-pull service rule sheet
+- Added canonical request normalization and 11 structured `errorCode`s before queueing or dispatch
 - Added structured validation failure audit events (`REQUEST_VALIDATION_FAILED`)
-- Added parser and integration regression tests for valid/invalid official request formats
+- Fixed batch-reply collection so an operator replying once per number (not one combined SMS) is fully captured (`c26b896`)
+- Added duplicate-active-request blocking (30 min window)
+- Anchored the reply-window timeout clock on carrier-confirmed send time (`sendResult.confirmedAt`) instead of queue time, plus a separate send-confirmation grace period for claimed-but-unacked jobs
+- Added a dedicated `POST /api/gateway/heartbeat` endpoint so gateway `lastSeenAt` stays fresh even with zero pending jobs; wired into the Android poll loop every 30s
+- Fixed the poll-thread watchdog restart in `GatewayForegroundService.kt`
+- Added new admin diagnostics (`delayedConfirmations`, `ambiguousReplies24h`, `duplicateRiskGroups`) to `/api/dashboard` and the web admin console
+- Added parser and integration regression tests for valid/invalid official request formats (71 tests total, all passing)
+- Reconciled `docs/multi-number-batching-plan.md` (was a pre-implementation plan) and `docs/PHONE_GATEWAY_CONTRACT.md` (was describing a dead push-send model) against the actual shipped code
 - Added and iterated the separate Android admin app under `android-gateway/adminapp/`
 - Connected the Android admin app to the live backend using saved backend URL + admin API key
 - Updated the Android admin app shell toward the V2 command-center direction
@@ -23,13 +30,22 @@ This file is the handoff log for another PC, another developer, or another codin
 
 - `a34c82b` - Implement V2 admin surfaces and Android admin app
 - `ad76496` - Refine Android admin app command-center UI
-- Local working tree now also contains uncommitted backend validation/doc updates after `c1582c5`
+- `c1582c5` - Document multi-number batching plan and fix stale MS-NID routing in README (pre-implementation)
+- `8bd26a5` - Harden backend intake validation and surface audit failures (the batching implementation)
+- `cbb2d4f` - Align gateway live status with backend heartbeat
+- `a76d988` - Harden request lifecycle timeouts and admin diagnostics
+- `b3bc890` - Fix gateway poll watchdog restart
+- `c26b896` - multiple number bug fixed (batch-reply collection)
+
+Git `main` and the production VPS are both confirmed live at `c26b896` (verified directly against `https://licbarishal.duckdns.org`, not assumed).
 
 ## Locked Product Decisions
 
 - Backend remains the single workflow authority
 - Backend validates request format before queueing or dispatching
 - Invalid requests must never be sent to Android gateway phones
+- Multi-number batching (1-5 identifiers) follows the official push-pull service rule sheet; mixed operators in one `LCL`/`LRL`/`MS-NID` batch are rejected, not split
+- Type-token formatting mistakes (`MS NID`, `LRL01308-218563`) are rejected with a specific error, not auto-corrected — this reverses an earlier same-day decision to auto-correct trivial cases; revisit if that's still wanted
 - Web operations UI, web admin console, Android gateway app, and separate Android admin app remain separate surfaces
 - Android admin app must stay separate from the Android gateway app
 - Admin capability remains available from both web admin and Android admin
@@ -40,14 +56,17 @@ This file is the handoff log for another PC, another developer, or another codin
 
 Behavior now:
 
-- Supported commands: `IMEI-MS`, `LCL`, `LRL`, `MS-NID`, `NID-MS`
+- Supported commands: `IMEI-MS`, `LCL`, `LRL`, `MS-NID`, `NID-MS`, each accepting 1-5 identifiers
 - Harmless whitespace is normalized
 - Canonical dispatch text is generated before gateway outbox creation
-- `LCL`, `LRL`, and `MS-NID` reject mixed-operator batches
+- `LCL`, `LRL`, and `MS-NID` reject mixed-operator batches (`OPERATOR_MISMATCH`)
 - `NID-MS` and `IMEI-MS` continue to fan out to all operators
-- Invalid requests return normalized `errorCode`, `errors`, and `replyText`
+- Invalid requests return one of 11 normalized `errorCode`s, `errors`, and `replyText` — full list in `docs/multi-number-batching-plan.md`
 - Invalid requests do not create normal request rows and do not enter queue/outbox
-- Validation failures are still visible through the audit path
+- Validation failures are still visible through the audit path (`REQUEST_VALIDATION_FAILED`)
+- Identical active requests (same type/payload/operators) within 30 minutes are blocked (`DUPLICATE_ACTIVE_REQUEST`)
+- The operator reply-window clock starts from carrier-confirmed send time, not queue time, with a separate grace period for the claim-to-ack gap
+- Gateway phones heartbeat the backend every 30s independent of job polling, so `lastSeenAt` doesn't go stale on a quiet operator
 
 ## Current Android Admin App State
 
@@ -152,20 +171,22 @@ Important note:
 
 ## Known Gaps / Next Best Work
 
-1. Surface validation failure events more clearly in the web/admin audit experience
-2. Continue improving Android admin screen fidelity against the Stitch references
-3. Make the bottom nav less blocky by moving from filled tabs toward a slimmer active-state marker
-4. Refine approvals, gateways, incidents, and audit rows so they feel more custom and less text-heavy
-5. Continue V2 redesign on web admin and web operations surfaces
-6. Keep docs synchronized after each visible UI pass
+1. Decide whether to add the type-token auto-correct layer that was planned but not shipped, or close it out as won't-do
+2. Surface validation failure events and the new diagnostics counters more clearly in the web/admin audit experience
+3. Continue improving Android admin screen fidelity against the Stitch references
+4. Make the bottom nav less blocky by moving from filled tabs toward a slimmer active-state marker
+5. Refine approvals, gateways, incidents, and audit rows so they feel more custom and less text-heavy
+6. Continue V2 redesign on web admin and web operations surfaces
+7. Keep docs synchronized after each visible UI pass — this file and `progress_tracker.md` had drifted behind several commits before this reconciliation pass; don't let that happen again
 
 ## Safe Starting Point For Another Agent
 
 1. Read `progress_tracker.md`
 2. Read this file
-3. Read `docs/system-design-v2.md` and `docs/ui-design-guide-v2.md`
-4. Review `docs/Design/android-admin-stitch/README.md` and `DESIGN.md`
-5. Inspect `android-gateway/adminapp/`
-6. Inspect `src/parser.js`, `src/service.js`, and `test/workflow.test.js` for the intake contract
-7. Build the admin app before making UI changes
-8. Avoid changing Android gateway runtime unless explicitly requested
+3. Read `docs/multi-number-batching-plan.md` and `docs/PHONE_GATEWAY_CONTRACT.md` for the current backend intake/dispatch contract
+4. Read `docs/system-design-v2.md` and `docs/ui-design-guide-v2.md`
+5. Review `docs/Design/android-admin-stitch/README.md` and `DESIGN.md`
+6. Inspect `android-gateway/adminapp/`
+7. Inspect `src/parser.js`, `src/service.js`, and `test/workflow.test.js` for the intake contract
+8. Build the admin app before making UI changes
+9. Avoid changing Android gateway runtime unless explicitly requested

@@ -1,18 +1,22 @@
-# Multi-number batching — official rules and implementation plan
+# Multi-number batching — official rules and implementation status
 
-**Status:** planned, not implemented. Source: official "পুশপুল সার্ভিস" (push-pull
-service) rule sheet provided by the requester (officer-facing slides), 2026-06-18.
-This doc is the rule-data capture and the agreed plan — no parser/domain code has
-changed yet.
+**Status: implemented** (commit `8bd26a5` "Harden backend intake validation
+and surface audit failures", extended by `c26b896` "multiple number bug
+fixed"). This doc originally captured the plan before implementation; it now
+also records what actually shipped, including one deliberate deviation from
+the original plan (see "Decision that changed" below).
 
-## Why this matters
+Source of the rules: official "পুশপুল সার্ভিস" (push-pull service) rule sheet
+provided by the requester (officer-facing slides), 2026-06-18.
 
-Today [`src/parser.js`](../src/parser.js) only accepts **one** value per request
+## Why this mattered
+
+`src/parser.js` used to accept only **one** value per request
 (`LCL 01710000000`). The official protocol that operators already work under
-supports **up to 5 numbers per SMS**. Every multi-number lookup today costs N
-separate Telegram requests → N separate operator SMS, instead of the 1 SMS the
-official system is designed for. Closing this gap is a real SMS-cost reduction,
-not just a parity nice-to-have.
+supports **up to 5 numbers per SMS**. Every multi-number lookup cost N
+separate Telegram requests → N separate operator SMS instead of the 1 SMS the
+official system is designed for — a real SMS-cost problem, not just a parity
+gap.
 
 ## The official rules (as given)
 
@@ -20,83 +24,98 @@ not just a parity nice-to-have.
 2. No `+`/`-` anywhere in or around a number.
 3. No space *inside* a single number.
 4. No more than **one** space *between* numbers in a batch.
-   (Already satisfied by our parser today — `cleaned.replace(/\s+/g, ' ')`
-   collapses any run of spaces. No change needed for this rule.)
 5. Can't request multiple **info types** in one message (no mixing `LRL` +
-   `NID-MS`, etc.). Already structurally impossible for us — the parser only
-   ever reads one type token per message.
+   `NID-MS`, etc.).
 6. Can't request multiple **operators** in one message — except Robi & Airtel,
-   which combine. Already free for us: `ROBI.msisdnPrefixes` in
-   [`domain.js`](../src/domain.js) already includes both `016` (Airtel) and
-   `018` (Robi) as one bucket.
+   which combine.
 7. Format must always be **English capital letters** (`LRL` not `Lrl`,
    `MS-NID` not `Ms-nid`).
 
-## Canonical format table (matches our `REQUEST_TYPES` exactly)
+## What actually shipped — `src/parser.js`
 
-| Requested info | Format | Single number | Multiple numbers |
-|---|---|---|---|
-| IMEI search | `IMEI-MS` | `IMEI-MS 865239458712678` | `IMEI-MS 865239458712678 865239458712679` |
-| Last Call Location | `LCL` | `LCL 01710000000` | `LCL 01710000000 01720000001` |
-| Last Radio Location | `LRL` | `LRL 01710000000` | `LRL 01710000000 01720000001` |
-| Mobile → NID | `MS-NID` | `MS-NID 01810000000` | `MS-NID 01810000000 01820000001` |
-| NID → Mobile | `NID-MS` | `NID-MS 4246780000` | `NID-MS 4246780000 524678000` |
+`parseRequestText()` now returns `identifiers` (array), `canonicalPayload`,
+and `canonicalRequestText` on success, and a stable `errorCode` + `replyText`
+on failure. The full error vocabulary (`ERROR_DEFINITIONS` in `parser.js`):
 
-## Recurring real-world mistakes (from the wrong/correct examples)
+| `errorCode` | When |
+|---|---|
+| `EMPTY_MESSAGE` | blank input |
+| `UNSUPPORTED_COMMAND` | first token isn't `IMEI-MS`/`LCL`/`LRL`/`MS-NID`/`NID-MS` |
+| `MISSING_IDENTIFIERS` | command with no values after it |
+| `TOO_MANY_IDENTIFIERS` | more than 5 identifiers (rule 1) |
+| `MIXED_REQUEST_TYPES` | a different command keyword appears inside the payload (rule 5) |
+| `REPEATED_COMMAND` | the *same* command keyword repeated inside the payload |
+| `INVALID_IDENTIFIER_CHARS` | any identifier contains a non-digit (covers rules 2 and 3 — `+`, `-`, `/`, spaces-within-a-number all land here) |
+| `INVALID_IDENTIFIER_FORMAT` | digits-only but wrong length/shape for the command's payload type |
+| `OPERATOR_MISMATCH` | identifiers resolve to more than one operator in one `LRL`/`LCL`/`MS-NID` request (rule 6) |
+| `OPERATOR_UNRESOLVED` | an MSISDN's prefix doesn't match any known operator |
+| `DUPLICATE_ACTIVE_REQUEST` | an identical request is already in flight (separate feature added alongside this, see below) |
 
-- Type glued to the number, often with a stray hyphen: `LRL01308-218563`,
-  `LCL-01981-332862`.
-- Hyphenated type typed with a space instead: `MS NID 0162...` (should be
-  `MS-NID`), `IMEI ms ...` (should be `IMEI-MS`).
-- Type written after the number, randomly cased: `01718663266` / `Lrl/Lcl`.
-- Several single-number messages sent separately instead of one batched
-  message: five separate `MS NID <num>` lines instead of one
-  `MS-NID <num1> <num2> <num3> <num4>`.
-- Prose mixing two info types in one message: `Nid with LRL 01917574316 NID
-  01925098586` → should be two separate messages.
+Rule 4 (single space between numbers) needed no new code — normalization
+already collapsed repeated whitespace before this feature existed.
+Robi/Airtel combine for free too — `ROBI.msisdnPrefixes` in `domain.js`
+already covers both `016` (Airtel) and `018` (Robi) as one operator bucket,
+so `OPERATOR_MISMATCH` never fires between them.
 
-## Decisions locked in (2026-06-18)
+`domain.js`'s `targetOperatorsForRequest()` now takes an array of identifiers:
+for `RELEVANT_OPERATOR` types it resolves every identifier's operator and
+returns a single-operator result only if they all agree — otherwise empty
+(which `parser.js` turns into `OPERATOR_MISMATCH` or `OPERATOR_UNRESOLVED`).
 
-- **Auto-correct vs. reject:** auto-correct trivial *type-token* formatting
-  only (glued type+number → insert space; spaced hyphenated type like
-  `MS NID` → join to `MS-NID`; stray `+`/`-` adjacent to the type code →
-  stripped). Never auto-correct *inside* the actual MSISDN/NID/IMEI digits —
-  too risky to guess at intent. Everything else (batch > 5, mixed types,
-  mixed operators, malformed numbers) gets a **specific** rejection message,
-  not the old generic one.
-- **Batch cap scope:** the 5-number cap applies to **all five** request
-  types, including `NID-MS` and `IMEI-MS` (which fan out to all 3 operator
-  gateways) — matches the rule sheet's table, which shows multi-number
-  examples for those two types with no different limit called out.
+## Decision that changed: no auto-correct
 
-## Implementation plan
+The plan as agreed on 2026-06-18 called for auto-correcting trivial
+*type-token* formatting mistakes (`MS NID` → `MS-NID`, `LRL01308-218563` →
+`LRL 01308218563`) while still rejecting ambiguous cases outright.
 
-1. **Domain model** ([`domain.js`](../src/domain.js)): each request type
-   accepts an array of 1–5 values instead of a single string; each entry
-   validated with the type's existing regex (MSISDN/NID/IMEI).
-2. **Parser** ([`parser.js`](../src/parser.js)):
-   - Auto-correct layer on the type token only (see above), applied before
-     validation.
-   - Split the payload into tokens; reject with a specific message if
-     count > 5.
-   - Reject any token containing `+`/`-`.
-   - For MSISDN-based types (`LRL`/`LCL`/`MS-NID`), resolve each number's
-     operator and reject if the batch isn't all the same operator bucket.
-   - Detect and name mixed-type prose with a specific "split into two
-     messages" correction instead of the generic unsupported-type error.
-3. **Dispatch** ([`smsGateway.js`](../src/smsGateway.js)):
-   `formatOperatorSms()` must emit one batched SMS body (`LCL 017...
-   018...`) for the whole batch — this is the actual SMS-cost reduction.
-4. **Reply matching** ([`service.js`](../src/service.js)): audit how a
-   reply gets matched/drafted today, since a batched request will get back
-   one reply covering multiple numbers. **Not yet verified — open risk to
-   check before implementation.**
-5. **Tests** ([`test/workflow.test.js`](../test/workflow.test.js)): batch
-   happy-path per type (1–5 values), >5 rejected, mixed-operator batch
-   rejected (LRL/LCL/MS-NID only), each auto-correct case, each strict-reject
-   case.
+**That auto-correct layer was not implemented.** What shipped instead is
+**strict rejection only**, with a specific `errorCode` per failure mode
+instead of one generic message. A message like `MS NID 01625242040` is
+rejected as `UNSUPPORTED_COMMAND` today (first token `MS` doesn't match any
+known command) rather than being silently corrected to `MS-NID` and
+processed.
 
-## Next step
+This is a real, deliberate-looking gap from the original decision, not an
+oversight noticed in review — worth a conscious call on whether to add the
+auto-correct layer later or to keep the strict-only behavior permanently
+(strict is arguably safer for a police system: it never guesses at intent).
 
-Start at step 1 (domain model) when implementation is greenlit. This doc
-should be updated as decisions change or steps complete.
+## Other things that shipped alongside this (not in the original plan)
+
+- **Reply collection across a batch** (`c26b896`): `formatCombinedReply()` in
+  `service.js` used to read only one inbox message
+  (`dispatch.inboxId`) per operator. `collectDispatchReplyMessages()` now
+  gathers every inbound SMS matched to that dispatch's gateway + request, so
+  an operator replying once per number in a batch (rather than one combined
+  reply) still gets fully captured in the review draft.
+- **Duplicate-request blocking** (`a76d988`): `store.findRecentDuplicateRequest()`
+  blocks a new request if an identical one (same type, same canonical
+  payload, same target operators) is already active within a 30-minute
+  window (`DEFAULT_DUPLICATE_REQUEST_WINDOW_MS`), returning
+  `DUPLICATE_ACTIVE_REQUEST` instead of creating a second one.
+- **Two-phase dispatch timeout** (`a76d988`): the reply-window clock (now 15
+  minutes, `DEFAULT_REPLY_WINDOW_MS`) only starts once the gateway phone's
+  send is *carrier-acked* (`sendResult.confirmedAt`). Before that, a shorter
+  **send-confirmation grace period** (`DEFAULT_SEND_CONFIRMATION_GRACE_MS`,
+  also 15 minutes) covers the claimed-but-not-yet-acked phase, so a stalled
+  phone surfaces as a timeout instead of hanging the request forever — see
+  `AutomationService.dispatchTimeoutState()`.
+- **New diagnostics on `/api/dashboard`**: `delayedConfirmations`,
+  `ambiguousReplies24h`, and `duplicateRiskGroups` counts/lists, surfaced in
+  the web admin console's Overview and Audit tabs.
+
+## Verification
+
+All 71 tests pass across `test/persistence.test.js`, `test/security.test.js`,
+`test/telegramBridge.test.js`, and `test/workflow.test.js` (run individually
+with `node --test <file>` — running multiple files at once is known to hang
+in this environment).
+
+## Open follow-ups
+
+- Decide whether to add the type-token auto-correct layer (see above) or
+  formally close it out as "won't do."
+- `docs/system-design-v2.md` §5 lists `GET /api/ops/validation-failures` as a
+  *future* endpoint — validation failures are currently only visible via the
+  general audit log (`REQUEST_VALIDATION_FAILED` events), filterable in the
+  web admin Audit tab.
