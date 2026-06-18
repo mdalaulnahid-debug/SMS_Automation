@@ -139,6 +139,14 @@ class AdminActivity : AppCompatActivity() {
         binding.tvStatTotal.text = gateways.size.toString()
         binding.gatewayCardsContainer.removeAllViews()
         gateways.forEach { addGatewayCard(it) }
+        hideLastRowDivider(binding.gatewayCardsContainer)
+    }
+
+    // Matches the web design system's `tbody tr:last-child { border-bottom: none }` rule —
+    // rows share one panel border now, so the last row shouldn't draw its own trailing divider.
+    private fun hideLastRowDivider(container: LinearLayout) {
+        val last = container.getChildAt(container.childCount - 1) ?: return
+        last.findViewById<View>(R.id.itemDivider)?.visibility = View.INVISIBLE
     }
 
     // ── Overview rendering ────────────────────────────────────────────────────
@@ -170,6 +178,7 @@ class AdminActivity : AppCompatActivity() {
             return
         }
         entries.forEach { entry -> binding.recentActivityContainer.addView(buildAuditView(entry)) }
+        hideLastRowDivider(binding.recentActivityContainer)
     }
 
     // ── Requests rendering ────────────────────────────────────────────────────
@@ -183,7 +192,6 @@ class AdminActivity : AppCompatActivity() {
             binding.requestCardsContainer.addView(emptyCard("No requests yet"))
             return
         }
-        val dp8 = (8 * resources.displayMetrics.density).toInt()
         requests.forEach { req ->
             val view = LayoutInflater.from(this).inflate(R.layout.item_request_card, null)
 
@@ -216,11 +224,11 @@ class AdminActivity : AppCompatActivity() {
             }
             view.findViewById<TextView>(R.id.tvReqDispatches).text = dispatches
 
-            val params = LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
-            ).also { it.bottomMargin = dp8 }
-            binding.requestCardsContainer.addView(view, params)
+            // No bottomMargin — rows are divided by their own bottom border now and
+            // share one panel border (set in activity_admin.xml), not individually spaced cards.
+            binding.requestCardsContainer.addView(view)
         }
+        hideLastRowDivider(binding.requestCardsContainer)
     }
 
     // ── Audit rendering ───────────────────────────────────────────────────────
@@ -232,6 +240,7 @@ class AdminActivity : AppCompatActivity() {
             return
         }
         entries.forEach { entry -> binding.auditEntriesContainer.addView(buildAuditView(entry)) }
+        hideLastRowDivider(binding.auditEntriesContainer)
     }
 
     private fun buildAuditView(entry: BackendClient.AuditEntry): View {
@@ -310,10 +319,9 @@ class AdminActivity : AppCompatActivity() {
         view.findViewById<TextView>(R.id.tvSentCount).text = "—"
         view.findViewById<TextView>(R.id.tvReceivedCount).text = "—"
 
-        val params = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
-        ).also { it.bottomMargin = (10 * resources.displayMetrics.density).toInt() }
-        binding.gatewayCardsContainer.addView(view, params)
+        // No bottomMargin — rows are divided by their own bottom border now and
+        // share one panel border (set in activity_admin.xml), not individually spaced cards.
+        binding.gatewayCardsContainer.addView(view)
     }
 
     // ── APK publish ───────────────────────────────────────────────────────────

@@ -1,34 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardBackgroundColor="@color/bg_card"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="0dp"
-    app:strokeColor="@color/divider"
-    app:strokeWidth="1dp">
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <!-- Left status stripe -->
+        <!-- Left status rail — matches web .operator-rail, not a bordered card -->
         <View
             android:id="@+id/statusStripe"
             android:layout_width="4dp"
             android:layout_height="match_parent"
             android:background="@color/text_muted" />
 
-        <!-- Card content -->
+        <!-- Row content -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:paddingStart="14dp"
+            android:paddingTop="12dp"
+            android:paddingEnd="14dp"
+            android:paddingBottom="12dp">
 
             <!-- Header: circle + name/id + badge -->
             <LinearLayout
@@ -36,18 +34,18 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:layout_marginBottom="12dp">
+                android:layout_marginBottom="10dp">
 
                 <!-- Operator initial circle -->
                 <FrameLayout
-                    android:layout_width="46dp"
-                    android:layout_height="46dp"
-                    android:layout_marginEnd="14dp">
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="12dp">
 
                     <View
                         android:id="@+id/operatorCircleBg"
-                        android:layout_width="46dp"
-                        android:layout_height="46dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:background="@drawable/bg_operator_circle" />
 
                     <TextView
@@ -55,7 +53,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:textSize="20sp"
+                        android:textSize="18sp"
                         android:textStyle="bold"
                         android:fontFamily="sans-serif-medium"
                         android:textColor="@color/success" />
@@ -73,7 +71,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/TextAppearance.SmsGateway.CardTitle"
-                        android:textSize="17sp" />
+                        android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/tvGatewayId"
@@ -81,7 +79,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="monospace"
                         android:textColor="@color/accent"
-                        android:textSize="12sp"
+                        android:textSize="11sp"
                         android:layout_marginTop="2dp" />
 
                     <TextView
@@ -90,7 +88,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="monospace"
                         android:textColor="@color/text_secondary"
-                        android:textSize="12sp"
+                        android:textSize="11sp"
                         android:layout_marginTop="1dp"
                         android:visibility="gone" />
                 </LinearLayout>
@@ -100,9 +98,9 @@
                     android:id="@+id/tvGatewayOnline"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="6dp"
-                    android:textSize="11sp"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="5dp"
+                    android:textSize="10sp"
                     android:textStyle="bold"
                     android:letterSpacing="0.10"
                     android:fontFamily="sans-serif-medium"
@@ -115,15 +113,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="@color/text_secondary"
-                android:textSize="13sp"
-                android:layout_marginBottom="12dp" />
-
-            <!-- Divider -->
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/divider"
-                android:layout_marginBottom="10dp" />
+                android:textSize="12sp"
+                android:layout_marginBottom="8dp" />
 
             <!-- Stats row -->
             <LinearLayout
@@ -136,14 +127,14 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:layout_marginEnd="24dp">
+                    android:layout_marginEnd="20dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="↑ "
                         android:textColor="@color/accent"
-                        android:textSize="14sp" />
+                        android:textSize="13sp" />
 
                     <TextView
                         android:id="@+id/tvSentCount"
@@ -151,7 +142,7 @@
                         android:layout_height="wrap_content"
                         android:text="—"
                         android:textColor="@color/text_secondary"
-                        android:textSize="13sp"
+                        android:textSize="12sp"
                         android:fontFamily="monospace" />
                 </LinearLayout>
 
@@ -166,7 +157,7 @@
                         android:layout_height="wrap_content"
                         android:text="↓ "
                         android:textColor="@color/success"
-                        android:textSize="14sp" />
+                        android:textSize="13sp" />
 
                     <TextView
                         android:id="@+id/tvReceivedCount"
@@ -174,11 +165,18 @@
                         android:layout_height="wrap_content"
                         android:text="—"
                         android:textColor="@color/text_secondary"
-                        android:textSize="13sp"
+                        android:textSize="12sp"
                         android:fontFamily="monospace" />
                 </LinearLayout>
             </LinearLayout>
-
         </LinearLayout>
     </LinearLayout>
-</com.google.android.material.card.MaterialCardView>
+
+    <!-- Row divider — replaces the per-card border; the panel around the list provides the outer edge -->
+    <View
+        android:id="@+id/itemDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider" />
+
+</LinearLayout>
