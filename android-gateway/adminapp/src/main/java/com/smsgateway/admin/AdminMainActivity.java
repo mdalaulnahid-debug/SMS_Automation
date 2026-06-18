@@ -374,9 +374,54 @@ public class AdminMainActivity extends Activity {
         footer.setOrientation(LinearLayout.HORIZONTAL);
         footer.setGravity(Gravity.END);
         footer.setPadding(0, 16, 0, 0);
-        footer.addView(buildStatusChip(draftReady ? "READY" : "QUEUE", draftReady ? "#56D88B" : "#FFBF5F"));
+
+        // Real write actions — same endpoints the web admin console and the Gateway App's
+        // Control Center use. This list is already filtered to NEEDS_MANUAL_REVIEW requests
+        // (see renderApprovals), so reject/retry are always valid here.
+        if (draftReady) {
+            footer.addView(buildActionChip("APPROVE", "#56D88B", () ->
+                performAction("/api/reply-drafts/" + requestId + "/approve", null, "Reply approved")));
+        }
+        footer.addView(buildActionChip("RETRY", "#3DD7FF", () ->
+            performAction("/api/requests/" + requestId + "/retry", null, "Request re-queued")));
+        footer.addView(buildActionChip("REJECT", "#FF6D7F", () ->
+            performAction("/api/requests/" + requestId + "/reject", new JSONObject(), "Request rejected")));
+
         card.addView(footer);
         return card;
+    }
+
+    // Clickable variant of buildStatusChip — same visual, wired to a background POST.
+    private TextView buildActionChip(String label, String colorHex, Runnable onClick) {
+        TextView chip = buildStatusChip(label, colorHex);
+        chip.setClickable(true);
+        chip.setFocusable(true);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.leftMargin = (int) (8 * getResources().getDisplayMetrics().density);
+        chip.setLayoutParams(params);
+        chip.setOnClickListener(v -> onClick.run());
+        return chip;
+    }
+
+    private void performAction(String path, JSONObject body, String successMessage) {
+        String baseUrl = etBackendUrl.getText().toString().trim();
+        String apiKey = etAdminApiKey.getText().toString().trim();
+        if (baseUrl.isEmpty() || apiKey.isEmpty()) {
+            Toast.makeText(this, "Configure backend URL and admin key in Settings first.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        new Thread(() -> {
+            try {
+                AdminBackendClient.postJson(baseUrl, path, apiKey, body);
+                runOnUiThread(() -> {
+                    Toast.makeText(this, successMessage, Toast.LENGTH_SHORT).show();
+                    refreshLiveData();
+                });
+            } catch (Exception error) {
+                runOnUiThread(() -> Toast.makeText(this, "Action failed: " + error.getMessage(), Toast.LENGTH_LONG).show());
+            }
+        }).start();
     }
 
     private View buildIncidentRow(String severity, String title, String summary, String gatewayId, String occurredAt) {
