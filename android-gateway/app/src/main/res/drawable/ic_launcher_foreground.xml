@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Speech-bubble body: the single, bold motif reads clearly at launcher size -->
+    <path
+        android:fillColor="#3DD7FF"
+        android:pathData="M37,27 H71 A11,11 0 0 1 82,38 V64 A11,11 0 0 1 71,75 H46 L31,89 V75 H37 A11,11 0 0 1 26,64 V38 A11,11 0 0 1 37,27 Z" />
+    <!-- Forward/relay arrow inside the bubble, in dark navy for high contrast -->
+    <path
+        android:fillColor="#08111F"
+        android:pathData="M42,44 L42,58 L52,58 L52,65 L66,51 L52,37 L52,44 Z" />
+</vector>
