@@ -422,9 +422,13 @@ function createApp(options = {}) {
       }
       if (req.method === 'GET' && req.url === '/api/dashboard') {
         if (!requireAdmin(req, res)) return undefined;
+        // Single-sourced from buildAdminData (same computation as /api/admin/* and /api/ops/*)
+        // so stats never drift between the Gateway App's embedded Control Center and every
+        // other surface. `gateways` (secret/apiKey-redacted) is kept for backward compatibility
+        // with existing clients that read it directly off this endpoint.
         return json(res, 200, {
-          ...store.snapshot(),
-          queues: queue.snapshot()
+          ...buildAdminData(store, queue),
+          gateways: store.publicGateways()
         });
       }
       if (req.method === 'GET' && req.url === '/api/ops/overview') {
