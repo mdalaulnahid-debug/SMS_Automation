@@ -525,6 +525,22 @@ function createApp(options = {}) {
         }));
         return json(res, 200, { jobs });
       }
+      if (req.method === 'POST' && req.url === '/api/gateway/heartbeat') {
+        const body = await readJson(req);
+        if (!isAdmin(req, authConfig) && !isValidGateway(req, body.gatewayId, store, authConfig)) {
+          return json(res, 401, { error: 'Invalid or missing gateway secret.' });
+        }
+        if (!body.gatewayId) return json(res, 400, { error: 'gatewayId required' });
+        store.registerGatewayHeartbeat(body.gatewayId);
+        const gateway = store.getGateway(body.gatewayId);
+        return json(res, 200, {
+          ok: true,
+          gateway: {
+            id: gateway.id,
+            lastSeenAt: gateway.lastSeenAt
+          }
+        });
+      }
       if (req.method === 'POST' && req.url.startsWith('/api/gateway/jobs/') && req.url.endsWith('/ack')) {
         const outboxId = req.url.split('/')[4];
         const body = await readJson(req);

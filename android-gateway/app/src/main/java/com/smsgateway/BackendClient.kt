@@ -258,6 +258,34 @@ object BackendClient {
         }
     }
 
+    fun heartbeatGateway(
+        backendUrl: String,
+        gatewayId: String,
+        gatewaySecret: String = ""
+    ): Boolean {
+        val base = backendUrl.trim().trimEnd('/')
+        if (base.isBlank()) return false
+        val payload = JSONObject().apply {
+            put("gatewayId", gatewayId)
+        }.toString()
+        return try {
+            val builder = Request.Builder()
+                .url("$base/api/gateway/heartbeat")
+                .post(payload.toRequestBody(JSON))
+            if (gatewaySecret.isNotBlank()) builder.header("x-gateway-secret", gatewaySecret)
+            client.newCall(builder.build()).execute().use { r ->
+                if (!r.isSuccessful) {
+                    Log.w(TAG, "heartbeatGateway failed for $gatewayId: HTTP ${r.code}")
+                    return false
+                }
+                true
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "heartbeatGateway failed for $gatewayId: ${e.message}")
+            false
+        }
+    }
+
     fun ackJob(
         backendUrl: String,
         gatewayId: String,

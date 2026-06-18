@@ -9,6 +9,8 @@ object ServiceEvents {
     const val EXTRA_RUNNING = "running"
     const val EXTRA_ERROR = "error"
     const val EXTRA_NO_INTERNET = "no_internet"
+    const val EXTRA_GATEWAY_LIVE = "gateway_live"
+    const val EXTRA_GATEWAY_LIVE_DETAIL = "gateway_live_detail"
 
     fun sendRunning(context: Context) {
         broadcast(context, running = true, error = null)
@@ -34,6 +36,15 @@ object ServiceEvents {
         val intent = Intent(ACTION_STATUS).apply {
             putExtra(EXTRA_RUNNING, true)
             putExtra(EXTRA_NO_INTERNET, false)
+        }
+        LocalBroadcastManager.getInstance(context.applicationContext).sendBroadcast(intent)
+    }
+
+    fun sendGatewayLive(context: Context, live: Boolean, detail: String) {
+        val intent = Intent(ACTION_STATUS).apply {
+            putExtra(EXTRA_RUNNING, true)
+            putExtra(EXTRA_GATEWAY_LIVE, live)
+            putExtra(EXTRA_GATEWAY_LIVE_DETAIL, detail)
         }
         LocalBroadcastManager.getInstance(context.applicationContext).sendBroadcast(intent)
     }

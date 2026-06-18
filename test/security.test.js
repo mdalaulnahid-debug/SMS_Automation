@@ -174,6 +174,34 @@ test('strict gateway mode rejects gateways with no configured secret', async () 
   assert.equal(res.status, 401);
 });
 
+test('gateway heartbeat refreshes last-seen and online state', async () => {
+  const app = appWith({ adminApiKey: 'topsecret' });
+  await call(app, {
+    method: 'POST',
+    url: '/api/gateways/register',
+    headers: { 'content-type': 'application/json', 'x-gateway-secret': 'gp-secret' },
+    body: { gatewayId: 'GP_PHONE_01', host: '192.168.1.50', port: 8080 }
+  });
+  app.store.getGateway('GP_PHONE_01').lastSeenAt = '2000-01-01T00:00:00.000Z';
+
+  const heartbeat = await call(app, {
+    method: 'POST',
+    url: '/api/gateway/heartbeat',
+    headers: { 'content-type': 'application/json', 'x-gateway-secret': 'gp-secret' },
+    body: { gatewayId: 'GP_PHONE_01' }
+  });
+  assert.equal(heartbeat.status, 200);
+  assert.equal(heartbeat.json.ok, true);
+
+  const gateways = await call(app, {
+    method: 'GET',
+    url: '/api/gateways',
+    headers: { 'x-api-key': 'topsecret' }
+  });
+  const gp = gateways.json.gateways.find((gateway) => gateway.id === 'GP_PHONE_01');
+  assert.equal(gp.online, true);
+});
+
 test('audit chain verifies clean and detects tampering', () => {
   const store = new AutomationStore();
   store.audit('a', 'EVENT_ONE', null, { x: 1 });

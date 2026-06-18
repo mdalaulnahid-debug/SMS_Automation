@@ -35,6 +35,9 @@ class MainActivity : AppCompatActivity() {
     private var pulseAnimator: ObjectAnimator? = null
     private var noInternetSnackbar: Snackbar? = null
     private var selectedSimIndex = 0
+    private var backendReachable = false
+    private var gatewayLive = false
+    private var gatewayLiveDetail = "Gateway not live • service stopped"
 
     private val permissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestMultiplePermissions()
@@ -71,6 +74,11 @@ class MainActivity : AppCompatActivity() {
                     this@MainActivity,
                     intent.getBooleanExtra(ServiceEvents.EXTRA_RUNNING, false)
                 )
+            }
+            if (intent.hasExtra(ServiceEvents.EXTRA_GATEWAY_LIVE)) {
+                gatewayLive = intent.getBooleanExtra(ServiceEvents.EXTRA_GATEWAY_LIVE, false)
+                gatewayLiveDetail = intent.getStringExtra(ServiceEvents.EXTRA_GATEWAY_LIVE_DETAIL)
+                    ?: if (gatewayLive) "Gateway live" else "Gateway not live"
             }
             updateUI()
         }
@@ -258,7 +266,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun discoverAndCheckBackend() {
         val savedUrl = Prefs.getBackendUrl(this).trim()
-        binding.tvBackendHealth.text = "Backend: connecting…"
+        binding.tvBackendHealth.text = "Backend: checking reachability…"
         binding.tvBackendHealth.setTextColor(getColor(R.color.text_secondary))
         setBackendDotColor(R.color.warning)
 
@@ -278,8 +286,9 @@ class MainActivity : AppCompatActivity() {
                 null
             }
 
+            backendReachable = connected != null
             if (connected != null) {
-                binding.tvBackendHealth.text = "Backend: connected"
+                binding.tvBackendHealth.text = "Backend: reachable"
                 binding.tvBackendHealth.setTextColor(getColor(R.color.success))
                 setBackendDotColor(R.color.success)
             } else {
@@ -289,6 +298,7 @@ class MainActivity : AppCompatActivity() {
                 binding.tvBackendHealth.setTextColor(getColor(R.color.danger))
                 setBackendDotColor(R.color.danger)
             }
+            updateGatewayLiveStatus()
         }
     }
 
@@ -380,6 +390,31 @@ class MainActivity : AppCompatActivity() {
         }
 
         updateGatewayIdDisplay()
+        updateGatewayLiveStatus()
+    }
+
+    private fun updateGatewayLiveStatus() {
+        val running = Prefs.isServiceEnabled(this)
+        if (!running) {
+            binding.tvPollingStatus.text = "● Gateway not live · service stopped"
+            binding.tvPollingStatus.setTextColor(getColor(R.color.danger))
+            return
+        }
+
+        if (gatewayLive) {
+            binding.tvPollingStatus.text = "● $gatewayLiveDetail"
+            binding.tvPollingStatus.setTextColor(getColor(R.color.success))
+            return
+        }
+
+        if (backendReachable) {
+            binding.tvPollingStatus.text = "● ${gatewayLiveDetail.ifBlank { "Backend reachable · awaiting gateway confirmation" }}"
+            binding.tvPollingStatus.setTextColor(getColor(R.color.warning))
+            return
+        }
+
+        binding.tvPollingStatus.text = "● Gateway polling paused · backend not reachable"
+        binding.tvPollingStatus.setTextColor(getColor(R.color.danger))
     }
 
     private fun startPulse() {

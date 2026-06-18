@@ -86,6 +86,9 @@ class GatewayForegroundService : Service() {
 
     @Volatile private var pollActive = false
     private var pollThread: Thread? = null
+    @Volatile private var lastGatewayHeartbeatMs = 0L
+    @Volatile private var lastGatewayLive = false
+    @Volatile private var lastGatewayLiveDetail = "Awaiting backend confirmation"
 
     private var networkCallback: ConnectivityManager.NetworkCallback? = null
     @Volatile private var hasInternet = true
@@ -227,9 +230,24 @@ class GatewayForegroundService : Service() {
                 val gatewaySecret = Prefs.getApiKey(this@GatewayForegroundService)
                 if (localIp.isNotBlank() && backendUrl.isNotBlank()) {
                     val sm = getSystemService(android.telephony.SubscriptionManager::class.java)
+                    var registeredCount = 0
+                    var totalCount = 0
                     for ((gwId, subId) in Prefs.configuredGateways(this@GatewayForegroundService)) {
+                        totalCount += 1
                         val phoneNumber = readSimPhoneNumber(sm, subId)
-                        BackendClient.registerGateway(backendUrl, gwId, localIp, port, gatewaySecret, phoneNumber)
+                        if (BackendClient.registerGateway(backendUrl, gwId, localIp, port, gatewaySecret, phoneNumber)) {
+                            registeredCount += 1
+                        }
+                    }
+                    if (totalCount > 0) {
+                        publishGatewayLiveStatus(
+                            registeredCount > 0,
+                            if (registeredCount > 0) {
+                                "Gateway live • registered ${registeredCount}/${totalCount} route(s)"
+                            } else {
+                                "Backend reachable • gateway registration not confirmed"
+                            }
+                        )
                     }
                 }
 
@@ -382,7 +400,8 @@ class GatewayForegroundService : Service() {
                     val backendUrl = Prefs.getBackendUrl(this)
                     val secret = Prefs.getApiKey(this)
                     if (backendUrl.isNotBlank()) {
-                        for ((gwId, subId) in Prefs.configuredGateways(this)) {
+                        val configuredGateways = Prefs.configuredGateways(this)
+                        for ((gwId, subId) in configuredGateways) {
                             val jobs = BackendClient.fetchAndClaimJobs(backendUrl, gwId, secret)
                             for (job in jobs) {
                                 try {
@@ -395,9 +414,30 @@ class GatewayForegroundService : Service() {
                                 }
                             }
                         }
+                        val now = System.currentTimeMillis()
+                        if (configuredGateways.isNotEmpty() && now - lastGatewayHeartbeatMs >= 30_000) {
+                            var confirmedRoutes = 0
+                            for ((gwId, _) in configuredGateways) {
+                                if (BackendClient.heartbeatGateway(backendUrl, gwId, secret)) {
+                                    confirmedRoutes += 1
+                                }
+                            }
+                            lastGatewayHeartbeatMs = now
+                            publishGatewayLiveStatus(
+                                confirmedRoutes > 0,
+                                if (confirmedRoutes > 0) {
+                                    "Gateway live • backend confirmed ${confirmedRoutes}/${configuredGateways.size} route(s)"
+                                } else {
+                                    "Backend reachable • awaiting authenticated gateway confirmation"
+                                }
+                            )
+                        }
+                    } else {
+                        publishGatewayLiveStatus(false, "Gateway not live • backend URL missing")
                     }
                 } catch (e: Exception) {
                     Log.w(TAG, "Poll loop error: ${e.message}")
+                    publishGatewayLiveStatus(false, "Backend reachable check failed • poll loop error")
                 }
                 try { Thread.sleep(3_000) } catch (_: InterruptedException) { break }
             }
@@ -506,7 +546,15 @@ class GatewayForegroundService : Service() {
         }
 
         ServiceEvents.sendStopped(this)
+        publishGatewayLiveStatus(false, "Gateway not live • service stopped")
 
+    }
+
+    private fun publishGatewayLiveStatus(live: Boolean, detail: String) {
+        if (lastGatewayLive == live && lastGatewayLiveDetail == detail) return
+        lastGatewayLive = live
+        lastGatewayLiveDetail = detail
+        ServiceEvents.sendGatewayLive(this, live, detail)
     }
 
 
