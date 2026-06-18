@@ -105,9 +105,7 @@ class GatewayForegroundService : Service() {
                 val lag = System.currentTimeMillis() - lastPollAtMs
                 if (lastPollAtMs > 0 && lag > 30_000) {
                     Log.w(TAG, "Poll thread appears dead (${lag}ms since last tick) — restarting")
-                    pollThread?.interrupt()
-                    pollThread = null
-                    startPollLoop()
+                    restartPollLoop("watchdog lag ${lag}ms")
                 }
                 mainHandler.postDelayed(this, 15_000)
             }
@@ -446,6 +444,15 @@ class GatewayForegroundService : Service() {
         pollThread?.start()
         // Start poll-thread watchdog — checks every 15s that the thread is still making progress.
         mainHandler.postDelayed(pollWatchdogRunnable, 15_000)
+    }
+
+    private fun restartPollLoop(reason: String) {
+        Log.w(TAG, "Restarting poll loop: $reason")
+        pollActive = false
+        pollThread?.interrupt()
+        pollThread = null
+        lastPollAtMs = System.currentTimeMillis()
+        startPollLoop()
     }
 
     private fun registerNetworkMonitor() {
