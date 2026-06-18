@@ -99,6 +99,22 @@
       .detail-value { margin-top: 8px; color: var(--text-primary); line-height: 1.55; }
       .raw-reply { white-space: pre-wrap; padding: 14px; border-radius: 14px; background: var(--bg-panel-2); border: 1px solid var(--divider); font-family: var(--font-mono); font-size: 12px; }
       .audit-row-detail { margin-top: 8px; color: var(--text-secondary); font-size: 12px; line-height: 1.5; }
+      .audit-summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+      .audit-kpi { padding: 16px; border-radius: 18px; border: 1px solid var(--divider); background: var(--bg-panel); }
+      .audit-kpi-value { font-size: 24px; font-weight: 800; letter-spacing: -0.04em; }
+      .audit-kpi-label { margin-top: 6px; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
+      .audit-kpi-subtext { margin-top: 6px; color: var(--text-secondary); font-size: 12px; line-height: 1.45; }
+      .audit-toolbar { display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; }
+      .audit-filter-group { display:flex; gap:8px; flex-wrap:wrap; }
+      .audit-filter {
+        padding: 8px 12px; border-radius: 999px; border: 1px solid var(--divider); background: var(--bg-panel);
+        color: var(--text-secondary); font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; cursor:pointer;
+      }
+      .audit-filter.active { background: var(--accent-bg); border-color: var(--accent-border); color: var(--accent); }
+      .audit-row-detail-grid { margin-top: 10px; display:grid; gap:8px; }
+      .audit-detail-line { display:grid; gap:3px; }
+      .audit-detail-label { color: var(--text-muted); font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
+      .audit-detail-value { color: var(--text-secondary); font-family: var(--font-mono); font-size: 12px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
       .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
       .tool-panel { padding: 18px; display: grid; gap: 12px; }
       .tool-title { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 800; }
@@ -153,7 +169,7 @@
           <button class="sidebar-item active" data-section="overview"><span class="sidebar-label"><span class="material-symbols-outlined">dashboard</span>Overview</span></button>
           <button class="sidebar-item" data-section="requests"><span class="sidebar-label"><span class="material-symbols-outlined">fact_check</span>Requests & Replies</span><span class="sidebar-count" id="countRequests">0</span></button>
           <button class="sidebar-item" data-section="unmatched"><span class="sidebar-label"><span class="material-symbols-outlined">crisis_alert</span>Unmatched SMS</span><span class="sidebar-count" id="countUnmatched">0</span></button>
-          <button class="sidebar-item" data-section="audit"><span class="sidebar-label"><span class="material-symbols-outlined">policy</span>Audit</span></button>
+          <button class="sidebar-item" data-section="audit"><span class="sidebar-label"><span class="material-symbols-outlined">policy</span>Audit</span><span class="sidebar-count" id="countAudit">0</span></button>
           <button class="sidebar-item" data-section="tools"><span class="sidebar-label"><span class="material-symbols-outlined">construction</span>Tools</span></button>
         </aside>
 
@@ -264,9 +280,30 @@
               <button class="btn-secondary" onclick="exportAuditCsv()">Export CSV</button>
             </div>
             <div class="banner banner-ok" id="chainIntegrity"></div>
+            <div class="audit-summary-grid">
+              <div class="audit-kpi">
+                <div class="audit-kpi-value" id="auditTotalCount">0</div>
+                <div class="audit-kpi-label">Visible Events</div>
+                <div class="audit-kpi-subtext">Rows currently loaded into the admin audit feed.</div>
+              </div>
+              <div class="audit-kpi">
+                <div class="audit-kpi-value danger" id="validationFailCount">0</div>
+                <div class="audit-kpi-label">Validation Failures</div>
+                <div class="audit-kpi-subtext">Rejected requests blocked before queueing or dispatch.</div>
+              </div>
+              <div class="audit-kpi">
+                <div class="audit-kpi-value" id="validationFailRecentCount">0</div>
+                <div class="audit-kpi-label">Recent 24h</div>
+                <div class="audit-kpi-subtext">Quick signal for training gaps, misuse, or probing attempts.</div>
+              </div>
+            </div>
             <section class="data-surface">
-              <div class="table-toolbar">
+              <div class="table-toolbar audit-toolbar">
                 <input id="auditSearch" class="table-search" type="text" placeholder="Search action, actor, request id, or details…" />
+                <div class="audit-filter-group">
+                  <button id="auditFilterAll" class="audit-filter active" type="button">All Events</button>
+                  <button id="auditFilterValidation" class="audit-filter" type="button">Validation Failures</button>
+                </div>
               </div>
               <div class="list-shell" id="auditList"></div>
             </section>

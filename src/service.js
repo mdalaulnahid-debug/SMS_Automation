@@ -1,7 +1,7 @@
 'use strict';
 
 const { OPERATORS, STATUSES, DISPATCH_STATUSES, TERMINAL_DISPATCH_STATUSES } = require('./domain');
-const { parseRequestText, INVALID_FORMAT_MESSAGE } = require('./parser');
+const { parseRequestText } = require('./parser');
 const { analyzeOperatorReply, saveMatchedReplyKeywords } = require('./replyAnalyzer');
 
 const DEFAULT_REPLY_WINDOW_MS = 10 * 60 * 1000;
@@ -26,10 +26,23 @@ class AutomationService {
   async submitRequest(input) {
     const parsed = parseRequestText(input.text);
     if (!parsed.ok) {
+      this.store.audit('system', 'REQUEST_VALIDATION_FAILED', null, {
+        requesterId: input.requesterId || null,
+        requesterName: input.requesterName || null,
+        channel: input.channel || 'manual',
+        chatId: input.chatId || null,
+        sourceMessageId: input.sourceMessageId || null,
+        rawText: input.text,
+        normalizedText: parsed.normalizedText,
+        requestType: parsed.requestType,
+        errorCode: parsed.errorCode,
+        errors: parsed.errors
+      });
       return {
         ok: false,
+        errorCode: parsed.errorCode,
         errors: parsed.errors,
-        replyText: INVALID_FORMAT_MESSAGE
+        replyText: parsed.replyText
       };
     }
 
@@ -80,7 +93,7 @@ class AutomationService {
       operator: parsed.targetOperators[0],
       targetOperators: parsed.targetOperators,
       requestType: parsed.requestType,
-      payload: parsed.payload,
+      payload: parsed.canonicalPayload,
       rawRequestText: input.text,
       testDestination: input.testDestination || null
     });

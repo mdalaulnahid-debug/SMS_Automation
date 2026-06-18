@@ -1,14 +1,14 @@
 # Progress Tracker
 
-Last updated: **2026-06-18 - Android admin app command-center redesign + Stitch handoff**
+Last updated: **2026-06-18 - Backend intake v2 validation implemented**
 
 ---
 
 ## Current Stage
 
-**Backend and production operator flow remain live. A separate Android admin app now exists and connects to the backend, but its UI is still mid-redesign.**
+**Backend and production operator flow remain live. Backend intake validation is now hardened and canonicalized before queueing, and the separate Android admin app still remains mid-redesign.**
 
-Git is current through commit `ad76496` on `main`.
+Git is current through local commit `c1582c5` on `main` before the latest uncommitted backend validation/doc updates.
 
 ## Documentation Baseline
 
@@ -36,36 +36,35 @@ Important portability note:
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Android admin app live backend connectivity | Done | Uses saved backend URL + admin API key and reads real backend admin endpoints |
-| Android admin app shell redesign | Done | Header, live strip, overview posture framing, and settings access reworked |
-| Dedicated admin app settings surface | Done | Backend URL and admin key moved out of overview into a separate settings panel |
-| Android admin overview redesign | Done | Overview now focuses on posture, KPI signal, fleet snapshot, and recent escalations |
-| Android admin bottom nav refresh | Done | Custom vector icons plus compact tags |
-| Stitch design handoff organization | Done | Design screenshots, brief, and raw exports collected under `docs/Design/android-admin-stitch/` |
-| Git handoff for the UI pass | Done | Pushed to `main` in commit `ad76496` |
+| Backend intake validator v2 | Done | Parser now returns structured validation result with canonical request text and normalized failures |
+| Canonical dispatch message generation | Done | Valid requests now dispatch normalized `COMMAND identifier1 ...` text instead of preserving messy spacing |
+| Same-operator batch enforcement | Done | `LCL`, `LRL`, and `MS-NID` now reject mixed-operator batches instead of routing ambiguously |
+| Invalid request audit visibility | Done | Validation failures now write `REQUEST_VALIDATION_FAILED` audit events with raw text and reason |
+| Backend regression coverage | Done | Parser acceptance/rejection cases and queue-blocking integration test added |
+| Android gateway app changes | Not done by design | This slice intentionally left gateway runtime untouched |
+| Android admin UI polish | Deferred | Validation slice completed first, per architecture rule |
 
 ### Current caution
 
+- Telegram/web/mobile callers should now rely on normalized backend validation failures instead of assuming only a generic parse error.
 - The Android admin app is functional and connected, but the UI still needs another fidelity pass to better match the Stitch references.
-- Backend workflow logic was intentionally not changed during this redesign pass.
+- There is still a local uncommitted change in `data/reply-patterns.json`; do not overwrite it casually during later work.
 
 ### Important files for the current session
 
-- `android-gateway/adminapp/src/main/java/com/smsgateway/admin/AdminMainActivity.java`
-- `android-gateway/adminapp/src/main/java/com/smsgateway/admin/AdminBackendClient.java`
-- `android-gateway/adminapp/src/main/java/com/smsgateway/admin/AdminDesignSystem.java`
-- `android-gateway/adminapp/src/main/res/layout/activity_admin_main.xml`
-- `android-gateway/adminapp/src/main/res/layout/include_admin_overview.xml`
-- `android-gateway/adminapp/src/main/res/layout/include_admin_settings.xml`
+- `src/parser.js`
+- `src/service.js`
+- `src/domain.js`
+- `test/workflow.test.js`
+- `README.md`
+- `docs/system-design-v2.md`
 - `docs/CHANGELOG-2026-06-18.md`
-- `docs/Design/android-admin-stitch/README.md`
-- `docs/Design/android-admin-stitch/DESIGN.md`
 
 ### Current versions
 
 | Surface | State | Notes |
 |---------|-------|-------|
-| Backend | Live | Production backend is running; verify VPS sync against `ad76496` if needed |
+| Backend | Live with stronger intake guardrails | Request format is validated before queueing or dispatch; invalid requests are audit-visible and never sent to phones |
 | Android gateway app | Existing | Not reworked in this session |
 | Android admin app | Debug build active | Separate supervisor app with live API integration and redesign in progress |
 
@@ -77,9 +76,9 @@ Important portability note:
 
 ### Recommended next step
 
-1. Pull latest `main` on the VPS and restart PM2 if not already updated
+1. Surface `REQUEST_VALIDATION_FAILED` events clearly in the web/admin audit experience
 2. Continue Android admin UI refinement against Stitch references
-3. Then move to the web admin and web operations V2 surfaces
+3. Then modernize web admin and web operations UI around the now-stable intake contract
 
 ---
 
@@ -102,7 +101,9 @@ See `config/vps.md` (gitignored).
 
 ### Backend
 
-- Request parsing, operator routing, per-operator queues
+- Structured request validation, operator routing, per-operator queues
+- Canonical dispatch message generation
+- Audit-visible validation failures that do not enter queue/outbox
 - Trusted-sender filter and reply matching
 - Dashboard review actions (reject, retry, manual match)
 - SQLite persistence
@@ -132,5 +133,6 @@ See `config/vps.md` (gitignored).
 
 1. Increase Android admin app visual fidelity against the Stitch package
 2. Refine nav, rows, and per-screen modules so the app feels less boxy
-3. Sync VPS backend with latest `main` if still behind
-4. Resume V2 work on web admin and web operations surfaces
+3. Surface backend validation failures more clearly in admin/web audit views
+4. Sync VPS backend with latest `main` if still behind
+5. Resume V2 work on web admin and web operations surfaces

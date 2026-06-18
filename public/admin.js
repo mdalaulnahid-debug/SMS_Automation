@@ -5,6 +5,7 @@ let requestsData = [];
 let repliesData = [];
 let unmatchedData = [];
 let auditLogs = [];
+let auditFilter = 'all';
 let selectedRequestId = null;
 let selectedUnmatchedId = null;
 
@@ -319,6 +320,92 @@ function renderAuditList() {
     </div>`).join('') || '<div class="empty">No audit entries match the current search.</div>';
 }
 
+function filteredAuditLogs(search = '') {
+  return auditLogs.filter((log) => {
+    if (auditFilter === 'validation' && log.action !== 'REQUEST_VALIDATION_FAILED') return false;
+    if (!search) return true;
+    return `${log.action} ${log.actor || ''} ${log.requestId || ''} ${JSON.stringify(log.details || {})}`.toLowerCase().includes(search);
+  });
+}
+
+function renderAuditSummary() {
+  const validationRows = auditLogs.filter((log) => log.action === 'REQUEST_VALIDATION_FAILED');
+  const last24hCutoff = Date.now() - (24 * 60 * 60 * 1000);
+  const validationRecent = validationRows.filter((log) => Date.parse(log.timestamp) >= last24hCutoff);
+  document.getElementById('auditTotalCount').textContent = auditLogs.length;
+  document.getElementById('validationFailCount').textContent = validationRows.length;
+  document.getElementById('validationFailRecentCount').textContent = validationRecent.length;
+  document.getElementById('countAudit').textContent = validationRows.length;
+}
+
+function renderAuditDetails(log) {
+  if (log.action === 'REQUEST_VALIDATION_FAILED') {
+    const details = log.details || {};
+    return `
+      <div class="audit-row-detail-grid">
+        <div class="audit-detail-line">
+          <div class="audit-detail-label">Reason</div>
+          <div class="audit-detail-value">${esc((details.errors || []).join('; ') || details.errorCode || 'Validation rejected')}</div>
+        </div>
+        <div class="audit-detail-line">
+          <div class="audit-detail-label">Request Context</div>
+          <div class="audit-detail-value">${esc([
+            details.requesterName ? `Requester: ${details.requesterName}` : null,
+            details.requesterId ? `ID: ${details.requesterId}` : null,
+            details.channel ? `Channel: ${details.channel}` : null,
+            details.chatId ? `Chat: ${details.chatId}` : null
+          ].filter(Boolean).join(' | ') || 'No requester metadata')}</div>
+        </div>
+        <div class="audit-detail-line">
+          <div class="audit-detail-label">Raw Message</div>
+          <div class="audit-detail-value">${esc(details.rawText || '')}</div>
+        </div>
+        <div class="audit-detail-line">
+          <div class="audit-detail-label">Normalized Input</div>
+          <div class="audit-detail-value">${esc(details.normalizedText || '')}</div>
+        </div>
+        <div class="audit-detail-line">
+          <div class="audit-detail-label">Error Code</div>
+          <div class="audit-detail-value">${esc(details.errorCode || '')}</div>
+        </div>
+      </div>`;
+  }
+  return `<div class="audit-row-detail">${esc(JSON.stringify(log.details || {}))}</div>`;
+}
+
+function auditChipClass(log) {
+  if (log.action === 'REQUEST_VALIDATION_FAILED') return 'chip chip-danger';
+  return 'chip chip-muted';
+}
+
+function auditChipLabel(log) {
+  if (log.action === 'REQUEST_VALIDATION_FAILED') return 'BLOCKED';
+  return (log.actor || 'system').toUpperCase();
+}
+
+function setAuditFilter(nextFilter) {
+  auditFilter = nextFilter;
+  document.getElementById('auditFilterAll').classList.toggle('active', nextFilter === 'all');
+  document.getElementById('auditFilterValidation').classList.toggle('active', nextFilter === 'validation');
+  renderAuditList();
+}
+
+function renderAuditList() {
+  const search = document.getElementById('auditSearch').value.trim().toLowerCase();
+  const rows = filteredAuditLogs(search);
+  document.getElementById('auditList').innerHTML = rows.slice().reverse().map((log) => `
+    <div class="list-item row-accent ${statusTone(log.action)}">
+      <div class="item-head">
+        <div>
+          <div class="item-title">${esc(log.action.replaceAll('_', ' '))}</div>
+          <div class="item-meta">${esc(log.actor || 'system')} · ${log.requestId ? `${esc(log.requestId)} · ` : ''}${relativeTime(log.timestamp)}</div>
+        </div>
+        <span class="${auditChipClass(log)}">${esc(auditChipLabel(log))}</span>
+      </div>
+      ${renderAuditDetails(log)}
+    </div>`).join('') || '<div class="empty">No audit entries match the current search.</div>';
+}
+
 function exportAuditCsv() {
   downloadCsv(`audit-log-${new Date().toISOString().slice(0, 10)}.csv`, auditLogsToCsv(auditLogs));
 }
@@ -326,6 +413,8 @@ function exportAuditCsv() {
 document.getElementById('requestSearch').addEventListener('input', renderRequestList);
 document.getElementById('unmatchedSearch').addEventListener('input', renderUnmatchedList);
 document.getElementById('auditSearch').addEventListener('input', renderAuditList);
+document.getElementById('auditFilterAll').addEventListener('click', () => setAuditFilter('all'));
+document.getElementById('auditFilterValidation').addEventListener('click', () => setAuditFilter('validation'));
 document.getElementById('provUrl').value = window.location.origin;
 
 document.getElementById('requestForm').addEventListener('submit', async (event) => {
@@ -361,6 +450,7 @@ async function refreshAdmin() {
   renderOverview();
   renderRequestList();
   renderUnmatchedList();
+  renderAuditSummary();
   renderAuditList();
   const integrity = auditPayload.integrity?.ok
     ? `${auditPayload.integrity.count} audit events verified`

@@ -6,7 +6,7 @@ This repo now has **three actively relevant application surfaces**:
 
 | Part | Path | Role |
 |------|------|------|
-| **Backend** | `src/` | Node.js server: parse requests, queue per operator, call phone gateways, match replies, post replies via Telegram bridge |
+| **Backend** | `src/` | Node.js server: validate and canonicalize requests, queue per operator, call phone gateways, match replies, post replies via Telegram bridge |
 | **Android Gateway App** | `android-gateway/app/` | Kotlin gateway runtime app on each operator phone: HTTP server for outbound SMS, SMS receiver for inbound, webhook forward to backend |
 | **Android Admin App** | `android-gateway/adminapp/` | Separate Android supervisor console for overview, approvals, gateways, incidents, audit, and backend-admin connectivity |
 
@@ -176,9 +176,9 @@ Admin app notes:
 ```text
 Telegram group / dashboard / app test panel
   → POST /api/requests
-  → backend parser (LRL, LCL, MS-NID, NID-MS, IMEI-MS)
+  → backend validation + canonicalization
   → per-operator queue
-  → POST http://PHONE_IP:8080/send-sms
+  → gateway outbox job
   → phone sends SMS via SIM
   → operator (or test phone) replies via SMS
   → phone forwards POST /api/sms/inbound
@@ -195,16 +195,36 @@ Telegram group / dashboard / app test panel
 
 | Type | Payload | Routed to |
 |------|---------|-----------|
-| `LRL` | MSISDN (01xxxxxxxxx) | Operator matching prefix (GP 013/017, Robi 016/018, BL 014/019) |
-| `LCL` | MSISDN | Same as LRL |
-| `MS-NID` | MSISDN | Operator matching prefix — same as LRL (mobile→NID, only the owning operator can answer) |
-| `NID-MS` | NID | All three (NID→mobile, could be on any network) |
-| `IMEI-MS` | IMEI | All three |
+| `LRL` | 1-5 MSISDNs (01xxxxxxxxx) | One operator only, derived from prefix (GP 013/017, Robi 016/018, BL 014/019) |
+| `LCL` | 1-5 MSISDNs | Same operator constraint as LRL |
+| `MS-NID` | 1-5 MSISDNs | Same operator constraint as LRL |
+| `NID-MS` | 1-5 NIDs | All three operators |
+| `IMEI-MS` | 1-5 IMEIs | All three operators |
 
-Outbound SMS body is always exactly: `REQUEST_TYPE VALUE` (e.g. `LRL 01712345678`). No silent reference in the SMS.
+Outbound SMS body is always canonicalized to:
 
-Multi-number batching per the official rule sheet is not implemented yet — see
-[`docs/multi-number-batching-plan.md`](docs/multi-number-batching-plan.md).
+```text
+COMMAND identifier1 identifier2 identifier3 identifier4 identifier5
+```
+
+Examples:
+
+- `LCL    01710000000     01720000001` becomes `LCL 01710000000 01720000001`
+- `lrl 01712345678` becomes `LRL 01712345678`
+
+The backend does not silently clean unsafe identifiers such as `+880...`, `01710-...`, or comma/slash-separated values.
+
+## Intake Validation Rules
+
+- Supported commands only: `IMEI-MS`, `LCL`, `LRL`, `MS-NID`, `NID-MS`
+- Command must be the first token
+- Message may contain 1 to 5 identifiers
+- Only one request type is allowed per message
+- Repeating the command keyword inside the payload is rejected
+- Identifiers must be digits only
+- Harmless whitespace is normalized
+- Invalid requests are rejected before queueing and are not sent to Android gateway phones
+- Validation failures are preserved in audit with raw text and structured reason
 
 ---
 
@@ -249,6 +269,13 @@ For pre-launch testing with a phone you control instead of operator shortcode `1
 **Auth (Phase 2):** admin endpoints need `x-api-key` (or `Authorization: Bearer`) matching
 `config/auth.json` → `adminApiKey`; `/api/sms/inbound` and `/api/gateways/register` need the
 per-gateway `x-gateway-secret`. Empty `adminApiKey` = dev mode (auth off). Public: `/api/health`.
+
+`POST /api/requests` now returns normalized validation failures with:
+
+- `ok: false`
+- `errorCode`
+- `errors`
+- `replyText`
 
 Phone gateway contract: `docs/PHONE_GATEWAY_CONTRACT.md`
 
@@ -359,5 +386,6 @@ When continuing this project:
 12. Build admin APK: `cd android-gateway && gradlew.bat --offline :adminapp:assembleDebug`
 13. Start backend: `start-backend.bat` from repo root or run `setup-workstation.bat` first on a fresh PC
 14. Tests: `node --test`
+15. Intake validation source of truth: `src/parser.js`
 
 Safety principles (from `vision.md`): never alter operator SMS commands; only trust configured senders; manual review before posting reply; one active request per operator phone unless reference matching is reliable.

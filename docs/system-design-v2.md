@@ -31,6 +31,12 @@ Important rule:
 
 All business rules must live in the backend platform.
 
+The intake boundary is now part of that rule:
+
+- request parsing and validation happen in the backend before queueing
+- clients may assist with formatting, but they are not trusted as the workflow authority
+- Android gateway devices must only ever receive backend-approved canonical dispatch text
+
 Clients may differ in:
 
 - layout
@@ -47,6 +53,25 @@ Clients must not differ in:
 - matching rules
 - audit semantics
 - approval semantics
+- validation semantics
+
+## 3a. Intake Validation Boundary
+
+Every human-originated request must pass through a deterministic backend validation layer before it can become a request record or an operator dispatch.
+
+Current validation contract:
+
+- supported commands: `IMEI-MS`, `LCL`, `LRL`, `MS-NID`, `NID-MS`
+- harmless whitespace variance is normalized
+- canonical dispatch text is generated as `COMMAND identifier1 identifier2 ...`
+- invalid requests do not enter the normal request queue
+- invalid requests do not create operator outbox jobs
+- invalid requests are written to audit as structured validation-failure events
+
+Current enterprise rule:
+
+- for `LCL`, `LRL`, and `MS-NID`, all identifiers in one message must resolve to the same operator group
+- for `NID-MS` and `IMEI-MS`, fan-out to all operators remains valid
 
 ## 3. Component Diagram
 
@@ -158,6 +183,7 @@ server process.
 - `GET /api/ops/gateways`
 - `GET /api/ops/replies`
 - `GET /api/ops/unmatched`
+- `GET /api/ops/validation-failures` (future view-model endpoint if audit traffic becomes too dense)
 
 ### Admin API
 
@@ -182,6 +208,7 @@ Design rule:
 
 - UI clients should prefer purpose-built view endpoints over raw snapshots
 - admin actions should be command-style endpoints with clear audit entries
+- validation failures should remain observable to admins even when they are not persisted as normal request records
 
 ## 6. Client Split
 
@@ -303,6 +330,7 @@ Characteristics:
 3. Assign each gateway device a unique credential and revocation status
 4. Separate reviewer permissions from admin permissions
 5. Add rate limits and suspicious-action monitoring to all write endpoints
+6. Treat repeated validation failures as a signal for misuse, training gaps, or malicious probing
 
 ### Secret handling
 
@@ -323,6 +351,15 @@ Every privileged action should record:
 - timestamp
 - request correlation id
 
+Validation failures should also record:
+
+- raw request text
+- normalized text
+- request channel
+- requester identity, if known
+- stable error code
+- human-readable failure reason
+
 ## 9. Data Model Direction
 
 Core entities:
@@ -339,6 +376,8 @@ Core entities:
   - human actor and permissions
 - **Audit Event**
   - immutable action record
+- **Validation Failure Event**
+  - currently represented as an audit event, not a first-class request row
 - **Incident**
   - future entity for escalations, device issues, suspicious behavior
 
@@ -349,8 +388,9 @@ Core entities:
 3. Background timers owned by a runtime coordinator, not hidden inside factories
 4. Config loading must be deterministic and overrideable by environment
 5. UI clients consume stable view models, not random internal store shapes
-6. Every architectural change updates the docs in the same PR
-7. No mixing gateway runtime concerns with supervisor/admin concerns in the same Android app
+6. Request validation rules, command lists, and canonicalization policy live in one backend module
+7. Every architectural change updates the docs in the same PR
+8. No mixing gateway runtime concerns with supervisor/admin concerns in the same Android app
 
 ## 11. Immediate Design Decisions
 
@@ -364,8 +404,9 @@ These should be treated as locked unless there is a strong reason to revisit:
 
 ## 12. Suggested Next Implementation Order
 
-1. Formalize view-model/API boundaries for web/admin/admin-android
-2. Split human auth from machine auth
-3. Design the Android admin app scope and navigation
-4. Refactor web/admin UI around the new information architecture
-5. Add incident/alert model for operational maturity
+1. Surface validation-failure visibility cleanly in web/admin audit views
+2. Formalize view-model/API boundaries for web/admin/admin-android
+3. Split human auth from machine auth
+4. Design the Android admin app scope and navigation
+5. Refactor web/admin UI around the new information architecture
+6. Add incident/alert model for operational maturity

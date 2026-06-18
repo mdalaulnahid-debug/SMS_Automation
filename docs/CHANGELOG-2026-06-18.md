@@ -4,6 +4,10 @@ This file is the handoff log for another PC, another developer, or another codin
 
 ## What Changed
 
+- Implemented backend intake validation v2 in `src/parser.js`, `src/service.js`, and `src/domain.js`
+- Added canonical request normalization before queueing or dispatch
+- Added structured validation failure audit events (`REQUEST_VALIDATION_FAILED`)
+- Added parser and integration regression tests for valid/invalid official request formats
 - Added and iterated the separate Android admin app under `android-gateway/adminapp/`
 - Connected the Android admin app to the live backend using saved backend URL + admin API key
 - Updated the Android admin app shell toward the V2 command-center direction
@@ -19,15 +23,31 @@ This file is the handoff log for another PC, another developer, or another codin
 
 - `a34c82b` - Implement V2 admin surfaces and Android admin app
 - `ad76496` - Refine Android admin app command-center UI
+- Local working tree now also contains uncommitted backend validation/doc updates after `c1582c5`
 
 ## Locked Product Decisions
 
 - Backend remains the single workflow authority
+- Backend validates request format before queueing or dispatching
+- Invalid requests must never be sent to Android gateway phones
 - Web operations UI, web admin console, Android gateway app, and separate Android admin app remain separate surfaces
 - Android admin app must stay separate from the Android gateway app
 - Admin capability remains available from both web admin and Android admin
 - Telegram remains the preferred automation surface
 - UI should keep moving away from amateur boxy dashboards toward a professional command-center feel
+
+## Current Backend Intake State
+
+Behavior now:
+
+- Supported commands: `IMEI-MS`, `LCL`, `LRL`, `MS-NID`, `NID-MS`
+- Harmless whitespace is normalized
+- Canonical dispatch text is generated before gateway outbox creation
+- `LCL`, `LRL`, and `MS-NID` reject mixed-operator batches
+- `NID-MS` and `IMEI-MS` continue to fan out to all operators
+- Invalid requests return normalized `errorCode`, `errors`, and `replyText`
+- Invalid requests do not create normal request rows and do not enter queue/outbox
+- Validation failures are still visible through the audit path
 
 ## Current Android Admin App State
 
@@ -63,9 +83,9 @@ Behavior now:
 
 ## What Was Not Changed
 
-- Backend workflow logic was not redesigned in this pass
 - Android gateway app behavior was not reworked in this pass
 - Web surfaces were not finalized in this pass
+- Android admin UI was not further redesigned during the backend validation slice
 
 ## Build / Run Notes
 
@@ -132,11 +152,12 @@ Important note:
 
 ## Known Gaps / Next Best Work
 
-1. Continue improving Android admin screen fidelity against the Stitch references
-2. Make the bottom nav less blocky by moving from filled tabs toward a slimmer active-state marker
-3. Refine approvals, gateways, incidents, and audit rows so they feel more custom and less text-heavy
-4. Continue V2 redesign on web admin and web operations surfaces
-5. Keep docs synchronized after each visible UI pass
+1. Surface validation failure events more clearly in the web/admin audit experience
+2. Continue improving Android admin screen fidelity against the Stitch references
+3. Make the bottom nav less blocky by moving from filled tabs toward a slimmer active-state marker
+4. Refine approvals, gateways, incidents, and audit rows so they feel more custom and less text-heavy
+5. Continue V2 redesign on web admin and web operations surfaces
+6. Keep docs synchronized after each visible UI pass
 
 ## Safe Starting Point For Another Agent
 
@@ -145,5 +166,6 @@ Important note:
 3. Read `docs/system-design-v2.md` and `docs/ui-design-guide-v2.md`
 4. Review `docs/Design/android-admin-stitch/README.md` and `DESIGN.md`
 5. Inspect `android-gateway/adminapp/`
-6. Build the admin app before making UI changes
-7. Avoid changing backend workflow logic unless explicitly requested
+6. Inspect `src/parser.js`, `src/service.js`, and `test/workflow.test.js` for the intake contract
+7. Build the admin app before making UI changes
+8. Avoid changing Android gateway runtime unless explicitly requested

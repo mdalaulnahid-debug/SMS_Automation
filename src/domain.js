@@ -129,8 +129,11 @@ function targetOperatorsForRequest(requestType, payload) {
   const definition = REQUEST_DEFINITIONS[requestType];
   if (!definition) return [];
   if (definition.target === 'ALL_OPERATORS') return Object.keys(OPERATORS);
-  const operator = operatorForMsisdn(payload);
-  return operator ? [operator] : [];
+  const identifiers = Array.isArray(payload) ? payload : [payload];
+  const routed = identifiers.map((identifier) => operatorForMsisdn(identifier));
+  if (routed.some((operator) => !operator)) return [];
+  const uniqueOperators = [...new Set(routed)];
+  return uniqueOperators.length === 1 ? uniqueOperators : [];
 }
 
 function formatOperatorSms(request, operatorKey) {

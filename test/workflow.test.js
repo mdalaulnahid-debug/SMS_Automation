@@ -17,18 +17,72 @@ function createHarness(gatewayConfig = {}) {
   return { store, queue, smsGateway, service };
 }
 
-test('parses strict operator request format', () => {
-  const parsed = parseRequestText('@bot LRL 01712345678');
+function assertInvalidParse(input, expectedCode, expectedMessagePattern) {
+  const parsed = parseRequestText(input);
+  assert.equal(parsed.ok, false);
+  assert.equal(parsed.errorCode, expectedCode);
+  if (expectedMessagePattern) {
+    assert.match(parsed.replyText, expectedMessagePattern);
+  }
+}
+
+test('parses canonicalized multi-identifier request format', () => {
+  const parsed = parseRequestText('@bot   lrl   01712345678   01799999999');
   assert.equal(parsed.ok, true);
   assert.equal(parsed.requestType, 'LRL');
-  assert.equal(parsed.payload, '01712345678');
+  assert.deepEqual(parsed.identifiers, ['01712345678', '01799999999']);
+  assert.equal(parsed.payload, '01712345678 01799999999');
+  assert.equal(parsed.canonicalRequestText, 'LRL 01712345678 01799999999');
   assert.deepEqual(parsed.targetOperators, ['GP']);
 });
 
-test('rejects invalid request format with correction message', () => {
-  const parsed = parseRequestText('hello world');
-  assert.equal(parsed.ok, false);
-  assert.match(parsed.correctionMessage, /Valid request types: LRL, LCL, MS-NID, NID-MS, IMEI-MS/);
+test('parses all-operator request with five identifiers exactly', () => {
+  const parsed = parseRequestText('NID-MS 4246780000 5246780000 6246780000 7246780000 8246780000');
+  assert.equal(parsed.ok, true);
+  assert.equal(parsed.requestType, 'NID-MS');
+  assert.equal(parsed.canonicalPayload, '4246780000 5246780000 6246780000 7246780000 8246780000');
+  assert.deepEqual(parsed.targetOperators, ['GP', 'ROBI', 'BANGLALINK']);
+});
+
+test('rejects invalid request format with normalized correction message', () => {
+  assertInvalidParse('hello world', 'UNSUPPORTED_COMMAND', /Supported commands: IMEI-MS, LCL, LRL, MS-NID, NID-MS/);
+});
+
+test('rejects empty request message', () => {
+  assertInvalidParse('   ', 'EMPTY_MESSAGE', /Use English capital command/);
+});
+
+test('rejects request with command but no identifiers', () => {
+  assertInvalidParse('LCL', 'MISSING_IDENTIFIERS', /at least one identifier/i);
+});
+
+test('rejects more than five identifiers', () => {
+  assertInvalidParse(
+    'LCL 01710000000 01710000001 01710000002 01710000003 01710000004 01710000005',
+    'TOO_MANY_IDENTIFIERS',
+    /Maximum 5 identifiers/
+  );
+});
+
+test('rejects repeated command keyword in same message', () => {
+  assertInvalidParse('MS-NID 01810000000 MS-NID 01820000001', 'REPEATED_COMMAND', /Do not repeat/);
+});
+
+test('rejects mixed request types in same message', () => {
+  assertInvalidParse('LCL 01710000000 LRL 01720000001', 'MIXED_REQUEST_TYPES', /Only one request type/);
+});
+
+test('rejects identifiers with symbols instead of silently cleaning them', () => {
+  assertInvalidParse('LCL +8801710000000', 'INVALID_IDENTIFIER_CHARS', /digits only/);
+  assertInvalidParse('NID-MS 4246780000/5246780000', 'INVALID_IDENTIFIER_CHARS', /digits only/);
+});
+
+test('rejects invalid identifier shape after tokenization', () => {
+  assertInvalidParse('LCL 01710 000000', 'INVALID_IDENTIFIER_FORMAT', /Use English capital command/);
+});
+
+test('rejects same request type across mixed operators', () => {
+  assertInvalidParse('LCL 01710000000 01820000001', 'OPERATOR_MISMATCH', /multiple operators/);
 });
 
 test('submits request, sends SMS, and waits for operator reply', async () => {
@@ -46,6 +100,40 @@ test('submits request, sends SMS, and waits for operator reply', async () => {
   assert.equal(store.smsOutbox[0].gatewayId, 'GP_PHONE_01');
   assert.equal(store.smsOutbox[0].messageBody, 'LRL 01712345678');
   assert.match(result.request.silentReference, /^SR/);
+});
+
+test('submits canonicalized request text to queue and gateway dispatch', async () => {
+  const { store, service } = createHarness();
+  const result = await service.submitRequest({
+    chatId: 'operations',
+    requesterName: 'Officer Rahim',
+    requesterId: '8801700000000',
+    text: '  lcl \n 01712345678   01799999999 '
+  });
+
+  assert.equal(result.ok, true);
+  assert.equal(result.request.payload, '01712345678 01799999999');
+  assert.equal(store.smsOutbox.length, 1);
+  assert.equal(store.smsOutbox[0].messageBody, 'LCL 01712345678 01799999999');
+});
+
+test('invalid request does not enter request queue and writes audit failure', async () => {
+  const { store, service } = createHarness();
+  const result = await service.submitRequest({
+    chatId: 'operations',
+    requesterName: 'Officer Rahim',
+    requesterId: '8801700000000',
+    text: 'LCL 01710000000 LRL 01720000001'
+  });
+
+  assert.equal(result.ok, false);
+  assert.equal(result.errorCode, 'MIXED_REQUEST_TYPES');
+  assert.equal(store.listRequests().length, 0);
+  assert.equal(store.smsOutbox.length, 0);
+  const audit = store.auditLogs.at(-1);
+  assert.equal(audit.action, 'REQUEST_VALIDATION_FAILED');
+  assert.equal(audit.requestId, null);
+  assert.equal(audit.details.errorCode, 'MIXED_REQUEST_TYPES');
 });
 
 test('dispatches multiple same-operator requests without blocking', async () => {
