@@ -9,11 +9,11 @@ const { AutomationService } = require('../src/service');
 const { parseRequestText } = require('../src/parser');
 const { STATUSES } = require('../src/domain');
 
-function createHarness(gatewayConfig = {}) {
+function createHarness(gatewayConfig = {}, serviceOptions = {}) {
   const store = new AutomationStore(gatewayConfig);
   const queue = new OperatorQueue(store);
   const smsGateway = new SmsGatewayClient(store, queue);
-  const service = new AutomationService({ store, queue, smsGateway });
+  const service = new AutomationService({ store, queue, smsGateway, ...serviceOptions });
   return { store, queue, smsGateway, service };
 }
 
@@ -154,6 +154,30 @@ test('dispatches multiple same-operator requests without blocking', async () => 
   assert.equal(store.smsOutbox.length, 2);
   const second = store.listRequests().find((request) => request.requesterName === 'Officer Karim');
   assert.equal(second.status, STATUSES.WAITING_OPERATOR_REPLY);
+});
+
+test('blocks duplicate active request intake and returns existing request id', async () => {
+  const { store, service } = createHarness();
+  const first = await service.submitRequest({
+    chatId: 'operations',
+    requesterName: 'Officer Rahim',
+    requesterId: '8801700000000',
+    text: 'LRL 01712345678'
+  });
+
+  const duplicate = await service.submitRequest({
+    chatId: 'operations',
+    requesterName: 'Officer Karim',
+    requesterId: '8801800000000',
+    text: 'LRL 01712345678'
+  });
+
+  assert.equal(first.ok, true);
+  assert.equal(duplicate.ok, false);
+  assert.equal(duplicate.errorCode, 'DUPLICATE_ACTIVE_REQUEST');
+  assert.equal(duplicate.duplicateRequestId, first.request.requestId);
+  assert.equal(store.listRequests().length, 1);
+  assert.equal(store.auditLogs.at(-1).action, 'REQUEST_DUPLICATE_BLOCKED');
 });
 
 test('matches operator reply and drafts tagged WhatsApp response', async () => {
@@ -385,8 +409,9 @@ test('timeout sweep dispatches next queued request for same operator', async () 
     text: 'LRL 01798765432'
   });
 
-  const waiting = store.listRequests().find((request) => request.requesterName === 'Officer Rahim');
-  store.smsOutbox[0].sentAt = new Date(Date.now() - 11 * 60 * 1000).toISOString();
+  store.claimPendingJobs('GP_PHONE_01');
+  store.ackOutboxJob(store.smsOutbox[0].id, { ok: true, providerMessageId: 'sms_1' });
+  store.smsOutbox[0].sendResult.confirmedAt = new Date(Date.now() - 16 * 60 * 1000).toISOString();
 
   const timedOut = await service.timeoutWaitingRequests();
   assert.equal(timedOut.length, 1);
@@ -412,6 +437,26 @@ test('late-claimed job gets a full reply window from claim time, not queue time'
 
   const timedOut = await service.timeoutWaitingRequests();
   assert.equal(timedOut.length, 0, 'should not time out — the reply window starts from the recent claim, not the stale queue time');
+});
+
+test('request does not time out early while gateway send confirmation is still pending', async () => {
+  const { store, service } = createHarness();
+  const submitted = await service.submitRequest({
+    chatId: 'operations',
+    requesterName: 'Officer Rahim',
+    requesterId: '8801700000000',
+    text: 'LRL 01712345678'
+  });
+
+  store.smsOutbox[0].sentAt = new Date(Date.now() - 11 * 60 * 1000).toISOString();
+  const beforeGrace = await service.timeoutWaitingRequests();
+  assert.equal(beforeGrace.length, 0);
+  assert.equal(store.getRequest(submitted.request.requestId).status, STATUSES.WAITING_OPERATOR_REPLY);
+
+  store.smsOutbox[0].sentAt = new Date(Date.now() - 16 * 60 * 1000).toISOString();
+  const afterGrace = await service.timeoutWaitingRequests();
+  assert.equal(afterGrace.length, 1);
+  assert.equal(store.getRequest(submitted.request.requestId).status, STATUSES.TIMEOUT);
 });
 
 test('request IDs stay unique across store restarts', () => {
@@ -461,7 +506,9 @@ test('fan-out with two replies and one timeout finalizes to manual review (not t
 
   // Age the Banglalink send past the reply window so only ITS dispatch times out.
   const blOutbox = store.smsOutbox.find((row) => row.gatewayId === 'BANGLALINK_PHONE_01');
-  blOutbox.sentAt = new Date(Date.now() - 11 * 60 * 1000).toISOString();
+  store.claimPendingJobs('BANGLALINK_PHONE_01');
+  store.ackOutboxJob(blOutbox.id, { ok: true, providerMessageId: 'sms_bl' });
+  blOutbox.sendResult.confirmedAt = new Date(Date.now() - 16 * 60 * 1000).toISOString();
 
   const finalized = await service.timeoutWaitingRequests();
   const request = store.getRequest(requestId);
@@ -492,7 +539,9 @@ test('fan-out with no replies times out as a whole', async () => {
     text: 'NID-MS 123456789012'
   });
   for (const row of store.smsOutbox) {
-    row.sentAt = new Date(Date.now() - 11 * 60 * 1000).toISOString();
+    store.claimPendingJobs(row.gatewayId);
+    store.ackOutboxJob(row.id, { ok: true, providerMessageId: `sms_${row.id}` });
+    row.sendResult.confirmedAt = new Date(Date.now() - 16 * 60 * 1000).toISOString();
   }
   const finalized = await service.timeoutWaitingRequests();
   assert.equal(finalized.length, 1);
@@ -722,7 +771,9 @@ test('retry re-queues a timed-out request', async () => {
     requesterId: '8801700000000',
     text: 'LRL 01712345678'
   });
-  store.smsOutbox[0].sentAt = new Date(Date.now() - 11 * 60 * 1000).toISOString();
+  store.claimPendingJobs('GP_PHONE_01');
+  store.ackOutboxJob(store.smsOutbox[0].id, { ok: true, providerMessageId: 'sms_retry' });
+  store.smsOutbox[0].sendResult.confirmedAt = new Date(Date.now() - 16 * 60 * 1000).toISOString();
   await service.timeoutWaitingRequests();
   assert.equal(store.getRequest(submitted.request.requestId).status, STATUSES.TIMEOUT);
 

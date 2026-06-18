@@ -202,6 +202,38 @@ test('gateway heartbeat refreshes last-seen and online state', async () => {
   assert.equal(gp.online, true);
 });
 
+test('admin overview exposes delayed-send and duplicate-risk diagnostics', async () => {
+  const app = appWith({ adminApiKey: 'topsecret' });
+  const first = await call(app, {
+    method: 'POST',
+    url: '/api/requests',
+    headers: { 'x-api-key': 'topsecret', 'content-type': 'application/json' },
+    body: { requesterId: '880170', requesterName: 'Ofc', text: 'LRL 01712345678' }
+  });
+  assert.equal(first.status, 201);
+
+  const duplicate = await call(app, {
+    method: 'POST',
+    url: '/api/requests',
+    headers: { 'x-api-key': 'topsecret', 'content-type': 'application/json' },
+    body: { requesterId: '880171', requesterName: 'Ofc 2', text: 'LRL 01712345678' }
+  });
+  assert.equal(duplicate.status, 400);
+  assert.equal(duplicate.json.errorCode, 'DUPLICATE_ACTIVE_REQUEST');
+
+  app.store.smsOutbox[0].sentAt = new Date(Date.now() - (16 * 60 * 1000)).toISOString();
+  const overview = await call(app, {
+    method: 'GET',
+    url: '/api/admin/overview',
+    headers: { 'x-api-key': 'topsecret' }
+  });
+  assert.equal(overview.status, 200);
+  assert.equal(overview.json.stats.delayedConfirmations, 1);
+  assert.equal(overview.json.diagnostics.recentDuplicateBlocks, 1);
+  const gpQueue = overview.json.queues.find((row) => row.operator === 'GP');
+  assert.equal(gpQueue.delayedSendCount, 1);
+});
+
 test('audit chain verifies clean and detects tampering', () => {
   const store = new AutomationStore();
   store.audit('a', 'EVENT_ONE', null, { x: 1 });

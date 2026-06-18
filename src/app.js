@@ -7,7 +7,11 @@ const https = require('node:https');
 const { AutomationStore } = require('./store');
 const { OperatorQueue } = require('./queue');
 const { SmsGatewayClient } = require('./smsGateway');
-const { AutomationService } = require('./service');
+const {
+  AutomationService,
+  DEFAULT_SEND_CONFIRMATION_GRACE_MS,
+  DEFAULT_DUPLICATE_REQUEST_WINDOW_MS
+} = require('./service');
 const { loadGatewayConfig, loadAuthConfig, loadTelegramConfig } = require('./config');
 const { isAdmin, isValidGateway } = require('./auth');
 const { getBackendUrls, getLanAddresses, getPreferredLanIp } = require('./network');
@@ -58,6 +62,7 @@ function summarizeAlerts(store, requests, gateways, unmatched) {
   const pendingApprovals = requests.filter((r) => r.status === 'NEEDS_MANUAL_REVIEW').length;
   const failed = requests.filter((r) => ['FAILED', 'TIMEOUT'].includes(r.status)).length;
   const offlineGateways = gateways.filter((g) => !g.online && g.status !== 'MOCK').length;
+
   return {
     pendingApprovals,
     failedRequests: failed,
@@ -157,25 +162,66 @@ function buildAdminData(store, queue) {
   const requests = store.listRequests();
   const gateways = decorateGatewayHealth(store);
   const unmatched = store.smsInbox.filter((row) => !row.matchedRequestId && !row.analysis?.ignored);
+  const now = Date.now();
+  const delayedConfirmations = store.smsOutbox.filter((row) => {
+    if (row.sentStatus === 'SENT' || row.sentStatus === 'FAILED') return false;
+    const anchor = row.claimedAt || row.sentAt;
+    return anchor && (now - new Date(anchor).getTime() > DEFAULT_SEND_CONFIRMATION_GRACE_MS);
+  });
+  const recentAmbiguousReplies = store.auditLogs.filter((row) => {
+    return row.action === 'SMS_REPLY_AMBIGUOUS' && now - new Date(row.timestamp).getTime() < 24 * 60 * 60 * 1000;
+  });
+  const recentDuplicateBlocks = store.auditLogs.filter((row) => {
+    return row.action === 'REQUEST_DUPLICATE_BLOCKED' && now - new Date(row.timestamp).getTime() < 24 * 60 * 60 * 1000;
+  });
+  const duplicateRiskGroups = store.listDuplicateRiskGroups(DEFAULT_DUPLICATE_REQUEST_WINDOW_MS);
   const alerts = summarizeAlerts(store, requests, gateways, unmatched);
   const activity = buildActivityFeed(store, requests, gateways);
   const today = new Date().toDateString();
   const pendingApprovals = requests.filter((r) => r.status === 'NEEDS_MANUAL_REVIEW');
   const failedRequests = requests.filter((r) => ['FAILED', 'TIMEOUT'].includes(r.status));
+  const queueSnapshot = queue.snapshot().map((row) => ({
+    ...row,
+    delayedSendCount: delayedConfirmations.filter((item) => item.operator === row.operator).length
+  }));
 
   return {
     generatedAt: new Date().toISOString(),
     environment: process.env.NODE_ENV || 'production',
     alerts,
-    queues: queue.snapshot(),
+    queues: queueSnapshot,
     stats: {
       activeRequests: requests.filter((r) => ['RECEIVED', 'VALIDATED', 'QUEUED', 'SMS_SENT', 'WAITING_OPERATOR_REPLY', 'NEEDS_MANUAL_REVIEW'].includes(r.status)).length,
       pendingApprovals: pendingApprovals.length,
       failedOrTimedOut: failedRequests.length,
       unmatchedInbound: unmatched.length,
       onlineGateways: gateways.filter((g) => g.online).length,
+      delayedConfirmations: delayedConfirmations.length,
+      ambiguousReplies24h: recentAmbiguousReplies.length,
+      duplicateRiskGroups: duplicateRiskGroups.length,
       todayRequests: requests.filter((r) => new Date(r.createdAt).toDateString() === today).length,
       completedToday: requests.filter((r) => r.status === 'COMPLETED' && new Date(r.createdAt).toDateString() === today).length
+    },
+    diagnostics: {
+      delayedConfirmations: delayedConfirmations.map((row) => ({
+        outboxId: row.id,
+        requestId: row.requestId,
+        gatewayId: row.gatewayId,
+        operator: row.operator,
+        sentStatus: row.sentStatus,
+        anchorAt: row.claimedAt || row.sentAt,
+        waitMinutes: Math.round((now - new Date(row.claimedAt || row.sentAt).getTime()) / 60000)
+      })),
+      recentAmbiguousReplies: recentAmbiguousReplies.length,
+      recentDuplicateBlocks: recentDuplicateBlocks.length,
+      duplicateRiskGroups: duplicateRiskGroups.map((group) => ({
+        requestType: group[0].requestType,
+        payload: group[0].payload,
+        operators: group[0].targetOperators || [group[0].operator],
+        requestIds: group.map((request) => request.requestId),
+        count: group.length,
+        latestCreatedAt: group[0].createdAt
+      }))
     },
     activity,
     gatewayHealth: gateways.map((gateway) => ({
@@ -458,6 +504,7 @@ function createApp(options = {}) {
           environment: admin.environment,
           alerts: admin.alerts,
           stats: admin.stats,
+          diagnostics: admin.diagnostics,
           gatewayHealth: admin.gatewayHealth,
           queues: admin.queues,
           activity: admin.activity.slice(0, 60)

@@ -59,12 +59,20 @@ function renderOverview() {
   document.getElementById('lastRefresh').textContent = `Updated ${new Date().toLocaleTimeString()}`;
 
   const stats = overviewData.stats || {};
+  const diagnostics = overviewData.diagnostics || {};
+  const delayedByGateway = new Map();
+  (diagnostics.delayedConfirmations || []).forEach((row) => {
+    delayedByGateway.set(row.gatewayId, (delayedByGateway.get(row.gatewayId) || 0) + 1);
+  });
   document.getElementById('statsGrid').innerHTML = [
     ['Active requests', stats.activeRequests || 0, ''],
     ['Pending approvals', stats.pendingApprovals || 0, 'warning'],
     ['Failed / timed out', stats.failedOrTimedOut || 0, stats.failedOrTimedOut ? 'danger' : ''],
     ['Unmatched inbound', stats.unmatchedInbound || 0, stats.unmatchedInbound ? 'warning' : ''],
-    ['Online gateways', stats.onlineGateways || 0, 'success']
+    ['Online gateways', stats.onlineGateways || 0, 'success'],
+    ['Delayed sends', stats.delayedConfirmations || 0, stats.delayedConfirmations ? 'danger' : 'success'],
+    ['Ambiguous replies', stats.ambiguousReplies24h || 0, stats.ambiguousReplies24h ? 'warning' : 'success'],
+    ['Duplicate risks', stats.duplicateRiskGroups || 0, stats.duplicateRiskGroups ? 'warning' : 'success']
   ].map(([label, value, tone]) => `
     <div class="kpi-tile">
       <div class="kpi-value ${tone}">${value}</div>
@@ -81,7 +89,7 @@ function renderOverview() {
           <span class="${gateway.status === 'MOCK' ? 'chip chip-muted' : gateway.online ? 'chip chip-success' : 'chip chip-danger'}">${gateway.status === 'MOCK' ? 'MOCK' : gateway.online ? 'ONLINE' : 'OFFLINE'}</span>
         </div>
         <div class="fleet-state">${esc(gateway.id)}</div>
-        <div class="fleet-meta">${gateway.gatewayUrl || 'No URL registered'}<br />Last seen ${relativeTime(gateway.lastSeenAt)}</div>
+        <div class="fleet-meta">${gateway.gatewayUrl || 'No URL registered'}<br />Last seen ${relativeTime(gateway.lastSeenAt)}<br />Delayed sends ${delayedByGateway.get(gateway.id) || 0}</div>
       </div>
     </div>`).join('');
 
@@ -90,7 +98,8 @@ function renderOverview() {
       <td><strong>${esc(queue.operator)}</strong></td>
       <td class="mono">${queue.active ? esc(queue.active.requestId) : '—'}</td>
       <td>${queue.waiting.length}</td>
-    </tr>`).join('') || '<tr><td colspan="3" class="empty">No queue data.</td></tr>';
+      <td>${queue.delayedSendCount ? `${queue.delayedSendCount} delayed` : 'Clear'}</td>
+    </tr>`).join('') || '<tr><td colspan="4" class="empty">No queue data.</td></tr>';
 
   document.getElementById('recentIncidents').innerHTML = (overviewData.activity || []).slice(0, 8).map((event) => `
     <div class="timeline-item">
@@ -107,7 +116,10 @@ function renderOverview() {
     ['Pending approvals', alerts.pendingApprovals || 0, 'warning'],
     ['Failed requests', alerts.failedRequests || 0, alerts.failedRequests ? 'danger' : 'success'],
     ['Unmatched inbound', alerts.unmatchedSms || 0, alerts.unmatchedSms ? 'warning' : 'success'],
-    ['Offline gateways', alerts.offlineGateways || 0, alerts.offlineGateways ? 'danger' : 'success']
+    ['Offline gateways', alerts.offlineGateways || 0, alerts.offlineGateways ? 'danger' : 'success'],
+    ['Delayed sends', stats.delayedConfirmations || 0, stats.delayedConfirmations ? 'danger' : 'success'],
+    ['Ambiguous replies (24h)', stats.ambiguousReplies24h || 0, stats.ambiguousReplies24h ? 'warning' : 'success'],
+    ['Duplicate blocks (24h)', diagnostics.recentDuplicateBlocks || 0, diagnostics.recentDuplicateBlocks ? 'warning' : 'success']
   ];
   document.getElementById('alertSummary').innerHTML = alertItems.map(([label, value, tone]) => `
     <div class="banner banner-${tone === 'warning' ? 'warn' : tone === 'danger' ? 'danger' : 'ok'}">
@@ -335,7 +347,7 @@ function renderAuditSummary() {
   document.getElementById('auditTotalCount').textContent = auditLogs.length;
   document.getElementById('validationFailCount').textContent = validationRows.length;
   document.getElementById('validationFailRecentCount').textContent = validationRecent.length;
-  document.getElementById('countAudit').textContent = validationRows.length;
+  document.getElementById('countAudit').textContent = auditLogs.length;
 }
 
 function renderAuditDetails(log) {

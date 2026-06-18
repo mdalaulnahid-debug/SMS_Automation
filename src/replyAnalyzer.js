@@ -21,19 +21,21 @@ function analyzeOperatorReply({ request, messageBody }) {
     .filter((_, index) => expectedPatterns[index].test(body));
   const foundReference = extractSilentReference(body);
   const trainingMatch = matchTrainingPattern(request, body);
-  const payloadFound = payloadInReply(request.payload, body);
+  const payloadMatch = payloadInReply(request.payload, body);
 
   return {
     requestType: request.requestType,
     referenceMatched: Boolean(foundReference && foundReference === request.silentReference),
     foundReference,
-    payloadMatched: payloadFound,
+    payloadMatched: payloadMatch.matched,
+    payloadMatchCount: payloadMatch.count,
+    payloadMatches: payloadMatch.identifiers,
     patternMatched: matchedPatterns.length > 0 || trainingMatch.matched,
     matchedPatterns,
     trainingMatch,
     confidence: confidenceScore({
       referenceMatched: Boolean(foundReference && foundReference === request.silentReference),
-      payloadMatched: payloadFound,
+      payloadMatched: payloadMatch.matched,
       patternMatched: matchedPatterns.length > 0 || trainingMatch.matched
     })
   };
@@ -42,14 +44,23 @@ function analyzeOperatorReply({ request, messageBody }) {
 // Check if the request payload (phone number, NID, IMEI) appears in the reply body.
 // Normalizes phone numbers (strips leading 0/+880) so "01712345678" matches "8801712345678".
 function payloadInReply(payload, body) {
-  if (!payload || !body) return false;
+  if (!payload || !body) return { matched: false, count: 0, identifiers: [] };
   const normalizedBody = body.replace(/[\s\-().]/g, '');
-  const normalizedPayload = String(payload).replace(/[\s\-().]/g, '');
-  if (normalizedBody.includes(normalizedPayload)) return true;
-  // Phone number variants: strip leading 0 or +880/880
-  const stripped = normalizedPayload.replace(/^(?:\+?880|0)/, '');
-  if (stripped.length >= 10 && normalizedBody.includes(stripped)) return true;
-  return false;
+  const identifiers = String(payload)
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+  const matchedIdentifiers = identifiers.filter((identifier) => {
+    const normalizedPayload = String(identifier).replace(/[\s\-().]/g, '');
+    if (normalizedBody.includes(normalizedPayload)) return true;
+    const stripped = normalizedPayload.replace(/^(?:\+?880|0)/, '');
+    return stripped.length >= 10 && normalizedBody.includes(stripped);
+  });
+  return {
+    matched: matchedIdentifiers.length > 0,
+    count: matchedIdentifiers.length,
+    identifiers: matchedIdentifiers
+  };
 }
 
 function matchTrainingPattern(request, body) {

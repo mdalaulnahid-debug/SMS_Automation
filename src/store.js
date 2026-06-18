@@ -17,6 +17,16 @@ function nowIso() {
   return new Date().toISOString();
 }
 
+const DUPLICATE_BLOCKING_STATUSES = Object.freeze([
+  STATUSES.RECEIVED,
+  STATUSES.VALIDATED,
+  STATUSES.QUEUED,
+  STATUSES.SMS_SENT,
+  STATUSES.WAITING_OPERATOR_REPLY,
+  STATUSES.REPLY_RECEIVED,
+  STATUSES.NEEDS_MANUAL_REVIEW
+]);
+
 function randomId(prefix) {
   return `${prefix}_${Math.random().toString(36).slice(2, 10)}`;
 }
@@ -385,7 +395,13 @@ class AutomationStore {
     const job = this.smsOutbox.find((row) => row.id === outboxId);
     if (!job) return null;
     job.sentStatus = ok ? 'SENT' : 'FAILED';
-    job.sendResult = { ok, error: error || null, providerMessageId: providerMessageId || null, mode: 'poll' };
+    job.sendResult = {
+      ok,
+      error: error || null,
+      providerMessageId: providerMessageId || null,
+      mode: 'poll',
+      confirmedAt: nowIso()
+    };
     if (this.persistence) this.persistence.updateOutboxStatus(outboxId, job.sentStatus, job.sendResult);
     this.audit('sms-gateway', ok ? 'SMS_SENT_CONFIRMED' : 'SMS_SEND_FAILED', job.requestId, {
       outboxId, gatewayId: job.gatewayId, error: error || null
@@ -451,6 +467,41 @@ class AutomationStore {
     return this.smsOutbox.find((row) => {
       return row.requestId === requestId && row.gatewayId === gatewayId && row.sentStatus !== 'FAILED';
     });
+  }
+
+  getOutboxById(outboxId) {
+    return this.smsOutbox.find((row) => row.id === outboxId) || null;
+  }
+
+  findRecentDuplicateRequest({ requestType, payload, targetOperators, windowMs }) {
+    const cutoff = Date.now() - windowMs;
+    const sortedTargets = [...(targetOperators || [])].sort().join('|');
+    return this.listRequests().find((request) => {
+      if (!DUPLICATE_BLOCKING_STATUSES.includes(request.status)) return false;
+      if (new Date(request.createdAt).getTime() < cutoff) return false;
+      if (request.requestType !== requestType) return false;
+      if (request.payload !== payload) return false;
+      return [...(request.targetOperators || [])].sort().join('|') === sortedTargets;
+    }) || null;
+  }
+
+  listDuplicateRiskGroups(windowMs = 30 * 60 * 1000) {
+    const cutoff = Date.now() - windowMs;
+    const groups = new Map();
+    for (const request of this.listRequests()) {
+      if (!DUPLICATE_BLOCKING_STATUSES.includes(request.status)) continue;
+      if (new Date(request.createdAt).getTime() < cutoff) continue;
+      const key = [
+        request.requestType,
+        request.payload,
+        [...(request.targetOperators || [])].sort().join('|')
+      ].join('::');
+      if (!groups.has(key)) groups.set(key, []);
+      groups.get(key).push(request);
+    }
+    return [...groups.values()]
+      .filter((group) => group.length > 1)
+      .map((group) => group.sort((a, b) => b.createdAt.localeCompare(a.createdAt)));
   }
 
   findActiveRequestForGateway(gatewayId, senderNumber, windowMs, messageBody = '') {

@@ -4,7 +4,9 @@ const { OPERATORS, STATUSES, DISPATCH_STATUSES, TERMINAL_DISPATCH_STATUSES } = r
 const { parseRequestText } = require('./parser');
 const { analyzeOperatorReply, saveMatchedReplyKeywords } = require('./replyAnalyzer');
 
-const DEFAULT_REPLY_WINDOW_MS = 10 * 60 * 1000;
+const DEFAULT_REPLY_WINDOW_MS = 15 * 60 * 1000;
+const DEFAULT_SEND_CONFIRMATION_GRACE_MS = 15 * 60 * 1000;
+const DEFAULT_DUPLICATE_REQUEST_WINDOW_MS = 30 * 60 * 1000;
 
 // Grace period before posting the first partial live reply for a fan-out request.
 // Holds the draft for this many ms so replies that arrive close together are batched
@@ -12,11 +14,22 @@ const DEFAULT_REPLY_WINDOW_MS = 10 * 60 * 1000;
 const LIVE_POST_HOLD_MS = 5 * 1000;
 
 class AutomationService {
-  constructor({ store, queue, smsGateway, replyWindowMs = DEFAULT_REPLY_WINDOW_MS, denyUnknownRequesters = false, autoApproveChannels = [] }) {
+  constructor({
+    store,
+    queue,
+    smsGateway,
+    replyWindowMs = DEFAULT_REPLY_WINDOW_MS,
+    sendConfirmationGraceMs = DEFAULT_SEND_CONFIRMATION_GRACE_MS,
+    duplicateRequestWindowMs = DEFAULT_DUPLICATE_REQUEST_WINDOW_MS,
+    denyUnknownRequesters = false,
+    autoApproveChannels = []
+  }) {
     this.store = store;
     this.queue = queue;
     this.smsGateway = smsGateway;
     this.replyWindowMs = replyWindowMs;
+    this.sendConfirmationGraceMs = sendConfirmationGraceMs;
+    this.duplicateRequestWindowMs = duplicateRequestWindowMs;
     this.denyUnknownRequesters = denyUnknownRequesters;
     // Channels whose replies are auto-approved (skips manual review gate).
     // e.g. ['telegram'] — the reply goes straight to APPROVED_FOR_POST.
@@ -84,6 +97,31 @@ class AutomationService {
       };
     }
 
+    const duplicate = this.store.findRecentDuplicateRequest({
+      requestType: parsed.requestType,
+      payload: parsed.canonicalPayload,
+      targetOperators: parsed.targetOperators,
+      windowMs: this.duplicateRequestWindowMs
+    });
+    if (duplicate) {
+      this.store.audit('system', 'REQUEST_DUPLICATE_BLOCKED', duplicate.requestId, {
+        requesterId: input.requesterId || null,
+        requesterName: input.requesterName || null,
+        channel: input.channel || 'manual',
+        rawText: input.text,
+        canonicalRequestText: parsed.canonicalRequestText,
+        duplicateRequestId: duplicate.requestId,
+        duplicateStatus: duplicate.status
+      });
+      return {
+        ok: false,
+        errorCode: 'DUPLICATE_ACTIVE_REQUEST',
+        errors: [`A similar request is already active as ${duplicate.requestId}.`],
+        replyText: `A similar request is already active as ${duplicate.requestId}. Wait for that result or use retry from admin.`,
+        duplicateRequestId: duplicate.requestId
+      };
+    }
+
     const request = this.store.createRequest({
       requesterId: input.requesterId,
       requesterName: input.requesterName,
@@ -145,10 +183,22 @@ class AutomationService {
       // to manual review (matchedRequest stays null).
       const scored = matchResult.candidates.map((request) => {
         const a = analyzeOperatorReply({ request, messageBody: input.body });
-        return { request, analysis: a, score: confidenceRank(a.confidence) };
+        return {
+          request,
+          analysis: a,
+          score: confidenceRank(a.confidence),
+          payloadMatches: a.payloadMatchCount || 0,
+          createdAt: new Date(request.createdAt).getTime()
+        };
       });
-      scored.sort((a, b) => b.score - a.score);
-      if (scored[0].score > 0 && (scored.length < 2 || scored[0].score > scored[1].score)) {
+      scored.sort((a, b) => {
+        if (b.score !== a.score) return b.score - a.score;
+        if (b.payloadMatches !== a.payloadMatches) return b.payloadMatches - a.payloadMatches;
+        return b.createdAt - a.createdAt;
+      });
+      const hasUniqueTopScore = scored.length < 2 || scored[0].score > scored[1].score;
+      const hasUniqueTopPayload = scored.length < 2 || scored[0].payloadMatches > scored[1].payloadMatches;
+      if (scored[0].score > 0 && (hasUniqueTopScore || hasUniqueTopPayload)) {
         matchedRequest = scored[0].request;
         analysis = scored[0].analysis;
       } else {
@@ -156,7 +206,11 @@ class AutomationService {
           gatewayId: input.gatewayId,
           senderNumber: input.from,
           candidateCount: scored.length,
-          scores: scored.map((s) => ({ requestId: s.request.requestId, confidence: s.analysis.confidence }))
+          scores: scored.map((s) => ({
+            requestId: s.request.requestId,
+            confidence: s.analysis.confidence,
+            payloadMatches: s.payloadMatches
+          }))
         });
       }
     } else if (matchResult && !matchResult.ambiguous) {
@@ -565,7 +619,7 @@ class AutomationService {
   // so a request that queued for a while still gets a full reply window per operator, and a
   // fan-out where some operators replied is finalized to NEEDS_MANUAL_REVIEW rather than TIMEOUT.
   async timeoutWaitingRequests() {
-    const cutoff = Date.now() - this.replyWindowMs;
+    const now = Date.now();
     const finalized = [];
 
     for (const request of this.store.listRequests()) {
@@ -574,11 +628,14 @@ class AutomationService {
       let changed = false;
       for (const dispatch of request.dispatches || []) {
         if (dispatch.status !== DISPATCH_STATUSES.WAITING_REPLY) continue;
-        const sentAt = this.dispatchSentAt(request.requestId, dispatch);
-        if (sentAt !== null && sentAt < cutoff) {
+        const timeout = this.dispatchTimeoutState(request.requestId, dispatch);
+        if (timeout.timeoutAt !== null && timeout.timeoutAt < now) {
           this.store.markDispatchTimeout(request.requestId, dispatch.operator);
           this.store.audit('system', 'DISPATCH_TIMEOUT', request.requestId, {
-            operator: dispatch.operator
+            operator: dispatch.operator,
+            phase: timeout.phase,
+            anchorAt: timeout.anchorAt,
+            outboxStatus: timeout.outboxStatus
           });
           changed = true;
         }
@@ -598,12 +655,41 @@ class AutomationService {
   // time (sentAt) for jobs never claimed at all, so a gateway that's permanently offline
   // still eventually times out instead of waiting forever.
   dispatchSentAt(requestId, dispatch) {
-    const outbox =
-      this.store.smsOutbox.find((row) => row.id === dispatch.outboxId) ||
-      this.store.getOutboxForGateway(requestId, dispatch.gatewayId);
+    const outbox = this.getDispatchOutbox(requestId, dispatch);
     if (!outbox) return null;
-    const effective = outbox.claimedAt || outbox.sentAt;
+    const effective = outbox.sendResult?.confirmedAt || outbox.claimedAt || outbox.sentAt;
     return effective ? new Date(effective).getTime() : null;
+  }
+
+  dispatchTimeoutState(requestId, dispatch) {
+    const outbox = this.getDispatchOutbox(requestId, dispatch);
+    if (!outbox) {
+      return { timeoutAt: null, phase: 'missing_outbox', anchorAt: null, outboxStatus: null };
+    }
+
+    const confirmedAt = outbox.sendResult?.confirmedAt ? new Date(outbox.sendResult.confirmedAt).getTime() : null;
+    const provisionalAt = outbox.claimedAt ? new Date(outbox.claimedAt).getTime() : (outbox.sentAt ? new Date(outbox.sentAt).getTime() : null);
+
+    if (outbox.sentStatus === 'SENT') {
+      const anchorAt = confirmedAt ?? provisionalAt;
+      return {
+        timeoutAt: anchorAt === null ? null : anchorAt + this.replyWindowMs,
+        phase: 'operator_reply',
+        anchorAt: anchorAt === null ? null : new Date(anchorAt).toISOString(),
+        outboxStatus: outbox.sentStatus
+      };
+    }
+
+    return {
+      timeoutAt: provisionalAt === null ? null : provisionalAt + this.sendConfirmationGraceMs,
+      phase: 'gateway_confirmation',
+      anchorAt: provisionalAt === null ? null : new Date(provisionalAt).toISOString(),
+      outboxStatus: outbox.sentStatus
+    };
+  }
+
+  getDispatchOutbox(requestId, dispatch) {
+    return this.store.getOutboxById(dispatch.outboxId) || this.store.getOutboxForGateway(requestId, dispatch.gatewayId);
   }
 }
 
@@ -645,5 +731,7 @@ function confidenceRank(confidence) {
 module.exports = {
   AutomationService,
   DEFAULT_REPLY_WINDOW_MS,
+  DEFAULT_SEND_CONFIRMATION_GRACE_MS,
+  DEFAULT_DUPLICATE_REQUEST_WINDOW_MS,
   formatCombinedReply
 };
