@@ -307,6 +307,25 @@ test('timeout sweep dispatches next queued request for same operator', async () 
   assert.equal(store.smsOutbox[1].messageBody, 'LRL 01798765432');
 });
 
+test('late-claimed job gets a full reply window from claim time, not queue time', async () => {
+  const { store, service } = createHarness();
+  await service.submitRequest({
+    chatId: 'operations',
+    requesterName: 'Officer Rahim',
+    requesterId: '8801700000000',
+    text: 'LRL 01712345678'
+  });
+
+  // Simulate a gateway phone that was offline: the job sat PENDING_PICKUP for 9 minutes
+  // (older than the reply window on its own) before the phone reconnected and claimed it.
+  const outbox = store.smsOutbox[0];
+  outbox.sentAt = new Date(Date.now() - 9 * 60 * 1000).toISOString();
+  store.claimPendingJobs(outbox.gatewayId);
+
+  const timedOut = await service.timeoutWaitingRequests();
+  assert.equal(timedOut.length, 0, 'should not time out — the reply window starts from the recent claim, not the stale queue time');
+});
+
 test('request IDs stay unique across store restarts', () => {
   const first = new AutomationStore();
   const second = new AutomationStore();

@@ -579,13 +579,18 @@ class AutomationService {
     return finalized;
   }
 
-  // Effective send time for a dispatch, read from its linked outbox row (the source of truth
-  // for when the carrier accepted the send).
+  // Effective send time for a dispatch: prefer claimedAt (when the gateway phone actually
+  // picked the job up and sent it), so a phone/network outage between queueing and pickup
+  // doesn't eat into the operator's reply window. Falls back to the outbox row's creation
+  // time (sentAt) for jobs never claimed at all, so a gateway that's permanently offline
+  // still eventually times out instead of waiting forever.
   dispatchSentAt(requestId, dispatch) {
     const outbox =
       this.store.smsOutbox.find((row) => row.id === dispatch.outboxId) ||
       this.store.getOutboxForGateway(requestId, dispatch.gatewayId);
-    return outbox && outbox.sentAt ? new Date(outbox.sentAt).getTime() : null;
+    if (!outbox) return null;
+    const effective = outbox.claimedAt || outbox.sentAt;
+    return effective ? new Date(effective).getTime() : null;
   }
 }
 
