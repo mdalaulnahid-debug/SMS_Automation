@@ -202,6 +202,43 @@ test('matches operator reply and drafts tagged WhatsApp response', async () => {
   assert.match(inbound.replyDraft.replyText, /LRL: 01712345678/);
 });
 
+test('single-operator batch replies include multiple matched inbound SMS messages', async () => {
+  const { store, service } = createHarness({
+    BANGLALINK: { trustedSenders: ['8801924400990'] }
+  });
+  const submitted = await service.submitRequest({
+    channel: 'telegram',
+    chatId: 'operations',
+    sourceMessageId: 315,
+    requesterName: 'LIC Barisal',
+    requesterId: '8739371943',
+    text: 'LRL 01937690281 01916018151'
+  });
+
+  const firstInbound = service.receiveSmsWebhook({
+    gatewayId: 'BANGLALINK_PHONE_01',
+    from: '8801924400990',
+    body: 'MN: 8801916018151, Cell Name: DHK_X0118_1 - Banglalink',
+    receivedAt: '2026-06-18T20:40:17.023287+06:00'
+  });
+  assert.equal(firstInbound.ok, true);
+
+  const secondInbound = service.receiveSmsWebhook({
+    gatewayId: 'BANGLALINK_PHONE_01',
+    from: '8801924400990',
+    body: 'MN: 8801937690281, Cell Name: BAR_X0080_2 - Banglalink',
+    receivedAt: '2026-06-18T20:40:21.100395+06:00'
+  });
+  assert.equal(secondInbound.ok, true);
+
+  const request = store.getRequest(submitted.request.requestId);
+  const draft = store.listReplyDrafts().find((row) => row.requestId === request.requestId);
+  assert.equal(request.status, STATUSES.NEEDS_MANUAL_REVIEW);
+  assert.ok(draft);
+  assert.match(draft.replyText, /8801916018151/);
+  assert.match(draft.replyText, /8801937690281/);
+});
+
 test('manual approval completes request after reply review', async () => {
   const { service } = createHarness();
   const submitted = await service.submitRequest({

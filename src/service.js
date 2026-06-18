@@ -706,9 +706,16 @@ function formatCombinedReply(request, store) {
   for (const dispatch of request.dispatches || []) {
     const name = OPERATORS[dispatch.operator]?.name || dispatch.operator;
     if (dispatch.status === DISPATCH_STATUSES.REPLY_RECEIVED) {
-      const inbox = store.smsInbox.find((row) => row.id === dispatch.inboxId);
+      const inboxMessages = collectDispatchReplyMessages(request, dispatch, store);
       lines.push(`— ${name}:`);
-      lines.push(inbox?.messageBody || '(reply captured)');
+      if (!inboxMessages.length) {
+        lines.push('(reply captured)');
+      } else {
+        inboxMessages.forEach((messageBody, index) => {
+          if (index > 0) lines.push('');
+          lines.push(messageBody);
+        });
+      }
     } else if (dispatch.status === DISPATCH_STATUSES.TIMEOUT) {
       lines.push(`— ${name}: no reply (timed out)`);
     } else if (dispatch.status === DISPATCH_STATUSES.FAILED) {
@@ -721,6 +728,22 @@ function formatCombinedReply(request, store) {
   lines.push('');
   lines.push(`Processed at: ${new Date().toLocaleString('en-GB', { timeZone: 'Asia/Dhaka' })}`);
   return lines.join('\n');
+}
+
+function collectDispatchReplyMessages(request, dispatch, store) {
+  const matchedMessages = store.smsInbox
+    .filter((row) => row.matchedRequestId === request.requestId && row.gatewayId === dispatch.gatewayId)
+    .sort((a, b) => new Date(a.receivedAt) - new Date(b.receivedAt))
+    .map((row) => row.messageBody);
+
+  if (!matchedMessages.length && dispatch.inboxId) {
+    const inbox = store.smsInbox.find((row) => row.id === dispatch.inboxId);
+    if (inbox?.messageBody) matchedMessages.push(inbox.messageBody);
+  }
+
+  return matchedMessages.filter((messageBody, index, messages) => {
+    return messages.indexOf(messageBody) === index;
+  });
 }
 
 const CONFIDENCE_RANKS = { HIGH: 3, MEDIUM: 2, LOW: 1, UNKNOWN: 0 };

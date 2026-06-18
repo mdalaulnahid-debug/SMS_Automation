@@ -6,15 +6,15 @@
       "keywords": [
         {
           "token": "cell",
-          "count": 258
+          "count": 394
         },
         {
           "token": "location",
-          "count": 284
+          "count": 430
         },
         {
           "token": "data",
-          "count": 26
+          "count": 40
         }
       ]
     },
@@ -34,19 +34,19 @@
       "keywords": [
         {
           "token": "name",
-          "count": 26
+          "count": 40
         },
         {
           "token": "test",
-          "count": 52
+          "count": 80
         },
         {
           "token": "person",
-          "count": 26
+          "count": 40
         },
         {
           "token": "father",
-          "count": 52
+          "count": 80
         }
       ]
     },
@@ -56,7 +56,33 @@
       "keywords": [
         {
           "token": "robi",
-          "count": 12
+          "count": 26
+        }
+      ]
+    },
+    {
+      "requestType": "LRL",
+      "operator": "BANGLALINK",
+      "keywords": [
+        {
+          "token": "cell",
+          "count": 6
+        },
+        {
+          "token": "name",
+          "count": 6
+        },
+        {
+          "token": "x0118",
+          "count": 3
+        },
+        {
+          "token": "banglalink",
+          "count": 6
+        },
+        {
+          "token": "x0080",
+          "count": 3
         }
       ]
     }
