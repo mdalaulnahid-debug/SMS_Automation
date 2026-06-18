@@ -4,12 +4,12 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <!-- Speech-bubble body: the single, bold motif reads clearly at launcher size -->
+    <!-- Accent badge circle, inset within the adaptive-icon safe zone -->
     <path
         android:fillColor="#3DD7FF"
-        android:pathData="M37,27 H71 A11,11 0 0 1 82,38 V64 A11,11 0 0 1 71,75 H46 L31,89 V75 H37 A11,11 0 0 1 26,64 V38 A11,11 0 0 1 37,27 Z" />
-    <!-- Forward/relay arrow inside the bubble, in dark navy for high contrast -->
+        android:pathData="M21,54 A33,33 0 1 0 87,54 A33,33 0 1 0 21,54 Z" />
+    <!-- Forward/relay dart: simple solid polygon, reads clean at any size -->
     <path
         android:fillColor="#08111F"
-        android:pathData="M42,44 L42,58 L52,58 L52,65 L66,51 L52,37 L52,44 Z" />
+        android:pathData="M73,54 L39,37 L54,54 L39,71 Z" />
 </vector>
