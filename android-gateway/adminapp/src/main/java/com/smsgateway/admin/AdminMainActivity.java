@@ -282,11 +282,49 @@ public class AdminMainActivity extends Activity {
         for (int i = Math.max(0, logs.length() - 20); i < logs.length(); i++) {
             JSONObject log = logs.optJSONObject(i);
             if (log == null) continue;
-            String body = "Actor: " + log.optString("actor", "system")
-                + "\nRequest: " + log.optString("requestId", "-")
-                + "\nTime: " + log.optString("timestamp", "-")
-                + "\nDetails: " + log.optJSONObject("details");
-            layoutAuditList.addView(infoCard("LEDGER", log.optString("action", "Audit Event"), body));
+            StringBuilder body = new StringBuilder("Actor: ").append(log.optString("actor", "system"));
+            if (!log.isNull("requestId") && !log.optString("requestId", "").isEmpty()) {
+                body.append("\nRequest: ").append(log.optString("requestId"));
+            }
+            body.append("\nTime: ").append(formatRelative(log.optString("timestamp", "")));
+            String summary = summarizeAuditDetails(log.isNull("details") ? null : log.optJSONObject("details"));
+            if (!summary.isEmpty()) {
+                body.append("\n").append(summary);
+            }
+            layoutAuditList.addView(infoCard("LEDGER", log.optString("action", "Audit Event"), body.toString()));
+        }
+    }
+
+    // Picks the few fields a supervisor actually reads instead of dumping the raw JSON blob —
+    // full details still live in the web admin console's audit export.
+    private String summarizeAuditDetails(JSONObject details) {
+        if (details == null) return "";
+        String[] preferredKeys = {"messageBody", "snippet", "gatewayId", "recipient", "senderNumber"};
+        List<String> parts = new ArrayList<>();
+        for (String key : preferredKeys) {
+            String value = details.optString(key, "");
+            if (value.isEmpty()) continue;
+            if (value.length() > 80) value = value.substring(0, 80) + "…";
+            parts.add(key + ": " + value);
+        }
+        return String.join("\n", parts);
+    }
+
+    private String formatRelative(String iso) {
+        if (iso == null || iso.isEmpty()) return "-";
+        try {
+            long then = java.time.Instant.parse(iso).toEpochMilli();
+            long diffMs = System.currentTimeMillis() - then;
+            if (diffMs < 0) return "just now";
+            long seconds = diffMs / 1000;
+            if (seconds < 60) return seconds + "s ago";
+            long minutes = seconds / 60;
+            if (minutes < 60) return minutes + "m ago";
+            long hours = minutes / 60;
+            if (hours < 24) return hours + "h ago";
+            return (hours / 24) + "d ago";
+        } catch (Exception e) {
+            return iso;
         }
     }
 
