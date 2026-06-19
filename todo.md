@@ -6,6 +6,99 @@ Start with `progress_tracker.md` for the latest session handoff, test results, a
 
 ## Pending — From 2026-06-19 Session (start here next)
 
+### 0. Fix end-to-end reply correlation before trusting auto-post again
+
+User-reported production symptom:
+
+- request A is posted in Telegram
+- operator reply for request B arrives first on the same gateway
+- backend attaches that reply to request A
+- Telegram bridge posts the wrong operator result into the group thread
+
+**Review findings from the 2026-06-20 code/audit/training pass (don't re-derive):**
+- The main bug is in backend reply correlation, not Telegram posting itself.
+- Candidate selection in `src/store.js` `findActiveRequestForGateway()` is too broad:
+  it considers multiple recent requests on the same gateway, including
+  `WAITING_OPERATOR_REPLY`, `NEEDS_MANUAL_REVIEW`, and recent `TIMEOUT`.
+- If more than one candidate exists, `src/service.js` scores them using
+  `src/replyAnalyzer.js` soft heuristics only: request-type patterns, payload
+  appearance, learned keywords, and recency.
+- That heuristic layer is currently too permissive for production auto-match:
+  pattern-only evidence can still win, and many tokens are generic.
+- `saveMatchedReplyKeywords()` learns from whatever was matched, so one bad
+  auto-match can reinforce future bad matches.
+
+**Observed real failure families already seen by user:**
+- `LCL` request got an `LRL`-style location reply
+- `MS-NID` request got an `IMEI-MS` reply from another request
+- `MS-NID` request got an `LRL` reply from another request
+- `LRL` request got an `LCL`-style Banglalink call/SMS event reply
+
+**Strong implementation direction:**
+- Tighten candidate selection before any scoring happens.
+- Prefer hard correlation anchors first:
+  1. internal silent reference if ever available
+  2. request-family-specific structure checks
+  3. stronger payload anchoring
+- If correlation is not clear, leave unmatched for admin review instead of
+  auto-attaching.
+- Treat `NEEDS_MANUAL_REVIEW` and `TIMEOUT` candidates much more cautiously
+  than the currently active waiting request.
+
+**Training-data rule learned from this review:**
+- The top-level five Excel files under `Training Data/Automation/` are now the
+  practical baseline.
+- The old operator-wise subfolders were noisy; user cleaned and consolidated
+  the top-level files instead.
+
+### 0.1. Use cleaned top-level training files as the active reply-shape baseline
+
+Active manual baseline:
+
+- `Training Data/Automation/LCL.xlsx`
+- `Training Data/Automation/LRL.xlsx`
+- `Training Data/Automation/MS-NID.xlsx`
+- `Training Data/Automation/NID-MS.xlsx`
+- `Training Data/Automation/IMEI-MS.xlsx`
+
+Ignore for matching-rule work:
+
+- `Training Data/Automation/Operato_wise_data.zip`
+- old operator-wise subfolders if they conflict with the top-level files
+- old `Training Data/Automation/README.md` until updated
+
+**Important distinctions confirmed during review:**
+- `LCL` and `LRL` both provide last location, but `LCL` usually includes
+  B-party and usage/event clues such as `MOC`, `MTC`, `SMSMO`, `SMSMT`,
+  `CALL MO`, `CALL MT`, and often `IMEI`.
+- `LRL` is more radio/geographic in nature and is better recognized by
+  `RADIO LOCATION`, `LastActiveDateTime`, `LRA`, `Latitude`, `Longitude`,
+  or `No Radio Location Found`.
+- `IMEI-MS` intake is normally a 15-digit IMEI from the user, but operator
+  result rows may show 14-digit variants. The safest anchor is the first IMEI
+  echoed in the reply body.
+
+### 0.2. Add separate self-training storage with max-100 retention
+
+User requirement:
+
+- keep a separate self-training store for real request/reply pairs captured by
+  the running system
+- never let it grow beyond the latest 100 entries
+
+Required behavior:
+
+- do not overwrite the five manual Excel baseline files automatically
+- keep self-training separate from the manual curated baseline
+- when a new captured example is added beyond 100, delete the oldest one
+- prefer storing:
+  - timestamp
+  - request type
+  - canonical request text
+  - operator
+  - raw reply body
+  - whether the match was automatic or manually corrected
+
 ### 1. Stop posting unauthorized-sender rejections into the Telegram group — needs scope answers first
 
 User's request: unauthorized messages currently get posted back into the
@@ -55,6 +148,27 @@ answering, must be resolved before implementing:**
   today) becomes audit-visible too, if question 1 says to suppress it.
 - In `telegram-bridge/bridge.js` `handleIntake()`, skip the `telegram.sendMessage`
   call for whichever failure types are in scope, per the answers above.
+
+### 1.1. Stop gateway watchdog unauthorized-send alerts from going to the group
+
+Separate from bridge/backend authorization rejections:
+
+- `POST /api/gateway/watchdog` in `src/app.js` writes `UNAUTHORIZED_SMS_SEND`
+  audit and then sends a Telegram alert immediately.
+- That alert currently goes to `watchdogAlertChatId` or falls back to the main
+  group chat if no private watchdog chat is configured.
+
+Desired behavior:
+
+- do not post these alerts into the shared group
+- either:
+  - send privately to the group owner/watchdog chat only, or
+  - keep audit-only visibility in admin surfaces
+
+Implementation note:
+
+- this is a different path from `telegram-bridge/bridge.js` and must be fixed
+  separately.
 
 ---
 
