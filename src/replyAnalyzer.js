@@ -13,6 +13,43 @@ const REPLY_PATTERNS = Object.freeze({
   [REQUEST_TYPES.IMEI_MS]: [/imei/i, /msisdn|mobile|subscriber|number/i]
 });
 
+const STRONG_REPLY_FAMILY_PATTERNS = Object.freeze({
+  [REQUEST_TYPES.LRL]: [
+    /no\s+radio\s+location\s+found/i,
+    /no\s+rl\s+info\s+found/i,
+    /radio\s+location/i,
+    /lastactivedatetime/i,
+    /\blra:/i,
+    /latitude/i,
+    /longitude/i,
+    /\blat\b/i,
+    /\blong\b/i
+  ],
+  [REQUEST_TYPES.LCL]: [
+    /msisdn\s+b\s*party/i,
+    /\bbparty\b/i,
+    /last\s+call\s+location/i,
+    /usagetype\s*:/i,
+    /\b(?:moc|mtc|smsmo|smsmt|call mo|call mt)\b/i
+  ],
+  [REQUEST_TYPES.MS_NID]: [
+    /(?:^|\n)\s*msisdn[:\s]/i,
+    /(?:^|\n).*\b(?:nid|dob)\b/i,
+    /(?:^|\n).*,\s*\d{4}-\d{2}-\d{2}(?:\s|$)/i
+  ],
+  [REQUEST_TYPES.NID_MS]: [
+    /(?:^|\n)\s*nid[:\s]/i,
+    /(?:^|\n)\s*nid[^\n]*\b(?:msisdn|8801\d{9})/i,
+    /no\s+data\s+found[^\n]*\bnid\b/i
+  ],
+  [REQUEST_TYPES.IMEI_MS]: [
+    /(?:^|\n)\s*imei[:\s]/i,
+    /\bmsisdn-date\b/i,
+    /no\s+data\s+available\s+within\s+90\s+days/i,
+    /(?:^|\n)\s*\d{14,15},\s*8801\d{9},\s*\d{8}/i
+  ]
+});
+
 function analyzeOperatorReply({ request, messageBody }) {
   const body = String(messageBody || '');
   const expectedPatterns = REPLY_PATTERNS[request.requestType] || [];
@@ -22,6 +59,7 @@ function analyzeOperatorReply({ request, messageBody }) {
   const foundReference = extractSilentReference(body);
   const trainingMatch = matchTrainingPattern(request, body);
   const payloadMatch = payloadInReply(request.payload, body);
+  const inferredReplyFamilies = inferReplyFamilies(body);
 
   return {
     requestType: request.requestType,
@@ -33,11 +71,23 @@ function analyzeOperatorReply({ request, messageBody }) {
     patternMatched: matchedPatterns.length > 0 || trainingMatch.matched,
     matchedPatterns,
     trainingMatch,
+    inferredReplyFamilies,
     confidence: confidenceScore({
       referenceMatched: Boolean(foundReference && foundReference === request.silentReference),
       payloadMatched: payloadMatch.matched,
       patternMatched: matchedPatterns.length > 0 || trainingMatch.matched
     })
+  };
+}
+
+function inferReplyFamilies(messageBody) {
+  const body = String(messageBody || '');
+  const strongTypes = [];
+  for (const [requestType, patterns] of Object.entries(STRONG_REPLY_FAMILY_PATTERNS)) {
+    if (patterns.some((pattern) => pattern.test(body))) strongTypes.push(requestType);
+  }
+  return {
+    strongTypes
   };
 }
 
@@ -146,6 +196,7 @@ function saveMatchedReplyKeywords(requestType, operator, messageBody) {
 module.exports = {
   REPLY_PATTERNS,
   analyzeOperatorReply,
+  inferReplyFamilies,
   matchTrainingPattern,
   saveMatchedReplyKeywords
 };

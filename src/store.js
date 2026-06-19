@@ -553,14 +553,8 @@ class AutomationStore {
         return senderMatchesDestination || senderIsTrustedOperator;
       });
 
-    // Priority: WAITING_OPERATOR_REPLY > NEEDS_MANUAL_REVIEW > TIMEOUT
-    const active = pending.filter((r) => r.status === STATUSES.WAITING_OPERATOR_REPLY);
-    const finalized = pending.filter((r) => r.status === STATUSES.NEEDS_MANUAL_REVIEW);
-    const timedOut = pending.filter((r) => r.status === STATUSES.TIMEOUT);
-    const candidates = active.length ? active : finalized.length ? finalized : timedOut;
-
-    if (candidates.length === 1) return candidates[0];
-    if (candidates.length > 1) return { ambiguous: true, candidates };
+    if (pending.length === 1) return pending[0];
+    if (pending.length > 1) return { ambiguous: true, candidates: pending };
     return null;
   }
 

@@ -13,6 +13,15 @@ function buildMention(replyText, requesterId) {
   return { offset: 0, length: firstLine.length, userId: requesterId };
 }
 
+function shouldSuppressGroupReply(result) {
+  const suppressed = new Set([
+    'REQUEST_DENIED_DISABLED_USER',
+    'REQUEST_DENIED_UNKNOWN_USER',
+    'REQUEST_DENIED_UNAUTHORIZED_OPERATOR'
+  ]);
+  return suppressed.has(result?.errorCode);
+}
+
 // Decide what to do with an inbound group message. Returns a plan the caller executes,
 // keeping this function free of network calls for easy testing.
 function planIntake(message, config) {
@@ -74,13 +83,6 @@ async function handleIntake(message, { config, backend, telegram, log = () => {}
 
   if (plan.action === 'unauthorized') {
     log(`intake: unauthorized user ${plan.fromId}`);
-    if (plan.replyText) {
-      await telegram.sendMessage({
-        chatId: config.groupChatId,
-        text: plan.replyText,
-        replyToMessageId: plan.replyToMessageId
-      });
-    }
     return plan;
   }
 
@@ -89,11 +91,13 @@ async function handleIntake(message, { config, backend, telegram, log = () => {}
     // Parse/validation/authorization failure — surface the backend's correction message
     // back in-thread so the requester can fix and resend.
     const msg = result.replyText || (result.errors && result.errors.join('; ')) || 'Request rejected.';
-    await telegram.sendMessage({
-      chatId: config.groupChatId,
-      text: msg,
-      replyToMessageId: plan.replyToMessageId
-    });
+    if (!shouldSuppressGroupReply(result)) {
+      await telegram.sendMessage({
+        chatId: config.groupChatId,
+        text: msg,
+        replyToMessageId: plan.replyToMessageId
+      });
+    }
     log(`intake: rejected — ${msg}`);
     return { action: 'rejected', result };
   }
@@ -206,4 +210,4 @@ async function notifyTimeouts({ backend, telegram, notifiedSet, log = () => {} }
   return posted;
 }
 
-module.exports = { buildMention, planIntake, handleIntake, postApprovedReplies, postLiveEdits, notifyTimeouts };
+module.exports = { buildMention, planIntake, handleIntake, postApprovedReplies, postLiveEdits, notifyTimeouts, shouldSuppressGroupReply };

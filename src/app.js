@@ -276,7 +276,7 @@ function buildOpsData(store, queue) {
 // Fire-and-forget Telegram alert to the admin/watchdog chat when an unauthorized send is detected.
 function sendTelegramWatchdogAlert(telegramConfig, { gatewayId, recipient, snippet }) {
   const botToken = telegramConfig.botToken;
-  const chatId = telegramConfig.watchdogAlertChatId || telegramConfig.groupChatId;
+  const chatId = telegramConfig.watchdogAlertChatId || null;
   if (!botToken || !chatId) return;
   const text = `⚠️ <b>UNAUTHORIZED SMS DETECTED</b>\n\nGateway: <code>${gatewayId}</code>\nRecipient: <code>${recipient}</code>\nMessage: "<i>${snippet}</i>"\n\nCheck the admin AUDIT tab immediately.`;
   const payload = JSON.stringify({ chat_id: chatId, text, parse_mode: 'HTML' });

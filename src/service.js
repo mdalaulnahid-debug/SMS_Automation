@@ -2,7 +2,7 @@
 
 const { OPERATORS, STATUSES, DISPATCH_STATUSES, TERMINAL_DISPATCH_STATUSES } = require('./domain');
 const { parseRequestText } = require('./parser');
-const { analyzeOperatorReply, saveMatchedReplyKeywords } = require('./replyAnalyzer');
+const { analyzeOperatorReply, saveMatchedReplyKeywords, inferReplyFamilies } = require('./replyAnalyzer');
 
 const DEFAULT_REPLY_WINDOW_MS = 15 * 60 * 1000;
 const DEFAULT_SEND_CONFIRMATION_GRACE_MS = 15 * 60 * 1000;
@@ -66,6 +66,7 @@ class AutomationService {
       });
       return {
         ok: false,
+        errorCode: 'REQUEST_DENIED_DISABLED_USER',
         errors: ['Requester account is disabled.'],
         replyText: 'Your account is disabled. Contact the administrator.'
       };
@@ -76,6 +77,7 @@ class AutomationService {
       });
       return {
         ok: false,
+        errorCode: 'REQUEST_DENIED_UNKNOWN_USER',
         errors: ['Requester is not authorized.'],
         replyText: 'You are not an authorized requester. Contact the administrator to be added.'
       };
@@ -90,8 +92,13 @@ class AutomationService {
       return !requester.allowedOperators.includes(operator);
     });
     if (unauthorizedOperator) {
+      this.store.audit('system', 'REQUEST_DENIED_UNAUTHORIZED_OPERATOR', null, {
+        requesterId: input.requesterId,
+        operator: unauthorizedOperator
+      });
       return {
         ok: false,
+        errorCode: 'REQUEST_DENIED_UNAUTHORIZED_OPERATOR',
         errors: [`Requester is not authorized for ${unauthorizedOperator}.`],
         replyText: 'You are not authorized to submit this operator request.'
       };
@@ -176,6 +183,7 @@ class AutomationService {
 
     let matchedRequest = null;
     let analysis = null;
+    const inferredReplyFamilies = inferReplyFamilies(input.body);
 
     if (matchResult && matchResult.ambiguous) {
       // Multiple pending requests on this gateway — score each with the reply analyzer
@@ -187,35 +195,60 @@ class AutomationService {
           request,
           analysis: a,
           score: confidenceRank(a.confidence),
+          typeScore: replyTypeScore(request, inferredReplyFamilies),
           payloadMatches: a.payloadMatchCount || 0,
+          statusRank: requestStatusRank(request.status),
           createdAt: new Date(request.createdAt).getTime()
         };
       });
-      scored.sort((a, b) => {
+      const narrowed = scored.filter((candidate) => candidate.typeScore > -3);
+      const viable = narrowed.length ? narrowed : scored;
+      viable.sort((a, b) => {
+        if (b.typeScore !== a.typeScore) return b.typeScore - a.typeScore;
         if (b.score !== a.score) return b.score - a.score;
         if (b.payloadMatches !== a.payloadMatches) return b.payloadMatches - a.payloadMatches;
+        if (b.statusRank !== a.statusRank) return b.statusRank - a.statusRank;
         return b.createdAt - a.createdAt;
       });
-      const hasUniqueTopScore = scored.length < 2 || scored[0].score > scored[1].score;
-      const hasUniqueTopPayload = scored.length < 2 || scored[0].payloadMatches > scored[1].payloadMatches;
-      if (scored[0].score > 0 && (hasUniqueTopScore || hasUniqueTopPayload)) {
-        matchedRequest = scored[0].request;
-        analysis = scored[0].analysis;
+      const hasUniqueTopType = viable.length < 2 || viable[0].typeScore > viable[1].typeScore;
+      const hasUniqueTopScore = viable.length < 2 || viable[0].score > viable[1].score;
+      const hasUniqueTopPayload = viable.length < 2 || viable[0].payloadMatches > viable[1].payloadMatches;
+      if (
+        viable[0].typeScore >= 0 &&
+        viable[0].score > 0 &&
+        (hasUniqueTopType || hasUniqueTopScore || hasUniqueTopPayload)
+      ) {
+        matchedRequest = viable[0].request;
+        analysis = viable[0].analysis;
       } else {
         this.store.audit('system', 'SMS_REPLY_AMBIGUOUS', null, {
           gatewayId: input.gatewayId,
           senderNumber: input.from,
-          candidateCount: scored.length,
-          scores: scored.map((s) => ({
+          candidateCount: viable.length,
+          inferredReplyFamilies,
+          scores: viable.map((s) => ({
             requestId: s.request.requestId,
             confidence: s.analysis.confidence,
-            payloadMatches: s.payloadMatches
+            payloadMatches: s.payloadMatches,
+            typeScore: s.typeScore,
+            status: s.request.status
           }))
         });
       }
     } else if (matchResult && !matchResult.ambiguous) {
-      matchedRequest = matchResult;
-      analysis = analyzeOperatorReply({ request: matchedRequest, messageBody: input.body });
+      const typeScore = replyTypeScore(matchResult, inferredReplyFamilies);
+      if (typeScore < 0) {
+        this.store.audit('system', 'SMS_REPLY_TYPE_MISMATCH', null, {
+          gatewayId: input.gatewayId,
+          senderNumber: input.from,
+          requestId: matchResult.requestId,
+          requestType: matchResult.requestType,
+          inferredReplyFamilies
+        });
+      } else {
+        matchedRequest = matchResult;
+        analysis = analyzeOperatorReply({ request: matchedRequest, messageBody: input.body });
+      }
     }
 
     const inbox = this.store.addSmsInbox({
@@ -781,6 +814,19 @@ function collectDispatchReplyMessages(request, dispatch, store) {
 const CONFIDENCE_RANKS = { HIGH: 3, MEDIUM: 2, LOW: 1, UNKNOWN: 0 };
 function confidenceRank(confidence) {
   return CONFIDENCE_RANKS[confidence] || 0;
+}
+
+function requestStatusRank(status) {
+  if (status === STATUSES.WAITING_OPERATOR_REPLY) return 3;
+  if (status === STATUSES.NEEDS_MANUAL_REVIEW) return 2;
+  if (status === STATUSES.TIMEOUT) return 1;
+  return 0;
+}
+
+function replyTypeScore(request, inferredReplyFamilies) {
+  const strongTypes = inferredReplyFamilies?.strongTypes || [];
+  if (!strongTypes.length) return 0;
+  return strongTypes.includes(request.requestType) ? 3 : -3;
 }
 
 module.exports = {

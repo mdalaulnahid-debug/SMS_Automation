@@ -2,7 +2,7 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { buildMention, planIntake, handleIntake, postApprovedReplies } = require('../telegram-bridge/bridge');
+const { buildMention, planIntake, handleIntake, postApprovedReplies, shouldSuppressGroupReply } = require('../telegram-bridge/bridge');
 
 const CONFIG = {
   groupChatId: '-1001234567890',
@@ -83,6 +83,41 @@ test('handleIntake relays a backend rejection back into the thread', async () =>
   assert.equal(res.action, 'rejected');
   assert.equal(telegram.sent[0].text, 'Invalid request format.');
   assert.equal(telegram.sent[0].replyToMessageId, 7);
+});
+
+test('handleIntake stays quiet for authorization-style backend rejections', async () => {
+  const telegram = fakeTelegram();
+  const backend = {
+    submitRequest: async () => ({
+      ok: false,
+      errorCode: 'REQUEST_DENIED_UNKNOWN_USER',
+      replyText: 'You are not an authorized requester.'
+    })
+  };
+  const res = await handleIntake(
+    { text: 'LRL 01712345678', chat: { id: CONFIG.groupChatId }, from: { id: 777888999 }, message_id: 9 },
+    { config: CONFIG, backend, telegram }
+  );
+  assert.equal(res.action, 'rejected');
+  assert.equal(telegram.sent.length, 0);
+});
+
+test('bridge-level unauthorized intake no longer replies into the group', async () => {
+  const telegram = fakeTelegram();
+  const backend = { submitRequest: async () => ({ ok: true }) };
+  const res = await handleIntake(
+    { text: 'LRL 01712345678', chat: { id: CONFIG.groupChatId }, from: { id: 555 }, message_id: 5 },
+    { config: CONFIG, backend, telegram }
+  );
+  assert.equal(res.action, 'unauthorized');
+  assert.equal(telegram.sent.length, 0);
+});
+
+test('shouldSuppressGroupReply recognizes authorization error codes', () => {
+  assert.equal(shouldSuppressGroupReply({ errorCode: 'REQUEST_DENIED_UNKNOWN_USER' }), true);
+  assert.equal(shouldSuppressGroupReply({ errorCode: 'REQUEST_DENIED_DISABLED_USER' }), true);
+  assert.equal(shouldSuppressGroupReply({ errorCode: 'REQUEST_DENIED_UNAUTHORIZED_OPERATOR' }), true);
+  assert.equal(shouldSuppressGroupReply({ errorCode: 'MIXED_REQUEST_TYPES' }), false);
 });
 
 test('postApprovedReplies posts telegram drafts threaded + mentioned, then confirms', async () => {

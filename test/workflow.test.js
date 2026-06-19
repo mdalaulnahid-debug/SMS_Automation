@@ -949,6 +949,103 @@ test('ambiguous requests with equal scores fall to manual review', async () => {
   assert.equal(result.needsManualReview, true);
 });
 
+test('single pending request is not matched when reply strongly indicates a different request family', async () => {
+  const { store, service } = createHarness({
+    BANGLALINK: { trustedSenders: ['8801924400990'] }
+  });
+  const submitted = await service.submitRequest({
+    channel: 'telegram',
+    chatId: 'operations',
+    sourceMessageId: 500,
+    requesterName: 'LIC Barisal',
+    requesterId: '8739371943',
+    text: 'MS-NID 01994428200'
+  });
+
+  const inbound = service.receiveSmsWebhook({
+    gatewayId: 'BANGLALINK_PHONE_01',
+    from: '8801924400990',
+    body: 'IMEI 353213353376890 No Data Available within 90 Days - Banglalink'
+  });
+
+  assert.equal(inbound.ok, false);
+  assert.equal(inbound.needsManualReview, true);
+  assert.equal(store.smsInbox.at(-1).matchedRequestId, null);
+
+  const mismatchAudit = store.auditLogs.find((row) => row.action === 'SMS_REPLY_TYPE_MISMATCH');
+  assert.ok(mismatchAudit);
+  assert.equal(mismatchAudit.requestId, null);
+  assert.equal(mismatchAudit.details.requestId, submitted.request.requestId);
+  assert.equal(mismatchAudit.details.requestType, 'MS-NID');
+});
+
+test('ambiguous mixed-family requests prefer the candidate whose family matches the operator reply', async () => {
+  const { store, service } = createHarness({
+    BANGLALINK: { trustedSenders: ['8801924400990'] }
+  });
+
+  const lrl = store.createRequest({
+    chatId: 'ops',
+    requesterId: '111',
+    requesterName: 'OC Banaripara',
+    operator: 'BANGLALINK',
+    targetOperators: ['BANGLALINK'],
+    requestType: 'LRL',
+    payload: '01971029492',
+    rawRequestText: 'LRL 01971029492'
+  });
+  store.updateRequestStatus(lrl.requestId, STATUSES.VALIDATED);
+  store.updateRequestStatus(lrl.requestId, STATUSES.QUEUED);
+  store.updateRequestStatus(lrl.requestId, STATUSES.SMS_SENT);
+  store.updateRequestStatus(lrl.requestId, STATUSES.WAITING_OPERATOR_REPLY);
+  store.addSmsOutbox({
+    requestId: lrl.requestId,
+    gatewayId: 'BANGLALINK_PHONE_01',
+    operator: 'BANGLALINK',
+    silentReference: lrl.silentReference,
+    destinationNumber: '8801924400990',
+    messageBody: 'LRL 01971029492',
+    sentStatus: 'SENT'
+  });
+  store.setDispatchSent(lrl.requestId, 'BANGLALINK', { ok: true });
+
+  const lcl = store.createRequest({
+    chatId: 'ops',
+    requesterId: '222',
+    requesterName: 'Different Officer',
+    operator: 'BANGLALINK',
+    targetOperators: ['BANGLALINK'],
+    requestType: 'LCL',
+    payload: '01971029492',
+    rawRequestText: 'LCL 01971029492'
+  });
+  store.updateRequestStatus(lcl.requestId, STATUSES.VALIDATED);
+  store.updateRequestStatus(lcl.requestId, STATUSES.QUEUED);
+  store.updateRequestStatus(lcl.requestId, STATUSES.SMS_SENT);
+  store.updateRequestStatus(lcl.requestId, STATUSES.WAITING_OPERATOR_REPLY);
+  store.addSmsOutbox({
+    requestId: lcl.requestId,
+    gatewayId: 'BANGLALINK_PHONE_01',
+    operator: 'BANGLALINK',
+    silentReference: lcl.silentReference,
+    destinationNumber: '8801924400990',
+    messageBody: 'LCL 01971029492',
+    sentStatus: 'SENT'
+  });
+  store.setDispatchSent(lcl.requestId, 'BANGLALINK', { ok: true });
+
+  const result = service.receiveSmsWebhook({
+    gatewayId: 'BANGLALINK_PHONE_01',
+    from: '8801924400990',
+    body: 'MSISDN: 8801971029492, Datetime: 20260618220704, LAC ID: 680, Cell ID: 62163, Address: Darogar Bazar, Guthia, Wazirpur, Barisal., BPARTY: 880711740273257, IMEI: 352640113845900, IMSI: 470039222076875, UsageType: MOC, NetworkType: 2G. - Banglalink'
+  });
+
+  assert.equal(result.ok, true);
+  assert.equal(result.request.requestId, lcl.requestId);
+  assert.equal(store.getRequest(lcl.requestId).status, STATUSES.NEEDS_MANUAL_REVIEW);
+  assert.equal(store.getRequest(lrl.requestId).status, STATUSES.WAITING_OPERATOR_REPLY);
+});
+
 test('reject moves request to FAILED and frees the operator queue', async () => {
   const { store, service } = createHarness();
   const submitted = await service.submitRequest({
