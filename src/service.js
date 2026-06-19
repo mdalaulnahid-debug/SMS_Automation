@@ -22,7 +22,8 @@ class AutomationService {
     sendConfirmationGraceMs = DEFAULT_SEND_CONFIRMATION_GRACE_MS,
     duplicateRequestWindowMs = DEFAULT_DUPLICATE_REQUEST_WINDOW_MS,
     denyUnknownRequesters = false,
-    autoApproveChannels = []
+    autoApproveChannels = [],
+    manualReviewStore = null
   }) {
     this.store = store;
     this.queue = queue;
@@ -34,6 +35,7 @@ class AutomationService {
     // Channels whose replies are auto-approved (skips manual review gate).
     // e.g. ['telegram'] — the reply goes straight to APPROVED_FOR_POST.
     this.autoApproveChannels = autoApproveChannels;
+    this.manualReviewStore = manualReviewStore;
   }
 
   async submitRequest(input) {
@@ -183,7 +185,7 @@ class AutomationService {
 
     let matchedRequest = null;
     let analysis = null;
-    const inferredReplyFamilies = inferReplyFamilies(input.body);
+    const inferredReplyFamilies = inferReplyFamilies(input.body, this.store.operatorForGateway(input.gatewayId) || '');
 
     if (matchResult && matchResult.ambiguous) {
       // Multiple pending requests on this gateway — score each with the reply analyzer
@@ -196,6 +198,7 @@ class AutomationService {
           analysis: a,
           score: confidenceRank(a.confidence),
           typeScore: replyTypeScore(request, inferredReplyFamilies),
+          trainingScore: a.trainingMatch?.score || 0,
           payloadMatches: a.payloadMatchCount || 0,
           statusRank: requestStatusRank(request.status),
           createdAt: new Date(request.createdAt).getTime()
@@ -205,18 +208,20 @@ class AutomationService {
       const viable = narrowed.length ? narrowed : scored;
       viable.sort((a, b) => {
         if (b.typeScore !== a.typeScore) return b.typeScore - a.typeScore;
+        if (b.trainingScore !== a.trainingScore) return b.trainingScore - a.trainingScore;
         if (b.score !== a.score) return b.score - a.score;
         if (b.payloadMatches !== a.payloadMatches) return b.payloadMatches - a.payloadMatches;
         if (b.statusRank !== a.statusRank) return b.statusRank - a.statusRank;
         return b.createdAt - a.createdAt;
       });
       const hasUniqueTopType = viable.length < 2 || viable[0].typeScore > viable[1].typeScore;
+      const hasUniqueTopTraining = viable.length < 2 || viable[0].trainingScore > viable[1].trainingScore;
       const hasUniqueTopScore = viable.length < 2 || viable[0].score > viable[1].score;
       const hasUniqueTopPayload = viable.length < 2 || viable[0].payloadMatches > viable[1].payloadMatches;
       if (
         viable[0].typeScore >= 0 &&
-        viable[0].score > 0 &&
-        (hasUniqueTopType || hasUniqueTopScore || hasUniqueTopPayload)
+        (viable[0].trainingScore > 0 || viable[0].score > 0) &&
+        (hasUniqueTopType || hasUniqueTopTraining || hasUniqueTopScore || hasUniqueTopPayload)
       ) {
         matchedRequest = viable[0].request;
         analysis = viable[0].analysis;
@@ -230,6 +235,7 @@ class AutomationService {
             requestId: s.request.requestId,
             confidence: s.analysis.confidence,
             payloadMatches: s.payloadMatches,
+            trainingScore: s.trainingScore,
             typeScore: s.typeScore,
             status: s.request.status
           }))
@@ -275,6 +281,13 @@ class AutomationService {
       this.store.markOperatorReplyReceived(matchedRequest.requestId, operatorKey);
       this.store.markDispatchReplied(matchedRequest.requestId, operatorKey, { inboxId: inbox.id });
     }
+    this._recordManualReviewCandidate({
+      request: matchedRequest,
+      operatorKey,
+      messageBody: input.body,
+      analysis,
+      source: 'auto_match'
+    });
 
     // Multi-operator live posting (NID-MS, IMEI-MS): post a partial summary immediately when
     // some operators are still pending, then edit the same Telegram message as more come in.
@@ -668,6 +681,13 @@ class AutomationService {
       this.store.markOperatorReplyReceived(requestId, operatorKey);
       this.store.markDispatchReplied(requestId, operatorKey, { inboxId: inbox.id });
     }
+    this._recordManualReviewCandidate({
+      request,
+      operatorKey,
+      messageBody: inbox.messageBody,
+      analysis,
+      source: 'manual_match'
+    });
 
     this.store.audit('admin', 'MANUAL_MATCH', requestId, { inboxId, operator: operatorKey });
 
@@ -754,6 +774,17 @@ class AutomationService {
 
   getDispatchOutbox(requestId, dispatch) {
     return this.store.getOutboxById(dispatch.outboxId) || this.store.getOutboxForGateway(requestId, dispatch.gatewayId);
+  }
+
+  _recordManualReviewCandidate({ request, operatorKey, messageBody, analysis, source }) {
+    if (!this.manualReviewStore) return;
+    this.manualReviewStore.record({
+      request,
+      operator: operatorKey,
+      messageBody,
+      analysis,
+      source
+    });
   }
 }
 

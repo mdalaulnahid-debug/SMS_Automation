@@ -7,6 +7,7 @@ const https = require('node:https');
 const { AutomationStore } = require('./store');
 const { OperatorQueue } = require('./queue');
 const { SmsGatewayClient } = require('./smsGateway');
+const { ManualReviewStore } = require('./manualReviewStore');
 const {
   AutomationService,
   DEFAULT_SEND_CONFIRMATION_GRACE_MS,
@@ -304,12 +305,14 @@ function createApp(options = {}) {
   const smsGateway = new SmsGatewayClient(store, queue);
   const telegramConfig = options.telegramConfig || loadTelegramConfig();
   const autoApproveChannels = telegramConfig.autoApprove ? ['telegram'] : [];
+  const manualReviewStore = options.manualReviewStore || new ManualReviewStore();
   const service = new AutomationService({
     store,
     queue,
     smsGateway,
     denyUnknownRequesters: authConfig.denyUnknownRequesters,
-    autoApproveChannels
+    autoApproveChannels,
+    manualReviewStore
   });
 
   // Restore the per-operator waiting lists from any persisted QUEUED requests.

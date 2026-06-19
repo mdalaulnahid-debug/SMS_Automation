@@ -4,6 +4,7 @@ const { existsSync, readFileSync } = require('node:fs');
 const { join } = require('node:path');
 const { REQUEST_TYPES } = require('./domain');
 const { extractSilentReference } = require('./store');
+const { matchReplyAgainstTraining, scoreReplyFamiliesFromTraining } = require('./trainingData');
 
 const REPLY_PATTERNS = Object.freeze({
   [REQUEST_TYPES.LRL]: [/last\s+radio/i, /\blrl\b/i, /cell|lac|latitude|longitude|location/i],
@@ -59,7 +60,7 @@ function analyzeOperatorReply({ request, messageBody }) {
   const foundReference = extractSilentReference(body);
   const trainingMatch = matchTrainingPattern(request, body);
   const payloadMatch = payloadInReply(request.payload, body);
-  const inferredReplyFamilies = inferReplyFamilies(body);
+  const inferredReplyFamilies = inferReplyFamilies(body, request.operator);
 
   return {
     requestType: request.requestType,
@@ -80,14 +81,24 @@ function analyzeOperatorReply({ request, messageBody }) {
   };
 }
 
-function inferReplyFamilies(messageBody) {
+function inferReplyFamilies(messageBody, operator = '') {
   const body = String(messageBody || '');
   const strongTypes = [];
   for (const [requestType, patterns] of Object.entries(STRONG_REPLY_FAMILY_PATTERNS)) {
     if (patterns.some((pattern) => pattern.test(body))) strongTypes.push(requestType);
   }
+  const trainingScores = scoreReplyFamiliesFromTraining(body, operator);
+  const trainingTypes = [];
+  if (trainingScores.length) {
+    const top = trainingScores[0];
+    const second = trainingScores[1];
+    if (top.score >= 2 && (!second || top.score > second.score)) {
+      trainingTypes.push(top.requestType);
+    }
+  }
   return {
-    strongTypes
+    strongTypes: [...new Set(strongTypes)],
+    trainingTypes
   };
 }
 
@@ -114,6 +125,15 @@ function payloadInReply(payload, body) {
 }
 
 function matchTrainingPattern(request, body) {
+  const workbookMatch = matchReplyAgainstTraining({
+    requestType: request.requestType,
+    operator: request.operator,
+    messageBody: body
+  });
+  if (workbookMatch.matched || workbookMatch.score > 0) {
+    return workbookMatch;
+  }
+
   const training = loadTrainingPatterns();
   const normalizedBody = body.toLowerCase();
   const groups = training.patterns.filter((pattern) => {
@@ -127,7 +147,9 @@ function matchTrainingPattern(request, body) {
 
   return {
     matched: matches.length > 0,
-    matches: matches.slice(0, 10)
+    score: matches.reduce((sum, match) => sum + Math.min(match.count, 3), 0),
+    keywordHits: matches.slice(0, 10),
+    exampleHits: []
   };
 }
 

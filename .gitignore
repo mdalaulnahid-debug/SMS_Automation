@@ -15,3 +15,5 @@ android-gateway/keystore.properties
 public/gateway-app.apk
 data/telegram-offset.json
 config/vps.md
+Training Data/Automation/~$*.xlsx
+Training Data/Automation/*.tmp
