@@ -2,7 +2,7 @@
 
 const { OPERATORS, STATUSES, DISPATCH_STATUSES, TERMINAL_DISPATCH_STATUSES } = require('./domain');
 const { parseRequestText } = require('./parser');
-const { analyzeOperatorReply, saveMatchedReplyKeywords, inferReplyFamilies } = require('./replyAnalyzer');
+const { analyzeOperatorReply, inferReplyFamilies } = require('./replyAnalyzer');
 
 const DEFAULT_REPLY_WINDOW_MS = 15 * 60 * 1000;
 const DEFAULT_SEND_CONFIRMATION_GRACE_MS = 15 * 60 * 1000;
@@ -274,7 +274,6 @@ class AutomationService {
     if (operatorKey) {
       this.store.markOperatorReplyReceived(matchedRequest.requestId, operatorKey);
       this.store.markDispatchReplied(matchedRequest.requestId, operatorKey, { inboxId: inbox.id });
-      saveMatchedReplyKeywords(matchedRequest.requestType, operatorKey, input.body);
     }
 
     // Multi-operator live posting (NID-MS, IMEI-MS): post a partial summary immediately when
