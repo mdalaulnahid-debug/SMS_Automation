@@ -134,7 +134,7 @@ test('loadTrainingCatalog refreshes cache after workbook changes', async () => {
     const first = loadTrainingCatalog({ rootDir: root, cacheDir });
     assert.equal(first.examples.length, 1);
 
-    await new Promise((resolve) => setTimeout(resolve, 20));
+    await new Promise((resolve) => setTimeout(resolve, 1200));
     writeWorkbook(workbookPath, [
       { Request: 'LCL 01971029492', Reply: 'BPARTY MOC Banglalink' },
       { Request: 'LCL 01971020000', Reply: 'BPARTY SMSMT Banglalink' }

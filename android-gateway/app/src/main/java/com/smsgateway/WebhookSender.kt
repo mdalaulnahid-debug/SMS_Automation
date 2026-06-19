@@ -25,7 +25,8 @@ object WebhookSender {
         gatewayId: String,
         from: String,
         body: String,
-        receivedAt: String
+        receivedAt: String,
+        deliveryKey: String? = null
     ): Boolean {
         val backendUrl = Prefs.getBackendUrl(context).trimEnd('/')
         val apiKey = Prefs.getApiKey(context)
@@ -35,6 +36,7 @@ object WebhookSender {
             put("from", from)
             put("body", body)
             put("receivedAt", receivedAt)
+            if (!deliveryKey.isNullOrBlank()) put("deliveryKey", deliveryKey)
         }.toString()
 
         val requestBuilder = Request.Builder()

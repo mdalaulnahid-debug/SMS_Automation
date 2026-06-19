@@ -395,6 +395,35 @@ test('matches operator reply and drafts tagged WhatsApp response', async () => {
   assert.match(inbound.replyDraft.replyText, /LRL: 01712345678/);
 });
 
+test('duplicate inbound webhook retry is ignored without creating a second inbox row', async () => {
+  const { store, service } = createHarness();
+  const submitted = await service.submitRequest({
+    chatId: 'operations',
+    requesterName: 'Officer Rahim',
+    requesterId: '8801700000000',
+    text: 'LRL 01712345678'
+  });
+
+  const receivedAt = '2026-06-20T10:15:00.000+06:00';
+  const payload = {
+    gatewayId: 'GP_PHONE_01',
+    from: '12345',
+    body: 'LRL cell location',
+    receivedAt
+  };
+
+  const first = service.receiveSmsWebhook(payload);
+  const second = service.receiveSmsWebhook(payload);
+
+  assert.equal(first.ok, true);
+  assert.equal(first.request.requestId, submitted.request.requestId);
+  assert.equal(second.ok, true);
+  assert.equal(second.duplicate, true);
+  assert.equal(store.smsInbox.length, 1);
+  assert.equal(store.listReplyDrafts().filter((row) => row.requestId === submitted.request.requestId).length, 1);
+  assert.equal(store.auditLogs.some((row) => row.action === 'SMS_INBOUND_DUPLICATE_IGNORED'), true);
+});
+
 test('single-operator batch replies include multiple matched inbound SMS messages', async () => {
   const { store, service } = createHarness({
     BANGLALINK: { trustedSenders: ['8801924400990'] }

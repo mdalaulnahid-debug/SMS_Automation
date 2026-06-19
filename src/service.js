@@ -152,6 +152,27 @@ class AutomationService {
   }
 
   receiveSmsWebhook(input) {
+    const receivedAt = input.receivedAt || new Date().toISOString();
+    const duplicateInbox = this.store.findInboundDuplicate({
+      gatewayId: input.gatewayId,
+      senderNumber: input.from,
+      messageBody: input.body,
+      receivedAt
+    });
+    if (duplicateInbox) {
+      this.store.audit('system', 'SMS_INBOUND_DUPLICATE_IGNORED', duplicateInbox.matchedRequestId, {
+        gatewayId: input.gatewayId,
+        senderNumber: input.from,
+        receivedAt
+      });
+      return {
+        ok: true,
+        duplicate: true,
+        inbox: duplicateInbox,
+        request: duplicateInbox.matchedRequestId ? this.store.getRequest(duplicateInbox.matchedRequestId) : null
+      };
+    }
+
     if (!this.store.isTrustedSenderForGateway(input.gatewayId, input.from)) {
       const inbox = this.store.addSmsInbox({
         gatewayId: input.gatewayId,
@@ -162,7 +183,7 @@ class AutomationService {
           ignored: true,
           reason: 'Sender is not configured as a push-pull, hotline, or network sender for this gateway.'
         },
-        receivedAt: input.receivedAt
+        receivedAt
       });
       this.store.audit('system', 'SMS_IGNORED_UNTRUSTED_SENDER', null, {
         gatewayId: input.gatewayId,
@@ -263,7 +284,7 @@ class AutomationService {
       messageBody: input.body,
       matchedRequestId: matchedRequest?.requestId || null,
       analysis,
-      receivedAt: input.receivedAt
+      receivedAt
     });
 
     if (!matchedRequest) {

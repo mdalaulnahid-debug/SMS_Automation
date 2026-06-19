@@ -6,6 +6,9 @@ import android.content.Intent
 import android.provider.Telephony
 import android.util.Log
 import androidx.work.BackoffPolicy
+import androidx.work.Constraints
+import androidx.work.ExistingWorkPolicy
+import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkManager
 import com.smsgateway.db.AppDatabase
@@ -13,6 +16,7 @@ import com.smsgateway.db.LogEntry
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.security.MessageDigest
 import java.time.Instant
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
@@ -21,6 +25,7 @@ import java.util.concurrent.TimeUnit
 class SmsReceiver : BroadcastReceiver() {
     companion object {
         private const val TAG = "SmsReceiver"
+        private const val RETRY_WORK_NAME = "retry_inbound_webhooks"
     }
 
     override fun onReceive(context: Context, intent: Intent) {
@@ -37,15 +42,12 @@ class SmsReceiver : BroadcastReceiver() {
 
         Log.d(TAG, "SMS from $sender: ${body.take(50)}")
 
-        // Determine which SIM received this SMS so we use the right gatewayId.
         val incomingSubId = intent.getIntExtra("android.telephony.extra.SUBSCRIPTION_INDEX", -1)
             .takeIf { it >= 0 }
             ?: intent.getIntExtra("subscription", -1)
 
         CoroutineScope(Dispatchers.IO).launch {
             val db = AppDatabase.get(context)
-
-            // Match subId to configured gateway; fall back to primary.
             val gatewayId = if (incomingSubId >= 0) {
                 Prefs.configuredGateways(context)
                     .firstOrNull { (_, subId) -> subId == incomingSubId }
@@ -56,29 +58,46 @@ class SmsReceiver : BroadcastReceiver() {
 
             Log.d(TAG, "Routing inbound SMS (subId=$incomingSubId) to gateway $gatewayId")
 
-            val ok = WebhookSender.forward(context, gatewayId, sender, body, receivedAt)
+            val deliveryKey = buildDeliveryKey(gatewayId, sender, body, receivedAt)
+            val ok = WebhookSender.forward(context, gatewayId, sender, body, receivedAt, deliveryKey)
 
             db.logDao().insert(
                 LogEntry(
                     type = if (ok) "FORWARDED" else "RECEIVED",
                     direction = "INBOUND",
                     sender = sender,
-                    messageBody = body.take(500),
+                    messageBody = body,
                     operator = gatewayId,
+                    gatewayId = gatewayId,
                     status = if (ok) "OK" else "PENDING_RETRY",
-                    errorDetail = if (!ok) "Webhook delivery failed — pending retry" else null,
+                    errorDetail = if (!ok) "Webhook delivery failed - pending retry" else null,
+                    receivedAtText = receivedAt,
                     subId = incomingSubId
                 )
             )
 
             if (!ok) {
+                val constraints = Constraints.Builder()
+                    .setRequiredNetworkType(NetworkType.CONNECTED)
+                    .build()
                 val retryRequest = OneTimeWorkRequestBuilder<RetryWorker>()
+                    .setConstraints(constraints)
                     .setInitialDelay(30, TimeUnit.SECONDS)
                     .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS)
                     .build()
-                WorkManager.getInstance(context).enqueue(retryRequest)
-                Log.w(TAG, "Webhook failed — scheduled retry in 30s")
+                WorkManager.getInstance(context).enqueueUniqueWork(
+                    RETRY_WORK_NAME,
+                    ExistingWorkPolicy.KEEP,
+                    retryRequest
+                )
+                Log.w(TAG, "Webhook failed - scheduled retry in 30s")
             }
         }
+    }
+
+    private fun buildDeliveryKey(gatewayId: String, sender: String, body: String, receivedAt: String): String {
+        val raw = "$gatewayId|$sender|$receivedAt|$body"
+        val digest = MessageDigest.getInstance("SHA-256").digest(raw.toByteArray(Charsets.UTF_8))
+        return digest.joinToString("") { "%02x".format(it) }
     }
 }

@@ -15,10 +15,14 @@ data class LogEntry(
     val messageBody: String,
     val requestId: String? = null,
     val operator: String? = null,
+    /** Original gatewayId for inbound retry routing. */
+    val gatewayId: String? = null,
     /** OK | QUEUED_TO_CARRIER | DELIVERED | FAILED | PENDING_RETRY */
     val status: String,
     val errorDetail: String? = null,
     val timestamp: Long = System.currentTimeMillis(),
+    /** Original receivedAt sent to backend so retries remain idempotent. */
+    val receivedAtText: String? = null,
     /** Provider message ID returned by SmsSender (links delivery callbacks to this row) */
     val localId: String? = null,
     /** SubscriptionManager subId of the SIM used to send; -1 = system default */

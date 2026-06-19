@@ -300,6 +300,15 @@ class AutomationStore {
     return row;
   }
 
+  findInboundDuplicate({ gatewayId, senderNumber, messageBody, receivedAt }) {
+    return this.smsInbox.find((row) => {
+      return row.gatewayId === gatewayId
+        && row.senderNumber === senderNumber
+        && row.messageBody === messageBody
+        && row.receivedAt === receivedAt;
+    }) || null;
+  }
+
   addReplyDraft(entry) {
     const row = {
       id: randomId('reply'),

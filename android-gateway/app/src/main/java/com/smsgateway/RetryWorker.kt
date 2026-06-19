@@ -26,16 +26,24 @@ class RetryWorker(appContext: Context, workerParams: WorkerParameters) :
         var allOk = true
 
         for (entry in pending) {
-            val receivedAt = DateTimeFormatter.ISO_OFFSET_DATE_TIME
+            val gatewayId = entry.gatewayId ?: entry.operator ?: Prefs.getGatewayId(applicationContext)
+            val receivedAt = entry.receivedAtText ?: DateTimeFormatter.ISO_OFFSET_DATE_TIME
                 .withZone(ZoneId.systemDefault())
                 .format(Instant.ofEpochMilli(entry.timestamp))
-
-            val ok = WebhookSender.forward(
-                applicationContext,
-                Prefs.getGatewayId(applicationContext),
+            val deliveryKey = buildDeliveryKey(
+                gatewayId,
                 entry.sender ?: "",
                 entry.messageBody,
                 receivedAt
+            )
+
+            val ok = WebhookSender.forward(
+                applicationContext,
+                gatewayId,
+                entry.sender ?: "",
+                entry.messageBody,
+                receivedAt,
+                deliveryKey
             )
 
             if (ok) {
@@ -48,5 +56,12 @@ class RetryWorker(appContext: Context, workerParams: WorkerParameters) :
         }
 
         return if (allOk) Result.success() else Result.retry()
+    }
+
+    private fun buildDeliveryKey(gatewayId: String, sender: String, body: String, receivedAt: String): String {
+        val raw = "$gatewayId|$sender|$receivedAt|$body"
+        val digest = java.security.MessageDigest.getInstance("SHA-256")
+            .digest(raw.toByteArray(Charsets.UTF_8))
+        return digest.joinToString("") { "%02x".format(it) }
     }
 }
