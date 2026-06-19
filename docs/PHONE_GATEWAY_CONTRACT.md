@@ -1,8 +1,6 @@
 # Android Phone SMS Gateway Contract
 
-Each Android phone exposes a local HTTP endpoint for sending SMS and forwards incoming SMS to the backend webhook. The backend can discover phones via runtime registration or static `config/gateways.json`.
-
-See `progress_tracker.md` for validated E2E test (2026-06-11) and dual-SIM notes.
+Each Android phone acts as an operator SMS gateway for the backend. The backend queues outbound jobs, the phone polls and claims them, then the phone forwards inbound operator replies back to the backend.
 
 ---
 
@@ -14,16 +12,16 @@ See `progress_tracker.md` for validated E2E test (2026-06-11) and dual-SIM notes
 | Robi phone | `ROBI_PHONE_01` | Robi |
 | Banglalink phone | `BANGLALINK_PHONE_01` | Banglalink |
 
-One APK for all phones — set Gateway ID in Settings per device.
+One APK serves all phones; identity is selected in Settings.
 
 ---
 
-## Discovery and Registration
+## Discovery And Registration
 
-### Backend health (phone → PC)
+### Backend health
 
 ```http
-GET http://<PC_LAN_IP>:3000/api/health
+GET http://<PC_OR_VPS>:3000/api/health
 ```
 
 Example response:
@@ -33,22 +31,18 @@ Example response:
   "ok": true,
   "service": "sms-telegram-automation",
   "version": "0.1.0",
-  "port": 3000,
-  "preferredLanIp": "192.168.0.230",
-  "lanAddresses": ["192.168.0.230"],
-  "backendUrls": ["http://192.168.0.230:3000"]
+  "port": 3000
 }
 ```
 
-Android app (v1.2.1+) scans the phone's Wi‑Fi subnet for this endpoint when Backend URL is blank.
+### Gateway registration
 
-### Gateway registration (phone → PC)
-
-When the foreground service starts, the phone registers its HTTP listen address:
+When the foreground service starts, the phone registers its identity and listener details:
 
 ```http
-POST http://<PC_LAN_IP>:3000/api/gateways/register
+POST http://<PC_OR_VPS>:3000/api/gateways/register
 Content-Type: application/json
+x-gateway-secret: <per-gateway secret>
 
 {
   "gatewayId": "GP_PHONE_01",
@@ -58,74 +52,32 @@ Content-Type: application/json
 }
 ```
 
-Response:
-
-```json
-{
-  "ok": true,
-  "gateway": {
-    "id": "GP_PHONE_01",
-    "gatewayUrl": "http://192.168.0.172:8080",
-    "status": "CONFIGURED",
-    "lastSeenAt": "2026-06-10T21:11:26.286Z"
-  }
-}
-```
-
-Backend updates `gatewayUrl` **in memory** (and displays it for diagnostics —
-gateway `status` shows `CONFIGURED` vs `MOCK` based on whether it's set). Restart
-backend → phone must Start Service again (or set `gatewayUrl` manually in
-`config/gateways.json`).
-
-`config/gateways.json` may use `"gatewayUrl": ""` for GP to rely on auto-registration.
-
-**`gatewayUrl`/`sendPath` are not actually used to send anything today.** The
-backend never makes an outbound HTTP call to the phone — see the poll-based
-contract below. These fields exist for the gateway health display only; an
-earlier "push" design called `POST http://<PHONE_IP>:8080/send-sms` directly,
-but that path is dead code on the backend side now.
-
-### Heartbeat (phone → PC)
+### Heartbeat
 
 ```http
-POST http://<PC_LAN_IP>:3000/api/gateway/heartbeat
+POST http://<PC_OR_VPS>:3000/api/gateway/heartbeat
 Content-Type: application/json
 x-gateway-secret: <per-gateway secret>
 
 { "gatewayId": "GP_PHONE_01" }
 ```
 
-Response:
-
-```json
-{ "ok": true, "gateway": { "id": "GP_PHONE_01", "lastSeenAt": "2026-06-18T11:31:15.401Z" } }
-```
-
-Added so the dashboard's `lastSeenAt` (and the "online/offline" gateway health
-chip) stays current even when a gateway has no outgoing jobs to poll for —
-polling `/api/gateway/jobs` also refreshes `lastSeenAt` as a side effect, but a
-quiet operator with no pending requests could otherwise look stale/offline for
-no real reason. The Android app calls this every 30s from the same poll-loop
-thread that calls `/api/gateway/jobs` ([`GatewayForegroundService.kt`](../android-gateway/app/src/main/java/com/smsgateway/GatewayForegroundService.kt)).
+Heartbeat keeps gateway `lastSeenAt` fresh even when there are no pending jobs.
 
 ---
 
-## Backend ↔ Phone: Send SMS (poll-based — this is the real contract)
+## Backend -> Phone: SMS Dispatch
 
-The phone never receives a push from the backend. Instead it polls every 3
-seconds from a background thread inside the foreground service
-([`GatewayForegroundService.kt`](../android-gateway/app/src/main/java/com/smsgateway/GatewayForegroundService.kt)),
-claims any waiting jobs, sends them via `SmsManager`, then acks the result.
+The active design is poll-based. The backend does not push SMS requests directly to the phone.
 
-### 1. Poll and claim (phone → PC)
+### 1. Poll and claim jobs
 
 ```http
-GET http://<PC_LAN_IP>:3000/api/gateway/jobs?gatewayId=GP_PHONE_01
+GET http://<PC_OR_VPS>:3000/api/gateway/jobs?gatewayId=GP_PHONE_01
 x-gateway-secret: <per-gateway secret>
 ```
 
-Atomically claims every `PENDING_PICKUP` outbox row for that gateway (sets
-status `CLAIMED`, records `claimedAt`) and returns them:
+Response:
 
 ```json
 {
@@ -141,100 +93,115 @@ status `CLAIMED`, records `claimedAt`) and returns them:
 }
 ```
 
-- `message` is the canonical dispatch text built by `src/parser.js` — sent
-  **exactly** as-is, no backend metadata appended. Since the multi-number
-  batching work, this may contain up to 5 space-separated identifiers in one
-  body (`LRL 0171... 0172...`), not just one.
-- In test mode, `to` is `testDestination` instead of the operator shortcode.
-- If a job is claimed but never acked within 90 seconds, a maintenance sweep
-  resets it back to `PENDING_PICKUP` so it gets retried on the next poll
-  (`store.reclaimStaleClaimedJobs`, see [`src/maintenance.js`](../src/maintenance.js)).
+Rules:
 
-### 2. Ack the result (phone → PC)
+- `message` is the canonical operator SMS body built by `src/parser.js`
+- operator-facing command format remains hardbound
+- intake may be lightly normalized first, but the dispatched SMS must already be in canonical telecom format
+- up to 5 identifiers may appear in one operator SMS body
+- in test mode, `to` is `testDestination` instead of the operator shortcode
+
+### 2. Ack send result
 
 ```http
-POST http://<PC_LAN_IP>:3000/api/gateway/jobs/outbox_8mrrs9xw/ack
+POST http://<PC_OR_VPS>:3000/api/gateway/jobs/outbox_8mrrs9xw/ack
 Content-Type: application/json
 x-gateway-secret: <per-gateway secret>
 
 { "gatewayId": "GP_PHONE_01", "ok": true, "providerMessageId": "sms_1781126748295" }
 ```
 
-Failure case: `{ "gatewayId": "GP_PHONE_01", "ok": false, "error": "description" }`.
+Failure example:
 
-Response: `{ "ok": true, "sentStatus": "SENT" }` (or `"FAILED"`).
+```json
+{ "gatewayId": "GP_PHONE_01", "ok": false, "error": "description" }
+```
 
-The backend stamps `sendResult.confirmedAt` on ack — this is what starts the
-operator reply-window clock (not the original queue time), so a delayed
-phone doesn't lose reply-window time it never got to use. There's also a
-**send-confirmation grace period** before that: a job that's been claimed but
-not yet acked has its own shorter timeout window so a phone that claimed a
-job and then went silent doesn't leave the request hanging forever either.
+Notes:
 
-**Known gap:** the phone reports `ok: true` once `SmsManager` accepts the
-send, which is not carrier-confirmed — a dual-SIM wrong-slot or no-signal
-failure can surface seconds later in the system SMS app, after the ack
-already said success. Target: sent-intent callbacks.
+- backend starts the operator reply window from send confirmation time, not original queue time
+- stale claimed jobs are reclaimed if the phone goes silent before ack
+- `ok: true` means Android accepted the SMS job, not that the carrier confirmed delivery
 
 ---
 
-## Phone → Backend: Incoming SMS Webhook
+## Phone -> Backend: Incoming SMS Webhook
 
 ```http
-POST http://<PC_LAN_IP>:3000/api/sms/inbound
+POST http://<PC_OR_VPS>:3000/api/sms/inbound
 Content-Type: application/json
+x-gateway-secret: <per-gateway secret>
 
 {
   "gatewayId": "GP_PHONE_01",
   "from": "+8801936759367",
   "body": "MSISDN: 8801724761972\nLastActiveDateTime: ...",
-  "receivedAt": "2026-06-11T03:27:35+06:00"
+  "receivedAt": "2026-06-11T03:27:35+06:00",
+  "deliveryKey": "GP_PHONE_01:01936759367:2026-06-11T03:27:35+06:00:<body-hash>"
 }
 ```
 
-Backend ignores messages unless `from` (normalized) is in that gateway's `trustedSenders` list in `config/gateways.json`.
+Rules:
 
-Matching: trusted sender + single pending request on gateway within reply window → `NEEDS_MANUAL_REVIEW` + reply draft.
+- backend ignores inbound SMS unless normalized `from` is in that gateway's `trustedSenders`
+- backend correlates replies using payload anchors, request-family checks, curated training-cache scoring, and manual-review fallback
+- one ambiguous reply should fall to review instead of being forced onto the wrong request
+
+### Retry behavior
+
+If internet is temporarily down when the phone receives the operator SMS:
+
+1. Android stores the inbound event locally in Room
+2. it attempts immediate webhook delivery
+3. WorkManager retries later when network returns
+4. retry preserves:
+   - original `gatewayId`
+   - original full `body`
+   - original receive timestamp
+   - deterministic `deliveryKey`
+5. backend deduplicates repeated deliveries of that same SMS event
+
+This protects both sides:
+
+- replies are not lost just because the network was briefly unavailable
+- delayed retries do not create duplicate inbox rows or duplicate Telegram postings
 
 ---
 
 ## Phone App Requirements
 
-- Send SMS from the phone's **active/default SMS SIM** (dual-SIM: user must pick correct SIM in phone settings until app adds SIM picker)
+- Send SMS from the active/default SMS SIM
 - Read incoming SMS (`RECEIVE_SMS`, `READ_SMS`)
-- Foreground service so Android does not kill the HTTP server
-- Retry inbound webhooks via WorkManager when backend unreachable
-- Local Room log of sent/received/forwarded messages
-- Never alter the operator SMS command body
-- Register gateway URL with backend on service start
-- Optional: auto-discover backend URL on LAN (v1.2.1)
+- Run a foreground service so Android does not kill the gateway loop
+- Retry failed inbound webhooks via WorkManager
+- Preserve original inbound SMS identity across retries
+- Keep a Room log of sent/received/forwarded messages
+- Never alter the canonical operator SMS command body
+- Register gateway identity on service start
 
 ---
 
-## Trusted Senders (`config/gateways.json`)
+## Trusted Senders
 
-Per-operator array. Include:
+Configured in `config/gateways.json` per operator. Include:
 
-- Operator shortcodes (e.g. `12345`)
-- Test reply phone numbers in `01xxxxxxxxx` form (e.g. `01936759367`)
-- Any alphanumeric sender IDs operators use for replies
+- operator shortcodes such as `12345`
+- known reply numbers in normalized `01...` form
+- alphanumeric sender IDs used by operators
 
-Example (GP, home test session):
+Example:
 
 ```json
 "trustedSenders": ["12345", "01700000001", "01800000002", "01320151105", "01936759367"]
 ```
 
-Restart backend after editing `gateways.json`.
-
 ---
 
-## Test Mode Flow (validated)
+## Test Mode
 
-1. App `POST /api/requests` with `testDestination: "01936759367"`
-2. Backend queues a `PENDING_PICKUP` outbox job → phone polls
-   `GET /api/gateway/jobs`, claims it, and sends `to: 01936759367`
-3. Target phone receives `LRL <payload>`, replies manually
-4. Phone `SmsReceiver` → `POST /api/sms/inbound`
-5. Backend drafts reply → dashboard `NEEDS_MANUAL_REVIEW`
-6. Reviewer approves draft → Telegram bridge posts to group
+1. App submits `POST /api/requests` with `testDestination`
+2. Backend queues a gateway job
+3. Phone polls and sends the SMS to the test phone
+4. Test phone replies manually
+5. Gateway forwards inbound SMS
+6. Backend creates a reviewable reply draft

@@ -201,6 +201,16 @@ Telegram group / dashboard / app test panel
 | `NID-MS` | 1-5 NIDs | All three operators |
 | `IMEI-MS` | 1-5 IMEIs | All three operators |
 
+Initially the system treated intake as a fully hardbound rule. That rule still applies to the operator-facing SMS, but intake is now lightly normalized first so harmless formatting mistakes do not break operation.
+
+Allowed normalization examples:
+
+- split compound commands such as `MS NID` -> `MS-NID`
+- glued prefixes such as `LRL01712345678` -> `LRL 01712345678`
+- lowercase or mixed-case command tokens
+- `+880` / `880` country-code forms for MSISDN input
+- safe separator stripping inside numeric identifiers
+
 Outbound SMS body is always canonicalized to:
 
 ```text
@@ -211,8 +221,9 @@ Examples:
 
 - `LCL    01710000000     01720000001` becomes `LCL 01710000000 01720000001`
 - `lrl 01712345678` becomes `LRL 01712345678`
+- `MS NID +8801712345678` becomes `MS-NID 01712345678`
 
-The backend does not silently clean unsafe identifiers such as `+880...`, `01710-...`, or comma/slash-separated values.
+The operator SMS itself is still hardbound. Normalization happens only at intake so the final dispatch remains the strict telecom format.
 
 ## Intake Validation Rules
 
@@ -304,7 +315,9 @@ SMS_Automation/
 ├── config/
 │   └── gateways.example.json    # Phone URLs + trusted senders
 ├── public/                      # Dashboard UI
-├── data/reply-patterns.json     # Training-derived reply patterns
+├── data/training-cache/         # Generated per-request-type cache from curated Excel workbooks
+├── data/manual-review/          # Review-only rolling capture store (max 100 per request type)
+├── data/training-summary.json   # Generated summary of imported training data
 ├── db/schema.sql                # Future SQLite schema (not wired)
 ├── android-gateway/             # Kotlin Android gateway app
 │   ├── build-apk.bat            # Release APK build script
@@ -345,11 +358,27 @@ SMS_Automation/
 
 ## Training Data
 
+Primary curated source of truth:
+
+- `Training Data/Automation/LCL.xlsx`
+- `Training Data/Automation/LRL.xlsx`
+- `Training Data/Automation/MS-NID.xlsx`
+- `Training Data/Automation/NID-MS.xlsx`
+- `Training Data/Automation/IMEI-MS.xlsx`
+
+Runtime matching reads generated caches, not the workbooks on every reply:
+
 ```bash
 npm install
-npm run import:training    # → data/reply-patterns.json
-npm run organize:training  # → Training Data/Organized/
+npm run import:training    # -> data/training-cache/*.json + data/training-summary.json
+npm run organize:training  # -> Training Data/Organized/
 ```
+
+Notes:
+
+- the old single `data/reply-patterns.json` file is no longer used
+- automatic self-training into the curated baseline is disabled
+- review-only captures may be stored under `data/manual-review/`, capped at the latest 100 entries per request type
 
 ---
 
@@ -358,11 +387,12 @@ npm run organize:training  # → Training Data/Organized/
 - **Persistent** via SQLite (`data/automation.db`, `node:sqlite`, WAL). Restart restores requests,
   drafts, audit log, queues, and registered gateway URLs; in-flight requests keep waiting. See
   `src/persistence.js` and `docs/telegram-bridge.md`.
-- Reply analysis uses keyword/pattern matching, not structured field extractors yet
+- Reply analysis now combines payload anchoring, request-family checks, curated training-cache scoring, and manual-review fallback; it is safer than the earlier broad heuristic match, but it is still not a full structured extractor
 - Intake and reply posting are via Telegram (see `docs/telegram-bridge.md`); dashboard is admin-only
 - Backend API auth exists (Phase 2): admin API key + per-gateway secrets + deny-by-default users +
   hash-chained audit log. Set `config/auth.json`; empty key = dev mode. Phone-side rejection of
   unsigned `/send-sms` is still an Android TODO.
+- Android inbound webhook retry now preserves original sender, full body, and receive time, and uses a deterministic delivery key so delayed resend after internet loss does not create duplicate reply processing
 - Play Protect may warn on sideload — use signed release APK, tap Install anyway
 - Office/home LAN IPs change — use auto-discovery or `start-backend.bat` printed IP
 

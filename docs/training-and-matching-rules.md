@@ -1,6 +1,6 @@
 # Training And Matching Rules
 
-This file is the quick-reference rule sheet for request routing, reply-shape recognition, and future self-training behavior.
+This file is the quick-reference rule sheet for request routing, intake normalization, reply-shape recognition, and future self-training behavior.
 
 Use this file as the first checkpoint before changing:
 
@@ -36,12 +36,37 @@ Notes:
 - `IMEI-MS` must fan out to all three operators: GP, Robi, Banglalink.
 - `LRL`, `LCL`, and `MS-NID` are mobile-number-driven requests and must go only to the relevant operator for that MSISDN.
 
+## Intake Normalization Rules
+
+Initially intake was treated as a fully hardbound rule with strict operator-format typing required from the user.
+
+Current rule:
+
+- operator-facing SMS is still hardbound
+- intake is now lightly normalized before validation and routing
+
+Allowed safe normalization:
+
+- split compound commands such as `MS NID`, `NID MS`, `IMEI MS`
+- glued command prefixes such as `LRL017...` or `MSNID016...`
+- lowercase or mixed-case command tokens
+- `+880` / `880` country-code MSISDN forms
+- harmless separators inside numeric identifiers
+
+Not allowed:
+
+- mixed request families in one message
+- more than 5 identifiers
+- unsafe or ambiguous payloads that still fail shape validation after normalization
+- any hidden metadata in the operator-facing SMS body
+
 ## Silent Reference Rule
 
 - Every request received from Telegram should get an internal silent reference.
 - That silent reference is for backend correlation only.
 - The silent reference must never be added to the operator-facing outbound SMS body.
 - Outbound operator SMS must stay compliant with the hardbound telecom command format.
+- The silent reference and normalization logic are backend-only conveniences; operators must still receive the canonical telecom command only.
 
 ## Reply Shape Rules
 
