@@ -6,6 +6,8 @@ config/auth.json
 data/*.db
 data/*.db-wal
 data/*.db-shm
+data/training-cache.json
+data/manual-review/*.json
 npm-debug.log*
 android-gateway/local.properties
 android-gateway/app/local.properties

@@ -1,7 +1,5 @@
 'use strict';
 
-const { existsSync, readFileSync } = require('node:fs');
-const { join } = require('node:path');
 const { REQUEST_TYPES } = require('./domain');
 const { extractSilentReference } = require('./store');
 const { matchReplyAgainstTraining, scoreReplyFamiliesFromTraining } = require('./trainingData');
@@ -125,42 +123,11 @@ function payloadInReply(payload, body) {
 }
 
 function matchTrainingPattern(request, body) {
-  const workbookMatch = matchReplyAgainstTraining({
+  return matchReplyAgainstTraining({
     requestType: request.requestType,
     operator: request.operator,
     messageBody: body
   });
-  if (workbookMatch.matched || workbookMatch.score > 0) {
-    return workbookMatch;
-  }
-
-  const training = loadTrainingPatterns();
-  const normalizedBody = body.toLowerCase();
-  const groups = training.patterns.filter((pattern) => {
-    return pattern.requestType === request.requestType && (!pattern.operator || request.operator === pattern.operator);
-  });
-  const matches = groups.flatMap((group) => {
-    return group.keywords
-      .filter(({ token }) => normalizedBody.includes(token.toLowerCase()))
-      .map(({ token, count }) => ({ token, count, operator: group.operator }));
-  });
-
-  return {
-    matched: matches.length > 0,
-    score: matches.reduce((sum, match) => sum + Math.min(match.count, 3), 0),
-    keywordHits: matches.slice(0, 10),
-    exampleHits: []
-  };
-}
-
-function loadTrainingPatterns() {
-  const filePath = join(__dirname, '..', 'data', 'reply-patterns.json');
-  if (!existsSync(filePath)) return { patterns: [] };
-  try {
-    return JSON.parse(readFileSync(filePath, 'utf8'));
-  } catch {
-    return { patterns: [] };
-  }
 }
 
 function confidenceScore({ referenceMatched, payloadMatched, patternMatched }) {

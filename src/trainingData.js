@@ -1,45 +1,74 @@
 'use strict';
 
-const { existsSync, readdirSync, statSync } = require('node:fs');
-const { basename, extname, join } = require('node:path');
+const { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } = require('node:fs');
+const { basename, dirname, extname, join } = require('node:path');
 const { REQUEST_TYPES } = require('./domain');
 
 const DEFAULT_TRAINING_ROOT = process.env.TRAINING_ROOT || join(__dirname, '..', 'Training Data', 'Automation');
+const DEFAULT_CACHE_FILE = process.env.TRAINING_CACHE_FILE || join(__dirname, '..', 'data', 'training-cache.json');
 const TRAINING_EXTENSIONS = new Set(['.xlsx', '.xls', '.xlsm']);
 
 let cachedCatalog = null;
 let cachedSignature = '';
+let cachedCacheFile = '';
 
-function loadTrainingCatalog(rootDir = DEFAULT_TRAINING_ROOT) {
+function loadTrainingCatalog({
+  rootDir = DEFAULT_TRAINING_ROOT,
+  cacheFile = DEFAULT_CACHE_FILE
+} = {}) {
   const signature = buildSignature(rootDir);
-  if (cachedCatalog && cachedSignature === signature) return cachedCatalog;
+  if (cachedCatalog && cachedSignature === signature && cachedCacheFile === cacheFile) {
+    return cachedCatalog;
+  }
 
+  const fromCache = readTrainingCache(cacheFile);
+  if (fromCache && fromCache.signature === signature && fromCache.rootDir === rootDir) {
+    cachedCatalog = fromCache.catalog;
+    cachedSignature = signature;
+    cachedCacheFile = cacheFile;
+    return cachedCatalog;
+  }
+
+  const catalog = rebuildTrainingCache({ rootDir, cacheFile, signature });
+  cachedCatalog = catalog;
+  cachedSignature = signature;
+  cachedCacheFile = cacheFile;
+  return catalog;
+}
+
+function rebuildTrainingCache({
+  rootDir = DEFAULT_TRAINING_ROOT,
+  cacheFile = DEFAULT_CACHE_FILE,
+  signature = buildSignature(rootDir)
+} = {}) {
   const xlsx = loadXlsx();
   if (!xlsx) {
-    cachedCatalog = emptyCatalog(rootDir);
-    cachedSignature = signature;
-    return cachedCatalog;
+    const empty = emptyCatalog(rootDir, []);
+    writeTrainingCache(cacheFile, { signature, rootDir, catalog: empty });
+    return empty;
   }
 
   const files = listWorkbookFiles(rootDir);
   const examples = files.flatMap((filePath) => readWorkbook(xlsx, filePath));
   const patterns = buildPatterns(examples);
+  const summary = buildSummary(examples);
+  const catalog = { rootDir, files, examples, patterns, summary };
 
-  cachedCatalog = {
-    rootDir,
-    files,
-    examples,
-    patterns
-  };
-  cachedSignature = signature;
-  return cachedCatalog;
+  writeTrainingCache(cacheFile, { signature, rootDir, catalog });
+  return catalog;
 }
 
-function matchReplyAgainstTraining({ requestType, operator, messageBody, rootDir = DEFAULT_TRAINING_ROOT }) {
+function matchReplyAgainstTraining({
+  requestType,
+  operator,
+  messageBody,
+  rootDir = DEFAULT_TRAINING_ROOT,
+  cacheFile = DEFAULT_CACHE_FILE
+}) {
   const bodyTokens = tokenizeTrainingText(messageBody);
   if (!bodyTokens.length) return emptyMatch();
 
-  const catalog = loadTrainingCatalog(rootDir);
+  const catalog = loadTrainingCatalog({ rootDir, cacheFile });
   const patterns = catalog.patterns.filter((pattern) => {
     return pattern.requestType === requestType && (!pattern.operator || pattern.operator === operator);
   });
@@ -72,13 +101,18 @@ function matchReplyAgainstTraining({ requestType, operator, messageBody, rootDir
   };
 }
 
-function scoreReplyFamiliesFromTraining(messageBody, operator, rootDir = DEFAULT_TRAINING_ROOT) {
+function scoreReplyFamiliesFromTraining(
+  messageBody,
+  operator,
+  rootDir = DEFAULT_TRAINING_ROOT,
+  cacheFile = DEFAULT_CACHE_FILE
+) {
   const bodyTokens = tokenizeTrainingText(messageBody);
   if (!bodyTokens.length) return [];
 
-  const catalog = loadTrainingCatalog(rootDir);
+  loadTrainingCatalog({ rootDir, cacheFile });
   const scores = Object.values(REQUEST_TYPES).map((requestType) => {
-    const result = matchReplyAgainstTraining({ requestType, operator, messageBody, rootDir });
+    const result = matchReplyAgainstTraining({ requestType, operator, messageBody, rootDir, cacheFile });
     return {
       requestType,
       score: result.score,
@@ -147,6 +181,24 @@ function buildPatterns(examples) {
       .slice(0, 50)
       .map(([token, count]) => ({ token, count }))
   }));
+}
+
+function buildSummary(examples) {
+  const summary = {
+    totalExamples: examples.length,
+    blankReplies: examples.filter((example) => !example.replyText).length,
+    byRequestType: {},
+    byOperator: {},
+    byRequestTypeAndOperator: {}
+  };
+
+  for (const example of examples) {
+    increment(summary.byRequestType, example.requestType || 'UNKNOWN');
+    increment(summary.byOperator, example.operator || 'UNKNOWN');
+    increment(summary.byRequestTypeAndOperator, `${example.requestType || 'UNKNOWN'}:${example.operator || 'UNKNOWN'}`);
+  }
+
+  return summary;
 }
 
 function scoreExampleOverlap(example, bodyTokens) {
@@ -220,6 +272,23 @@ function buildSignature(rootDir) {
   return parts.join('|');
 }
 
+function readTrainingCache(cacheFile) {
+  if (!existsSync(cacheFile)) return null;
+  try {
+    return JSON.parse(readFileSync(cacheFile, 'utf8'));
+  } catch {
+    return null;
+  }
+}
+
+function writeTrainingCache(cacheFile, payload) {
+  mkdirSync(dirname(cacheFile), { recursive: true });
+  writeFileSync(cacheFile, JSON.stringify({
+    generatedAt: new Date().toISOString(),
+    ...payload
+  }, null, 2), 'utf8');
+}
+
 function loadXlsx() {
   try {
     return require('xlsx');
@@ -228,8 +297,8 @@ function loadXlsx() {
   }
 }
 
-function emptyCatalog(rootDir) {
-  return { rootDir, files: [], examples: [], patterns: [] };
+function emptyCatalog(rootDir, files = []) {
+  return { rootDir, files, examples: [], patterns: [], summary: buildSummary([]) };
 }
 
 function emptyMatch() {
@@ -241,9 +310,15 @@ function emptyMatch() {
   };
 }
 
+function increment(target, key) {
+  target[key] = (target[key] || 0) + 1;
+}
+
 module.exports = {
   DEFAULT_TRAINING_ROOT,
+  DEFAULT_CACHE_FILE,
   loadTrainingCatalog,
+  rebuildTrainingCache,
   matchReplyAgainstTraining,
   scoreReplyFamiliesFromTraining,
   tokenizeTrainingText
