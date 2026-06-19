@@ -72,17 +72,210 @@ test('rejects mixed request types in same message', () => {
   assertInvalidParse('LCL 01710000000 LRL 01720000001', 'MIXED_REQUEST_TYPES', /Only one request type/);
 });
 
-test('rejects identifiers with symbols instead of silently cleaning them', () => {
-  assertInvalidParse('LCL +8801710000000', 'INVALID_IDENTIFIER_CHARS', /digits only/);
+test('accepts +880 country code prefix instead of rejecting it', () => {
+  const parsed = parseRequestText('LCL +8801710000000');
+  assert.equal(parsed.ok, true);
+  assert.deepEqual(parsed.identifiers, ['01710000000']);
+});
+
+test('rejects identifiers with slash separator', () => {
   assertInvalidParse('NID-MS 4246780000/5246780000', 'INVALID_IDENTIFIER_CHARS', /digits only/);
 });
 
 test('rejects invalid identifier shape after tokenization', () => {
-  assertInvalidParse('LCL 01710 000000', 'INVALID_IDENTIFIER_FORMAT', /Use English capital command/);
+  assertInvalidParse('LCL 01710 000000', 'INVALID_IDENTIFIER_FORMAT', /too short.*5 digits/);
 });
 
 test('rejects same request type across mixed operators', () => {
   assertInvalidParse('LCL 01710000000 01820000001', 'OPERATOR_MISMATCH', /multiple operators/);
+});
+
+// Auto-correct type-token typo tests
+
+test('auto-corrects split hyphenated command: MS NID → MS-NID', () => {
+  const parsed = parseRequestText('MS NID 01625242040');
+  assert.equal(parsed.ok, true);
+  assert.equal(parsed.requestType, 'MS-NID');
+  assert.deepEqual(parsed.identifiers, ['01625242040']);
+  assert.equal(parsed.canonicalRequestText, 'MS-NID 01625242040');
+  assert.ok(parsed.correctionMessage);
+});
+
+test('auto-corrects split hyphenated command: NID MS → NID-MS', () => {
+  const parsed = parseRequestText('NID MS 4246780000');
+  assert.equal(parsed.ok, true);
+  assert.equal(parsed.requestType, 'NID-MS');
+  assert.deepEqual(parsed.identifiers, ['4246780000']);
+  assert.ok(parsed.correctionMessage);
+});
+
+test('auto-corrects split hyphenated command: IMEI MS → IMEI-MS', () => {
+  const parsed = parseRequestText('IMEI MS 35391109000000');
+  assert.equal(parsed.ok, true);
+  assert.equal(parsed.requestType, 'IMEI-MS');
+  assert.deepEqual(parsed.identifiers, ['35391109000000']);
+  assert.ok(parsed.correctionMessage);
+});
+
+test('auto-corrects glued prefix: LRL01308218563 → LRL 01308218563', () => {
+  const parsed = parseRequestText('LRL01308218563');
+  assert.equal(parsed.ok, true);
+  assert.equal(parsed.requestType, 'LRL');
+  assert.deepEqual(parsed.identifiers, ['01308218563']);
+  assert.equal(parsed.canonicalRequestText, 'LRL 01308218563');
+  assert.ok(parsed.correctionMessage);
+});
+
+test('auto-corrects glued prefix with hyphen in number: LRL01308-218563 → LRL 01308218563', () => {
+  const parsed = parseRequestText('LRL01308-218563');
+  assert.equal(parsed.ok, true);
+  assert.equal(parsed.requestType, 'LRL');
+  assert.deepEqual(parsed.identifiers, ['01308218563']);
+  assert.ok(parsed.correctionMessage);
+});
+
+test('auto-corrects glued compound prefix: MSNID01625242040 → MS-NID 01625242040', () => {
+  const parsed = parseRequestText('MSNID01625242040');
+  assert.equal(parsed.ok, true);
+  assert.equal(parsed.requestType, 'MS-NID');
+  assert.deepEqual(parsed.identifiers, ['01625242040']);
+  assert.ok(parsed.correctionMessage);
+});
+
+test('auto-corrects lowercase command: lrl → LRL', () => {
+  const parsed = parseRequestText('lrl 01712345678');
+  assert.equal(parsed.ok, true);
+  assert.equal(parsed.requestType, 'LRL');
+  assert.equal(parsed.canonicalRequestText, 'LRL 01712345678');
+});
+
+test('auto-corrects mixed case command: Ms-Nid → MS-NID', () => {
+  const parsed = parseRequestText('Ms-Nid 01625242040');
+  assert.equal(parsed.ok, true);
+  assert.equal(parsed.requestType, 'MS-NID');
+});
+
+test('strips hyphens from identifier: 01718-000000 → 01718000000', () => {
+  const parsed = parseRequestText('LRL 01718-000000');
+  assert.equal(parsed.ok, true);
+  assert.deepEqual(parsed.identifiers, ['01718000000']);
+  assert.equal(parsed.canonicalRequestText, 'LRL 01718000000');
+  assert.ok(parsed.correctionMessage);
+});
+
+test('strips separators from identifier: colons, underscores, commas, dots', () => {
+  const parsed = parseRequestText('LRL 0171:800.00,0_0');
+  assert.equal(parsed.ok, true);
+  assert.deepEqual(parsed.identifiers, ['01718000000']);
+  assert.ok(parsed.correctionMessage);
+});
+
+test('auto-corrects glued prefix with separator: LRL-01718000000 → LRL 01718000000', () => {
+  const parsed = parseRequestText('LRL-01718000000');
+  assert.equal(parsed.ok, true);
+  assert.equal(parsed.requestType, 'LRL');
+  assert.deepEqual(parsed.identifiers, ['01718000000']);
+  assert.ok(parsed.correctionMessage);
+});
+
+test('auto-corrects command-separator-number with hyphens in number: LRL-01718-000000', () => {
+  const parsed = parseRequestText('LRL-01718-000000');
+  assert.equal(parsed.ok, true);
+  assert.equal(parsed.requestType, 'LRL');
+  assert.deepEqual(parsed.identifiers, ['01718000000']);
+});
+
+test('strips +880 country code: LRL +8801712345678 → LRL 01712345678', () => {
+  const parsed = parseRequestText('LRL +8801712345678');
+  assert.equal(parsed.ok, true);
+  assert.equal(parsed.requestType, 'LRL');
+  assert.deepEqual(parsed.identifiers, ['01712345678']);
+  assert.equal(parsed.canonicalRequestText, 'LRL 01712345678');
+  assert.ok(parsed.correctionMessage);
+});
+
+test('strips 880 country code without plus: LRL 8801712345678 → LRL 01712345678', () => {
+  const parsed = parseRequestText('LRL 8801712345678');
+  assert.equal(parsed.ok, true);
+  assert.deepEqual(parsed.identifiers, ['01712345678']);
+});
+
+test('strips +880 with hyphens: LCL +880-1718-000000 → LCL 01718000000', () => {
+  const parsed = parseRequestText('LCL +880-1718-000000');
+  assert.equal(parsed.ok, true);
+  assert.deepEqual(parsed.identifiers, ['01718000000']);
+});
+
+test('strips +880 in batch: MS-NID +8801625242040 8801825242040', () => {
+  const parsed = parseRequestText('MS-NID +8801625242040 8801825242040');
+  assert.equal(parsed.ok, true);
+  assert.deepEqual(parsed.identifiers, ['01625242040', '01825242040']);
+});
+
+test('specific error when phone number too short', () => {
+  const parsed = parseRequestText('LRL 0171234');
+  assert.equal(parsed.ok, false);
+  assert.equal(parsed.errorCode, 'INVALID_IDENTIFIER_FORMAT');
+  assert.match(parsed.replyText, /too short.*7 digits/);
+});
+
+test('specific error when NID given instead of phone number', () => {
+  const parsed = parseRequestText('LRL 4246780000');
+  assert.equal(parsed.ok, false);
+  assert.match(parsed.replyText, /looks like an NID.*10 digits.*not a phone number/);
+});
+
+test('specific error when IMEI given instead of phone number', () => {
+  const parsed = parseRequestText('LCL 35391109000000');
+  assert.equal(parsed.ok, false);
+  assert.match(parsed.replyText, /looks like an IMEI.*14 digits.*not a phone number/);
+});
+
+test('specific error when phone number given instead of NID', () => {
+  const parsed = parseRequestText('NID-MS 01712345678');
+  assert.equal(parsed.ok, false);
+  assert.match(parsed.replyText, /looks like a phone number.*not an NID/);
+});
+
+test('specific error when phone number given instead of IMEI', () => {
+  const parsed = parseRequestText('IMEI-MS 01712345678');
+  assert.equal(parsed.ok, false);
+  assert.match(parsed.replyText, /looks like a phone number.*not an IMEI/);
+});
+
+test('specific error when IMEI given instead of NID', () => {
+  const parsed = parseRequestText('NID-MS 35391109000000');
+  assert.equal(parsed.ok, false);
+  assert.match(parsed.replyText, /looks like an IMEI.*14 digits.*not an NID/);
+});
+
+test('specific error when NID given instead of IMEI', () => {
+  const parsed = parseRequestText('IMEI-MS 4246780000');
+  assert.equal(parsed.ok, false);
+  assert.match(parsed.replyText, /looks like an NID.*10 digits.*not an IMEI/);
+});
+
+test('specific error for invalid NID length (12 digits)', () => {
+  const parsed = parseRequestText('NID-MS 123456789012');
+  assert.equal(parsed.ok, false);
+  assert.match(parsed.replyText, /12 digits.*not a valid NID length.*exactly 10, 13, or 17/);
+});
+
+test('accepts valid NID lengths: 10, 13, 17 digits', () => {
+  assert.equal(parseRequestText('NID-MS 4246780000').ok, true);
+  assert.equal(parseRequestText('NID-MS 1234567890123').ok, true);
+  assert.equal(parseRequestText('NID-MS 12345678901234567').ok, true);
+});
+
+test('accepts valid IMEI lengths: 14 and 15 digits', () => {
+  assert.equal(parseRequestText('IMEI-MS 35391109000000').ok, true);
+  assert.equal(parseRequestText('IMEI-MS 353911090000001').ok, true);
+});
+
+test('identifier with letters after stripping still fails', () => {
+  const parsed = parseRequestText('LRL 0171800ABC0');
+  assert.equal(parsed.ok, false);
+  assert.equal(parsed.errorCode, 'INVALID_IDENTIFIER_CHARS');
 });
 
 test('submits request, sends SMS, and waits for operator reply', async () => {
@@ -291,7 +484,7 @@ test('NID-MS request is sent to all operator gateways', async () => {
     chatId: 'operations',
     requesterName: 'Officer Rahim',
     requesterId: '8801700000000',
-    text: 'NID-MS 123456789012'
+    text: 'NID-MS 1234567890123'
   });
 
   assert.equal(result.ok, true);
@@ -309,7 +502,7 @@ test('all-operator request waits for every operator reply before review', async 
     chatId: 'operations',
     requesterName: 'Officer Rahim',
     requesterId: '8801700000000',
-    text: 'NID-MS 123456789012'
+    text: 'NID-MS 1234567890123'
   });
 
   const firstReply = service.receiveSmsWebhook({
@@ -339,7 +532,7 @@ test('partial all-operator reply cannot be approved early', async () => {
     chatId: 'operations',
     requesterName: 'Officer Rahim',
     requesterId: '8801700000000',
-    text: 'NID-MS 123456789012'
+    text: 'NID-MS 1234567890123'
   });
   service.receiveSmsWebhook({
     gatewayId: 'GP_PHONE_01',
@@ -532,7 +725,7 @@ test('fan-out with two replies and one timeout finalizes to manual review (not t
     chatId: 'operations',
     requesterName: 'Officer Rahim',
     requesterId: '8801700000000',
-    text: 'NID-MS 123456789012'
+    text: 'NID-MS 1234567890123'
   });
   const requestId = submitted.request.requestId;
 
@@ -573,7 +766,7 @@ test('fan-out with no replies times out as a whole', async () => {
     chatId: 'operations',
     requesterName: 'Officer Rahim',
     requesterId: '8801700000000',
-    text: 'NID-MS 123456789012'
+    text: 'NID-MS 1234567890123'
   });
   for (const row of store.smsOutbox) {
     store.claimPendingJobs(row.gatewayId);

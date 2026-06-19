@@ -96,7 +96,7 @@ test('per-operator dispatches survive a restart and finalize correctly afterward
   const h1 = harness(dbPath);
   const submitted = await h1.service.submitRequest({
     chatId: 'g', requesterName: 'Ofc', requesterId: '8801700000000',
-    text: 'NID-MS 123456789012'
+    text: 'NID-MS 1234567890123'
   });
   const requestId = submitted.request.requestId;
   h1.service.receiveSmsWebhook({ gatewayId: 'GP_PHONE_01', from: '12345', body: 'NID 111' });

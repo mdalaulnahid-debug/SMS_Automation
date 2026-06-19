@@ -62,23 +62,35 @@ for `RELEVANT_OPERATOR` types it resolves every identifier's operator and
 returns a single-operator result only if they all agree — otherwise empty
 (which `parser.js` turns into `OPERATOR_MISMATCH` or `OPERATOR_UNRESOLVED`).
 
-## Decision that changed: no auto-correct
+## Auto-correct — now implemented (2026-06-19)
 
 The plan as agreed on 2026-06-18 called for auto-correcting trivial
-*type-token* formatting mistakes (`MS NID` → `MS-NID`, `LRL01308-218563` →
-`LRL 01308218563`) while still rejecting ambiguous cases outright.
+*type-token* formatting mistakes. Initially shipped as strict-rejection-only,
+the auto-correct layer was implemented on 2026-06-19 with expanded scope:
 
-**That auto-correct layer was not implemented.** What shipped instead is
-**strict rejection only**, with a specific `errorCode` per failure mode
-instead of one generic message. A message like `MS NID 01625242040` is
-rejected as `UNSUPPORTED_COMMAND` today (first token `MS` doesn't match any
-known command) rather than being silently corrected to `MS-NID` and
-processed.
+1. **Split commands**: `MS NID` → `MS-NID`, `NID MS` → `NID-MS`, `IMEI MS` → `IMEI-MS`
+2. **Glued prefixes**: `LRL01308218563` → `LRL 01308218563`, `MSNID01625242040` → `MS-NID 01625242040`
+3. **Command-value separators**: `LRL-01718000000`, `LRL:01718000000` → `LRL 01718000000`
+4. **Bangladesh country code**: `+8801712345678` and `8801712345678` → `01712345678`
+5. **Separator stripping in identifiers**: hyphens, colons, underscores, commas, dots removed from numbers
+6. **Case-insensitive commands**: `lrl`, `Ms-Nid` etc. all accepted
 
-This is a real, deliberate-looking gap from the original decision, not an
-oversight noticed in review — worth a conscious call on whether to add the
-auto-correct layer later or to keep the strict-only behavior permanently
-(strict is arguably safer for a police system: it never guesses at intent).
+The `correctionMessage` field on a successful parse indicates what was auto-corrected.
+If the identifier is still malformed after auto-correction, it fails normally with
+a specific error message (see below).
+
+## Specific validation error messages (2026-06-19)
+
+`INVALID_IDENTIFIER_FORMAT` now returns a diagnostic message instead of a generic one.
+The system detects when identifiers look like the wrong type:
+
+- NID given where phone number expected (and vice versa)
+- IMEI given where NID expected (and vice versa)
+- Phone number given where IMEI expected (and vice versa)
+- Digit count too short or too long for the expected type
+
+NID validation is now strict: exactly 10 (smart NID), 13, or 17 (old NID with birth year) digits.
+IMEI validation is now strict: exactly 14 (without check digit) or 15 (with check digit) digits.
 
 ## Other things that shipped alongside this (not in the original plan)
 
@@ -106,15 +118,13 @@ auto-correct layer later or to keep the strict-only behavior permanently
 
 ## Verification
 
-All 71 tests pass across `test/persistence.test.js`, `test/security.test.js`,
-`test/telegramBridge.test.js`, and `test/workflow.test.js` (run individually
-with `node --test <file>` — running multiple files at once is known to hang
+99 tests pass across `test/persistence.test.js` (5), `test/security.test.js` (12),
+`test/telegramBridge.test.js` (9), and `test/workflow.test.js` (73) — run individually
+with `node --test <file>` (running multiple files at once is known to hang
 in this environment).
 
 ## Open follow-ups
 
-- Decide whether to add the type-token auto-correct layer (see above) or
-  formally close it out as "won't do."
 - `docs/system-design-v2.md` §5 lists `GET /api/ops/validation-failures` as a
   *future* endpoint — validation failures are currently only visible via the
   general audit log (`REQUEST_VALIDATION_FAILED` events), filterable in the

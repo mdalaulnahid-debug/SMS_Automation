@@ -1,14 +1,14 @@
 # Progress Tracker
 
-Last updated: **2026-06-18 - Multi-number batching live; reply-window/heartbeat hardening; docs reconciled**
+Last updated: **2026-06-19 — Auto-correct, specific errors, multi-op reply fix deployed**
 
 ---
 
 ## Current Stage
 
-**Backend and production operator flow remain live. Multi-number batching (up to 5 identifiers per request, official rule sheet compliant) is implemented and deployed. Reply-window timeouts now anchor on actual carrier-confirmed send time, gateway heartbeat is decoupled from job polling, and the separate Android admin app still remains mid-redesign.**
+**Backend and production operator flow remain live. This session added three intake improvements: (1) auto-correct for common typos (split commands, glued prefixes, `+880` country code, separator stripping), (2) specific validation error messages that diagnose the mistake (NID/IMEI/MSISDN cross-detection, digit counts, strict NID 10/13/17 and IMEI 14/15 lengths), and (3) multi-operator replies now post as separate Telegram messages instead of editing the previous one in-place.**
 
-Git and the live VPS (`https://licbarishal.duckdns.org`) are both current through commit `c26b896` on `main` — verified directly against the live API, not assumed from docs.
+Git and the live VPS (`https://licbarishal.duckdns.org`) are both current through this session's commit on `main`.
 
 ## Documentation Baseline
 
@@ -30,73 +30,83 @@ Important portability note:
 
 ---
 
-## Session Handoff (2026-06-18) - Read This First
+## Session Handoff (2026-06-19) - Read This First
 
 ### What was accomplished this session
 
-Backend intake / batching (commits `8bd26a5`, `c26b896`):
+Intake auto-correct and specific error messages:
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Multi-number batching | Done | `LRL`/`LCL`/`MS-NID`/`NID-MS`/`IMEI-MS` all accept 1-5 identifiers; canonical dispatch text built by `src/parser.js` |
-| Same-operator batch enforcement | Done | `LCL`, `LRL`, `MS-NID` reject mixed-operator batches (`OPERATOR_MISMATCH`) instead of routing ambiguously |
-| Structured validation errors | Done | 11 distinct `errorCode`s with specific `replyText` per failure mode — see `docs/multi-number-batching-plan.md` |
-| Invalid request audit visibility | Done | Validation failures write `REQUEST_VALIDATION_FAILED` audit events; never enter the queue or reach a gateway phone |
-| Batch reply collection | Done | An operator replying once per number (not one combined SMS) is now fully captured — `collectDispatchReplyMessages()` in `service.js` |
-| Type-token auto-correct (`MS NID` → `MS-NID` etc.) | **Not implemented** | Originally planned, deliberately not shipped — strict rejection only. See "Decision that changed" in `docs/multi-number-batching-plan.md` |
+| Auto-correct split commands | Done | `MS NID` → `MS-NID`, `NID MS` → `NID-MS`, `IMEI MS` → `IMEI-MS` |
+| Auto-correct glued prefixes | Done | `LRL01308218563` → `LRL 01308218563`, `MSNID01625242040` → `MS-NID 01625242040` |
+| Auto-correct command separators | Done | `LRL-01718000000`, `LRL:01718000000` → `LRL 01718000000` |
+| Strip `+880`/`880` country code | Done | `+8801712345678` → `01712345678`, `8801712345678` → `01712345678` |
+| Strip separators in identifiers | Done | Hyphens, colons, underscores, commas, dots stripped from numbers (e.g. `01718-000000` → `01718000000`) |
+| Case-insensitive commands | Done | `lrl`, `Ms-Nid` etc. all accepted (was already working via `.toUpperCase()`) |
+| Specific validation errors | Done | Each error now tells the user exactly what's wrong — see table below |
+| Strict NID lengths | Done | NID must be exactly 10 (smart NID), 13, or 17 (old NID with birth year) digits. Was 10-17 range. |
+| Strict IMEI lengths | Done | IMEI must be exactly 14 (no check digit) or 15 (with check digit) digits. Was 14-17 range. |
+| Cross-type detection | Done | If you send a phone number where NID is expected (or IMEI where NID is expected, etc.), the error says what it looks like and what was expected |
 
-Reply-window / gateway-health hardening (commits `cbb2d4f`, `a76d988`, `b3bc890`):
+Specific error messages now returned (examples):
+
+| Mistake | Error reply |
+|---------|------------|
+| `LRL 0171234` (too few digits) | `"0171234" is too short (7 digits). Phone numbers must be 11 digits starting with 01.` |
+| `LRL 4246780000` (NID in phone slot) | `"4246780000" looks like an NID (10 digits), not a phone number. LRL requires an 11-digit mobile number starting with 01.` |
+| `NID-MS 01712345678` (phone in NID slot) | `"01712345678" looks like a phone number, not an NID. NID-MS requires an NID (10, 13, or 17 digits).` |
+| `IMEI-MS 01712345678` (phone in IMEI slot) | `"01712345678" looks like a phone number, not an IMEI. IMEI-MS requires a 14 or 15 digit IMEI.` |
+| `NID-MS 35391109000000` (IMEI in NID slot) | `"35391109000000" looks like an IMEI (14 digits), not an NID.` |
+| `IMEI-MS 4246780000` (NID in IMEI slot) | `"4246780000" looks like an NID (10 digits), not an IMEI.` |
+| `NID-MS 123456789012` (12-digit invalid) | `"123456789012" has 12 digits which is not a valid NID length. NID must be exactly 10, 13, or 17 digits.` |
+
+Multi-operator reply posting fix:
 
 | Item | Status | Notes |
 |------|--------|-------|
-| Reply-window clock anchored on carrier confirmation | Done | Starts from `sendResult.confirmedAt` (the ack), not queue time — 15 min window (`DEFAULT_REPLY_WINDOW_MS`) |
-| Send-confirmation grace period | Done | A separate, shorter timeout covers claimed-but-not-yet-acked jobs so a stalled phone can't hang a request forever |
-| Duplicate-request blocking | Done | Identical request (same type/payload/operators) within 30 min returns `DUPLICATE_ACTIVE_REQUEST` instead of double-dispatching |
-| Dedicated gateway heartbeat | Done | `POST /api/gateway/heartbeat`, called every 30s from the Android poll loop — keeps `lastSeenAt` fresh even with zero pending jobs |
-| Poll-thread watchdog restart fix | Done | `GatewayForegroundService.kt` |
-| New admin diagnostics | Done | `delayedConfirmations`, `ambiguousReplies24h`, `duplicateRiskGroups` on `/api/dashboard`, surfaced in web admin Overview + Audit tabs |
-
-Docs reconciliation (this pass):
-
-| Item | Status | Notes |
-|------|--------|-------|
-| `docs/multi-number-batching-plan.md` | Rewritten | Was a pre-implementation plan; now documents actual shipped behavior + the auto-correct deviation |
-| `docs/PHONE_GATEWAY_CONTRACT.md` | Rewritten | Was describing a dead "push" send model (`POST phone/send-sms`); now documents the real poll-based contract (`GET /api/gateway/jobs`, ack, heartbeat) |
-| `README.md` request-type table | Fixed earlier this session | `MS-NID` was wrongly documented as broadcasting to all operators |
-| `progress_tracker.md`, `docs/CHANGELOG-2026-06-18.md` | Reconciled | Previous entries referenced an "uncommitted" state at commit `c1582c5`; both files are now current through `c26b896`, with the VPS confirmed at the same commit |
+| New message per operator reply | Done | Each operator reply now posts as a **separate Telegram message** in the thread, instead of editing the previous message in-place. All messages remain visible in Telegram history. |
+| Old edit-in-place behavior | Removed | `APPROVED_FOR_EDIT` status is no longer set. `postLiveEdits()` in bridge is now dead code. |
 
 ### Current caution
 
-- The type-token auto-correct decision from earlier in the day was **not** carried through to the implementation — confirm whether that's intentional going forward or still wanted.
-- The Android admin app is functional and connected, but the UI still needs another fidelity pass to better match the Stitch references.
+- The Android admin app UI still needs another fidelity pass to better match the Stitch references.
 - `data/reply-patterns.json` changes on every test run (learned-keyword counts) — expect it to show as modified locally; don't read that as a real change.
 
-### Important files for the current session
+### Important files for this session's changes
 
-- `src/parser.js`, `src/domain.js`, `src/service.js`, `src/store.js`, `src/app.js`
-- `android-gateway/app/src/main/java/com/smsgateway/GatewayForegroundService.kt`, `BackendClient.kt`
-- `test/workflow.test.js`, `test/security.test.js`
-- `docs/multi-number-batching-plan.md`, `docs/PHONE_GATEWAY_CONTRACT.md`
+- `src/parser.js` — auto-correct logic (`tryAutoCorrectCommand()`), identifier sanitization, `diagnoseIdentifierError()`, strict `isNid()`/`isImei()` validators
+- `src/service.js` — multi-operator reply posting change (new draft per reply instead of editing existing)
+- `test/workflow.test.js` — 73 tests (was 52), all pass
+- `test/persistence.test.js` — updated NID test values to valid 13-digit NIDs
 
 ### Current versions
 
 | Surface | State | Notes |
 |---------|-------|-------|
-| Backend | Live, verified at commit `c26b896` | Multi-number batching, hardened timeouts, gateway heartbeat all confirmed live against `https://licbarishal.duckdns.org` |
-| Android gateway app | Live | Heartbeat + watchdog-restart fixes shipped; new icon from earlier in the session |
-| Android admin app | Debug build active | Separate supervisor app with live API integration; theme synced to Gateway App; redesign still in progress |
+| Backend | Live on VPS after this session's deploy | Auto-correct, specific errors, multi-op reply fix all deployed |
+| Android gateway app | Live | Unchanged in this session |
+| Android admin app | Debug build active | Unchanged in this session |
+
+### Test results
+
+99 tests total, all passing:
+- `test/workflow.test.js` — 73 tests (parser, auto-correct, specific errors, integration)
+- `test/security.test.js` — 12 tests
+- `test/persistence.test.js` — 5 tests
+- `test/telegramBridge.test.js` — 9 tests
 
 ### Deployment / continuity notes
 
-- GitHub `main` and the production VPS are both at `c26b896` — confirmed by hitting `/api/dashboard` and submitting test requests directly against the live API, not assumed from a doc.
-- VPS update procedure (when a future commit needs pushing): `scp` the changed `src/*.js` files to `/opt/sms-backend/src/` then `ssh ... "pm2 restart sms-backend"` — see `scripts/deploy.sh` for the full-surface version.
+- Deploy via `bash scripts/deploy.sh` from Git Bash, or manually: `scp src/parser.js src/service.js root@45.77.240.195:/opt/sms-backend/src/ && ssh root@45.77.240.195 "pm2 restart sms-backend"`
+- Config files are gitignored and per-machine (`config/auth.json`, `config/gateways.json`, `config/telegram.json`)
 
 ### Recommended next step
 
-1. Decide on the type-token auto-correct question (see "Current caution" above) and either implement it or close it out as won't-do.
-2. Surface `REQUEST_VALIDATION_FAILED` and the new diagnostics counters more prominently in the web/admin audit experience.
+1. Resolve the two scope questions for unauthorized-sender rejection suppression (see `todo.md`).
+2. Release gateway phone settings from PIN lock (Android-side change in `SettingsActivity.kt`).
 3. Continue Android admin UI refinement against Stitch references.
-4. Then modernize web admin and web operations UI around the now-stable intake contract.
+4. Surface validation failures more prominently in web/admin audit views.
 
 ---
 
@@ -122,6 +132,10 @@ See `config/vps.md` (gitignored).
 - Structured request validation, operator routing, per-operator queues
 - Canonical dispatch message generation
 - Audit-visible validation failures that do not enter queue/outbox
+- Auto-correct common typos (split commands, glued prefixes, `+880` country code, separator stripping)
+- Specific validation error messages (NID/IMEI/MSISDN cross-detection, digit counts, strict lengths)
+- Strict NID (10/13/17) and IMEI (14/15) length validation
+- Multi-operator replies post as separate Telegram messages (not edited in-place)
 - Trusted-sender filter and reply matching
 - Dashboard review actions (reject, retry, manual match)
 - SQLite persistence
@@ -149,8 +163,8 @@ See `config/vps.md` (gitignored).
 
 ## Next Milestone
 
-1. Increase Android admin app visual fidelity against the Stitch package
-2. Refine nav, rows, and per-screen modules so the app feels less boxy
-3. Surface backend validation failures more clearly in admin/web audit views
-4. Sync VPS backend with latest `main` if still behind
+1. Resolve unauthorized-sender rejection suppression scope (see `todo.md`)
+2. Release gateway phone settings from PIN lock (Android `SettingsActivity.kt`)
+3. Increase Android admin app visual fidelity against the Stitch package
+4. Surface backend validation failures more clearly in admin/web audit views
 5. Resume V2 work on web admin and web operations surfaces

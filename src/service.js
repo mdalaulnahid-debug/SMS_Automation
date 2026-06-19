@@ -272,8 +272,23 @@ class AutomationService {
             });
           }
         } else if (existingDraft.sentStatus === 'POSTED_LIVE') {
-          this.store.updateReplyDraft(existingDraft.id, { replyText: updatedText, sentStatus: 'APPROVED_FOR_EDIT' });
-          reply = existingDraft;
+          this.store.updateReplyDraft(existingDraft.id, { sentStatus: 'POSTED' });
+          reply = this.store.addReplyDraft({
+            requestId: matchedRequest.requestId,
+            replyText: updatedText,
+            sentStatus: autoApprove ? 'APPROVED_FOR_POST' : 'DRAFT',
+            holdUntil: Date.now() + LIVE_POST_HOLD_MS,
+            channel: request.channel,
+            chatId: request.chatId,
+            sourceMessageId: request.sourceMessageId,
+            requesterName: request.requesterName,
+            requesterId: request.requesterId
+          });
+          if (autoApprove) {
+            this.store.audit('system', 'REPLY_AUTO_APPROVED', matchedRequest.requestId, {
+              replyId: reply.id, channel: request.channel
+            });
+          }
         } else {
           // DRAFT or APPROVED_FOR_POST — bridge hasn't posted it yet; just update text
           this.store.updateReplyDraft(existingDraft.id, { replyText: updatedText });
@@ -399,9 +414,26 @@ class AutomationService {
       // with the final combined content. Otherwise create a normal draft.
       const existingDraft = this._getActiveDraftForRequest(requestId);
       let reply;
-      if (existingDraft) {
-        const nextStatus = existingDraft.sentStatus === 'POSTED_LIVE' ? 'APPROVED_FOR_EDIT' : existingDraft.sentStatus;
-        this.store.updateReplyDraft(existingDraft.id, { replyText, sentStatus: nextStatus });
+      if (existingDraft && existingDraft.sentStatus === 'POSTED_LIVE') {
+        this.store.updateReplyDraft(existingDraft.id, { sentStatus: 'POSTED' });
+        const autoApprove = request.channel && this.autoApproveChannels.includes(request.channel);
+        reply = this.store.addReplyDraft({
+          requestId,
+          replyText,
+          sentStatus: autoApprove ? 'APPROVED_FOR_POST' : 'DRAFT',
+          channel: request.channel,
+          chatId: request.chatId,
+          sourceMessageId: request.sourceMessageId,
+          requesterName: request.requesterName,
+          requesterId: request.requesterId
+        });
+        if (autoApprove) {
+          this.store.audit('system', 'REPLY_AUTO_APPROVED', requestId, {
+            replyId: reply.id, channel: request.channel
+          });
+        }
+      } else if (existingDraft) {
+        this.store.updateReplyDraft(existingDraft.id, { replyText, sentStatus: existingDraft.sentStatus });
         reply = existingDraft;
       } else {
         const autoApprove = request.channel && this.autoApproveChannels.includes(request.channel);

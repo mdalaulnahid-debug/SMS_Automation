@@ -4,36 +4,9 @@ Start with `progress_tracker.md` for the latest session handoff, test results, a
 
 ---
 
-## Pending — From 2026-06-18 Session (start here next)
+## Pending — From 2026-06-19 Session (start here next)
 
-Two items agreed on but paused mid-session — pick up exactly here, don't re-derive.
-
-### 1. Auto-correct type-token typos in `src/parser.js` — scoped, ready to implement
-
-Agreed earlier the same day, then reversed by a later commit (`8bd26a5`/`c26b896`)
-which shipped strict-rejection-only instead. User confirmed they want the
-original auto-correct behavior after all. See `docs/multi-number-batching-plan.md`
-("Decision that changed") for the full history.
-
-**Scope (already agreed, do not re-litigate):**
-- Only fix the **command keyword** spacing/gluing — e.g. `MS NID 0162...` →
-  `MS-NID 0162...`, `LRL01308-218563` → `LRL 01308-218563`.
-- **Never** touch the digits inside the identifier itself. If the corrected
-  identifier is still malformed (e.g. a stray hyphen inside the number), it
-  must still fail normally (`INVALID_IDENTIFIER_CHARS` / `INVALID_IDENTIFIER_FORMAT`)
-  — auto-correct fixes the boundary between command and value, nothing else.
-- Two concrete patterns to handle in `parseRequestText()` before the existing
-  strict-match logic in `src/parser.js`:
-  1. Two leading tokens form a known hyphenated command when joined —
-     `MS` + `NID` → `MS-NID`, `NID` + `MS` → `NID-MS`, `IMEI` + `MS` → `IMEI-MS`.
-  2. First token has a known command as a glued prefix, optionally followed
-     by one connecting hyphen, then digits — split it into the command token
-     plus the remainder (remainder is NOT otherwise modified).
-- Add test cases to `test/workflow.test.js` for both patterns, plus a case
-  confirming a still-malformed remainder after correction is rejected.
-- Estimated effort: ~10-15 minutes (one parser function + tests + run suite + commit).
-
-### 2. Stop posting unauthorized-sender rejections into the Telegram group — needs scope answers first
+### 1. Stop posting unauthorized-sender rejections into the Telegram group — needs scope answers first
 
 User's request: unauthorized messages currently get posted back into the
 shared Telegram group; this should stop, and those events should only be
@@ -123,8 +96,11 @@ pm2 status
 - [x] **MS-NID single-operator routing** — routes by MSISDN prefix, not all operators
 - [x] **Telegram open-group auth** — any group member can submit
 - [x] **Late reply matching** — replies arriving after finalization are now matched and re-posted
-- [x] **Multi-operator live posting** — NID-MS and IMEI-MS post immediately on first reply, edit as more come in
-- [ ] **[TOMORROW] Release gateway phone settings from PIN lock** — Backend URL, Gateway ID, SIM slot selection should be freely editable without PIN (so gateway phone can be reconfigured if something breaks). Only admin/system settings stay behind PIN: admin API key, secondary gateway ID, test connection, PIN management itself.
+- [x] **Multi-operator live posting** — NID-MS and IMEI-MS post immediately on first reply, new message for each update
+- [x] **Auto-correct type-token typos** — `MS NID` → `MS-NID`, glued prefixes, `+880` country code, separator stripping
+- [x] **Specific validation error messages** — NID/IMEI/MSISDN cross-detection, digit count hints, strict NID (10/13/17) and IMEI (14/15) lengths
+- [x] **Multi-operator reply posting fix** — each operator reply posts as a new Telegram message instead of editing the previous one
+- [ ] **Release gateway phone settings from PIN lock** — Backend URL, Gateway ID, SIM slot selection should be freely editable without PIN. Only admin/system settings stay behind PIN: admin API key, secondary gateway ID, test connection, PIN management itself.
 
 ---
 
@@ -208,4 +184,7 @@ pm2 status
 - [x] Telegram open-group auth (any group member can submit)
 - [x] Late reply matching + re-posting (6-hour window)
 - [x] One-command deploy script (`scripts/deploy.sh`, passwordless SSH)
-- [x] Multi-operator live posting (NID-MS, IMEI-MS) — post on first reply, edit as more come in
+- [x] Multi-operator live posting (NID-MS, IMEI-MS) — post on first reply, new message per update
+- [x] Auto-correct type-token typos (`MS NID` → `MS-NID`, glued prefixes, `+880` strip, separator strip)
+- [x] Specific validation errors (NID/IMEI/MSISDN cross-detection, digit count, strict lengths)
+- [x] Multi-operator reply: new Telegram message per update instead of editing in-place
