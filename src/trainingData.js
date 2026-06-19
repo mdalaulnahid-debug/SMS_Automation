@@ -5,46 +5,47 @@ const { basename, dirname, extname, join } = require('node:path');
 const { REQUEST_TYPES } = require('./domain');
 
 const DEFAULT_TRAINING_ROOT = process.env.TRAINING_ROOT || join(__dirname, '..', 'Training Data', 'Automation');
-const DEFAULT_CACHE_FILE = process.env.TRAINING_CACHE_FILE || join(__dirname, '..', 'data', 'training-cache.json');
+const DEFAULT_CACHE_DIR = process.env.TRAINING_CACHE_DIR || join(__dirname, '..', 'data', 'training-cache');
 const TRAINING_EXTENSIONS = new Set(['.xlsx', '.xls', '.xlsm']);
+const INDEX_FILE_NAME = 'index.json';
 
 let cachedCatalog = null;
 let cachedSignature = '';
-let cachedCacheFile = '';
+let cachedCacheDir = '';
 
 function loadTrainingCatalog({
   rootDir = DEFAULT_TRAINING_ROOT,
-  cacheFile = DEFAULT_CACHE_FILE
+  cacheDir = DEFAULT_CACHE_DIR
 } = {}) {
   const signature = buildSignature(rootDir);
-  if (cachedCatalog && cachedSignature === signature && cachedCacheFile === cacheFile) {
+  if (cachedCatalog && cachedSignature === signature && cachedCacheDir === cacheDir) {
     return cachedCatalog;
   }
 
-  const fromCache = readTrainingCache(cacheFile);
+  const fromCache = readTrainingCache(cacheDir);
   if (fromCache && fromCache.signature === signature && fromCache.rootDir === rootDir) {
     cachedCatalog = fromCache.catalog;
     cachedSignature = signature;
-    cachedCacheFile = cacheFile;
+    cachedCacheDir = cacheDir;
     return cachedCatalog;
   }
 
-  const catalog = rebuildTrainingCache({ rootDir, cacheFile, signature });
+  const catalog = rebuildTrainingCache({ rootDir, cacheDir, signature });
   cachedCatalog = catalog;
   cachedSignature = signature;
-  cachedCacheFile = cacheFile;
+  cachedCacheDir = cacheDir;
   return catalog;
 }
 
 function rebuildTrainingCache({
   rootDir = DEFAULT_TRAINING_ROOT,
-  cacheFile = DEFAULT_CACHE_FILE,
+  cacheDir = DEFAULT_CACHE_DIR,
   signature = buildSignature(rootDir)
 } = {}) {
   const xlsx = loadXlsx();
   if (!xlsx) {
     const empty = emptyCatalog(rootDir, []);
-    writeTrainingCache(cacheFile, { signature, rootDir, catalog: empty });
+    writeTrainingCache(cacheDir, { signature, rootDir, catalog: empty });
     return empty;
   }
 
@@ -54,7 +55,7 @@ function rebuildTrainingCache({
   const summary = buildSummary(examples);
   const catalog = { rootDir, files, examples, patterns, summary };
 
-  writeTrainingCache(cacheFile, { signature, rootDir, catalog });
+  writeTrainingCache(cacheDir, { signature, rootDir, catalog });
   return catalog;
 }
 
@@ -63,12 +64,12 @@ function matchReplyAgainstTraining({
   operator,
   messageBody,
   rootDir = DEFAULT_TRAINING_ROOT,
-  cacheFile = DEFAULT_CACHE_FILE
+  cacheDir = DEFAULT_CACHE_DIR
 }) {
   const bodyTokens = tokenizeTrainingText(messageBody);
   if (!bodyTokens.length) return emptyMatch();
 
-  const catalog = loadTrainingCatalog({ rootDir, cacheFile });
+  const catalog = loadTrainingCatalog({ rootDir, cacheDir });
   const patterns = catalog.patterns.filter((pattern) => {
     return pattern.requestType === requestType && (!pattern.operator || pattern.operator === operator);
   });
@@ -105,14 +106,14 @@ function scoreReplyFamiliesFromTraining(
   messageBody,
   operator,
   rootDir = DEFAULT_TRAINING_ROOT,
-  cacheFile = DEFAULT_CACHE_FILE
+  cacheDir = DEFAULT_CACHE_DIR
 ) {
   const bodyTokens = tokenizeTrainingText(messageBody);
   if (!bodyTokens.length) return [];
 
-  loadTrainingCatalog({ rootDir, cacheFile });
+  loadTrainingCatalog({ rootDir, cacheDir });
   const scores = Object.values(REQUEST_TYPES).map((requestType) => {
-    const result = matchReplyAgainstTraining({ requestType, operator, messageBody, rootDir, cacheFile });
+    const result = matchReplyAgainstTraining({ requestType, operator, messageBody, rootDir, cacheDir });
     return {
       requestType,
       score: result.score,
@@ -272,20 +273,66 @@ function buildSignature(rootDir) {
   return parts.join('|');
 }
 
-function readTrainingCache(cacheFile) {
-  if (!existsSync(cacheFile)) return null;
+function readTrainingCache(cacheDir) {
+  const indexFile = join(cacheDir, INDEX_FILE_NAME);
+  if (!existsSync(indexFile)) return null;
   try {
-    return JSON.parse(readFileSync(cacheFile, 'utf8'));
+    const index = JSON.parse(readFileSync(indexFile, 'utf8'));
+    const examples = [];
+    const patterns = [];
+    for (const requestType of Object.values(REQUEST_TYPES)) {
+      const typeFile = join(cacheDir, `${requestType}.json`);
+      if (!existsSync(typeFile)) continue;
+      const payload = JSON.parse(readFileSync(typeFile, 'utf8'));
+      examples.push(...(payload.examples || []));
+      patterns.push(...(payload.patterns || []));
+    }
+    return {
+      signature: index.signature,
+      rootDir: index.rootDir,
+      catalog: {
+        rootDir: index.rootDir,
+        files: index.files || [],
+        examples,
+        patterns,
+        summary: index.summary || buildSummary([])
+      }
+    };
   } catch {
     return null;
   }
 }
 
-function writeTrainingCache(cacheFile, payload) {
-  mkdirSync(dirname(cacheFile), { recursive: true });
-  writeFileSync(cacheFile, JSON.stringify({
+function writeTrainingCache(cacheDir, payload) {
+  mkdirSync(cacheDir, { recursive: true });
+  const byType = new Map(Object.values(REQUEST_TYPES).map((requestType) => [requestType, { examples: [], patterns: [] }]));
+
+  for (const example of payload.catalog.examples || []) {
+    if (!byType.has(example.requestType)) continue;
+    byType.get(example.requestType).examples.push(example);
+  }
+  for (const pattern of payload.catalog.patterns || []) {
+    if (!byType.has(pattern.requestType)) continue;
+    byType.get(pattern.requestType).patterns.push(pattern);
+  }
+
+  for (const requestType of Object.values(REQUEST_TYPES)) {
+    const typeFile = join(cacheDir, `${requestType}.json`);
+    writeFileSync(typeFile, JSON.stringify({
+      generatedAt: new Date().toISOString(),
+      requestType,
+      examples: byType.get(requestType).examples,
+      patterns: byType.get(requestType).patterns
+    }, null, 2), 'utf8');
+  }
+
+  const indexFile = join(cacheDir, INDEX_FILE_NAME);
+  writeFileSync(indexFile, JSON.stringify({
     generatedAt: new Date().toISOString(),
-    ...payload
+    signature: payload.signature,
+    rootDir: payload.rootDir,
+    files: payload.catalog.files,
+    summary: payload.catalog.summary
   }, null, 2), 'utf8');
 }
 
@@ -316,7 +363,7 @@ function increment(target, key) {
 
 module.exports = {
   DEFAULT_TRAINING_ROOT,
-  DEFAULT_CACHE_FILE,
+  DEFAULT_CACHE_DIR,
   loadTrainingCatalog,
   rebuildTrainingCache,
   matchReplyAgainstTraining,

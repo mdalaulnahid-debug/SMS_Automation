@@ -23,7 +23,7 @@ function writeWorkbook(filePath, rows, sheetName = 'Sheet1') {
 
 test('matchReplyAgainstTraining uses curated workbook content', () => {
   const root = mkdtempSync(join(tmpdir(), 'training-data-'));
-  const cacheFile = join(root, 'training-cache.json');
+  const cacheDir = join(root, 'training-cache');
   try {
     writeWorkbook(join(root, 'LCL.xlsx'), [
       {
@@ -37,13 +37,14 @@ test('matchReplyAgainstTraining uses curated workbook content', () => {
       operator: 'BANGLALINK',
       messageBody: 'MSISDN: 8801971029492, BPARTY: 880711740273257, UsageType: MOC - Banglalink',
       rootDir: root,
-      cacheFile
+      cacheDir
     });
 
     assert.equal(match.matched, true);
     assert.ok(match.score > 0);
     assert.ok(match.keywordHits.some((hit) => hit.token === 'bparty'));
-    assert.equal(existsSync(cacheFile), true);
+    assert.equal(existsSync(join(cacheDir, 'LCL.json')), true);
+    assert.equal(existsSync(join(cacheDir, 'index.json')), true);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
@@ -51,7 +52,7 @@ test('matchReplyAgainstTraining uses curated workbook content', () => {
 
 test('scoreReplyFamiliesFromTraining ranks the closest curated family first', () => {
   const root = mkdtempSync(join(tmpdir(), 'training-data-'));
-  const cacheFile = join(root, 'training-cache.json');
+  const cacheDir = join(root, 'training-cache');
   try {
     writeWorkbook(join(root, 'LRL.xlsx'), [
       {
@@ -70,7 +71,7 @@ test('scoreReplyFamiliesFromTraining ranks the closest curated family first', ()
       'MSISDN: 8801971029492, BPARTY: 880711740273257, UsageType: MOC - Banglalink',
       'BANGLALINK',
       root,
-      cacheFile
+      cacheDir
     );
 
     assert.equal(scores[0].requestType, 'LCL');
@@ -82,14 +83,14 @@ test('scoreReplyFamiliesFromTraining ranks the closest curated family first', ()
 
 test('loadTrainingCatalog ignores temp and non-request workbooks', () => {
   const root = mkdtempSync(join(tmpdir(), 'training-data-'));
-  const cacheFile = join(root, 'training-cache.json');
+  const cacheDir = join(root, 'training-cache');
   try {
     writeWorkbook(join(root, 'LCL.xlsx'), [{ Request: 'LCL 1', Reply: 'BPARTY one' }]);
     writeWorkbook(join(root, '~$LCL.xlsx'), [{ Request: 'LCL 2', Reply: 'ignored' }]);
     writeWorkbook(join(root, 'Random.xlsx'), [{ Request: 'X', Reply: 'ignored' }]);
     mkdirSync(join(root, 'nested'));
 
-    const catalog = loadTrainingCatalog({ rootDir: root, cacheFile });
+    const catalog = loadTrainingCatalog({ rootDir: root, cacheDir });
     assert.equal(catalog.files.length, 1);
     assert.equal(catalog.examples.length, 1);
     assert.ok(catalog.files[0].endsWith('LCL.xlsx'));
@@ -100,7 +101,7 @@ test('loadTrainingCatalog ignores temp and non-request workbooks', () => {
 
 test('rebuildTrainingCache writes normalized cache file from workbook source', () => {
   const root = mkdtempSync(join(tmpdir(), 'training-data-'));
-  const cacheFile = join(root, 'nested', 'training-cache.json');
+  const cacheDir = join(root, 'nested', 'training-cache');
   try {
     writeWorkbook(join(root, 'LRL.xlsx'), [
       {
@@ -109,13 +110,14 @@ test('rebuildTrainingCache writes normalized cache file from workbook source', (
       }
     ]);
 
-    const catalog = rebuildTrainingCache({ rootDir: root, cacheFile });
-    const saved = JSON.parse(readFileSync(cacheFile, 'utf8'));
+    const catalog = rebuildTrainingCache({ rootDir: root, cacheDir });
+    const savedIndex = JSON.parse(readFileSync(join(cacheDir, 'index.json'), 'utf8'));
+    const savedType = JSON.parse(readFileSync(join(cacheDir, 'LRL.json'), 'utf8'));
 
     assert.equal(catalog.examples.length, 1);
-    assert.equal(saved.catalog.examples.length, 1);
-    assert.equal(saved.catalog.patterns[0].requestType, 'LRL');
-    assert.equal(saved.catalog.summary.totalExamples, 1);
+    assert.equal(savedType.examples.length, 1);
+    assert.equal(savedType.patterns[0].requestType, 'LRL');
+    assert.equal(savedIndex.summary.totalExamples, 1);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
@@ -123,13 +125,13 @@ test('rebuildTrainingCache writes normalized cache file from workbook source', (
 
 test('loadTrainingCatalog refreshes cache after workbook changes', async () => {
   const root = mkdtempSync(join(tmpdir(), 'training-data-'));
-  const cacheFile = join(root, 'training-cache.json');
+  const cacheDir = join(root, 'training-cache');
   try {
     const workbookPath = join(root, 'LCL.xlsx');
     writeWorkbook(workbookPath, [
       { Request: 'LCL 01971029492', Reply: 'BPARTY MOC Banglalink' }
     ]);
-    const first = loadTrainingCatalog({ rootDir: root, cacheFile });
+    const first = loadTrainingCatalog({ rootDir: root, cacheDir });
     assert.equal(first.examples.length, 1);
 
     await new Promise((resolve) => setTimeout(resolve, 20));
@@ -138,10 +140,10 @@ test('loadTrainingCatalog refreshes cache after workbook changes', async () => {
       { Request: 'LCL 01971020000', Reply: 'BPARTY SMSMT Banglalink' }
     ]);
 
-    const second = loadTrainingCatalog({ rootDir: root, cacheFile });
-    const saved = JSON.parse(readFileSync(cacheFile, 'utf8'));
+    const second = loadTrainingCatalog({ rootDir: root, cacheDir });
+    const savedType = JSON.parse(readFileSync(join(cacheDir, 'LCL.json'), 'utf8'));
     assert.equal(second.examples.length, 2);
-    assert.equal(saved.catalog.examples.length, 2);
+    assert.equal(savedType.examples.length, 2);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
