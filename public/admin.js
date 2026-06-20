@@ -72,7 +72,8 @@ function renderOverview() {
     ['Online gateways', stats.onlineGateways || 0, 'success'],
     ['Delayed sends', stats.delayedConfirmations || 0, stats.delayedConfirmations ? 'danger' : 'success'],
     ['Ambiguous replies', stats.ambiguousReplies24h || 0, stats.ambiguousReplies24h ? 'warning' : 'success'],
-    ['Duplicate risks', stats.duplicateRiskGroups || 0, stats.duplicateRiskGroups ? 'warning' : 'success']
+    ['Duplicate risks', stats.duplicateRiskGroups || 0, stats.duplicateRiskGroups ? 'warning' : 'success'],
+    ['Telegram chat mismatches', stats.telegramChatMismatches24h || 0, stats.telegramChatMismatches24h ? 'danger' : 'success']
   ].map(([label, value, tone]) => `
     <div class="kpi-tile">
       <div class="kpi-value ${tone}">${value}</div>
@@ -119,7 +120,8 @@ function renderOverview() {
     ['Offline gateways', alerts.offlineGateways || 0, alerts.offlineGateways ? 'danger' : 'success'],
     ['Delayed sends', stats.delayedConfirmations || 0, stats.delayedConfirmations ? 'danger' : 'success'],
     ['Ambiguous replies (24h)', stats.ambiguousReplies24h || 0, stats.ambiguousReplies24h ? 'warning' : 'success'],
-    ['Duplicate blocks (24h)', diagnostics.recentDuplicateBlocks || 0, diagnostics.recentDuplicateBlocks ? 'warning' : 'success']
+    ['Duplicate blocks (24h)', diagnostics.recentDuplicateBlocks || 0, diagnostics.recentDuplicateBlocks ? 'warning' : 'success'],
+    ['Telegram chat mismatches (24h)', stats.telegramChatMismatches24h || 0, stats.telegramChatMismatches24h ? 'danger' : 'success']
   ];
   document.getElementById('alertSummary').innerHTML = alertItems.map(([label, value, tone]) => `
     <div class="banner banner-${tone === 'warning' ? 'warn' : tone === 'danger' ? 'danger' : 'ok'}">
@@ -443,6 +445,48 @@ document.getElementById('smsForm').addEventListener('submit', async (event) => {
   await refreshAdmin();
 });
 
+function showSettingsResult(message, isError) {
+  const el = document.getElementById('settingsResult');
+  el.textContent = message;
+  el.style.display = 'block';
+  el.style.color = isError ? 'var(--danger)' : 'var(--success)';
+}
+
+async function loadSettings() {
+  const res = await apiFetch('/api/admin/settings');
+  if (!res.ok) return;
+  const data = await res.json();
+  document.getElementById('settingsGroupChatId').value = data.telegramGroupChatId || '';
+  const operator = document.getElementById('settingsOperator').value;
+  document.getElementById('settingsShortcode').value = (data.operators?.[operator]?.shortcode) || '';
+}
+
+document.getElementById('settingsOperator').addEventListener('change', loadSettings);
+
+document.getElementById('telegramGroupForm').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const groupChatId = document.getElementById('settingsGroupChatId').value.trim();
+  try {
+    const body = await postJson('/api/admin/settings/telegram-group', { groupChatId });
+    showSettingsResult(`Saved. ${body.note || ''}`, false);
+  } catch (error) {
+    showSettingsResult(error.message || 'Failed to update group chat ID.', true);
+  }
+});
+
+document.getElementById('operatorContactForm').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const operator = document.getElementById('settingsOperator').value;
+  const shortcode = document.getElementById('settingsShortcode').value.trim();
+  try {
+    const body = await postJson('/api/admin/settings/operator-contact', { operator, shortcode });
+    showSettingsResult(`Saved ${body.operator} hotline number — applied immediately.`, false);
+    await refreshAdmin();
+  } catch (error) {
+    showSettingsResult(error.message || 'Failed to update operator number.', true);
+  }
+});
+
 async function refreshAdmin() {
   const [overviewRes, requestsRes, repliesRes, unmatchedRes, auditRes] = await Promise.all([
     apiFetch('/api/admin/overview'),
@@ -476,6 +520,8 @@ function boot() {
   setInterval(pollHealth, 30_000);
   refreshAdmin();
   setInterval(refreshAdmin, 15_000);
+  // Load once only — the 15s refresh interval would otherwise clobber an in-progress edit.
+  loadSettings();
 }
 
 (function init() {

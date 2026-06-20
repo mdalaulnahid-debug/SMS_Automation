@@ -31,7 +31,7 @@ function planIntake(message, config) {
 
   if (!text) return { action: 'ignore', reason: 'no text' };
   if (chatId !== String(config.groupChatId)) {
-    return { action: 'ignore', reason: 'wrong chat' };
+    return { action: 'ignore', reason: 'wrong chat', chatId, chatTitle: message.chat?.title || null };
   }
 
   // If authorizedUsers is configured, only listed users can submit.
@@ -74,10 +74,21 @@ function planIntake(message, config) {
 }
 
 // Process a single inbound message end-to-end (authorize → submit → ack/error reply).
-async function handleIntake(message, { config, backend, telegram, log = () => {} }) {
+async function handleIntake(message, { config, backend, telegram, log = () => {}, reportedMismatchChatIds = new Set() }) {
   const plan = planIntake(message, config);
 
   if (plan.action === 'ignore') {
+    // A config drift between groupChatId and the actual group silently breaks intake with
+    // nothing but a console log line — report it once per distinct wrong chat so it shows up
+    // in admin/web audit instead of going unnoticed for hours (see TELEGRAM_CHAT_MISMATCH).
+    if (plan.reason === 'wrong chat' && !reportedMismatchChatIds.has(plan.chatId)) {
+      reportedMismatchChatIds.add(plan.chatId);
+      await backend.reportChatMismatch({
+        chatId: plan.chatId,
+        chatTitle: plan.chatTitle,
+        configuredGroupChatId: String(config.groupChatId)
+      });
+    }
     return plan;
   }
 

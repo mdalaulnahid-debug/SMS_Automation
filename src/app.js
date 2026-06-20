@@ -8,6 +8,8 @@ const { AutomationStore } = require('./store');
 const { OperatorQueue } = require('./queue');
 const { SmsGatewayClient } = require('./smsGateway');
 const { ManualReviewStore } = require('./manualReviewStore');
+const settingsStore = require('./settingsStore');
+const { OPERATORS } = require('./domain');
 const {
   AutomationService,
   DEFAULT_SEND_CONFIRMATION_GRACE_MS,
@@ -176,6 +178,9 @@ function buildAdminData(store, queue) {
     return row.action === 'REQUEST_DUPLICATE_BLOCKED' && now - new Date(row.timestamp).getTime() < 24 * 60 * 60 * 1000;
   });
   const duplicateRiskGroups = store.listDuplicateRiskGroups(DEFAULT_DUPLICATE_REQUEST_WINDOW_MS);
+  const recentChatMismatches = store.auditLogs.filter((row) => {
+    return row.action === 'TELEGRAM_CHAT_MISMATCH' && now - new Date(row.timestamp).getTime() < 24 * 60 * 60 * 1000;
+  });
   const alerts = summarizeAlerts(store, requests, gateways, unmatched);
   const activity = buildActivityFeed(store, requests, gateways);
   const today = new Date().toDateString();
@@ -200,6 +205,7 @@ function buildAdminData(store, queue) {
       delayedConfirmations: delayedConfirmations.length,
       ambiguousReplies24h: recentAmbiguousReplies.length,
       duplicateRiskGroups: duplicateRiskGroups.length,
+      telegramChatMismatches24h: recentChatMismatches.length,
       todayRequests: requests.filter((r) => new Date(r.createdAt).toDateString() === today).length,
       completedToday: requests.filter((r) => r.status === 'COMPLETED' && new Date(r.createdAt).toDateString() === today).length
     },
@@ -215,6 +221,12 @@ function buildAdminData(store, queue) {
       })),
       recentAmbiguousReplies: recentAmbiguousReplies.length,
       recentDuplicateBlocks: recentDuplicateBlocks.length,
+      recentChatMismatches: recentChatMismatches.map((row) => ({
+        chatId: row.details?.chatId,
+        chatTitle: row.details?.chatTitle,
+        configuredGroupChatId: row.details?.configuredGroupChatId,
+        timestamp: row.timestamp
+      })),
       duplicateRiskGroups: duplicateRiskGroups.map((group) => ({
         requestType: group[0].requestType,
         payload: group[0].payload,
@@ -234,6 +246,7 @@ function buildAdminData(store, queue) {
       lastSeenAt: gateway.lastSeenAt,
       gatewayUrl: gateway.gatewayUrl,
       phoneNumber: gateway.phoneNumber || '',
+      shortcode: gateway.shortcode || '',
       trustedSendersCount: (gateway.trustedSenders || []).length
     })),
     requests,
@@ -468,6 +481,57 @@ function createApp(options = {}) {
             lastSeenAt: gateway.lastSeenAt
           }
         });
+      }
+      if (req.method === 'GET' && req.url === '/api/admin/settings') {
+        if (!requireAdmin(req, res)) return undefined;
+        return json(res, 200, {
+          telegramGroupChatId: settingsStore.readTelegramGroupChatId(),
+          operators: settingsStore.readOperatorContacts()
+        });
+      }
+      if (req.method === 'POST' && req.url === '/api/admin/settings/telegram-group') {
+        if (!requireAdmin(req, res)) return undefined;
+        const body = await readJson(req);
+        try {
+          const groupChatId = settingsStore.writeTelegramGroupChatId(body.groupChatId);
+          store.audit('admin', 'SETTINGS_TELEGRAM_GROUP_UPDATED', null, { groupChatId });
+          return json(res, 200, {
+            ok: true,
+            groupChatId,
+            note: 'Restart the Telegram bridge process for this to take effect (pm2 restart sms-bridge).'
+          });
+        } catch (error) {
+          return json(res, 400, { error: error.message });
+        }
+      }
+      if (req.method === 'POST' && req.url === '/api/admin/settings/operator-contact') {
+        if (!requireAdmin(req, res)) return undefined;
+        const body = await readJson(req);
+        const operatorKey = String(body.operator || '').toUpperCase();
+        if (!OPERATORS[operatorKey]) return json(res, 400, { error: `Unknown operator: ${body.operator}` });
+        try {
+          const shortcode = settingsStore.writeOperatorShortcode(operatorKey, body.shortcode);
+          store.updateGatewayShortcode(operatorKey, shortcode);
+          store.audit('admin', 'SETTINGS_OPERATOR_CONTACT_UPDATED', null, { operator: operatorKey, shortcode });
+          return json(res, 200, { ok: true, operator: operatorKey, shortcode });
+        } catch (error) {
+          return json(res, 400, { error: error.message });
+        }
+      }
+      if (req.method === 'POST' && req.url === '/api/telegram/chat-mismatch') {
+        // Reported by the Telegram bridge process when it sees a message from a chat that
+        // doesn't match its configured groupChatId — the exact failure mode that silently
+        // broke intake on 2026-06-20 (config drift between the bridge's groupChatId and the
+        // real group) until someone happened to check pm2 logs. Now audit-visible instead.
+        if (!requireAdmin(req, res)) return undefined;
+        const body = await readJson(req);
+        if (!body.chatId) return json(res, 400, { error: 'chatId required' });
+        store.audit('telegram-bridge', 'TELEGRAM_CHAT_MISMATCH', null, {
+          chatId: String(body.chatId),
+          chatTitle: body.chatTitle || null,
+          configuredGroupChatId: body.configuredGroupChatId || null
+        });
+        return json(res, 200, { ok: true });
       }
       if (req.method === 'GET' && req.url === '/api/dashboard') {
         if (!requireAdmin(req, res)) return undefined;

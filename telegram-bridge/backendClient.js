@@ -71,6 +71,21 @@ class BackendClient {
     );
     return res.json();
   }
+
+  // Reports a message received from a chat that doesn't match groupChatId — surfaces a config
+  // drift (bridge listening to the wrong group) in admin/web audit instead of only a console
+  // log line that's easy to miss until intake has been silently broken for hours.
+  async reportChatMismatch({ chatId, chatTitle, configuredGroupChatId }) {
+    try {
+      await this.fetch(`${this.base}/api/telegram/chat-mismatch`, {
+        method: 'POST',
+        headers: this.headers({ 'content-type': 'application/json' }),
+        body: JSON.stringify({ chatId, chatTitle, configuredGroupChatId })
+      });
+    } catch {
+      // Best-effort — never let a reporting failure affect the intake loop itself.
+    }
+  }
 }
 
 module.exports = { BackendClient };

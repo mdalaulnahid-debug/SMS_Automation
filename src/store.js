@@ -52,7 +52,7 @@ class AutomationStore {
         id: operator.gatewayId,
         operator: operatorKey,
         operatorName: operator.name,
-        shortcode: operator.shortcode,
+        shortcode: config.shortcode || operator.shortcode,
         gatewayUrl: config.gatewayUrl || '',
         sendPath: config.sendPath || '/send-sms',
         apiKey: config.apiKey || '',
@@ -441,6 +441,19 @@ class AutomationStore {
     gateway.lastSeenAt = nowIso();
     gateway.registeredAt = nowIso();
     if (input.phoneNumber) gateway.phoneNumber = String(input.phoneNumber).trim();
+    if (this.persistence) this.persistence.upsertGateway(gateway);
+    return gateway;
+  }
+
+  // Apply a shortcode override live (no restart needed for the backend itself — the bridge
+  // process is separate and unaffected by this). The on-disk write-through that makes this
+  // survive a backend restart is settingsStore.writeOperatorShortcode(), called by the caller
+  // alongside this, not here — this method only updates the in-memory/persisted runtime state.
+  updateGatewayShortcode(operatorKey, shortcode) {
+    const operator = OPERATORS[String(operatorKey || '').toUpperCase()];
+    if (!operator) throw new Error(`Unknown operator: ${operatorKey}`);
+    const gateway = this.gateways.get(operator.gatewayId);
+    gateway.shortcode = String(shortcode).trim();
     if (this.persistence) this.persistence.upsertGateway(gateway);
     return gateway;
   }

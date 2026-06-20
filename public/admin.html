@@ -351,6 +351,22 @@
                 </form>
               </section>
               <section class="data-surface tool-panel">
+                <div class="tool-title"><span class="material-symbols-outlined">settings</span>Settings</div>
+                <div class="tool-note">Authenticated changes to the Telegram group and operator hotline numbers — previously only editable by SSH-ing into the server and hand-editing JSON.</div>
+                <form id="telegramGroupForm" class="tool-form">
+                  <label>Telegram group chat ID<input id="settingsGroupChatId" class="input-field" name="groupChatId" placeholder="-1004316326579" /></label>
+                  <button type="submit" class="btn-primary">Save group chat ID</button>
+                  <div class="tool-note">Restart the Telegram bridge process after changing this (<code>pm2 restart sms-bridge</code>) — it reads this once at startup.</div>
+                </form>
+                <form id="operatorContactForm" class="tool-form" style="margin-top:8px;padding-top:12px;border-top:1px solid var(--divider)">
+                  <label>Operator<select id="settingsOperator" class="select-field"><option value="GP">GP</option><option value="ROBI">Robi</option><option value="BANGLALINK">Banglalink</option></select></label>
+                  <label>Hotline / shortcode number<input id="settingsShortcode" class="input-field" name="shortcode" placeholder="01714054239" /></label>
+                  <button type="submit" class="btn-secondary">Save operator number</button>
+                  <div class="tool-note">Applies immediately to this backend — no restart needed for this one.</div>
+                </form>
+                <div id="settingsResult" class="tool-note" style="display:none"></div>
+              </section>
+              <section class="data-surface tool-panel">
                 <div class="tool-title"><span class="material-symbols-outlined">shield_lock</span>Release / Publish</div>
                 <div class="tool-note">Keep high-risk actions visually isolated from daily review work.</div>
                 <div class="banner banner-warn"><span class="material-symbols-outlined">warning</span>APK publishing remains controlled through the existing admin release flow and backend endpoint.</div>

@@ -271,3 +271,117 @@ test('audit export returns CSV with the hash columns', async () => {
   assert.match(res.raw.split('\r\n')[0], /id,timestamp,actor,action,requestId,details,prevHash,hash/);
   assert.ok(res.raw.split('\r\n').length > 1);
 });
+
+function withTempSettingsConfig(fn) {
+  const { mkdtempSync, rmSync, writeFileSync } = require('node:fs');
+  const { join } = require('node:path');
+  const { tmpdir } = require('node:os');
+  const root = mkdtempSync(join(tmpdir(), 'security-settings-'));
+  const telegramPath = join(root, 'telegram.json');
+  const gatewaysPath = join(root, 'gateways.json');
+  writeFileSync(telegramPath, JSON.stringify({ botToken: 'tok', groupChatId: -111 }, null, 2));
+  writeFileSync(gatewaysPath, JSON.stringify({ GP: { trustedSenders: ['12345'] } }, null, 2));
+
+  const prevTelegram = process.env.SMS_TELEGRAM_CONFIG;
+  const prevGateways = process.env.SMS_GATEWAYS_CONFIG;
+  process.env.SMS_TELEGRAM_CONFIG = telegramPath;
+  process.env.SMS_GATEWAYS_CONFIG = gatewaysPath;
+
+  return Promise.resolve(fn()).finally(() => {
+    if (prevTelegram === undefined) delete process.env.SMS_TELEGRAM_CONFIG;
+    else process.env.SMS_TELEGRAM_CONFIG = prevTelegram;
+    if (prevGateways === undefined) delete process.env.SMS_GATEWAYS_CONFIG;
+    else process.env.SMS_GATEWAYS_CONFIG = prevGateways;
+    rmSync(root, { recursive: true, force: true });
+  });
+}
+
+test('admin settings endpoints require auth and round-trip the telegram group id', async () => {
+  await withTempSettingsConfig(async () => {
+    const app = appWith({ adminApiKey: 'topsecret' });
+
+    const denied = await call(app, { method: 'GET', url: '/api/admin/settings' });
+    assert.equal(denied.status, 401);
+
+    const before = await call(app, { method: 'GET', url: '/api/admin/settings', headers: { 'x-api-key': 'topsecret' } });
+    assert.equal(before.status, 200);
+    assert.equal(before.json.telegramGroupChatId, '-111');
+
+    const deniedWrite = await call(app, {
+      method: 'POST',
+      url: '/api/admin/settings/telegram-group',
+      body: { groupChatId: '-1004316326579' }
+    });
+    assert.equal(deniedWrite.status, 401);
+
+    const write = await call(app, {
+      method: 'POST',
+      url: '/api/admin/settings/telegram-group',
+      headers: { 'x-api-key': 'topsecret', 'content-type': 'application/json' },
+      body: { groupChatId: '-1004316326579' }
+    });
+    assert.equal(write.status, 200);
+    assert.equal(write.json.groupChatId, '-1004316326579');
+
+    const after = await call(app, { method: 'GET', url: '/api/admin/settings', headers: { 'x-api-key': 'topsecret' } });
+    assert.equal(after.json.telegramGroupChatId, '-1004316326579');
+
+    const badWrite = await call(app, {
+      method: 'POST',
+      url: '/api/admin/settings/telegram-group',
+      headers: { 'x-api-key': 'topsecret', 'content-type': 'application/json' },
+      body: { groupChatId: 'not-numeric' }
+    });
+    assert.equal(badWrite.status, 400);
+  });
+});
+
+test('admin settings endpoint updates an operator shortcode and applies it live', async () => {
+  await withTempSettingsConfig(async () => {
+    const app = appWith({ adminApiKey: 'topsecret' }, { GP: { trustedSenders: ['12345'] } });
+
+    const write = await call(app, {
+      method: 'POST',
+      url: '/api/admin/settings/operator-contact',
+      headers: { 'x-api-key': 'topsecret', 'content-type': 'application/json' },
+      body: { operator: 'gp', shortcode: '01799999999' }
+    });
+    assert.equal(write.status, 200);
+    assert.equal(write.json.shortcode, '01799999999');
+
+    const dashboard = await call(app, { method: 'GET', url: '/api/dashboard', headers: { 'x-api-key': 'topsecret' } });
+    const gp = dashboard.json.gatewayHealth.find((g) => g.operator === 'GP');
+    assert.equal(gp.shortcode, '01799999999');
+
+    const unknownOperator = await call(app, {
+      method: 'POST',
+      url: '/api/admin/settings/operator-contact',
+      headers: { 'x-api-key': 'topsecret', 'content-type': 'application/json' },
+      body: { operator: 'NOT_REAL', shortcode: '01799999999' }
+    });
+    assert.equal(unknownOperator.status, 400);
+  });
+});
+
+test('chat-mismatch endpoint requires auth and writes an audit entry', async () => {
+  const app = appWith({ adminApiKey: 'topsecret' });
+
+  const denied = await call(app, {
+    method: 'POST',
+    url: '/api/telegram/chat-mismatch',
+    body: { chatId: '-999' }
+  });
+  assert.equal(denied.status, 401);
+
+  const ok = await call(app, {
+    method: 'POST',
+    url: '/api/telegram/chat-mismatch',
+    headers: { 'x-api-key': 'topsecret', 'content-type': 'application/json' },
+    body: { chatId: '-999', chatTitle: 'Wrong Group', configuredGroupChatId: '-111' }
+  });
+  assert.equal(ok.status, 200);
+
+  const dashboard = await call(app, { method: 'GET', url: '/api/dashboard', headers: { 'x-api-key': 'topsecret' } });
+  assert.equal(dashboard.json.stats.telegramChatMismatches24h, 1);
+  assert.equal(dashboard.json.diagnostics.recentChatMismatches[0].chatId, '-999');
+});

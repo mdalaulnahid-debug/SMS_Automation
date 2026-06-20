@@ -35,6 +35,28 @@ test('planIntake ignores messages from other chats', () => {
   assert.equal(plan.action, 'ignore');
 });
 
+test('handleIntake reports a wrong-chat message once per distinct chat id', async () => {
+  const telegram = fakeTelegram();
+  const reported = [];
+  const backend = {
+    reportChatMismatch: async (detail) => { reported.push(detail); }
+  };
+  const reportedMismatchChatIds = new Set();
+  const message = { text: 'LRL 0171', chat: { id: '-999', title: 'Some Other Group' }, from: { id: 1 }, message_id: 5 };
+
+  const first = await handleIntake(message, { config: CONFIG, backend, telegram, reportedMismatchChatIds });
+  assert.equal(first.action, 'ignore');
+  assert.equal(reported.length, 1);
+  assert.deepEqual(reported[0], {
+    chatId: '-999',
+    chatTitle: 'Some Other Group',
+    configuredGroupChatId: CONFIG.groupChatId
+  });
+
+  await handleIntake(message, { config: CONFIG, backend, telegram, reportedMismatchChatIds });
+  assert.equal(reported.length, 1, 'should not report the same chat id twice');
+});
+
 test('planIntake denies unknown users by default', () => {
   const plan = planIntake(
     { text: 'LRL 01712345678', chat: { id: CONFIG.groupChatId }, from: { id: 555 }, message_id: 5 },

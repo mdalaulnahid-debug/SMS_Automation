@@ -4,171 +4,70 @@ Start with `progress_tracker.md` for the latest session handoff, test results, a
 
 ---
 
-## Pending — From 2026-06-19 Session (start here next)
+## Resolved — From 2026-06-19/20 Sessions
 
-### 0. Fix end-to-end reply correlation before trusting auto-post again
+All of the following were verified resolved in code during the 2026-06-20
+review pass (re-read the relevant source before re-opening any of these):
 
-User-reported production symptom:
+- **Reply correlation hardening** — `src/store.js` `findActiveRequestForGateway()`
+  no longer prioritizes `WAITING_OPERATOR_REPLY` over `NEEDS_MANUAL_REVIEW`/`TIMEOUT`
+  candidates; `src/replyAnalyzer.js` `inferReplyFamilies()` + `src/service.js`
+  `replyTypeScore()` now refuse to auto-match a reply whose inferred family
+  doesn't include the request's actual type (`SMS_REPLY_TYPE_MISMATCH` audit
+  instead of a silent wrong-match), for both single-candidate and ambiguous
+  multi-candidate cases.
+- **Training data** — the five curated `Training Data/Automation/*.xlsx`
+  workbooks are the active baseline, built into `data/training-cache/` by
+  `src/trainingData.js`. The old self-reinforcing `saveMatchedReplyKeywords()`
+  auto-learn-into-baseline mechanism was removed entirely.
+- **Self-training storage** — `src/manualReviewStore.js`, capped per request
+  type (not globally) at the latest 100 entries, stored under
+  `data/manual-review/<TYPE>.json`, wired into `service.js` by default. Never
+  feeds back into matching automatically — promotion into the curated
+  workbooks is a manual step.
+- **Unauthorized rejections silenced in the group** — `telegram-bridge/bridge.js`
+  `shouldSuppressGroupReply()` suppresses all three backend-level
+  authorization error codes; format/duplicate rejections still post normally.
+- **Watchdog alerts no longer fall back to the group** — `sendTelegramWatchdogAlert()`
+  in `src/app.js` only sends to `watchdogAlertChatId`, never the main group.
 
-- request A is posted in Telegram
-- operator reply for request B arrives first on the same gateway
-- backend attaches that reply to request A
-- Telegram bridge posts the wrong operator result into the group thread
+**One small residual gap, low priority (inactive today):** the bridge-level
+`authorizedUsers` allowlist rejection still never reaches the backend, so even
+though it's silent in the group now, it's also not audit-visible. Moot while
+`authorizedUsers: {}` is empty in production config — revisit if that
+allowlist is ever turned on.
 
-**Review findings from the 2026-06-20 code/audit/training pass (don't re-derive):**
-- The main bug is in backend reply correlation, not Telegram posting itself.
-- Candidate selection in `src/store.js` `findActiveRequestForGateway()` is too broad:
-  it considers multiple recent requests on the same gateway, including
-  `WAITING_OPERATOR_REPLY`, `NEEDS_MANUAL_REVIEW`, and recent `TIMEOUT`.
-- If more than one candidate exists, `src/service.js` scores them using
-  `src/replyAnalyzer.js` soft heuristics only: request-type patterns, payload
-  appearance, learned keywords, and recency.
-- That heuristic layer is currently too permissive for production auto-match:
-  pattern-only evidence can still win, and many tokens are generic.
-- `saveMatchedReplyKeywords()` learns from whatever was matched, so one bad
-  auto-match can reinforce future bad matches.
+## Done — 2026-06-20: Telegram chat-mismatch safeguard + authenticated settings
 
-**Observed real failure families already seen by user:**
-- `LCL` request got an `LRL`-style location reply
-- `MS-NID` request got an `IMEI-MS` reply from another request
-- `MS-NID` request got an `LRL` reply from another request
-- `LRL` request got an `LCL`-style Banglalink call/SMS event reply
+Root cause of the "bridge stopped working" incident: the VPS's
+`config/telegram.json` `groupChatId` had drifted from the real group, so
+every message was silently logged as "ignored" with no admin-visible signal.
+Fixed in two parts:
 
-**Strong implementation direction:**
-- Tighten candidate selection before any scoring happens.
-- Prefer hard correlation anchors first:
-  1. internal silent reference if ever available
-  2. request-family-specific structure checks
-  3. stronger payload anchoring
-- If correlation is not clear, leave unmatched for admin review instead of
-  auto-attaching.
-- Treat `NEEDS_MANUAL_REVIEW` and `TIMEOUT` candidates much more cautiously
-  than the currently active waiting request.
+1. **Safeguard** — `telegram-bridge/start.js`'s loop used to short-circuit
+   wrong-chat messages before ever reaching `bridge.js`'s `handleIntake()`/
+   `planIntake()`, which already had unused "wrong chat" handling. Consolidated
+   onto one path: `handleIntake()` now reports a mismatch once per distinct
+   wrong chat id (in-memory dedupe Set owned by the loop) via
+   `backendClient.reportChatMismatch()` → `POST /api/telegram/chat-mismatch`
+   (admin-key gated) → `TELEGRAM_CHAT_MISMATCH` audit entry, surfaced as a
+   `telegramChatMismatches24h` stat and `recentChatMismatches` diagnostic on
+   `/api/dashboard`, with a KPI tile + alert banner in the web admin console.
+2. **Authenticated settings** — `src/settingsStore.js` provides admin-gated
+   read/write for the Telegram group chat id (`config/telegram.json`) and
+   per-operator hotline/shortcode numbers (`config/gateways.json`), via
+   `GET /api/admin/settings`, `POST /api/admin/settings/telegram-group`, and
+   `POST /api/admin/settings/operator-contact`. A "Settings" panel in the web
+   admin console's Tools tab provides the input UI (previously only doable by
+   SSH-ing into the VPS and hand-editing JSON). Operator shortcode changes
+   apply live without a restart; Telegram group changes need
+   `pm2 restart sms-bridge` since that's a separate long-lived process that
+   reads its config once at startup — the UI says so after saving.
 
-**Training-data rule learned from this review:**
-- The top-level five Excel files under `Training Data/Automation/` are now the
-  practical baseline.
-- The old operator-wise subfolders were noisy; user cleaned and consolidated
-  the top-level files instead.
-
-### 0.1. Use cleaned top-level training files as the active reply-shape baseline
-
-Active manual baseline:
-
-- `Training Data/Automation/LCL.xlsx`
-- `Training Data/Automation/LRL.xlsx`
-- `Training Data/Automation/MS-NID.xlsx`
-- `Training Data/Automation/NID-MS.xlsx`
-- `Training Data/Automation/IMEI-MS.xlsx`
-
-Ignore for matching-rule work:
-
-- `Training Data/Automation/Operato_wise_data.zip`
-- old operator-wise subfolders if they conflict with the top-level files
-- old `Training Data/Automation/README.md` until updated
-
-**Important distinctions confirmed during review:**
-- `LCL` and `LRL` both provide last location, but `LCL` usually includes
-  B-party and usage/event clues such as `MOC`, `MTC`, `SMSMO`, `SMSMT`,
-  `CALL MO`, `CALL MT`, and often `IMEI`.
-- `LRL` is more radio/geographic in nature and is better recognized by
-  `RADIO LOCATION`, `LastActiveDateTime`, `LRA`, `Latitude`, `Longitude`,
-  or `No Radio Location Found`.
-- `IMEI-MS` intake is normally a 15-digit IMEI from the user, but operator
-  result rows may show 14-digit variants. The safest anchor is the first IMEI
-  echoed in the reply body.
-
-### 0.2. Add separate self-training storage with max-100 retention
-
-User requirement:
-
-- keep a separate self-training store for real request/reply pairs captured by
-  the running system
-- never let it grow beyond the latest 100 entries
-
-Required behavior:
-
-- do not overwrite the five manual Excel baseline files automatically
-- keep self-training separate from the manual curated baseline
-- when a new captured example is added beyond 100, delete the oldest one
-- prefer storing:
-  - timestamp
-  - request type
-  - canonical request text
-  - operator
-  - raw reply body
-  - whether the match was automatic or manually corrected
-
-### 1. Stop posting unauthorized-sender rejections into the Telegram group — needs scope answers first
-
-User's request: unauthorized messages currently get posted back into the
-shared Telegram group; this should stop, and those events should only be
-visible via the web admin console or Android admin app instead.
-
-**What was found (don't re-derive):**
-- Two separate authorization mechanisms exist, both currently posting their
-  rejection text back into the group via `telegram-bridge/bridge.js`'s
-  `handleIntake()`:
-  1. **Bridge-level allowlist** (`telegram-bridge/bridge.js` `planIntake()`,
-     `config.authorizedUsers` + `config.replyToUnauthorized` in
-     `config/telegram.json`). Currently **inactive** — `authorizedUsers: {}`
-     is empty, so `hasAllowList` is false and nobody is actually blocked here
-     today. This path never calls the backend at all, so even if active,
-     today it would NOT show up in admin/web audit — needs a new backend
-     endpoint for the bridge to report it if we want it audit-visible.
-  2. **Backend-level checks** in `src/service.js` `submitRequest()`
-     (`denyUnknownRequesters` in `config/auth.json`, currently `false`):
-     disabled user (`REQUEST_DENIED_DISABLED_USER`, already audited), unknown
-     requester (`REQUEST_DENIED_UNKNOWN_USER`, already audited), and
-     per-operator authorization mismatch (lines ~89-98 of `service.js` —
-     **not currently audited at all**, a real gap). All three currently
-     return a `replyText` that `bridge.js` posts straight into the group.
-- Format/duplicate rejections (max-5-identifiers, mixed types, duplicate
-  active request, etc.) are a **separate, unrelated category** — these are
-  useful self-correction feedback for a legitimate officer's typo, not an
-  authorization concern.
-
-**Open questions — asked via AskUserQuestion, user dismissed without
-answering, must be resolved before implementing:**
-1. Suppress the group reply for *all* authorization-type failures (disabled
-   user + unknown requester + operator-not-authorized + bridge allowlist), or
-   only the bridge-level allowlist case?
-2. Should format/duplicate rejections keep posting to the group as today
-   (recommended — they're not an authorization concern), or also move to
-   admin-only?
-
-**Once answered, the shape of the fix:**
-- Add stable `errorCode`s to the three backend-level authorization paths in
-  `service.js` (only `REQUEST_DUPLICATE_BLOCKED`/parser errors have one
-  today) so `bridge.js` can reliably tell "suppress this" apart from "show
-  this in-group."
-- Add the missing audit call for the operator-mismatch path.
-- Add a small backend endpoint + `telegram-bridge/backendClient.js` method so
-  the bridge-level allowlist rejection (which never touches the backend
-  today) becomes audit-visible too, if question 1 says to suppress it.
-- In `telegram-bridge/bridge.js` `handleIntake()`, skip the `telegram.sendMessage`
-  call for whichever failure types are in scope, per the answers above.
-
-### 1.1. Stop gateway watchdog unauthorized-send alerts from going to the group
-
-Separate from bridge/backend authorization rejections:
-
-- `POST /api/gateway/watchdog` in `src/app.js` writes `UNAUTHORIZED_SMS_SEND`
-  audit and then sends a Telegram alert immediately.
-- That alert currently goes to `watchdogAlertChatId` or falls back to the main
-  group chat if no private watchdog chat is configured.
-
-Desired behavior:
-
-- do not post these alerts into the shared group
-- either:
-  - send privately to the group owner/watchdog chat only, or
-  - keep audit-only visibility in admin surfaces
-
-Implementation note:
-
-- this is a different path from `telegram-bridge/bridge.js` and must be fixed
-  separately.
+Not done (deliberately out of scope, no Android app changes this pass): the
+same settings UI in the Android Admin App. The web admin console route was
+chosen as the lower-risk option per "admin app or backend admin console,
+whichever."
 
 ---
 

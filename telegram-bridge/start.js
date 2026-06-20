@@ -66,6 +66,10 @@ async function intakeLoop(config, telegram, backend) {
     log('intake loop started — no saved offset, processing all pending messages');
   }
 
+  // Owned for the lifetime of the loop so a wrong-chat config drift is reported to
+  // admin/web audit once, not on every single message from that chat.
+  const reportedMismatchChatIds = new Set();
+
   for (;;) {
     let updates;
     try {
@@ -79,13 +83,11 @@ async function intakeLoop(config, telegram, backend) {
       offset = update.update_id + 1;
       saveOffset(offset);
       if (!update.message) continue;
-      // Helpful during setup: surface the chat id of any group the bot is added to.
-      if (String(update.message.chat?.id) !== String(config.groupChatId)) {
-        log(`message from non-target chat ${update.message.chat?.id} (${update.message.chat?.title || 'n/a'}) — ignored`);
-        continue;
-      }
       try {
-        await handleIntake(update.message, { config, backend, telegram, log });
+        const result = await handleIntake(update.message, { config, backend, telegram, log, reportedMismatchChatIds });
+        if (result.action === 'ignore' && result.reason === 'wrong chat') {
+          log(`message from non-target chat ${result.chatId} (${result.chatTitle || 'n/a'}) — ignored`);
+        }
       } catch (error) {
         log(`handleIntake error: ${error.message}`);
       }

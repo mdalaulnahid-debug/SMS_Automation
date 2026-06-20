@@ -22,7 +22,10 @@ function loadGatewayConfig() {
         apiKey: config.apiKey || '',
         // Shared secret the phone must present on inbound webhook / registration (machine identity).
         secret: config.secret || '',
-        trustedSenders: config.trustedSenders || []
+        trustedSenders: config.trustedSenders || [],
+        // Optional override of the hardcoded operator hotline number in domain.js — set via
+        // settingsStore.writeOperatorShortcode(), empty means "use the domain.js default".
+        shortcode: config.shortcode || ''
       }
     ])
   );
