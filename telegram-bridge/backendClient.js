@@ -86,6 +86,20 @@ class BackendClient {
       // Best-effort — never let a reporting failure affect the intake loop itself.
     }
   }
+
+  // Reports a sender who failed the authorizedUsers check — group allowlist rejection, or
+  // any private DM (always authorized-only). Previously only ever a console log line.
+  async reportUnauthorizedAttempt({ chatId, chatType, fromId, fromName }) {
+    try {
+      await this.fetch(`${this.base}/api/telegram/unauthorized-attempt`, {
+        method: 'POST',
+        headers: this.headers({ 'content-type': 'application/json' }),
+        body: JSON.stringify({ chatId, chatType, fromId, fromName })
+      });
+    } catch {
+      // Best-effort — never let a reporting failure affect the intake loop itself.
+    }
+  }
 }
 
 module.exports = { BackendClient };

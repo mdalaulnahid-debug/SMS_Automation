@@ -4,6 +4,43 @@ Start with `progress_tracker.md` for the latest session handoff, test results, a
 
 ---
 
+## Done — 2026-06-20: Telegram private-DM intake
+
+Authorized users can now message the bot directly (1:1 DM) instead of only
+through the shared group, with replies routed back to that same private
+chat — useful when a request/reply shouldn't be visible to the whole group.
+
+- `telegram-bridge/bridge.js` `planIntake()`: a message is processed if it's
+  from the configured group OR from any private chat (`chat.type ===
+  'private'`). Private chats are **always** authorized-only via
+  `config.authorizedUsers` — there's no "open" equivalent of group
+  membership for a 1:1 chat with the bot. Unauthorized senders (group or
+  private) are silently ignored — no reply, ever — consistent with the
+  "all authorization failures stay silent" decision from earlier this
+  session.
+- **Real bug fixed in the same pass**: `handleIntake()`'s ack and
+  rejection messages used to hardcode `chatId: config.groupChatId` — a
+  private-DM submission's ack/rejection would have been sent to the
+  *group*, not back to the requester. Now uses `plan.request.chatId`,
+  so replies always go to whichever chat the request actually came from.
+- **Closed the audit gap** noted in the previous safeguard work:
+  unauthorized attempts (group allowlist rejection, or any unauthorized
+  private DM) are now reported once per (chat, sender) to
+  `POST /api/telegram/unauthorized-attempt` → `TELEGRAM_UNAUTHORIZED_ATTEMPT`
+  audit entry, surfaced as `telegramUnauthorizedAttempts24h` +
+  `recentUnauthorizedAttempts` on `/api/dashboard`, with a KPI tile and
+  alert banner in the web admin console (mirrors the chat-mismatch
+  safeguard pattern).
+- **Operational, not code**: to actually let someone use this, get their
+  numeric Telegram user ID (e.g. via `@userinfobot`) and add them to
+  `config/telegram.json`'s `authorizedUsers` map with a display name. The
+  user must also message the bot first (`/start` or anything) — Telegram
+  never lets a bot initiate contact, so being on the allowlist alone
+  doesn't make the bot reach out.
+- Verified: 128 tests pass, plus a live browser-preview round-trip of the
+  new unauthorized-attempt endpoint (KPI tile + alert banner both render
+  correctly).
+
 ## Resolved — From 2026-06-19/20 Sessions
 
 All of the following were verified resolved in code during the 2026-06-20

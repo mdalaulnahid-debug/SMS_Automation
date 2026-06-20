@@ -73,7 +73,8 @@ function renderOverview() {
     ['Delayed sends', stats.delayedConfirmations || 0, stats.delayedConfirmations ? 'danger' : 'success'],
     ['Ambiguous replies', stats.ambiguousReplies24h || 0, stats.ambiguousReplies24h ? 'warning' : 'success'],
     ['Duplicate risks', stats.duplicateRiskGroups || 0, stats.duplicateRiskGroups ? 'warning' : 'success'],
-    ['Telegram chat mismatches', stats.telegramChatMismatches24h || 0, stats.telegramChatMismatches24h ? 'danger' : 'success']
+    ['Telegram chat mismatches', stats.telegramChatMismatches24h || 0, stats.telegramChatMismatches24h ? 'danger' : 'success'],
+    ['Unauthorized attempts', stats.telegramUnauthorizedAttempts24h || 0, stats.telegramUnauthorizedAttempts24h ? 'danger' : 'success']
   ].map(([label, value, tone]) => `
     <div class="kpi-tile">
       <div class="kpi-value ${tone}">${value}</div>
@@ -121,7 +122,8 @@ function renderOverview() {
     ['Delayed sends', stats.delayedConfirmations || 0, stats.delayedConfirmations ? 'danger' : 'success'],
     ['Ambiguous replies (24h)', stats.ambiguousReplies24h || 0, stats.ambiguousReplies24h ? 'warning' : 'success'],
     ['Duplicate blocks (24h)', diagnostics.recentDuplicateBlocks || 0, diagnostics.recentDuplicateBlocks ? 'warning' : 'success'],
-    ['Telegram chat mismatches (24h)', stats.telegramChatMismatches24h || 0, stats.telegramChatMismatches24h ? 'danger' : 'success']
+    ['Telegram chat mismatches (24h)', stats.telegramChatMismatches24h || 0, stats.telegramChatMismatches24h ? 'danger' : 'success'],
+    ['Unauthorized attempts (24h)', stats.telegramUnauthorizedAttempts24h || 0, stats.telegramUnauthorizedAttempts24h ? 'danger' : 'success']
   ];
   document.getElementById('alertSummary').innerHTML = alertItems.map(([label, value, tone]) => `
     <div class="banner banner-${tone === 'warning' ? 'warn' : tone === 'danger' ? 'danger' : 'ok'}">

@@ -124,15 +124,70 @@ test('handleIntake stays quiet for authorization-style backend rejections', asyn
   assert.equal(telegram.sent.length, 0);
 });
 
-test('bridge-level unauthorized intake no longer replies into the group', async () => {
+test('bridge-level unauthorized intake no longer replies into the group, but is reported once', async () => {
   const telegram = fakeTelegram();
-  const backend = { submitRequest: async () => ({ ok: true }) };
+  const reported = [];
+  const backend = {
+    submitRequest: async () => ({ ok: true }),
+    reportUnauthorizedAttempt: async (detail) => { reported.push(detail); }
+  };
+  const reportedUnauthorizedSenders = new Set();
+  const message = { text: 'LRL 01712345678', chat: { id: CONFIG.groupChatId, type: 'group' }, from: { id: 555 }, message_id: 5 };
+
+  const first = await handleIntake(message, { config: CONFIG, backend, telegram, reportedUnauthorizedSenders });
+  assert.equal(first.action, 'unauthorized');
+  assert.equal(telegram.sent.length, 0);
+  assert.equal(reported.length, 1);
+  assert.equal(reported[0].chatId, CONFIG.groupChatId);
+  assert.equal(reported[0].chatType, 'group');
+  assert.equal(reported[0].fromId, '555');
+
+  await handleIntake(message, { config: CONFIG, backend, telegram, reportedUnauthorizedSenders });
+  assert.equal(reported.length, 1, 'should not report the same chat+sender twice');
+});
+
+test('planIntake always requires authorization for private chats, regardless of group allowlist', () => {
+  const unauthorizedDm = planIntake(
+    { text: 'LRL 01712345678', chat: { id: '555', type: 'private' }, from: { id: 555 }, message_id: 1 },
+    CONFIG
+  );
+  assert.equal(unauthorizedDm.action, 'unauthorized');
+  assert.equal(unauthorizedDm.replyText, null, 'private DMs never get a reply, unlike the group case');
+
+  const authorizedDm = planIntake(
+    { text: 'LRL 01712345678', chat: { id: '777888999', type: 'private' }, from: { id: 777888999 }, message_id: 2 },
+    CONFIG
+  );
+  assert.equal(authorizedDm.action, 'submit');
+  assert.equal(authorizedDm.request.chatId, '777888999');
+  assert.equal(authorizedDm.request.requesterName, 'Officer Rahim');
+});
+
+test('handleIntake routes an authorized private DM submission and ack back to the private chat, not the group', async () => {
+  const telegram = fakeTelegram();
+  const backend = {
+    submitRequest: async () => ({ ok: true, request: { requestId: 'REQ-1', targetOperators: ['GP'] } })
+  };
   const res = await handleIntake(
-    { text: 'LRL 01712345678', chat: { id: CONFIG.groupChatId }, from: { id: 555 }, message_id: 5 },
+    { text: 'LRL 01712345678', chat: { id: '777888999', type: 'private' }, from: { id: 777888999 }, message_id: 3 },
+    { config: { ...CONFIG, ackOnIntake: true }, backend, telegram }
+  );
+  assert.equal(res.action, 'submitted');
+  assert.equal(telegram.sent.length, 1);
+  assert.equal(telegram.sent[0].chatId, '777888999', 'ack must go to the private chat, never the group');
+});
+
+test('handleIntake routes a rejected private DM reply back to the private chat, not the group', async () => {
+  const telegram = fakeTelegram();
+  const backend = {
+    submitRequest: async () => ({ ok: false, replyText: 'Invalid request format.' })
+  };
+  const res = await handleIntake(
+    { text: 'garbage', chat: { id: '777888999', type: 'private' }, from: { id: 777888999 }, message_id: 4 },
     { config: CONFIG, backend, telegram }
   );
-  assert.equal(res.action, 'unauthorized');
-  assert.equal(telegram.sent.length, 0);
+  assert.equal(res.action, 'rejected');
+  assert.equal(telegram.sent[0].chatId, '777888999');
 });
 
 test('shouldSuppressGroupReply recognizes authorization error codes', () => {

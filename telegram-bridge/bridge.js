@@ -22,41 +22,56 @@ function shouldSuppressGroupReply(result) {
   return suppressed.has(result?.errorCode);
 }
 
-// Decide what to do with an inbound group message. Returns a plan the caller executes,
-// keeping this function free of network calls for easy testing.
+// Decide what to do with an inbound message — from the configured group, or a private DM.
+// Returns a plan the caller executes, keeping this function free of network calls for
+// easy testing.
 function planIntake(message, config) {
   const text = (message.text || '').trim();
   const fromId = message.from && String(message.from.id);
   const chatId = message.chat && String(message.chat.id);
+  const isGroupChat = chatId === String(config.groupChatId);
+  const isPrivateChat = message.chat && message.chat.type === 'private';
 
   if (!text) return { action: 'ignore', reason: 'no text' };
-  if (chatId !== String(config.groupChatId)) {
+  if (!isGroupChat && !isPrivateChat) {
     return { action: 'ignore', reason: 'wrong chat', chatId, chatTitle: message.chat?.title || null };
   }
 
-  // If authorizedUsers is configured, only listed users can submit.
-  // If not configured (or empty), any group member can submit — group membership is the gate.
   const authorizedUsers = config.authorizedUsers || {};
-  const hasAllowList = Object.keys(authorizedUsers).length > 0;
   const authorized = authorizedUsers[fromId];
-
-  if (hasAllowList && !authorized) {
-    return {
-      action: 'unauthorized',
-      reason: 'sender not in authorizedUsers',
-      fromId,
-      replyText: config.replyToUnauthorized
-        ? 'You are not authorized to submit requests in this group.'
-        : null,
-      replyToMessageId: message.message_id
-    };
-  }
-
   const firstName = message.from.first_name || '';
   const lastName = message.from.last_name || '';
-  const displayName = authorized?.name
+  const fromName = authorized?.name
     || [firstName, lastName].filter(Boolean).join(' ')
     || `user_${fromId}`;
+
+  if (isPrivateChat) {
+    // A private DM with the bot has no equivalent of "group membership" as a gate, so it's
+    // always authorized-only — silently ignored if the sender isn't on the allowlist, same
+    // policy as every other authorization failure (see shouldSuppressGroupReply). Reported
+    // once per (chat, sender) so an unauthorized DM is still visible in admin/web audit
+    // instead of disappearing with only a console log line.
+    if (!authorized) {
+      return { action: 'unauthorized', reason: 'unauthorized private sender', fromId, chatId, chatType: 'private', fromName, replyText: null };
+    }
+  } else {
+    // Group chat: open by default unless an allowlist is configured.
+    const hasAllowList = Object.keys(authorizedUsers).length > 0;
+    if (hasAllowList && !authorized) {
+      return {
+        action: 'unauthorized',
+        reason: 'sender not in authorizedUsers',
+        fromId,
+        chatId,
+        chatType: 'group',
+        fromName,
+        replyText: config.replyToUnauthorized
+          ? 'You are not authorized to submit requests in this group.'
+          : null,
+        replyToMessageId: message.message_id
+      };
+    }
+  }
 
   return {
     action: 'submit',
@@ -64,7 +79,7 @@ function planIntake(message, config) {
       channel: 'telegram',
       chatId,
       sourceMessageId: message.message_id,
-      requesterName: displayName,
+      requesterName: fromName,
       requesterId: fromId,
       text,
       ...(config.testDestination ? { testDestination: config.testDestination } : {})
@@ -74,7 +89,14 @@ function planIntake(message, config) {
 }
 
 // Process a single inbound message end-to-end (authorize → submit → ack/error reply).
-async function handleIntake(message, { config, backend, telegram, log = () => {}, reportedMismatchChatIds = new Set() }) {
+async function handleIntake(message, {
+  config,
+  backend,
+  telegram,
+  log = () => {},
+  reportedMismatchChatIds = new Set(),
+  reportedUnauthorizedSenders = new Set()
+}) {
   const plan = planIntake(message, config);
 
   if (plan.action === 'ignore') {
@@ -93,18 +115,33 @@ async function handleIntake(message, { config, backend, telegram, log = () => {}
   }
 
   if (plan.action === 'unauthorized') {
-    log(`intake: unauthorized user ${plan.fromId}`);
+    log(`intake: unauthorized ${plan.chatType} sender ${plan.fromId}`);
+    const dedupeKey = `${plan.chatId}:${plan.fromId}`;
+    if (!reportedUnauthorizedSenders.has(dedupeKey)) {
+      reportedUnauthorizedSenders.add(dedupeKey);
+      await backend.reportUnauthorizedAttempt({
+        chatId: plan.chatId,
+        chatType: plan.chatType,
+        fromId: plan.fromId,
+        fromName: plan.fromName
+      });
+    }
+    // Never reply — every authorization failure (group allowlist or private DM) stays
+    // silent in chat by design; visibility comes from the admin/web audit report above,
+    // not a message back to the sender. plan.replyText is computed but intentionally
+    // unused here (see shouldSuppressGroupReply for the equivalent post-submit policy).
     return plan;
   }
 
   const result = await backend.submitRequest(plan.request);
   if (!result.ok) {
     // Parse/validation/authorization failure — surface the backend's correction message
-    // back in-thread so the requester can fix and resend.
+    // back in-thread (in whichever chat the request came from) so the requester can fix
+    // and resend.
     const msg = result.replyText || (result.errors && result.errors.join('; ')) || 'Request rejected.';
     if (!shouldSuppressGroupReply(result)) {
       await telegram.sendMessage({
-        chatId: config.groupChatId,
+        chatId: plan.request.chatId,
         text: msg,
         replyToMessageId: plan.replyToMessageId
       });
@@ -117,7 +154,7 @@ async function handleIntake(message, { config, backend, telegram, log = () => {}
   if (config.ackOnIntake) {
     const operators = (result.request.targetOperators || []).join(', ') || 'operator';
     await telegram.sendMessage({
-      chatId: config.groupChatId,
+      chatId: plan.request.chatId,
       text: `✅ Request received — sending to ${operators}. Reply will be posted here when received.`,
       replyToMessageId: plan.replyToMessageId
     });

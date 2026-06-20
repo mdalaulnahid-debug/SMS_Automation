@@ -385,3 +385,35 @@ test('chat-mismatch endpoint requires auth and writes an audit entry', async () 
   assert.equal(dashboard.json.stats.telegramChatMismatches24h, 1);
   assert.equal(dashboard.json.diagnostics.recentChatMismatches[0].chatId, '-999');
 });
+
+test('unauthorized-attempt endpoint requires auth and writes an audit entry', async () => {
+  const app = appWith({ adminApiKey: 'topsecret' });
+
+  const denied = await call(app, {
+    method: 'POST',
+    url: '/api/telegram/unauthorized-attempt',
+    body: { chatId: '555', fromId: '555' }
+  });
+  assert.equal(denied.status, 401);
+
+  const missingField = await call(app, {
+    method: 'POST',
+    url: '/api/telegram/unauthorized-attempt',
+    headers: { 'x-api-key': 'topsecret', 'content-type': 'application/json' },
+    body: { chatId: '555' }
+  });
+  assert.equal(missingField.status, 400);
+
+  const ok = await call(app, {
+    method: 'POST',
+    url: '/api/telegram/unauthorized-attempt',
+    headers: { 'x-api-key': 'topsecret', 'content-type': 'application/json' },
+    body: { chatId: '555', chatType: 'private', fromId: '555', fromName: 'Unknown User' }
+  });
+  assert.equal(ok.status, 200);
+
+  const dashboard = await call(app, { method: 'GET', url: '/api/dashboard', headers: { 'x-api-key': 'topsecret' } });
+  assert.equal(dashboard.json.stats.telegramUnauthorizedAttempts24h, 1);
+  assert.equal(dashboard.json.diagnostics.recentUnauthorizedAttempts[0].fromId, '555');
+  assert.equal(dashboard.json.diagnostics.recentUnauthorizedAttempts[0].chatType, 'private');
+});

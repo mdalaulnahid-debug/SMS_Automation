@@ -181,6 +181,9 @@ function buildAdminData(store, queue) {
   const recentChatMismatches = store.auditLogs.filter((row) => {
     return row.action === 'TELEGRAM_CHAT_MISMATCH' && now - new Date(row.timestamp).getTime() < 24 * 60 * 60 * 1000;
   });
+  const recentUnauthorizedAttempts = store.auditLogs.filter((row) => {
+    return row.action === 'TELEGRAM_UNAUTHORIZED_ATTEMPT' && now - new Date(row.timestamp).getTime() < 24 * 60 * 60 * 1000;
+  });
   const alerts = summarizeAlerts(store, requests, gateways, unmatched);
   const activity = buildActivityFeed(store, requests, gateways);
   const today = new Date().toDateString();
@@ -206,6 +209,7 @@ function buildAdminData(store, queue) {
       ambiguousReplies24h: recentAmbiguousReplies.length,
       duplicateRiskGroups: duplicateRiskGroups.length,
       telegramChatMismatches24h: recentChatMismatches.length,
+      telegramUnauthorizedAttempts24h: recentUnauthorizedAttempts.length,
       todayRequests: requests.filter((r) => new Date(r.createdAt).toDateString() === today).length,
       completedToday: requests.filter((r) => r.status === 'COMPLETED' && new Date(r.createdAt).toDateString() === today).length
     },
@@ -225,6 +229,13 @@ function buildAdminData(store, queue) {
         chatId: row.details?.chatId,
         chatTitle: row.details?.chatTitle,
         configuredGroupChatId: row.details?.configuredGroupChatId,
+        timestamp: row.timestamp
+      })),
+      recentUnauthorizedAttempts: recentUnauthorizedAttempts.map((row) => ({
+        chatId: row.details?.chatId,
+        chatType: row.details?.chatType,
+        fromId: row.details?.fromId,
+        fromName: row.details?.fromName,
         timestamp: row.timestamp
       })),
       duplicateRiskGroups: duplicateRiskGroups.map((group) => ({
@@ -530,6 +541,22 @@ function createApp(options = {}) {
           chatId: String(body.chatId),
           chatTitle: body.chatTitle || null,
           configuredGroupChatId: body.configuredGroupChatId || null
+        });
+        return json(res, 200, { ok: true });
+      }
+      if (req.method === 'POST' && req.url === '/api/telegram/unauthorized-attempt') {
+        // Reported by the Telegram bridge when a sender fails the authorizedUsers check —
+        // group allowlist rejection, or any private DM (private chats are always
+        // authorized-only, see telegram-bridge/bridge.js planIntake). Closes the gap where
+        // this previously only ever produced a console log line in the bridge process.
+        if (!requireAdmin(req, res)) return undefined;
+        const body = await readJson(req);
+        if (!body.chatId || !body.fromId) return json(res, 400, { error: 'chatId and fromId required' });
+        store.audit('telegram-bridge', 'TELEGRAM_UNAUTHORIZED_ATTEMPT', null, {
+          chatId: String(body.chatId),
+          chatType: body.chatType || null,
+          fromId: String(body.fromId),
+          fromName: body.fromName || null
         });
         return json(res, 200, { ok: true });
       }
