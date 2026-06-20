@@ -46,6 +46,11 @@ public class AdminMainActivity extends Activity {
     private TextView tvKpiUnmatched;
     private TextView tvKpiGateways;
     private TextView tvSettingsSummary;
+    private EditText etTelegramGroupChatId;
+    private EditText etShortcodeGp;
+    private EditText etShortcodeRobi;
+    private EditText etShortcodeBanglalink;
+    private TextView tvOperationalSettingsResult;
     private LinearLayout layoutOverviewFleet;
     private LinearLayout layoutOverviewEscalations;
     private LinearLayout layoutApprovalsList;
@@ -81,6 +86,11 @@ public class AdminMainActivity extends Activity {
         tvKpiUnmatched = findViewById(R.id.tvKpiUnmatched);
         tvKpiGateways = findViewById(R.id.tvKpiGateways);
         tvSettingsSummary = findViewById(R.id.tvSettingsSummary);
+        etTelegramGroupChatId = findViewById(R.id.etTelegramGroupChatId);
+        etShortcodeGp = findViewById(R.id.etShortcodeGp);
+        etShortcodeRobi = findViewById(R.id.etShortcodeRobi);
+        etShortcodeBanglalink = findViewById(R.id.etShortcodeBanglalink);
+        tvOperationalSettingsResult = findViewById(R.id.tvOperationalSettingsResult);
         layoutOverviewFleet = findViewById(R.id.layoutOverviewFleet);
         layoutOverviewEscalations = findViewById(R.id.layoutOverviewEscalations);
         layoutApprovalsList = findViewById(R.id.layoutApprovalsList);
@@ -100,6 +110,15 @@ public class AdminMainActivity extends Activity {
             Toast.makeText(this, "Connection saved", Toast.LENGTH_SHORT).show();
         });
         ((Button) findViewById(R.id.btnRefreshData)).setOnClickListener(v -> refreshLiveData());
+
+        ((Button) findViewById(R.id.btnSaveTelegramGroup)).setOnClickListener(v ->
+            saveTelegramGroupChatId(etTelegramGroupChatId.getText().toString().trim()));
+        ((Button) findViewById(R.id.btnSaveShortcodeGp)).setOnClickListener(v ->
+            saveOperatorShortcode("GP", etShortcodeGp.getText().toString().trim()));
+        ((Button) findViewById(R.id.btnSaveShortcodeRobi)).setOnClickListener(v ->
+            saveOperatorShortcode("ROBI", etShortcodeRobi.getText().toString().trim()));
+        ((Button) findViewById(R.id.btnSaveShortcodeBanglalink)).setOnClickListener(v ->
+            saveOperatorShortcode("BANGLALINK", etShortcodeBanglalink.getText().toString().trim()));
 
         findViewById(R.id.tabOverview).setOnClickListener(v -> showPanel(0));
         findViewById(R.id.tabApprovals).setOnClickListener(v -> showPanel(1));
@@ -151,6 +170,7 @@ public class AdminMainActivity extends Activity {
                     renderGateways(overview.optJSONArray("gatewayHealth"));
                     renderIncidents(overview.optJSONArray("activity"), overview.optJSONObject("alerts"));
                     renderAudit(audit.optJSONArray("auditLogs"));
+                    loadOperationalSettings();
                 });
             } catch (Exception error) {
                 runOnUiThread(() -> {
@@ -422,6 +442,81 @@ public class AdminMainActivity extends Activity {
                 runOnUiThread(() -> Toast.makeText(this, "Action failed: " + error.getMessage(), Toast.LENGTH_LONG).show());
             }
         }).start();
+    }
+
+    // Pulls the current Telegram group chat id and operator hotline numbers so the Settings
+    // panel reflects what the backend actually has, not stale local field values. Loaded once
+    // a refresh succeeds rather than on its own timer — these change rarely and shouldn't
+    // clobber an in-progress edit.
+    private void loadOperationalSettings() {
+        String baseUrl = etBackendUrl.getText().toString().trim();
+        String apiKey = etAdminApiKey.getText().toString().trim();
+        if (baseUrl.isEmpty() || apiKey.isEmpty()) return;
+        new Thread(() -> {
+            try {
+                JSONObject settings = AdminBackendClient.getJson(baseUrl, "/api/admin/settings", apiKey);
+                JSONObject operators = settings.optJSONObject("operators");
+                runOnUiThread(() -> {
+                    etTelegramGroupChatId.setText(settings.optString("telegramGroupChatId", ""));
+                    if (operators != null) {
+                        etShortcodeGp.setText(optShortcode(operators, "GP"));
+                        etShortcodeRobi.setText(optShortcode(operators, "ROBI"));
+                        etShortcodeBanglalink.setText(optShortcode(operators, "BANGLALINK"));
+                    }
+                });
+            } catch (Exception error) {
+                // Best-effort — the rest of the Settings panel (backend link) still works.
+            }
+        }).start();
+    }
+
+    private String optShortcode(JSONObject operators, String operator) {
+        JSONObject entry = operators.optJSONObject(operator);
+        return entry == null ? "" : entry.optString("shortcode", "");
+    }
+
+    private void saveTelegramGroupChatId(String groupChatId) {
+        String baseUrl = etBackendUrl.getText().toString().trim();
+        String apiKey = etAdminApiKey.getText().toString().trim();
+        if (baseUrl.isEmpty() || apiKey.isEmpty()) {
+            Toast.makeText(this, "Configure backend URL and admin key first.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        new Thread(() -> {
+            try {
+                JSONObject body = new JSONObject().put("groupChatId", groupChatId);
+                JSONObject result = AdminBackendClient.postJson(baseUrl, "/api/admin/settings/telegram-group", apiKey, body);
+                runOnUiThread(() -> showOperationalSettingsResult(
+                    "Saved. " + result.optString("note", ""), false));
+            } catch (Exception error) {
+                runOnUiThread(() -> showOperationalSettingsResult(error.getMessage(), true));
+            }
+        }).start();
+    }
+
+    private void saveOperatorShortcode(String operator, String shortcode) {
+        String baseUrl = etBackendUrl.getText().toString().trim();
+        String apiKey = etAdminApiKey.getText().toString().trim();
+        if (baseUrl.isEmpty() || apiKey.isEmpty()) {
+            Toast.makeText(this, "Configure backend URL and admin key first.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        new Thread(() -> {
+            try {
+                JSONObject body = new JSONObject().put("operator", operator).put("shortcode", shortcode);
+                JSONObject result = AdminBackendClient.postJson(baseUrl, "/api/admin/settings/operator-contact", apiKey, body);
+                runOnUiThread(() -> showOperationalSettingsResult(
+                    "Saved " + result.optString("operator", operator) + " hotline number — applied immediately.", false));
+            } catch (Exception error) {
+                runOnUiThread(() -> showOperationalSettingsResult(error.getMessage(), true));
+            }
+        }).start();
+    }
+
+    private void showOperationalSettingsResult(String message, boolean isError) {
+        tvOperationalSettingsResult.setVisibility(View.VISIBLE);
+        tvOperationalSettingsResult.setText(message);
+        tvOperationalSettingsResult.setTextColor(Color.parseColor(isError ? "#FF6D7F" : "#56D88B"));
     }
 
     private View buildIncidentRow(String severity, String title, String summary, String gatewayId, String occurredAt) {

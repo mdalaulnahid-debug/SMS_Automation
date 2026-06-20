@@ -112,4 +112,201 @@
         android:text="Use HTTPS when available. Save changes before refreshing live data."
         android:textColor="@color/admin_text_secondary"
         android:textSize="13sp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="OPERATIONAL SETTINGS"
+        android:textColor="@color/admin_text_dim"
+        android:textSize="11sp"
+        android:textStyle="bold" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/admin_bg_panel"
+        android:orientation="vertical"
+        android:padding="18dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Authenticated changes to the Telegram group and operator hotline numbers — previously only doable by SSH-ing into the server."
+            android:textColor="@color/admin_text_secondary"
+            android:textSize="13sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="TELEGRAM GROUP CHAT ID"
+            android:textColor="@color/admin_text_dim"
+            android:textSize="10sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/etTelegramGroupChatId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/admin_bg_input"
+            android:hint="-1004316326579"
+            android:inputType="numberSigned"
+            android:padding="14dp"
+            android:textColor="@color/admin_text_primary"
+            android:textColorHint="@color/admin_text_dim" />
+
+        <Button
+            android:id="@+id/btnSaveTelegramGroup"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="10dp"
+            android:text="Save Group Chat ID" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Restart the Telegram bridge after changing this (pm2 restart sms-bridge) — it reads this once at startup."
+            android:textColor="@color/admin_text_dim"
+            android:textSize="11sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/admin_border" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="OPERATOR HOTLINE NUMBERS"
+            android:textColor="@color/admin_text_dim"
+            android:textSize="10sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="GP"
+            android:textColor="@color/admin_text_secondary"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/etShortcodeGp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/admin_bg_input"
+                android:hint="01714054239"
+                android:inputType="phone"
+                android:padding="14dp"
+                android:textColor="@color/admin_text_primary"
+                android:textColorHint="@color/admin_text_dim" />
+
+            <Button
+                android:id="@+id/btnSaveShortcodeGp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Save" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="ROBI"
+            android:textColor="@color/admin_text_secondary"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/etShortcodeRobi"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/admin_bg_input"
+                android:hint="01833122144"
+                android:inputType="phone"
+                android:padding="14dp"
+                android:textColor="@color/admin_text_primary"
+                android:textColorHint="@color/admin_text_dim" />
+
+            <Button
+                android:id="@+id/btnSaveShortcodeRobi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Save" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:text="BANGLALINK"
+            android:textColor="@color/admin_text_secondary"
+            android:textSize="11sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/etShortcodeBanglalink"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/admin_bg_input"
+                android:hint="01924400990"
+                android:inputType="phone"
+                android:padding="14dp"
+                android:textColor="@color/admin_text_primary"
+                android:textColorHint="@color/admin_text_dim" />
+
+            <Button
+                android:id="@+id/btnSaveShortcodeBanglalink"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="Save" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Applies immediately to the backend — no restart needed for these."
+            android:textColor="@color/admin_text_dim"
+            android:textSize="11sp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvOperationalSettingsResult"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:textSize="12sp"
+        android:visibility="gone" />
 </LinearLayout>
