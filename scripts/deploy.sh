@@ -17,6 +17,7 @@ ssh "$VPS" "mkdir -p \
   $REMOTE/config \
   $REMOTE/data/training-cache \
   $REMOTE/data/manual-review \
+  '$REMOTE/Training Data/Automation' \
   $REMOTE/backups"
 
 echo "==> Copying backend source..."
@@ -28,6 +29,9 @@ scp public/* "$VPS:$REMOTE/public/"
 echo "==> Copying Telegram bridge..."
 scp telegram-bridge/*.js "$VPS:$REMOTE/telegram-bridge/"
 
+echo "==> Copying curated training workbooks (source of truth for the training cache)..."
+scp "Training Data/Automation/"*.xlsx "$VPS:$REMOTE/Training Data/Automation/"
+
 echo "==> Copying generated training cache and review-store docs..."
 scp data/training-cache/*.json "$VPS:$REMOTE/data/training-cache/"
 scp data/training-summary.json "$VPS:$REMOTE/data/training-summary.json"
@@ -36,6 +40,7 @@ scp data/manual-review/README.md "$VPS:$REMOTE/data/manual-review/README.md"
 echo "==> Copying runtime package and scripts..."
 scp package.json "$VPS:$REMOTE/package.json"
 scp nginx/sms-backend.conf "$VPS:$REMOTE/nginx/sms-backend.conf"
+scp scripts/*.js "$VPS:$REMOTE/scripts/"
 scp scripts/setup-ssl.sh "$VPS:$REMOTE/scripts/setup-ssl.sh"
 scp scripts/backup.sh "$VPS:$REMOTE/scripts/backup.sh"
 ssh "$VPS" "chmod +x $REMOTE/scripts/setup-ssl.sh $REMOTE/scripts/backup.sh"
