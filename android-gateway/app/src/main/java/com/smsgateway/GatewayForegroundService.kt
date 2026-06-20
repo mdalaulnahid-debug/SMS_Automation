@@ -422,7 +422,9 @@ class GatewayForegroundService : Service() {
                         if (configuredGateways.isNotEmpty() && now - lastGatewayHeartbeatMs >= 30_000) {
                             var confirmedRoutes = 0
                             for ((gwId, _) in configuredGateways) {
-                                if (BackendClient.heartbeatGateway(backendUrl, gwId, secret)) {
+                                val ok = BackendClient.heartbeatGateway(backendUrl, gwId, secret)
+                                Log.d(TAG, "Heartbeat for $gwId -> $ok")
+                                if (ok) {
                                     confirmedRoutes += 1
                                 }
                             }
