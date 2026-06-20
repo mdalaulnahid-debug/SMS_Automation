@@ -39,13 +39,23 @@ const STRONG_REPLY_FAMILY_PATTERNS = Object.freeze({
   [REQUEST_TYPES.NID_MS]: [
     /(?:^|\n)\s*nid[:\s]/i,
     /(?:^|\n)\s*nid[^\n]*\b(?:msisdn|8801\d{9})/i,
-    /no\s+data\s+found[^\n]*\bnid\b/i
+    /no\s+data\s+found[^\n]*\bnid\b/i,
+    // Unanchored fallback: "Sorry No records found for NID: ..." embeds the keyword
+    // mid-sentence, so the line-start anchors above never fire for that template.
+    /\bnid\s*:\s*\d{6,}/i,
+    /no\s+records?\s+found\s+for\s+nid\b/i
   ],
   [REQUEST_TYPES.IMEI_MS]: [
     /(?:^|\n)\s*imei[:\s]/i,
     /\bmsisdn-date\b/i,
     /no\s+data\s+available\s+within\s+90\s+days/i,
-    /(?:^|\n)\s*\d{14,15},\s*8801\d{9},\s*\d{8}/i
+    /(?:^|\n)\s*\d{14,15},\s*8801\d{9},\s*\d{8}/i,
+    // Unanchored fallback: GP's "no records found" template embeds "IMEI:" mid-sentence
+    // (e.g. "Sorry No records found for IMEI: 353917104327090 [GP]"), so the line-start
+    // anchors above never fire for it — without this, the reply scores as type-neutral
+    // and can get matched onto an unrelated pending request (e.g. an LRL query).
+    /\bimei\s*:\s*\d{6,}/i,
+    /no\s+records?\s+found\s+for\s+imei\b/i
   ]
 });
 

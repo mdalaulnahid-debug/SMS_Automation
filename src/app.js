@@ -828,6 +828,19 @@ function createApp(options = {}) {
         const result = service.manualMatch(body.inboxId, body.requestId);
         return json(res, 200, result);
       }
+      if (req.method === 'GET' && req.url.startsWith('/api/admin/unmatched/') && req.url.endsWith('/candidates')) {
+        if (!requireAdmin(req, res)) return undefined;
+        const inboxId = decodeURIComponent(req.url.split('/').at(-2) || '');
+        const candidates = service.rankReplyCandidates(inboxId);
+        return json(res, 200, { candidates });
+      }
+      if (req.method === 'POST' && req.url === '/api/admin/correct-match') {
+        if (!requireAdmin(req, res)) return undefined;
+        const body = await readJson(req);
+        if (!body.inboxId || !body.requestId) return json(res, 400, { error: 'inboxId and requestId required.' });
+        const result = service.correctMatch(body.inboxId, body.requestId);
+        return json(res, 200, result);
+      }
       if (req.method === 'GET' && req.url === '/api/sms/unmatched') {
         if (!requireAdmin(req, res)) return undefined;
         const unmatched = store.smsInbox.filter((row) => !row.matchedRequestId && !row.analysis?.ignored);

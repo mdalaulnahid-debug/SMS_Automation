@@ -276,7 +276,7 @@ function renderUnmatchedList() {
   }
 }
 
-function renderUnmatchedDetail() {
+async function renderUnmatchedDetail() {
   const detail = document.getElementById('unmatchedDetail');
   const inbox = unmatchedData.find((item) => item.id === selectedUnmatchedId);
   if (!inbox) {
@@ -284,7 +284,6 @@ function renderUnmatchedDetail() {
     return;
   }
 
-  const candidates = requestsData.filter((request) => ['WAITING_OPERATOR_REPLY', 'NEEDS_MANUAL_REVIEW', 'TIMEOUT'].includes(request.status));
   detail.innerHTML = `
     <div class="section-eyebrow">Exception review</div>
     <div style="font-size:24px;font-weight:800;letter-spacing:-0.04em">${esc(inbox.senderNumber)}</div>
@@ -298,20 +297,43 @@ function renderUnmatchedDetail() {
     </div>
     <div class="detail-block">
       <div class="detail-label">Guided manual match</div>
-      ${candidates.length ? `
-        <select id="manualMatchSelect" class="select-field">
-          ${candidates.map((request) => `<option value="${esc(request.requestId)}">${esc(request.requestId)} · ${esc(request.requestType)} ${esc(request.payload)}</option>`).join('')}
-        </select>
-        <div class="detail-actions" style="margin-top:12px">
-          <button id="manualMatchBtn" class="btn-primary">Match to selected request</button>
-        </div>` : '<div class="detail-value">No waiting requests are currently eligible for match.</div>'}
+      <div class="detail-value">Loading ranked candidates…</div>
     </div>`;
+
+  let candidates = [];
+  try {
+    const res = await apiFetch(`/api/admin/unmatched/${encodeURIComponent(inbox.id)}/candidates`);
+    const body = await res.json();
+    candidates = body.candidates || [];
+  } catch (err) {
+    detail.querySelector('.detail-block:last-child').innerHTML = `
+      <div class="detail-label">Guided manual match</div>
+      <div class="detail-value">Failed to load candidates: ${esc(err.message)}</div>`;
+    return;
+  }
+
+  // Re-check the currently selected item hasn't changed while the fetch was in flight.
+  if (selectedUnmatchedId !== inbox.id) return;
+
+  detail.querySelector('.detail-block:last-child').innerHTML = `
+    <div class="detail-label">Guided manual match — ranked by the same logic as live auto-matching</div>
+    ${candidates.length ? `
+      <select id="manualMatchSelect" class="select-field">
+        ${candidates.map((c) => `<option value="${esc(c.requestId)}">${esc(c.requestId)} · ${esc(c.requestType)} ${esc(c.payload)} · ${esc(c.status)}${c.status === 'COMPLETED' ? ' (correction)' : ''} · score ${c.score}</option>`).join('')}
+      </select>
+      <div class="item-meta" style="margin-top:6px">Higher score = stronger match. A COMPLETED candidate means re-attaching will issue a correction message instead of a fresh reply.</div>
+      <div class="detail-actions" style="margin-top:12px">
+        <button id="manualMatchBtn" class="btn-primary">Match to selected request</button>
+      </div>` : '<div class="detail-value">No requests on this gateway are eligible for match.</div>'}
+  `;
 
   const button = document.getElementById('manualMatchBtn');
   if (button) {
     button.addEventListener('click', async () => {
       const requestId = document.getElementById('manualMatchSelect').value;
-      await postJson('/api/manual-match', { inboxId: inbox.id, requestId });
+      const candidate = candidates.find((c) => c.requestId === requestId);
+      const endpoint = candidate && candidate.status === 'COMPLETED' ? '/api/admin/correct-match' : '/api/manual-match';
+      await postJson(endpoint, { inboxId: inbox.id, requestId });
       await refreshAdmin();
     });
   }

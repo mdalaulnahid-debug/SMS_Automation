@@ -684,6 +684,115 @@ class AutomationService {
     return this.store.getRequest(requestId);
   }
 
+  // Ranks every plausible request for an inbox reply using the SAME scoring logic the
+  // live auto-matcher uses (analyzeOperatorReply + replyTypeScore + training score) —
+  // so a human picking a candidate sees the same signal the system would have used.
+  // Unlike live matching, this also considers already-finalized requests (COMPLETED,
+  // TIMEOUT) within a lookback window, since the point of this is to catch/correct a
+  // reply that was wrongly auto-matched (or never matched) after the fact.
+  rankReplyCandidates(inboxId, { lookbackMs = 24 * 60 * 60 * 1000 } = {}) {
+    const inbox = this.store.smsInbox.find((row) => row.id === inboxId);
+    if (!inbox) throw new Error(`Inbox entry not found: ${inboxId}`);
+
+    const operatorKey = this.store.operatorForGateway(inbox.gatewayId);
+    const inferredReplyFamilies = inferReplyFamilies(inbox.messageBody, operatorKey || '');
+    const cutoff = new Date(inbox.receivedAt).getTime() - lookbackMs;
+
+    const candidates = this.store.listRequests().filter((request) => {
+      if (new Date(request.createdAt).getTime() < cutoff) return false;
+      return Boolean(this.store.getOutboxForGateway(request.requestId, inbox.gatewayId));
+    });
+
+    const ranked = candidates.map((request) => {
+      const analysis = analyzeOperatorReply({ request, messageBody: inbox.messageBody });
+      const typeScore = replyTypeScore(request, inferredReplyFamilies);
+      const score = (typeScore * 100)
+        + (confidenceRank(analysis.confidence) * 10)
+        + (analysis.payloadMatchCount || 0) * 5
+        + (analysis.trainingMatch?.score || 0);
+      return {
+        requestId: request.requestId,
+        requestType: request.requestType,
+        payload: request.payload,
+        status: request.status,
+        createdAt: request.createdAt,
+        currentlyMatchedInboxId: inbox.matchedRequestId === request.requestId ? inbox.id : null,
+        score,
+        typeScore,
+        confidence: analysis.confidence,
+        payloadMatched: analysis.payloadMatched,
+        referenceMatched: analysis.referenceMatched
+      };
+    });
+
+    ranked.sort((a, b) => b.score - a.score || new Date(b.createdAt) - new Date(a.createdAt));
+    return ranked;
+  }
+
+  // Attaches (or re-attaches) an inbox reply to a request, regardless of the request's
+  // current status — including COMPLETED, so a reply that was wrongly auto-matched
+  // elsewhere (and already finalized) can be corrected after the fact. If another inbox
+  // row is currently attached to this request for the same gateway, it's detached first
+  // so the combined reply text doesn't show both the wrong and the correct reply.
+  correctMatch(inboxId, requestId) {
+    const inbox = this.store.smsInbox.find((row) => row.id === inboxId);
+    if (!inbox) throw new Error(`Inbox entry not found: ${inboxId}`);
+    const request = this.store.getRequest(requestId);
+    const operatorKey = this.store.operatorForGateway(inbox.gatewayId);
+    if (!operatorKey) throw new Error(`No operator mapped for gateway: ${inbox.gatewayId}`);
+
+    const previousInbox = this.store.smsInbox.find((row) => {
+      return row.matchedRequestId === requestId && row.gatewayId === inbox.gatewayId && row.id !== inboxId;
+    });
+    if (previousInbox) {
+      previousInbox.matchedRequestId = null;
+      previousInbox.analysis = { ...(previousInbox.analysis || {}), correctedAway: true, correctedToInboxId: inboxId };
+      if (this.store.persistence) this.store.persistence.insertInbox(previousInbox);
+    }
+
+    const analysis = analyzeOperatorReply({ request, messageBody: inbox.messageBody });
+    inbox.matchedRequestId = requestId;
+    inbox.analysis = analysis;
+    if (this.store.persistence) this.store.persistence.insertInbox(inbox);
+
+    this.store.markOperatorReplyReceived(requestId, operatorKey);
+    this.store.markDispatchReplied(requestId, operatorKey, { inboxId: inbox.id });
+    this._recordManualReviewCandidate({
+      request,
+      operatorKey,
+      messageBody: inbox.messageBody,
+      analysis,
+      source: 'manual_correction'
+    });
+
+    this.store.audit('admin', 'MANUAL_REMATCH_CORRECTION', requestId, {
+      inboxId,
+      previousInboxId: previousInbox?.id || null,
+      operator: operatorKey
+    });
+
+    const refreshedRequest = this.store.getRequest(requestId);
+    const updatedText = formatCombinedReply(refreshedRequest, this.store);
+    const autoApprove = refreshedRequest.channel && this.autoApproveChannels.includes(refreshedRequest.channel);
+    const reply = this.store.addReplyDraft({
+      requestId,
+      replyText: `⚠️ Correction — the previous reply for this request was matched in error.\n\n${updatedText}`,
+      sentStatus: autoApprove ? 'APPROVED_FOR_POST' : 'DRAFT',
+      channel: refreshedRequest.channel,
+      chatId: refreshedRequest.chatId,
+      sourceMessageId: refreshedRequest.sourceMessageId,
+      requesterName: refreshedRequest.requesterName,
+      requesterId: refreshedRequest.requesterId
+    });
+
+    return {
+      ok: true,
+      request: refreshedRequest,
+      replyDraft: reply,
+      correctedFromInboxId: previousInbox?.id || null
+    };
+  }
+
   manualMatch(inboxId, requestId) {
     const inbox = this.store.smsInbox.find((row) => row.id === inboxId);
     if (!inbox) throw new Error(`Inbox entry not found: ${inboxId}`);
