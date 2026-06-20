@@ -70,6 +70,12 @@ class GatewayForegroundService : Service() {
         const val ACTION_STOP = "com.smsgateway.ACTION_STOP"
         const val ACTION_DOWNLOAD_UPDATE = "com.smsgateway.ACTION_DOWNLOAD_UPDATE"
 
+        // Current live status, readable without needing to catch the broadcast — the service
+        // only broadcasts on CHANGE, so a UI that resumes after the state already settled would
+        // otherwise be stuck showing its default text until the next real transition.
+        @Volatile var lastKnownGatewayLive: Boolean = false
+        @Volatile var lastKnownGatewayLiveDetail: String = "Awaiting backend confirmation"
+
     }
 
 
@@ -558,6 +564,8 @@ class GatewayForegroundService : Service() {
     }
 
     private fun publishGatewayLiveStatus(live: Boolean, detail: String) {
+        lastKnownGatewayLive = live
+        lastKnownGatewayLiveDetail = detail
         if (lastGatewayLive == live && lastGatewayLiveDetail == detail) return
         lastGatewayLive = live
         lastGatewayLiveDetail = detail

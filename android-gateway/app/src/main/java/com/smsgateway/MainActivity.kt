@@ -177,6 +177,11 @@ class MainActivity : AppCompatActivity() {
             serviceReceiver,
             IntentFilter(ServiceEvents.ACTION_STATUS)
         )
+        // Sync with the service's current state directly — it only broadcasts on a CHANGE,
+        // so if the gateway already settled into "live" while this screen was gone, relying
+        // on the broadcast alone would leave the UI stuck on its default text forever.
+        gatewayLive = GatewayForegroundService.lastKnownGatewayLive
+        gatewayLiveDetail = GatewayForegroundService.lastKnownGatewayLiveDetail
         setupSimSwitcher()
         updateUI()
         discoverAndCheckBackend()
