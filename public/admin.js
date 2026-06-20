@@ -461,7 +461,45 @@ async function loadSettings() {
   document.getElementById('settingsGroupChatId').value = data.telegramGroupChatId || '';
   const operator = document.getElementById('settingsOperator').value;
   document.getElementById('settingsShortcode').value = (data.operators?.[operator]?.shortcode) || '';
+  renderAuthorizedUsers(data.authorizedUsers || []);
 }
+
+function renderAuthorizedUsers(users) {
+  document.getElementById('authorizedUsersList').innerHTML = users.length
+    ? users.map((user) => `
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0">
+        <span class="mono">${esc(user.telegramUserId)} — ${esc(user.name)}</span>
+        <button type="button" class="btn-secondary" data-remove-auth-user="${esc(user.telegramUserId)}">Remove</button>
+      </div>`).join('')
+    : '<div class="empty">No authorized users yet — group is open to any member, private DMs are closed to everyone.</div>';
+}
+
+document.getElementById('authorizedUsersList').addEventListener('click', async (event) => {
+  const telegramUserId = event.target?.dataset?.removeAuthUser;
+  if (!telegramUserId) return;
+  try {
+    await postJson('/api/admin/settings/authorized-users/remove', { telegramUserId });
+    showSettingsResult(`Removed ${telegramUserId}. Restart the Telegram bridge for this to take effect.`, false);
+    await loadSettings();
+  } catch (error) {
+    showSettingsResult(error.message || 'Failed to remove authorized user.', true);
+  }
+});
+
+document.getElementById('authorizedUserForm').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const telegramUserId = document.getElementById('authUserId').value.trim();
+  const name = document.getElementById('authUserName').value.trim();
+  try {
+    const body = await postJson('/api/admin/settings/authorized-users', { telegramUserId, name });
+    showSettingsResult(`Added ${body.name}. ${body.note || ''}`, false);
+    document.getElementById('authUserId').value = '';
+    document.getElementById('authUserName').value = '';
+    await loadSettings();
+  } catch (error) {
+    showSettingsResult(error.message || 'Failed to add authorized user.', true);
+  }
+});
 
 document.getElementById('settingsOperator').addEventListener('change', loadSettings);
 

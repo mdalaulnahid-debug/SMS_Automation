@@ -32,14 +32,41 @@ chat — useful when a request/reply shouldn't be visible to the whole group.
   alert banner in the web admin console (mirrors the chat-mismatch
   safeguard pattern).
 - **Operational, not code**: to actually let someone use this, get their
-  numeric Telegram user ID (e.g. via `@userinfobot`) and add them to
-  `config/telegram.json`'s `authorizedUsers` map with a display name. The
-  user must also message the bot first (`/start` or anything) — Telegram
-  never lets a bot initiate contact, so being on the allowlist alone
-  doesn't make the bot reach out.
+  numeric Telegram user ID (e.g. via `@userinfobot`) — see the next entry
+  for how to add them without touching the JSON file directly. The user
+  must also message the bot first (`/start` or anything) — Telegram never
+  lets a bot initiate contact, so being on the allowlist alone doesn't
+  make the bot reach out.
 - Verified: 128 tests pass, plus a live browser-preview round-trip of the
   new unauthorized-attempt endpoint (KPI tile + alert banner both render
   correctly).
+
+## Done — 2026-06-20: Manage authorized Telegram users from the UI
+
+Adding/removing authorized users no longer requires SSH + hand-editing
+`config/telegram.json` — both the web admin console and the Android Admin
+App can do it now, same pattern as the Telegram group/operator-hotline
+settings added earlier this session.
+
+- `src/settingsStore.js`: `readAuthorizedUsers()`, `writeAuthorizedUser(id,
+  name)`, `removeAuthorizedUser(id)` — merge into `authorizedUsers` in
+  `config/telegram.json`, preserving every other field/entry.
+- New admin-gated endpoints: `POST /api/admin/settings/authorized-users`
+  (add/update) and `POST /api/admin/settings/authorized-users/remove`;
+  `GET /api/admin/settings` now also returns the current list.
+- Web admin console: an "Authorized Telegram Users" block in the Tools tab
+  Settings panel — list with per-row Remove buttons, plus an Add form.
+- Android Admin App: the same thing, in the Settings screen's
+  "OPERATIONAL SETTINGS" panel — dynamically rendered rows with Remove
+  buttons, plus the Add form. Verified by screenshot on the A55 (empty
+  state and form both render correctly; didn't test an actual add/remove
+  against production from the device, since the web-console round-trip
+  already proved the same backend logic end-to-end against a local dev
+  server).
+- Same restart caveat as the group chat ID: adding/removing takes effect
+  only after `pm2 restart sms-bridge` — both UIs say so after a save.
+- Verified: 133 tests pass (11 in `test/settingsStore.test.js` now, up
+  from 6), plus a live browser-preview add → list → remove round-trip.
 
 ## Resolved — From 2026-06-19/20 Sessions
 

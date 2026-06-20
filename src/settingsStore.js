@@ -79,11 +79,54 @@ function writeOperatorShortcode(operatorKey, shortcode) {
   return trimmed;
 }
 
+function readAuthorizedUsers() {
+  const file = readJsonFile(telegramConfigPath());
+  const authorizedUsers = file.authorizedUsers || {};
+  return Object.entries(authorizedUsers).map(([telegramUserId, entry]) => ({
+    telegramUserId,
+    name: entry?.name || ''
+  }));
+}
+
+// Adds or updates one entry in telegram.json's authorizedUsers map, preserving every other
+// entry and every other top-level field. Same restart caveat as writeTelegramGroupChatId —
+// the bridge reads this once at startup.
+function writeAuthorizedUser(telegramUserId, name) {
+  const trimmedId = String(telegramUserId ?? '').trim();
+  const trimmedName = String(name ?? '').trim();
+  if (!trimmedId) throw new Error('telegramUserId is required');
+  if (!/^\d+$/.test(trimmedId)) throw new Error('telegramUserId must be numeric (the user\'s Telegram id, not @username)');
+  if (!trimmedName) throw new Error('name is required');
+
+  const path = telegramConfigPath();
+  const file = readJsonFile(path);
+  file.authorizedUsers = { ...(file.authorizedUsers || {}), [trimmedId]: { name: trimmedName } };
+  writeJsonFile(path, file);
+  return { telegramUserId: trimmedId, name: trimmedName };
+}
+
+function removeAuthorizedUser(telegramUserId) {
+  const trimmedId = String(telegramUserId ?? '').trim();
+  if (!trimmedId) throw new Error('telegramUserId is required');
+
+  const path = telegramConfigPath();
+  const file = readJsonFile(path);
+  const authorizedUsers = { ...(file.authorizedUsers || {}) };
+  if (!(trimmedId in authorizedUsers)) throw new Error(`No authorized user with id ${trimmedId}`);
+  delete authorizedUsers[trimmedId];
+  file.authorizedUsers = authorizedUsers;
+  writeJsonFile(path, file);
+  return trimmedId;
+}
+
 module.exports = {
   telegramConfigPath,
   gatewaysConfigPath,
   readTelegramGroupChatId,
   writeTelegramGroupChatId,
   readOperatorContacts,
-  writeOperatorShortcode
+  writeOperatorShortcode,
+  readAuthorizedUsers,
+  writeAuthorizedUser,
+  removeAuthorizedUser
 };

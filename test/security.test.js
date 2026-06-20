@@ -417,3 +417,56 @@ test('unauthorized-attempt endpoint requires auth and writes an audit entry', as
   assert.equal(dashboard.json.diagnostics.recentUnauthorizedAttempts[0].fromId, '555');
   assert.equal(dashboard.json.diagnostics.recentUnauthorizedAttempts[0].chatType, 'private');
 });
+
+test('admin settings endpoints manage authorized Telegram users end to end', async () => {
+  await withTempSettingsConfig(async () => {
+    const app = appWith({ adminApiKey: 'topsecret' });
+
+    const deniedAdd = await call(app, {
+      method: 'POST',
+      url: '/api/admin/settings/authorized-users',
+      body: { telegramUserId: '777888999', name: 'Officer Rahim' }
+    });
+    assert.equal(deniedAdd.status, 401);
+
+    const add = await call(app, {
+      method: 'POST',
+      url: '/api/admin/settings/authorized-users',
+      headers: { 'x-api-key': 'topsecret', 'content-type': 'application/json' },
+      body: { telegramUserId: '777888999', name: 'Officer Rahim' }
+    });
+    assert.equal(add.status, 200);
+    assert.equal(add.json.telegramUserId, '777888999');
+    assert.ok(add.json.note.includes('pm2 restart sms-bridge'));
+
+    const afterAdd = await call(app, { method: 'GET', url: '/api/admin/settings', headers: { 'x-api-key': 'topsecret' } });
+    assert.deepEqual(afterAdd.json.authorizedUsers, [{ telegramUserId: '777888999', name: 'Officer Rahim' }]);
+
+    const badAdd = await call(app, {
+      method: 'POST',
+      url: '/api/admin/settings/authorized-users',
+      headers: { 'x-api-key': 'topsecret', 'content-type': 'application/json' },
+      body: { telegramUserId: 'not-a-number', name: 'X' }
+    });
+    assert.equal(badAdd.status, 400);
+
+    const remove = await call(app, {
+      method: 'POST',
+      url: '/api/admin/settings/authorized-users/remove',
+      headers: { 'x-api-key': 'topsecret', 'content-type': 'application/json' },
+      body: { telegramUserId: '777888999' }
+    });
+    assert.equal(remove.status, 200);
+
+    const afterRemove = await call(app, { method: 'GET', url: '/api/admin/settings', headers: { 'x-api-key': 'topsecret' } });
+    assert.deepEqual(afterRemove.json.authorizedUsers, []);
+
+    const removeUnknown = await call(app, {
+      method: 'POST',
+      url: '/api/admin/settings/authorized-users/remove',
+      headers: { 'x-api-key': 'topsecret', 'content-type': 'application/json' },
+      body: { telegramUserId: '777888999' }
+    });
+    assert.equal(removeUnknown.status, 400);
+  });
+});

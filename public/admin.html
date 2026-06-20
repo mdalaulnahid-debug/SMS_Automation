@@ -364,6 +364,16 @@
                   <button type="submit" class="btn-secondary">Save operator number</button>
                   <div class="tool-note">Applies immediately to this backend — no restart needed for this one.</div>
                 </form>
+                <div style="margin-top:8px;padding-top:12px;border-top:1px solid var(--divider)">
+                  <div class="tool-note">Authorized Telegram users — gates the private-DM intake (group membership still gates the group, unless an allowlist is set there too).</div>
+                  <div id="authorizedUsersList" class="mono-list" style="margin-top:8px"></div>
+                  <form id="authorizedUserForm" class="tool-form" style="margin-top:8px">
+                    <label>Telegram user ID<input id="authUserId" class="input-field" name="telegramUserId" placeholder="777888999" /></label>
+                    <label>Display name<input id="authUserName" class="input-field" name="name" placeholder="Officer Rahim" /></label>
+                    <button type="submit" class="btn-secondary">Add authorized user</button>
+                  </form>
+                  <div class="tool-note">Get a user's numeric ID via <code>@userinfobot</code> on Telegram — not their @username. Restart the bridge after adding/removing (<code>pm2 restart sms-bridge</code>).</div>
+                </div>
                 <div id="settingsResult" class="tool-note" style="display:none"></div>
               </section>
               <section class="data-surface tool-panel">

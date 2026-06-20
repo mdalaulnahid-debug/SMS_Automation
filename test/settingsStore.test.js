@@ -88,3 +88,59 @@ test('writeOperatorShortcode rejects malformed input', () => {
     assert.throws(() => settingsStore.writeOperatorShortcode('GP', ''), /required/);
   });
 });
+
+test('readAuthorizedUsers starts empty and reflects writes', () => {
+  withTempConfigDir((settingsStore, { telegramPath }) => {
+    assert.deepEqual(settingsStore.readAuthorizedUsers(), []);
+
+    const added = settingsStore.writeAuthorizedUser('777888999', 'Officer Rahim');
+    assert.deepEqual(added, { telegramUserId: '777888999', name: 'Officer Rahim' });
+
+    const users = settingsStore.readAuthorizedUsers();
+    assert.deepEqual(users, [{ telegramUserId: '777888999', name: 'Officer Rahim' }]);
+
+    const onDisk = JSON.parse(readFileSync(telegramPath, 'utf8'));
+    assert.equal(onDisk.authorizedUsers['777888999'].name, 'Officer Rahim');
+    assert.equal(onDisk.botToken, 'tok', 'other fields must be preserved');
+  });
+});
+
+test('writeAuthorizedUser updates an existing entry and preserves other users', () => {
+  withTempConfigDir((settingsStore) => {
+    settingsStore.writeAuthorizedUser('111', 'Officer A');
+    settingsStore.writeAuthorizedUser('222', 'Officer B');
+    settingsStore.writeAuthorizedUser('111', 'Officer A Renamed');
+
+    const users = settingsStore.readAuthorizedUsers();
+    assert.equal(users.length, 2);
+    assert.deepEqual(users.find((u) => u.telegramUserId === '111'), { telegramUserId: '111', name: 'Officer A Renamed' });
+    assert.deepEqual(users.find((u) => u.telegramUserId === '222'), { telegramUserId: '222', name: 'Officer B' });
+  });
+});
+
+test('writeAuthorizedUser rejects non-numeric id or missing name', () => {
+  withTempConfigDir((settingsStore) => {
+    assert.throws(() => settingsStore.writeAuthorizedUser('not-a-number', 'X'), /numeric/);
+    assert.throws(() => settingsStore.writeAuthorizedUser('123', ''), /name is required/);
+    assert.throws(() => settingsStore.writeAuthorizedUser('', 'X'), /telegramUserId is required/);
+  });
+});
+
+test('removeAuthorizedUser deletes one entry and preserves the rest', () => {
+  withTempConfigDir((settingsStore) => {
+    settingsStore.writeAuthorizedUser('111', 'Officer A');
+    settingsStore.writeAuthorizedUser('222', 'Officer B');
+
+    const removedId = settingsStore.removeAuthorizedUser('111');
+    assert.equal(removedId, '111');
+
+    const users = settingsStore.readAuthorizedUsers();
+    assert.deepEqual(users, [{ telegramUserId: '222', name: 'Officer B' }]);
+  });
+});
+
+test('removeAuthorizedUser throws for an unknown id', () => {
+  withTempConfigDir((settingsStore) => {
+    assert.throws(() => settingsStore.removeAuthorizedUser('999'), /No authorized user/);
+  });
+});

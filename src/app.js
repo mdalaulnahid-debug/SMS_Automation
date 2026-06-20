@@ -497,8 +497,39 @@ function createApp(options = {}) {
         if (!requireAdmin(req, res)) return undefined;
         return json(res, 200, {
           telegramGroupChatId: settingsStore.readTelegramGroupChatId(),
-          operators: settingsStore.readOperatorContacts()
+          operators: settingsStore.readOperatorContacts(),
+          authorizedUsers: settingsStore.readAuthorizedUsers()
         });
+      }
+      if (req.method === 'POST' && req.url === '/api/admin/settings/authorized-users') {
+        if (!requireAdmin(req, res)) return undefined;
+        const body = await readJson(req);
+        try {
+          const user = settingsStore.writeAuthorizedUser(body.telegramUserId, body.name);
+          store.audit('admin', 'SETTINGS_AUTHORIZED_USER_ADDED', null, user);
+          return json(res, 200, {
+            ok: true,
+            ...user,
+            note: 'Restart the Telegram bridge process for this to take effect (pm2 restart sms-bridge).'
+          });
+        } catch (error) {
+          return json(res, 400, { error: error.message });
+        }
+      }
+      if (req.method === 'POST' && req.url === '/api/admin/settings/authorized-users/remove') {
+        if (!requireAdmin(req, res)) return undefined;
+        const body = await readJson(req);
+        try {
+          const telegramUserId = settingsStore.removeAuthorizedUser(body.telegramUserId);
+          store.audit('admin', 'SETTINGS_AUTHORIZED_USER_REMOVED', null, { telegramUserId });
+          return json(res, 200, {
+            ok: true,
+            telegramUserId,
+            note: 'Restart the Telegram bridge process for this to take effect (pm2 restart sms-bridge).'
+          });
+        } catch (error) {
+          return json(res, 400, { error: error.message });
+        }
       }
       if (req.method === 'POST' && req.url === '/api/admin/settings/telegram-group') {
         if (!requireAdmin(req, res)) return undefined;

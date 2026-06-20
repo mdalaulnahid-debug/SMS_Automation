@@ -300,6 +300,75 @@
             android:text="Applies immediately to the backend — no restart needed for these."
             android:textColor="@color/admin_text_dim"
             android:textSize="11sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/admin_border" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="AUTHORIZED TELEGRAM USERS"
+            android:textColor="@color/admin_text_dim"
+            android:textSize="10sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Gates the private-DM intake. Restart the bridge after adding/removing."
+            android:textColor="@color/admin_text_dim"
+            android:textSize="11sp" />
+
+        <LinearLayout
+            android:id="@+id/layoutAuthorizedUsers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical" />
+
+        <EditText
+            android:id="@+id/etAuthUserId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/admin_bg_input"
+            android:hint="Telegram user ID, e.g. 777888999"
+            android:inputType="number"
+            android:padding="14dp"
+            android:textColor="@color/admin_text_primary"
+            android:textColorHint="@color/admin_text_dim" />
+
+        <EditText
+            android:id="@+id/etAuthUserName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/admin_bg_input"
+            android:hint="Display name, e.g. Officer Rahim"
+            android:inputType="textPersonName"
+            android:padding="14dp"
+            android:textColor="@color/admin_text_primary"
+            android:textColorHint="@color/admin_text_dim" />
+
+        <Button
+            android:id="@+id/btnAddAuthorizedUser"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="10dp"
+            android:text="Add Authorized User" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Get the numeric ID via @userinfobot on Telegram — not the @username."
+            android:textColor="@color/admin_text_dim"
+            android:textSize="11sp" />
     </LinearLayout>
 
     <TextView

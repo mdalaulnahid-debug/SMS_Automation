@@ -51,6 +51,9 @@ public class AdminMainActivity extends Activity {
     private EditText etShortcodeRobi;
     private EditText etShortcodeBanglalink;
     private TextView tvOperationalSettingsResult;
+    private LinearLayout layoutAuthorizedUsers;
+    private EditText etAuthUserId;
+    private EditText etAuthUserName;
     private LinearLayout layoutOverviewFleet;
     private LinearLayout layoutOverviewEscalations;
     private LinearLayout layoutApprovalsList;
@@ -91,6 +94,9 @@ public class AdminMainActivity extends Activity {
         etShortcodeRobi = findViewById(R.id.etShortcodeRobi);
         etShortcodeBanglalink = findViewById(R.id.etShortcodeBanglalink);
         tvOperationalSettingsResult = findViewById(R.id.tvOperationalSettingsResult);
+        layoutAuthorizedUsers = findViewById(R.id.layoutAuthorizedUsers);
+        etAuthUserId = findViewById(R.id.etAuthUserId);
+        etAuthUserName = findViewById(R.id.etAuthUserName);
         layoutOverviewFleet = findViewById(R.id.layoutOverviewFleet);
         layoutOverviewEscalations = findViewById(R.id.layoutOverviewEscalations);
         layoutApprovalsList = findViewById(R.id.layoutApprovalsList);
@@ -119,6 +125,8 @@ public class AdminMainActivity extends Activity {
             saveOperatorShortcode("ROBI", etShortcodeRobi.getText().toString().trim()));
         ((Button) findViewById(R.id.btnSaveShortcodeBanglalink)).setOnClickListener(v ->
             saveOperatorShortcode("BANGLALINK", etShortcodeBanglalink.getText().toString().trim()));
+        ((Button) findViewById(R.id.btnAddAuthorizedUser)).setOnClickListener(v ->
+            addAuthorizedUser(etAuthUserId.getText().toString().trim(), etAuthUserName.getText().toString().trim()));
 
         findViewById(R.id.tabOverview).setOnClickListener(v -> showPanel(0));
         findViewById(R.id.tabApprovals).setOnClickListener(v -> showPanel(1));
@@ -456,6 +464,7 @@ public class AdminMainActivity extends Activity {
             try {
                 JSONObject settings = AdminBackendClient.getJson(baseUrl, "/api/admin/settings", apiKey);
                 JSONObject operators = settings.optJSONObject("operators");
+                JSONArray authorizedUsers = settings.optJSONArray("authorizedUsers");
                 runOnUiThread(() -> {
                     etTelegramGroupChatId.setText(settings.optString("telegramGroupChatId", ""));
                     if (operators != null) {
@@ -463,6 +472,7 @@ public class AdminMainActivity extends Activity {
                         etShortcodeRobi.setText(optShortcode(operators, "ROBI"));
                         etShortcodeBanglalink.setText(optShortcode(operators, "BANGLALINK"));
                     }
+                    renderAuthorizedUsers(authorizedUsers);
                 });
             } catch (Exception error) {
                 // Best-effort — the rest of the Settings panel (backend link) still works.
@@ -517,6 +527,95 @@ public class AdminMainActivity extends Activity {
         tvOperationalSettingsResult.setVisibility(View.VISIBLE);
         tvOperationalSettingsResult.setText(message);
         tvOperationalSettingsResult.setTextColor(Color.parseColor(isError ? "#FF6D7F" : "#56D88B"));
+    }
+
+    private void renderAuthorizedUsers(JSONArray users) {
+        layoutAuthorizedUsers.removeAllViews();
+        if (users == null || users.length() == 0) {
+            TextView empty = new TextView(this);
+            empty.setText("No authorized users yet — private DMs are closed to everyone until added here.");
+            empty.setTextColor(Color.parseColor("#7F91AF"));
+            empty.setTextSize(11);
+            layoutAuthorizedUsers.addView(empty);
+            return;
+        }
+        for (int i = 0; i < users.length(); i++) {
+            JSONObject user = users.optJSONObject(i);
+            if (user == null) continue;
+            String telegramUserId = user.optString("telegramUserId");
+            String name = user.optString("name");
+
+            LinearLayout row = new LinearLayout(this);
+            row.setOrientation(LinearLayout.HORIZONTAL);
+            row.setGravity(Gravity.CENTER_VERTICAL);
+            LinearLayout.LayoutParams rowParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            rowParams.topMargin = (int) (6 * getResources().getDisplayMetrics().density);
+            row.setLayoutParams(rowParams);
+
+            TextView label = new TextView(this);
+            label.setText(telegramUserId + " — " + name);
+            label.setTextColor(Color.parseColor("#DCE7F2"));
+            label.setTextSize(12);
+            LinearLayout.LayoutParams labelParams = new LinearLayout.LayoutParams(
+                0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+            label.setLayoutParams(labelParams);
+            row.addView(label);
+
+            Button removeButton = new Button(this);
+            removeButton.setText("Remove");
+            removeButton.setTextSize(11);
+            removeButton.setOnClickListener(v -> removeAuthorizedUser(telegramUserId));
+            row.addView(removeButton);
+
+            layoutAuthorizedUsers.addView(row);
+        }
+    }
+
+    private void addAuthorizedUser(String telegramUserId, String name) {
+        String baseUrl = etBackendUrl.getText().toString().trim();
+        String apiKey = etAdminApiKey.getText().toString().trim();
+        if (baseUrl.isEmpty() || apiKey.isEmpty()) {
+            Toast.makeText(this, "Configure backend URL and admin key first.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        new Thread(() -> {
+            try {
+                JSONObject body = new JSONObject().put("telegramUserId", telegramUserId).put("name", name);
+                JSONObject result = AdminBackendClient.postJson(baseUrl, "/api/admin/settings/authorized-users", apiKey, body);
+                runOnUiThread(() -> {
+                    showOperationalSettingsResult(
+                        "Added " + result.optString("name", name) + ". " + result.optString("note", ""), false);
+                    etAuthUserId.setText("");
+                    etAuthUserName.setText("");
+                    loadOperationalSettings();
+                });
+            } catch (Exception error) {
+                runOnUiThread(() -> showOperationalSettingsResult(error.getMessage(), true));
+            }
+        }).start();
+    }
+
+    private void removeAuthorizedUser(String telegramUserId) {
+        String baseUrl = etBackendUrl.getText().toString().trim();
+        String apiKey = etAdminApiKey.getText().toString().trim();
+        if (baseUrl.isEmpty() || apiKey.isEmpty()) {
+            Toast.makeText(this, "Configure backend URL and admin key first.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        new Thread(() -> {
+            try {
+                JSONObject body = new JSONObject().put("telegramUserId", telegramUserId);
+                AdminBackendClient.postJson(baseUrl, "/api/admin/settings/authorized-users/remove", apiKey, body);
+                runOnUiThread(() -> {
+                    showOperationalSettingsResult(
+                        "Removed " + telegramUserId + ". Restart the Telegram bridge for this to take effect.", false);
+                    loadOperationalSettings();
+                });
+            } catch (Exception error) {
+                runOnUiThread(() -> showOperationalSettingsResult(error.getMessage(), true));
+            }
+        }).start();
     }
 
     private View buildIncidentRow(String severity, String title, String summary, String gatewayId, String occurredAt) {
