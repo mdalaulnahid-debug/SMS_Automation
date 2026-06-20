@@ -124,22 +124,54 @@ function scoreReplyFamiliesFromTraining(
   return scores.sort((a, b) => b.score - a.score || a.requestType.localeCompare(b.requestType));
 }
 
+const REQUEST_HEADER_ALIASES = ['request', 'request text', 'sms request', 'query', 'input'];
+const REPLY_HEADER_ALIASES = ['reply', 'response', 'operator reply', 'sms reply', 'output'];
+const HEADER_SCAN_LIMIT = 10;
+
 function readWorkbook(xlsx, filePath) {
   const workbook = xlsx.readFile(filePath, { cellDates: false });
   return workbook.SheetNames.flatMap((sheetName) => {
-    const rows = xlsx.utils.sheet_to_json(workbook.Sheets[sheetName], {
-      defval: '',
-      raw: false
+    // Read as a raw array-of-arrays first so the real header row can be found even when
+    // a title/blank row sits above it (sheet_to_json would otherwise synthesize __EMPTY
+    // column names from that first row and silently drop every data row).
+    const sheet = workbook.Sheets[sheetName];
+    const aoa = xlsx.utils.sheet_to_json(sheet, { header: 1, defval: '', raw: false });
+    const headerIndex = findHeaderRowIndex(aoa);
+    const headerRow = aoa[headerIndex] || [];
+
+    const rows = aoa.slice(headerIndex + 1).map((dataRow) => {
+      const obj = {};
+      headerRow.forEach((key, col) => {
+        if (key) obj[String(key)] = dataRow[col] ?? '';
+      });
+      return obj;
     });
-    return rows.map((row, index) => normalizeRow(filePath, sheetName, row, index + 2)).filter(Boolean);
+
+    return rows
+      .map((row, index) => normalizeRow(filePath, sheetName, row, headerIndex + index + 2))
+      .filter(Boolean);
   });
+}
+
+// Find the row that actually contains the column labels (Request/Reply/etc.), scanning
+// the first few rows instead of assuming row 1 — a title or blank row above the real
+// header is common in hand-maintained workbooks.
+function findHeaderRowIndex(aoa) {
+  const limit = Math.min(aoa.length, HEADER_SCAN_LIMIT);
+  for (let i = 0; i < limit; i++) {
+    const cells = (aoa[i] || []).map((cell) => normalizeHeader(cell));
+    const hasRequest = REQUEST_HEADER_ALIASES.some((alias) => cells.includes(alias));
+    const hasReply = REPLY_HEADER_ALIASES.some((alias) => cells.includes(alias));
+    if (hasRequest || hasReply) return i;
+  }
+  return 0;
 }
 
 function normalizeRow(filePath, sheetName, row, rowNumber) {
   const requestType = inferRequestType(filePath, row);
   const operator = inferOperator(filePath, row);
-  const requestText = pick(row, ['request', 'request text', 'sms request', 'query', 'input']);
-  const replyText = pick(row, ['reply', 'response', 'operator reply', 'sms reply', 'output']);
+  const requestText = pick(row, REQUEST_HEADER_ALIASES);
+  const replyText = pick(row, REPLY_HEADER_ALIASES);
 
   if (!requestText && !replyText) return null;
 

@@ -21,6 +21,16 @@ function writeWorkbook(filePath, rows, sheetName = 'Sheet1') {
   xlsx.writeFile(workbook, filePath);
 }
 
+// Simulates a hand-maintained workbook where a title/blank row sits above the real
+// header — e.g. a merged "MS-NID Replies" title row before "SL NO | Request | Reply".
+function writeWorkbookWithLeadingRow(filePath, headerRow, dataRows, sheetName = 'Sheet1') {
+  const workbook = xlsx.utils.book_new();
+  const aoa = [['MS-NID Replies — Curated'], headerRow, ...dataRows];
+  const worksheet = xlsx.utils.aoa_to_sheet(aoa);
+  xlsx.utils.book_append_sheet(workbook, worksheet, sheetName);
+  xlsx.writeFile(workbook, filePath);
+}
+
 test('matchReplyAgainstTraining uses curated workbook content', () => {
   const root = mkdtempSync(join(tmpdir(), 'training-data-'));
   const cacheDir = join(root, 'training-cache');
@@ -118,6 +128,27 @@ test('rebuildTrainingCache writes normalized cache file from workbook source', (
     assert.equal(savedType.examples.length, 1);
     assert.equal(savedType.patterns[0].requestType, 'LRL');
     assert.equal(savedIndex.summary.totalExamples, 1);
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
+});
+
+test('readWorkbook finds the header row even when a title row sits above it', () => {
+  const root = mkdtempSync(join(tmpdir(), 'training-data-'));
+  const cacheDir = join(root, 'training-cache');
+  try {
+    writeWorkbookWithLeadingRow(
+      join(root, 'MS-NID.xlsx'),
+      ['SL NO', 'Request', 'Reply'],
+      [
+        [1, 'MS-NID 01712345678', 'MSISDN: 8801712345678, NID: 1234567890, DoB: 1990-01-01']
+      ]
+    );
+
+    const catalog = rebuildTrainingCache({ rootDir: root, cacheDir });
+    assert.equal(catalog.examples.length, 1);
+    assert.equal(catalog.examples[0].requestType, 'MS-NID');
+    assert.match(catalog.examples[0].replyText, /NID: 1234567890/);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
