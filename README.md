@@ -267,10 +267,10 @@ For pre-launch testing with a phone you control instead of operator shortcode `1
 | GET | `/api/health` | Health check; returns `preferredLanIp`, `backendUrls` (used by Android discovery) |
 | GET | `/api/dashboard` | Full system snapshot |
 | POST | `/api/gateways/register` | Phone registers `{ gatewayId, host, port }` → updates `gatewayUrl` in memory |
-| POST | `/api/requests` | Submit request (`text`, `whatsappGroupId`, `requesterWhatsappId`, `requesterName`, optional `testDestination`) |
+| POST | `/api/requests` | Submit request (`text`, `chatId`, `requesterId`, `requesterName`, optional `testDestination`) |
 | POST | `/api/sms/inbound` | Inbound SMS webhook from phone |
-| POST | `/api/whatsapp-replies/:id/approve` | Approve draft (manual → POSTED; automated channel → APPROVED_FOR_POST) |
-| POST | `/api/whatsapp-replies/:id/posted` | Bridge confirms a draft was posted → completes request |
+| POST | `/api/reply-drafts/:id/approve` | Approve draft (manual → POSTED; automated channel → APPROVED_FOR_POST) |
+| POST | `/api/reply-drafts/:id/posted` | Bridge confirms a draft was posted → completes request |
 | GET | `/api/users` · POST | List / upsert authorized requesters (admin) |
 | POST | `/api/users/:id/status` | Enable/disable a requester (admin) |
 | GET | `/api/audit/verify` | Verify the audit hash chain (admin) |

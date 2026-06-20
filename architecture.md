@@ -60,7 +60,7 @@ One APK for all three phones; identity (`gatewayId`) set in Settings per device.
 - **Network → Phone:** `SmsReceiver` catches inbound SMS
 - **Phone → Backend:** OkHttp `POST /api/sms/inbound`; WorkManager retries on failure
 - Foreground service (`dataSync` + `remoteMessaging`), Room DB activity log, boot receiver
-- **Backend discovery (v1.2.1):** scans phone subnet for `GET /api/health`, validates `service: sms-whatsapp-automation`
+- **Backend discovery (v1.2.1):** scans phone subnet for `GET /api/health`, validates `service: sms-telegram-automation`
 - **Gateway registration:** on Start Service, `POST /api/gateways/register` updates backend `gatewayUrl` in memory
 - **Dual-SIM caveat:** `SmsSender` uses default SMS SIM — wrong SIM selection causes carrier `No service` failures
 
@@ -157,7 +157,7 @@ Target: **structured field extractors** per (operator, request type) that pull n
 
 ## 10. Reply Drafting and Posting
 
-Every matched reply produces a draft tagging `@requesterName` with request ID, type, operator, payload, raw operator response, confidence note, and Dhaka-timezone timestamp. Drafts stay `DRAFT` until manually approved (`POST /api/whatsapp-replies/:id/approve`).
+Every matched reply produces a draft tagging `@requesterName` with request ID, type, operator, payload, raw operator response, confidence note, and Dhaka-timezone timestamp. Drafts stay `DRAFT` until manually approved (`POST /api/reply-drafts/:id/approve`).
 
 Target for fan-out requests: one **combined draft** assembled when all dispatches are terminal (per-operator sections, missing operators marked "no reply / timeout"), instead of independent per-operator drafts where only the latest gets posted.
 

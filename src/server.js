@@ -27,7 +27,7 @@ const maintenance = createMaintenanceCoordinator({
 });
 
 http.createServer(app.handle).listen(port, host, () => {
-  console.log(`SMS/WhatsApp automation server listening on http://${host}:${port}`);
+  console.log(`SMS/Telegram automation server listening on http://${host}:${port}`);
   console.log(`Open dashboard at http://localhost:${port}`);
 
   if (useTunnel) {

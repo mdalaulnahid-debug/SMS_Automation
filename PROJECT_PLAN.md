@@ -110,7 +110,7 @@ Built (channel-agnostic backend + bridge scaffold, behind unit tests):
 1. **Backend metadata plumbing** — requests/drafts carry `channel`, `chatId`, `sourceMessageId`,
    requester id; data model is channel-agnostic (`manual` keeps dashboard copy/paste).
 2. **Two-step posting for automated channels** — Approve marks draft `APPROVED_FOR_POST` (request
-   stays `NEEDS_MANUAL_REVIEW`); the bridge posts, then `POST /api/whatsapp-replies/:id/posted`
+   stays `NEEDS_MANUAL_REVIEW`); the bridge posts, then `POST /api/reply-drafts/:id/posted`
    completes the request. An unsent reply never looks completed and is retried.
 3. **Telegram bridge** (`telegram-bridge/`, separate process) — long-poll intake (authorize
    deny-by-default → submit) + posting loop (threaded reply + real `text_mention` tag). Zero deps.
@@ -148,5 +148,4 @@ to the original request with the requester tagged; review gate still enforced.
 | Operator replies from unexpected sender IDs | Fix 0.7 + keep `trustedSenders` configurable per gateway; unmatched → manual review, never dropped |
 | Concurrent requests on one SIM cause mismatched replies | One-active-per-phone queue rule is load-bearing — never relax without a reliable reply reference |
 | Android OEM kills the gateway service | Foreground service + battery exemption + heartbeat alerting (Phase 3/5) |
-| WhatsApp policy limits | Manual posting is the safe default; official API only after eligibility confirmed |
 | Sensitive data exposure | LAN-only, auth in Phase 2, audit everywhere, manual review gate before group posting |

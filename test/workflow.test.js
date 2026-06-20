@@ -373,7 +373,7 @@ test('blocks duplicate active request intake and returns existing request id', a
   assert.equal(store.auditLogs.at(-1).action, 'REQUEST_DUPLICATE_BLOCKED');
 });
 
-test('matches operator reply and drafts tagged WhatsApp response', async () => {
+test('matches operator reply and drafts a tagged reply', async () => {
   const { service } = createHarness();
   const submitted = await service.submitRequest({
     chatId: 'operations',
