@@ -4,6 +4,16 @@ Start with `progress_tracker.md` for the latest session handoff, test results, a
 
 ---
 
+## Planned — Domain migration: `licbarishal.duckdns.org` → `opsbarishal.com`
+
+Not started yet — buying the domain first. Full step-by-step procedure,
+rollback plan, and the one known non-zero-downtime gap are documented in
+`docs/domain-migration-plan.md`. Short version: nothing in the codebase
+hardcodes the duckdns domain (Telegram bridge uses localhost, Android app has
+no hardcoded domain) — the only things that need updating are nginx's TLS
+config on the VPS (`scripts/setup-ssl.sh`, already parameterized) and each
+gateway phone's Backend URL setting.
+
 ## Done — 2026-06-20 (night): Fixed reply-type misclassification + added correction tooling
 
 Real incident: a requester's `LRL 01718589986` private-DM request got the wrong

@@ -144,7 +144,7 @@ Verified in this session:
 | Component | Location | Notes |
 |-----------|----------|-------|
 | Backend | `45.77.240.195:3000` | Vultr Singapore VPS |
-| Public host | `https://licbarishal.duckdns.org` | Admin API reachable here |
+| Public host | `https://licbarishal.duckdns.org` | Admin API reachable here — **planned migration to `opsbarishal.com`, see `docs/domain-migration-plan.md`** |
 | Android JDK | `C:\Program Files\Android\Android Studio\jbr` | verified for local build |
 
 ---
