@@ -145,6 +145,10 @@ Inbound SMS is processed only if the sender is in the gateway's `trustedSenders`
 
 **Known gap (target fix):** operators sometimes reply from an alphanumeric sender ID different from the shortcode the SMS was sent to. Matching should fall back to *trusted sender + single pending request on the gateway* even when sender ≠ destination, since trust is already established by configuration.
 
+**Fixed 2026-06-20 (line-anchor false negative):** the single-pending-request fallback above is payload-blind by design, but it still rejects a reply whose *type* clearly doesn't match the request (`replyTypeScore` in `service.js`, driven by `inferReplyFamilies` in `replyAnalyzer.js`). GP's "Sorry No records found for IMEI: …" template embeds the type keyword mid-sentence, and the strong-type regexes were line-anchored (`^\s*imei[:\s]`), so this reply never registered as IMEI-typed and was accepted as a 0-confidence match against an unrelated open LRL request — the real LRL reply then arrived with nothing left to attach to. Added unanchored fallback patterns for IMEI/NID "no records" templates. See `test/replyMatching.test.js` for the regression case.
+
+**Correction tooling:** `service.rankReplyCandidates(inboxId)` and `service.correctMatch(inboxId, requestId)` let an admin re-attach an orphaned/misattached reply to the correct request — including an already-`COMPLETED` one — by reusing the exact same scoring used for live auto-matching. `correctMatch` detaches any previously (wrongly) matched inbox row for that request/gateway and issues a new `⚠️ Correction —` reply draft rather than silently rewriting history. Exposed via `GET /api/admin/unmatched/:id/candidates` and `POST /api/admin/correct-match`; surfaced in the admin console's unmatched-SMS panel (ranked dropdown instead of a flat list).
+
 ## 9. Reply Analysis
 
 `replyAnalyzer.js` scores each matched reply:

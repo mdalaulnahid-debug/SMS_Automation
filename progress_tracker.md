@@ -1,6 +1,6 @@
 # Progress Tracker
 
-Last updated: **2026-06-20 - matching hardening, curated training cache, Android inbound retry fix**
+Last updated: **2026-06-20 (night) - fixed reply-type misclassification incident + manual correction tooling**
 
 ---
 
@@ -11,6 +11,8 @@ Production backend flow remains live. The latest hardening pass focused on three
 1. request intake is still operator-hardbound at dispatch time, but now lightly normalized at intake for safe formatting mistakes
 2. reply matching is now anchored more tightly by request family, payload evidence, curated workbook-derived caches, and manual-review fallback
 3. Android inbound webhook retry now preserves original reply identity and backend deduplicates delayed resends after temporary internet loss
+
+A same-night incident (below) found and closed a real gap in (2): the reply-type classifier missed a real-world operator reply template, letting an unrelated reply steal an open request. Fixed, deployed, and the affected production request was corrected.
 
 Git and the live VPS should be kept in sync after each deploy from this branch.
 
@@ -24,6 +26,57 @@ Use these Markdown files as the active continuity baseline:
 - `docs/training-and-matching-rules.md`
 - `docs/PHONE_GATEWAY_CONTRACT.md`
 - `android-gateway/README.md`
+
+---
+
+## Session Handoff (2026-06-20 night) — reply-type misclassification incident
+
+### What happened
+
+A requester sent `LRL 01718589986` via private Telegram DM. An unrelated GP reply
+("Sorry No records found for IMEI: 353917104327090 [GP]") arrived first and was
+auto-matched to the LRL request, which was then approved and posted — wrong
+answer delivered. Two minutes later the real LRL reply (with full location data)
+arrived, found nothing left to attach to, and was silently dropped as unmatched.
+
+### Root cause
+
+`replyAnalyzer.js`'s strong-type detection regexes for IMEI/NID replies were
+line-anchored (`(?:^|\n)\s*imei[:\s]`), so they never matched GP's actual "no
+records found" template, which embeds the keyword mid-sentence. The reply
+scored as type-neutral, and the single-pending-request fallback (payload-blind
+by design) accepted it since it was the only open request on that gateway.
+
+### Fix (deployed, tested)
+
+- `src/replyAnalyzer.js`: added unanchored fallback patterns for IMEI/NID
+  "no records found" replies so they're correctly type-tagged regardless of
+  position in the message.
+- `src/service.js`: added `rankReplyCandidates(inboxId)` (ranks every plausible
+  request — including already-`COMPLETED` ones — using the same scoring as
+  live auto-matching) and `correctMatch(inboxId, requestId)` (re-attaches an
+  orphaned reply to the correct request, detaches any wrongly-matched inbox
+  row for that request/gateway, and issues a new `⚠️ Correction —` reply draft
+  instead of silently rewriting history).
+- `src/app.js`: `GET /api/admin/unmatched/:id/candidates`,
+  `POST /api/admin/correct-match` (both admin-gated).
+- `public/admin.js`: the unmatched-SMS panel's manual-match dropdown now shows
+  ranked candidates with scores (including completed ones, labeled "correction")
+  instead of a flat unranked list.
+- `test/replyMatching.test.js` (new, 5 tests): regression test reproducing the
+  exact GP message, plus coverage for `rankReplyCandidates`/`correctMatch`.
+- Tonight's actual stuck production request (`REQ-20260620-0118-D5UQ`) was
+  corrected live via the new endpoint — the real LRL answer was posted to the
+  requester's private chat with a correction note.
+
+### Verified
+
+- `node --test` across all 8 test files: 138/138 passing (was 133 before this
+  session; +5 new in `test/replyMatching.test.js`).
+- Deployed via `bash scripts/deploy.sh`; confirmed `pm2 status` online for both
+  `sms-backend` and `sms-bridge`.
+- Confirmed via the dashboard API that the correction reply draft reached
+  `sentStatus: POSTED_LIVE` with a real `postedMessageId`.
 
 ---
 

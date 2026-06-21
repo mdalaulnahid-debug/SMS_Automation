@@ -4,6 +4,39 @@ Start with `progress_tracker.md` for the latest session handoff, test results, a
 
 ---
 
+## Done — 2026-06-20 (night): Fixed reply-type misclassification + added correction tooling
+
+Real incident: a requester's `LRL 01718589986` private-DM request got the wrong
+answer delivered — an unrelated GP reply ("Sorry No records found for IMEI:
+353917104327090 [GP]") was auto-matched onto it, and the real LRL reply (which
+arrived two minutes later with full location data) found nothing left to
+attach to and was silently dropped.
+
+- **Root cause**: `src/replyAnalyzer.js`'s IMEI/NID strong-type regexes were
+  line-anchored (`(?:^|\n)\s*imei[:\s]`), so GP's "no records found" template
+  (keyword mid-sentence) never registered as IMEI-typed. The reply scored
+  type-neutral, and the single-pending-request fallback in
+  `findActiveRequestForGateway` — payload-blind by design — accepted it since
+  it was the only open request on that gateway at the time.
+- **Fix**: added unanchored fallback patterns for IMEI/NID "no records found"
+  replies, so `replyTypeScore` now correctly rejects a same-gateway reply whose
+  type doesn't match the request, even with only one candidate pending.
+- **New correction tooling** (for cases like this where a wrong match already
+  finalized): `service.rankReplyCandidates(inboxId)` ranks every plausible
+  request — including already-`COMPLETED` ones — using the exact same scoring
+  as live auto-matching; `service.correctMatch(inboxId, requestId)` re-attaches
+  the orphaned reply, detaches the wrongly-matched one, and posts a new
+  `⚠️ Correction —` reply instead of silently rewriting history. New endpoints:
+  `GET /api/admin/unmatched/:id/candidates`, `POST /api/admin/correct-match`.
+  The web admin console's unmatched-SMS panel now shows ranked candidates with
+  scores instead of a flat unranked list.
+- **Recovered tonight's actual stuck request** (`REQ-20260620-0118-D5UQ`) live
+  via the new endpoint — the correct LRL answer was posted to the requester's
+  private chat with a correction note.
+- Verified: 138 tests pass (5 new in `test/replyMatching.test.js`, regression
+  reproduces the exact GP message), deployed to VPS, confirmed `POSTED_LIVE`
+  on the live correction draft.
+
 ## Done — 2026-06-20: Telegram private-DM intake
 
 Authorized users can now message the bot directly (1:1 DM) instead of only
