@@ -31,6 +31,20 @@ function looksLikeEchoedBotOutput(text) {
   return false;
 }
 
+// The group is also used for general administrative chat — meeting announcements,
+// someone relaying a forwarded WhatsApp log, plain conversation — not exclusively for bot
+// commands. A genuine command attempt (even a typo'd one) is always a single short line
+// starting with something word-shaped. Multi-line, long, or non-Latin-first-token text is
+// essentially never a real attempt, so don't bother correcting it with "Unsupported command"
+// — that reply only makes sense to someone who was actually trying to use the bot.
+function looksLikeCommandAttempt(text) {
+  const trimmed = String(text || '').trim();
+  if (!trimmed || trimmed.includes('\n')) return false;
+  if (trimmed.length > 80) return false;
+  const firstToken = trimmed.split(/\s+/)[0] || '';
+  return /^[A-Za-z][A-Za-z-]{0,15}$/.test(firstToken);
+}
+
 function shouldSuppressGroupReply(result) {
   const suppressed = new Set([
     'REQUEST_DENIED_DISABLED_USER',
@@ -160,7 +174,14 @@ async function handleIntake(message, {
     // back in-thread (in whichever chat the request came from) so the requester can fix
     // and resend.
     const msg = result.replyText || (result.errors && result.errors.join('; ')) || 'Request rejected.';
-    if (!shouldSuppressGroupReply(result)) {
+    // "Unsupported command" specifically is only worth correcting when the message plausibly
+    // looks like someone trying to use bot syntax — otherwise it's just noise on top of
+    // ordinary group chat (meeting announcements, forwarded messages, etc.). Every OTHER
+    // rejection (missing identifiers, wrong length, mixed types...) already implies the first
+    // token WAS a recognized command, so the sender clearly was trying — always reply to those.
+    const isUnsupportedCommandOnNonAttempt = result.errorCode === 'UNSUPPORTED_COMMAND'
+      && !looksLikeCommandAttempt(plan.request.text);
+    if (!shouldSuppressGroupReply(result) && !isUnsupportedCommandOnNonAttempt) {
       await telegram.sendMessage({
         chatId: plan.request.chatId,
         text: msg,

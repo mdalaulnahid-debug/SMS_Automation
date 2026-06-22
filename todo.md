@@ -24,15 +24,30 @@ before fixing:
 2. **The bot was replying "Unsupported command" to its own forwarded/quoted
    output.** No code distinguished "someone forwarded the bot's previous
    answer back into the group" (common — sharing a result with another
-   officer) from "someone typed a malformed command." `pm2 logs` confirmed the
-   pattern: `intake: rejected — Unsupported command...` recurring shortly after
-   a `post: delivered reply...` line, across multiple separate days. Fixed:
-   `telegram-bridge/bridge.js`'s `planIntake()` now recognizes fingerprints of
-   our own output (`\nProcessed at:` from combined replies, the `✅ Request
-   received` ack, and the literal "Unsupported command..." text itself) and
-   silently ignores them — no reply, no audit noise.
-- Verified: 141 tests pass (3 new in `test/telegramBridge.test.js`), deployed,
-  confirmed `config/telegram.json` survived the deploy this time, confirmed
+   officer) from "someone typed a malformed command." Fixed: `planIntake()`
+   recognizes fingerprints of our own output (`\nProcessed at:` from combined
+   replies, the `✅ Request received` ack, the literal "Unsupported
+   command..." text) and silently ignores them.
+3. **(Bigger one) The bot scolded ANY non-command group message with
+   "Unsupported command," including unrelated administrative chat.** Pulled
+   the exact raw text straight from the SQLite `audit_logs` table (bridge logs
+   at the time didn't capture it — see fix below) for two real past
+   rejections: a forwarded WhatsApp-style chat log (`[21/06, 20:36] Si Morsed
+   Hizla: IMEI-MS 864268073757900`, prefixed per-line so the parser's first
+   token was `[21/06,` not `IMEI-MS`) and a Bengali Zoom-meeting announcement
+   posted by "LIC Barisal" — neither was a command attempt at all, yet both
+   got the same scolding reply. Fixed: added `looksLikeCommandAttempt()` in
+   `telegram-bridge/bridge.js` — only sends the "Unsupported command"
+   correction when the text is a single short line starting with a
+   word-shaped token; suppresses it for multi-line/long/non-command-shaped
+   text (announcements, forwarded logs, general chat). Genuine single-line
+   typo'd attempts (e.g. `LRLL 01712345678`) still get corrected as before.
+   Also: `handleIntake`'s rejection log line now includes the original input
+   text (truncated), so future incidents don't require a raw SQLite query to
+   diagnose.
+- Verified: 144 tests pass (6 new in `test/telegramBridge.test.js`, including
+  regression tests built directly from the two real rejected messages above),
+  deployed, confirmed `config/telegram.json` survived the deploy this time, confirmed
   the bridge restarted with the officer's DM access restored.
 
 ## Planned — Domain migration: `licbarishal.duckdns.org` → `opsbarishal.com`

@@ -143,6 +143,59 @@ test('handleIntake relays a backend rejection back into the thread', async () =>
   assert.equal(telegram.sent[0].replyToMessageId, 7);
 });
 
+test('handleIntake still corrects a genuine single-line typo\'d command attempt', async () => {
+  const telegram = fakeTelegram();
+  const backend = {
+    submitRequest: async () => ({
+      ok: false,
+      errorCode: 'UNSUPPORTED_COMMAND',
+      replyText: 'Unsupported command. Supported commands: IMEI-MS, LCL, LRL, MS-NID, NID-MS.'
+    })
+  };
+  const res = await handleIntake(
+    { text: 'LRLL 01712345678', chat: { id: CONFIG.groupChatId }, from: { id: 777888999 }, message_id: 11 },
+    { config: CONFIG, backend, telegram }
+  );
+  assert.equal(res.action, 'rejected');
+  assert.equal(telegram.sent.length, 1, 'a short single-line attempt should still get the correction');
+});
+
+test('handleIntake stays quiet for "Unsupported command" on a forwarded multi-line chat log', async () => {
+  const telegram = fakeTelegram();
+  const backend = {
+    submitRequest: async () => ({
+      ok: false,
+      errorCode: 'UNSUPPORTED_COMMAND',
+      replyText: 'Unsupported command. Supported commands: IMEI-MS, LCL, LRL, MS-NID, NID-MS.'
+    })
+  };
+  const forwardedLog = '[21/06, 20:36] Si Morsed Hizla: IMEI-MS 864268073757900\n[21/06, 20:38] Si Morsed Hizla: MS-NID 01720090547';
+  const res = await handleIntake(
+    { text: forwardedLog, chat: { id: CONFIG.groupChatId }, from: { id: 777888999 }, message_id: 12 },
+    { config: CONFIG, backend, telegram }
+  );
+  assert.equal(res.action, 'rejected');
+  assert.equal(telegram.sent.length, 0, 'a forwarded multi-line chat log is not an attempted command');
+});
+
+test('handleIntake stays quiet for "Unsupported command" on an unrelated group announcement', async () => {
+  const telegram = fakeTelegram();
+  const backend = {
+    submitRequest: async () => ({
+      ok: false,
+      errorCode: 'UNSUPPORTED_COMMAND',
+      replyText: 'Unsupported command. Supported commands: IMEI-MS, LCL, LRL, MS-NID, NID-MS.'
+    })
+  };
+  const announcement = 'DIG Barishal Range is inviting you to a scheduled Zoom meeting.\nMeeting ID: 476 755 8248\nPasscode: ict2026';
+  const res = await handleIntake(
+    { text: announcement, chat: { id: CONFIG.groupChatId }, from: { id: 777888999 }, message_id: 13 },
+    { config: CONFIG, backend, telegram }
+  );
+  assert.equal(res.action, 'rejected');
+  assert.equal(telegram.sent.length, 0, 'an unrelated administrative announcement is not an attempted command');
+});
+
 test('handleIntake stays quiet for authorization-style backend rejections', async () => {
   const telegram = fakeTelegram();
   const backend = {
