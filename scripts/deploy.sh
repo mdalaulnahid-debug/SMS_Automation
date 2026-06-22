@@ -45,8 +45,12 @@ scp scripts/setup-ssl.sh "$VPS:$REMOTE/scripts/setup-ssl.sh"
 scp scripts/backup.sh "$VPS:$REMOTE/scripts/backup.sh"
 ssh "$VPS" "chmod +x $REMOTE/scripts/setup-ssl.sh $REMOTE/scripts/backup.sh"
 
-echo "==> Copying gitignored runtime config..."
-scp config/telegram.json "$VPS:$REMOTE/config/telegram.json"
+echo "==> Ensuring config/telegram.json exists on the VPS (first-time bootstrap only)..."
+# Once a file exists on the VPS, it's runtime-owned by the admin console/app (Telegram
+# group id, operator hotline numbers, authorized DM users) — NEVER overwrite it on every
+# deploy. Doing so used to silently wipe out runtime edits (e.g. authorizedUsers added via
+# the admin console) back to whatever stale state happens to be on this machine's disk.
+ssh "$VPS" "[ -f $REMOTE/config/telegram.json ]" || scp config/telegram.json "$VPS:$REMOTE/config/telegram.json"
 
 echo "==> Installing production dependencies..."
 ssh "$VPS" "cd $REMOTE && npm install --omit=dev --quiet"

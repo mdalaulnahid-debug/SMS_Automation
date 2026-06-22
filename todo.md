@@ -4,6 +4,37 @@ Start with `progress_tracker.md` for the latest session handoff, test results, a
 
 ---
 
+## Done — 2026-06-22: Fixed deploy.sh clobbering runtime Telegram config + bot scolding forwarded messages
+
+Two real bugs reported by the user, both confirmed against live VPS logs/config
+before fixing:
+
+1. **`deploy.sh` was silently wiping `authorizedUsers` on every deploy.**
+   It unconditionally `scp`'d the local `config/telegram.json` over the VPS's
+   runtime copy. The authorized officer added via the admin console the night
+   of 2026-06-20 only ever existed in the VPS's runtime file — the next
+   `bash scripts/deploy.sh` run (same night, shipping the reply-matching fix)
+   clobbered it back to `authorizedUsers: {}`, and the officer's private DMs
+   were silently rejected from that point on (`intake: unauthorized private
+   sender 8914564310` — confirmed in `pm2 logs sms-bridge`). Fixed: `deploy.sh`
+   now only copies `config/telegram.json` if it doesn't already exist on the
+   VPS (first-time bootstrap) — once present, it's runtime-owned by the admin
+   console/app and never overwritten by a deploy. Re-added the wiped officer
+   and synced the local file to match so this doesn't drift again.
+2. **The bot was replying "Unsupported command" to its own forwarded/quoted
+   output.** No code distinguished "someone forwarded the bot's previous
+   answer back into the group" (common — sharing a result with another
+   officer) from "someone typed a malformed command." `pm2 logs` confirmed the
+   pattern: `intake: rejected — Unsupported command...` recurring shortly after
+   a `post: delivered reply...` line, across multiple separate days. Fixed:
+   `telegram-bridge/bridge.js`'s `planIntake()` now recognizes fingerprints of
+   our own output (`\nProcessed at:` from combined replies, the `✅ Request
+   received` ack, and the literal "Unsupported command..." text itself) and
+   silently ignores them — no reply, no audit noise.
+- Verified: 141 tests pass (3 new in `test/telegramBridge.test.js`), deployed,
+  confirmed `config/telegram.json` survived the deploy this time, confirmed
+  the bridge restarted with the officer's DM access restored.
+
 ## Planned — Domain migration: `licbarishal.duckdns.org` → `opsbarishal.com`
 
 Not started yet — buying the domain first. Full step-by-step procedure,

@@ -35,6 +35,42 @@ test('planIntake ignores messages from other chats', () => {
   assert.equal(plan.action, 'ignore');
 });
 
+test('planIntake silently ignores a forwarded/quoted copy of a previous combined reply', () => {
+  const echoedReply = [
+    '@oc Banaripara',
+    'LCL: 01790851324',
+    '',
+    '— GP:',
+    '8801790851324',
+    '',
+    'Processed at: 21/06/2026, 20:09:08'
+  ].join('\n');
+  const plan = planIntake(
+    { text: echoedReply, chat: { id: CONFIG.groupChatId }, from: { id: 777888999 }, message_id: 9 },
+    CONFIG
+  );
+  assert.equal(plan.action, 'ignore');
+  assert.equal(plan.reason, 'echoed bot output');
+});
+
+test('planIntake silently ignores a forwarded copy of the intake ack', () => {
+  const plan = planIntake(
+    { text: '✅ Request received — sending to GP. Reply will be posted here when received.', chat: { id: CONFIG.groupChatId }, from: { id: 777888999 }, message_id: 9 },
+    CONFIG
+  );
+  assert.equal(plan.action, 'ignore');
+  assert.equal(plan.reason, 'echoed bot output');
+});
+
+test('planIntake silently ignores a forwarded copy of the "Unsupported command" rejection itself', () => {
+  const plan = planIntake(
+    { text: 'Unsupported command. Supported commands: IMEI-MS, LCL, LRL, MS-NID, NID-MS.', chat: { id: CONFIG.groupChatId }, from: { id: 777888999 }, message_id: 9 },
+    CONFIG
+  );
+  assert.equal(plan.action, 'ignore');
+  assert.equal(plan.reason, 'echoed bot output');
+});
+
 test('handleIntake reports a wrong-chat message once per distinct chat id', async () => {
   const telegram = fakeTelegram();
   const reported = [];

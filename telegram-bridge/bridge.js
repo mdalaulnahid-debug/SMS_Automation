@@ -13,6 +13,24 @@ function buildMention(replyText, requesterId) {
   return { offset: 0, length: firstLine.length, userId: requesterId };
 }
 
+// Fingerprints of our own bot-authored output. If someone forwards or quotes a previous
+// answer back into the chat (common in a busy operational group — sharing the result with
+// someone else, or replying to ask about it), the parser sees plain text that doesn't start
+// with a known command and would otherwise scold the sender with "Unsupported command" —
+// confusing and noisy, since nobody actually attempted a command. Recognize and silently
+// ignore these rather than parsing them as a request attempt.
+const UNSUPPORTED_COMMAND_TEXT = 'Unsupported command. Supported commands: IMEI-MS, LCL, LRL, MS-NID, NID-MS.';
+
+function looksLikeEchoedBotOutput(text) {
+  // Combined reply drafts (formatCombinedReply) always end with this line — distinctive
+  // enough that no genuine command attempt would ever contain it.
+  if (text.includes('\nProcessed at:')) return true;
+  // The intake ack and our own static rejection message, if forwarded/quoted verbatim.
+  if (text.startsWith('✅ Request received')) return true;
+  if (text === UNSUPPORTED_COMMAND_TEXT) return true;
+  return false;
+}
+
 function shouldSuppressGroupReply(result) {
   const suppressed = new Set([
     'REQUEST_DENIED_DISABLED_USER',
@@ -33,6 +51,9 @@ function planIntake(message, config) {
   const isPrivateChat = message.chat && message.chat.type === 'private';
 
   if (!text) return { action: 'ignore', reason: 'no text' };
+  if (looksLikeEchoedBotOutput(text)) {
+    return { action: 'ignore', reason: 'echoed bot output' };
+  }
   if (!isGroupChat && !isPrivateChat) {
     return { action: 'ignore', reason: 'wrong chat', chatId, chatTitle: message.chat?.title || null };
   }
@@ -146,7 +167,7 @@ async function handleIntake(message, {
         replyToMessageId: plan.replyToMessageId
       });
     }
-    log(`intake: rejected — ${msg}`);
+    log(`intake: rejected — ${msg} (input: "${plan.request.text.slice(0, 120)}")`);
     return { action: 'rejected', result };
   }
 
