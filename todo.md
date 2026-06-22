@@ -297,18 +297,51 @@ pm2 status
 
 ---
 
-## Immediate Next (Priority Order)
+## Roadmap (Priority Order)
 
-- [x] **Robi phone setup** — installed v2.3.0, registered on VPS
-- [x] **SSH key on VPS** — passwordless deploy via `bash scripts/deploy.sh`
-- [x] **MS-NID single-operator routing** — routes by MSISDN prefix, not all operators
-- [x] **Telegram open-group auth** — any group member can submit
-- [x] **Late reply matching** — replies arriving after finalization are now matched and re-posted
-- [x] **Multi-operator live posting** — NID-MS and IMEI-MS post immediately on first reply, new message for each update
-- [x] **Auto-correct type-token typos** — `MS NID` → `MS-NID`, glued prefixes, `+880` country code, separator stripping
-- [x] **Specific validation error messages** — NID/IMEI/MSISDN cross-detection, digit count hints, strict NID (10/13/17) and IMEI (14/15) lengths
-- [x] **Multi-operator reply posting fix** — each operator reply posts as a new Telegram message instead of editing the previous one
+### P0 — Operational (do first)
+
+- [ ] **Review reply timeout window** — current 15-minute reply window may be too short for some operators (LCL queries can take 4+ minutes at GP alone; Banglalink/Robi may be slower). Evaluate from production data whether 15 min is sufficient or needs tuning per operator.
+- [ ] **Add second authorized DM user** — currently only Addl SP Crime & Ops (ID `8914564310`) can DM the bot privately. Add the user's own Telegram ID via the admin console or `POST /api/admin/settings/authorized-users`. Requires `pm2 restart sms-bridge` after adding.
+- [ ] **Domain name** — migrate from `licbarishal.duckdns.org` to `opsbarishal.com`. Full plan in `docs/domain-migration-plan.md`. Buy domain first, then DNS + nginx TLS + gateway phone URL update.
 - [ ] **Release gateway phone settings from PIN lock** — Backend URL, Gateway ID, SIM slot selection should be freely editable without PIN. Only admin/system settings stay behind PIN: admin API key, secondary gateway ID, test connection, PIN management itself.
+
+### P1 — Security & Access Control
+
+- [ ] **Daily security audit routine** — automated daily health check: gateway connectivity, stuck requests, unmatched SMS count, rejected messages, unauthorized access attempts, disk/memory usage. Posts a digest to a private Telegram chat or admin DM at a fixed time. Catches anomalies (sudden spike in unauthorized attempts, gateway going offline, DB growing too large) before they become incidents.
+- [ ] **Web admin login system** — currently admin console is protected only by API key in the request header. Add a proper login page with session tokens, password hashing (bcrypt), and session expiry. Three roles: (1) **admin** — full access including settings, user management, corrections; (2) **operator** — view requests and replies only; (3) **gateway** — phone registration and heartbeat only (already uses gateway secrets, formalize it).
+- [ ] **HTTPS for backend API** — gateway phones currently talk to `http://45.77.240.195:3000` (plain HTTP). After domain migration, enforce HTTPS for all API traffic (nginx already terminates TLS for the public host; extend to the API port or unify under one origin).
+- [ ] **Rate limiting** — protect the API from brute-force API key guessing and accidental request floods. Simple in-memory rate limiter per IP (e.g., 60 requests/minute for admin endpoints, 120/minute for gateway polling).
+- [ ] **API key rotation** — ability to rotate the admin API key and gateway secrets without downtime. New key activates immediately; old key stays valid for a grace period (e.g., 1 hour) so running clients can be updated.
+- [ ] **Audit log tamper protection** — current audit log is append-only in SQLite but not cryptographically signed. Add HMAC chain (each entry signs the previous hash) so tampering is detectable.
+
+### P2 — UI/UX Overhaul
+
+- [ ] **Web admin console redesign** — full UI/UX overhaul using modern design tools (21.dev, Google Stitch, Claude design). Current admin console is functional but plain HTML/JS. Target: professional command-center look with real-time updates, dark/light themes, responsive layout, proper data tables with filtering/sorting/export.
+- [ ] **Android admin app polish** — increase fidelity against the Stitch design references at `docs/Design/android-admin-stitch/`. Focus areas: typography, spacing, color consistency, loading states, error states, empty states, pull-to-refresh animations, proper Material 3 components.
+- [ ] **Android gateway app UI refresh** — match the admin app's visual language. Current gateway app is utilitarian; add status indicators, connection quality display, SMS queue visualization, and cleaner settings flow.
+
+### P3 — Backend Improvements
+
+- [ ] **Nightly DB backup on VPS** — cron job with rotation (keep last 7 days)
+- [ ] **Retry failed gateway sends** — exponential backoff when phone HTTP returns error
+- [ ] **Teletalk operator** — add `010x` prefix to `domain.js` if needed
+- [ ] **Unmatched SMS cleanup** — auto-archive unmatched SMS older than 7 days to keep the count meaningful. Current 2500+ unmatched is mostly spam noise.
+- [ ] **Request analytics dashboard** — daily/weekly/monthly request counts by type, operator, requester. Average response times per operator. Helps identify slow operators and heavy users.
+
+### Previously completed
+
+- [x] Robi phone setup — installed v2.3.0, registered on VPS
+- [x] SSH key on VPS — passwordless deploy
+- [x] MS-NID single-operator routing — routes by MSISDN prefix
+- [x] Telegram open-group auth — any group member can submit
+- [x] Late reply matching — replies after finalization matched and re-posted
+- [x] Multi-operator live posting — NID-MS/IMEI-MS post on first reply, new message per update
+- [x] Auto-correct type-token typos — split commands, glued prefixes, `+880` strip, separator strip
+- [x] Specific validation error messages — NID/IMEI/MSISDN cross-detection, strict lengths
+- [x] Multi-operator reply posting fix — new Telegram message per update
+- [x] Open group auth for forwarded messages — any group member can forward, `authorizedUsers` only gates DMs
+- [x] Forward-aware tagging — replies tag the group member who forwarded, not the original author
 
 ---
 
@@ -335,31 +368,7 @@ pm2 status
 - [ ] **Idempotency key** on inbound webhook — SIM slot + timestamp + sender hash; backend deduplicates
 - [ ] **EncryptedSharedPreferences** for API key storage
 - [ ] **compileSdk/targetSdk bump** to 35
-
----
-
-## Backend
-
-- [ ] **Nightly DB backup on VPS** — cron job: `cp data/automation.db data/automation.db.bak`
-- [ ] **Retry failed gateway sends** — exponential backoff when phone HTTP returns error
-- [ ] **Teletalk operator** — add 010x prefix to domain.js if needed
-
----
-
-## Production Readiness
-
-- [x] **Robi phone** — confirmed working
-- [x] **SSH key on VPS** — passwordless access
 - [ ] **Log rotation** — cap Room DB log size on Android
-- [ ] **Domain name for VPS** — instead of bare IP (optional)
-
----
-
-## Training Data
-
-- [x] 144 xlsx samples imported to `data/reply-patterns.json`
-- [ ] Add real GP LRL reply from E2E test as reference sample
-- [ ] Add Robi and Banglalink reply samples when available
 
 ---
 
