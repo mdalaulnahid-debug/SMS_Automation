@@ -4,6 +4,20 @@ Start with `progress_tracker.md` for the latest session handoff, test results, a
 
 ---
 
+## Version History
+
+| Version | Date | Tag | Description |
+|---------|------|-----|-------------|
+| **v3.0.0** | 2026-06-23 | `v3.0.0` | Stable checkpoint. Open group auth, forward-aware tagging, reply matching hardening, curated training workbooks, 141 tests passing. Restore: `git checkout v3.0.0` |
+
+To revert the VPS to a tagged version:
+```bash
+git checkout v3.0.0
+bash scripts/deploy.sh
+```
+
+---
+
 ## Done — 2026-06-23: Opened group auth for forwarded messages + forward-aware tagging
 
 Two issues found and fixed, both related to officers forwarding requests from
