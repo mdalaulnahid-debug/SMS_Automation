@@ -54,24 +54,16 @@ function planIntake(message, config) {
     if (!authorized) {
       return { action: 'unauthorized', reason: 'unauthorized private sender', fromId, chatId, chatType: 'private', fromName, replyText: null };
     }
-  } else {
-    // Group chat: open by default unless an allowlist is configured.
-    const hasAllowList = Object.keys(authorizedUsers).length > 0;
-    if (hasAllowList && !authorized) {
-      return {
-        action: 'unauthorized',
-        reason: 'sender not in authorizedUsers',
-        fromId,
-        chatId,
-        chatType: 'group',
-        fromName,
-        replyText: config.replyToUnauthorized
-          ? 'You are not authorized to submit requests in this group.'
-          : null,
-        replyToMessageId: message.message_id
-      };
-    }
   }
+  // Group chat: always open — any group member can submit. The authorizedUsers
+  // list only gates private-DM access; it never restricts the group.
+
+  // For forwarded messages, message.from is the group member who forwarded —
+  // that's who the reply should tag. The original author (forward_from /
+  // forward_sender_name) is stored separately for audit traceability only.
+  const forwardedFrom = message.forward_from
+    ? [message.forward_from.first_name, message.forward_from.last_name].filter(Boolean).join(' ')
+    : (message.forward_sender_name || null);
 
   return {
     action: 'submit',
@@ -82,6 +74,7 @@ function planIntake(message, config) {
       requesterName: fromName,
       requesterId: fromId,
       text,
+      ...(forwardedFrom ? { forwardedFrom } : {}),
       ...(config.testDestination ? { testDestination: config.testDestination } : {})
     },
     replyToMessageId: message.message_id
@@ -150,7 +143,8 @@ async function handleIntake(message, {
     return { action: 'rejected', result };
   }
 
-  log(`intake: accepted ${result.request.requestId} (${plan.request.text})`);
+  const fwdNote = plan.request.forwardedFrom ? ` [fwd from: ${plan.request.forwardedFrom}]` : '';
+  log(`intake: accepted ${result.request.requestId} (${plan.request.text})${fwdNote}`);
   if (config.ackOnIntake) {
     const operators = (result.request.targetOperators || []).join(', ') || 'operator';
     await telegram.sendMessage({

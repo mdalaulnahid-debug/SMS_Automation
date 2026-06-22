@@ -57,12 +57,49 @@ test('handleIntake reports a wrong-chat message once per distinct chat id', asyn
   assert.equal(reported.length, 1, 'should not report the same chat id twice');
 });
 
-test('planIntake denies unknown users by default', () => {
+test('planIntake allows any group member even when authorizedUsers is populated', () => {
   const plan = planIntake(
-    { text: 'LRL 01712345678', chat: { id: CONFIG.groupChatId }, from: { id: 555 }, message_id: 5 },
+    { text: 'LRL 01712345678', chat: { id: CONFIG.groupChatId }, from: { id: 555, first_name: 'Nazmul' }, message_id: 5 },
     CONFIG
   );
-  assert.equal(plan.action, 'unauthorized');
+  assert.equal(plan.action, 'submit');
+  assert.equal(plan.request.requesterName, 'Nazmul');
+});
+
+test('planIntake tags the group member who forwarded, not the original author', () => {
+  const plan = planIntake(
+    {
+      text: 'LRL 01726956407',
+      chat: { id: CONFIG.groupChatId },
+      from: { id: 555, first_name: 'Bakerganj', last_name: 'Circle' },
+      forward_from: { id: 999, first_name: 'SI Nazmul', last_name: 'Bakerganj' },
+      forward_date: 1719000000,
+      message_id: 10
+    },
+    CONFIG
+  );
+  assert.equal(plan.action, 'submit');
+  assert.equal(plan.request.requesterId, '555', 'requesterId must be the forwarder, not the original author');
+  assert.equal(plan.request.requesterName, 'Bakerganj Circle', 'requesterName must be the forwarder');
+  assert.equal(plan.request.forwardedFrom, 'SI Nazmul Bakerganj', 'original author stored for audit');
+});
+
+test('planIntake handles forward_sender_name when original author has privacy enabled', () => {
+  const plan = planIntake(
+    {
+      text: 'LCL 01712345678',
+      chat: { id: CONFIG.groupChatId },
+      from: { id: 555, first_name: 'Bakerganj', last_name: 'Circle' },
+      forward_sender_name: 'SI Nazmul Bakerganj',
+      forward_date: 1719000000,
+      message_id: 11
+    },
+    CONFIG
+  );
+  assert.equal(plan.action, 'submit');
+  assert.equal(plan.request.requesterId, '555');
+  assert.equal(plan.request.requesterName, 'Bakerganj Circle');
+  assert.equal(plan.request.forwardedFrom, 'SI Nazmul Bakerganj');
 });
 
 test('planIntake builds a telegram submit plan for authorized users', () => {
@@ -151,25 +188,30 @@ test('handleIntake stays quiet for authorization-style backend rejections', asyn
   assert.equal(telegram.sent.length, 0);
 });
 
-test('bridge-level unauthorized intake no longer replies into the group, but is reported once', async () => {
+test('bridge-level unauthorized private DM is reported once, group members are never unauthorized', async () => {
   const telegram = fakeTelegram();
   const reported = [];
   const backend = {
-    submitRequest: async () => ({ ok: true }),
+    submitRequest: async () => ({ ok: true, request: { requestId: 'REQ-1' } }),
     reportUnauthorizedAttempt: async (detail) => { reported.push(detail); }
   };
   const reportedUnauthorizedSenders = new Set();
-  const message = { text: 'LRL 01712345678', chat: { id: CONFIG.groupChatId, type: 'group' }, from: { id: 555 }, message_id: 5 };
 
-  const first = await handleIntake(message, { config: CONFIG, backend, telegram, reportedUnauthorizedSenders });
-  assert.equal(first.action, 'unauthorized');
+  // Group member (not on authorizedUsers) submits — should be accepted, not unauthorized
+  const groupMsg = { text: 'LRL 01712345678', chat: { id: CONFIG.groupChatId, type: 'group' }, from: { id: 555, first_name: 'Nazmul' }, message_id: 5 };
+  const groupRes = await handleIntake(groupMsg, { config: CONFIG, backend, telegram, reportedUnauthorizedSenders });
+  assert.equal(groupRes.action, 'submitted');
+  assert.equal(reported.length, 0, 'group members are never reported as unauthorized');
+
+  // Private DM from non-authorized user — should be unauthorized and reported once
+  const dmMsg = { text: 'LRL 01712345678', chat: { id: '555', type: 'private' }, from: { id: 555, first_name: 'Nazmul' }, message_id: 6 };
+  const dmRes = await handleIntake(dmMsg, { config: CONFIG, backend, telegram, reportedUnauthorizedSenders });
+  assert.equal(dmRes.action, 'unauthorized');
   assert.equal(telegram.sent.length, 0);
   assert.equal(reported.length, 1);
-  assert.equal(reported[0].chatId, CONFIG.groupChatId);
-  assert.equal(reported[0].chatType, 'group');
-  assert.equal(reported[0].fromId, '555');
+  assert.equal(reported[0].chatType, 'private');
 
-  await handleIntake(message, { config: CONFIG, backend, telegram, reportedUnauthorizedSenders });
+  await handleIntake(dmMsg, { config: CONFIG, backend, telegram, reportedUnauthorizedSenders });
   assert.equal(reported.length, 1, 'should not report the same chat+sender twice');
 });
 

@@ -4,6 +4,27 @@ Start with `progress_tracker.md` for the latest session handoff, test results, a
 
 ---
 
+## Done — 2026-06-23: Opened group auth for forwarded messages + forward-aware tagging
+
+Two issues found and fixed, both related to officers forwarding requests from
+colleagues into the Telegram group:
+
+1. **Group auth was too restrictive.** The `authorizedUsers` whitelist in
+   `config/telegram.json` gated both private DMs and group submissions. Adding
+   the Addl SP's Telegram ID (needed for private-DM access on 2026-06-20) closed
+   the group — every other officer's messages were silently rejected as
+   "unauthorized group sender." VPS logs confirmed 5+ distinct officers blocked
+   (Muladi Circle, OC Hijla, OC Babugong, Oc Gournadi, Bakerganj Circle).
+   **Fixed:** `planIntake()` no longer checks `authorizedUsers` for group chat
+   messages. Any group member can submit. Private DM gating unchanged.
+2. **Forwarded message tagging.** `planIntake()` now detects `forward_from` /
+   `forward_sender_name` and stores the original author as `forwardedFrom`
+   metadata for audit. Replies always tag `message.from` (the group member who
+   forwarded), never the original external author.
+- Recovered 3 silently rejected requests by manual API resubmission
+  (REQ-0285 IMEI-MS 4 IMEIs, REQ-0286 LCL, REQ-0287 LRL).
+- 19 bridge tests pass (2 new for forwarded message tagging).
+
 ## Done — 2026-06-22: Fixed deploy.sh clobbering runtime Telegram config + bot scolding forwarded messages
 
 Two real bugs reported by the user, both confirmed against live VPS logs/config

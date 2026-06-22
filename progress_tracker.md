@@ -1,18 +1,17 @@
 # Progress Tracker
 
-Last updated: **2026-06-20 (night) - fixed reply-type misclassification incident + manual correction tooling**
+Last updated: **2026-06-23 — opened group auth for forwarded messages + forward-aware tagging**
 
 ---
 
 ## Current Stage
 
-Production backend flow remains live. The latest hardening pass focused on three areas:
+Production backend flow remains live. Two issues found and fixed this session:
 
-1. request intake is still operator-hardbound at dispatch time, but now lightly normalized at intake for safe formatting mistakes
-2. reply matching is now anchored more tightly by request family, payload evidence, curated workbook-derived caches, and manual-review fallback
-3. Android inbound webhook retry now preserves original reply identity and backend deduplicates delayed resends after temporary internet loss
+1. **Group auth was too restrictive** — adding even one user to `authorizedUsers` (needed for private-DM gating) closed the group to all non-whitelisted members. Officers forwarding requests from colleagues were silently rejected. Fixed: group chat is now always open (any member can submit); `authorizedUsers` only gates private DMs.
+2. **Forwarded message tagging** — replies now explicitly tag the group member who forwarded the message (`message.from`), not the original author (`forward_from`). The original author is stored as `forwardedFrom` metadata for audit traceability.
 
-A same-night incident (below) found and closed a real gap in (2): the reply-type classifier missed a real-world operator reply template, letting an unrelated reply steal an open request. Fixed, deployed, and the affected production request was corrected.
+Three previously rejected requests were manually resubmitted via the API to recover them.
 
 Git and the live VPS should be kept in sync after each deploy from this branch.
 
@@ -26,6 +25,47 @@ Use these Markdown files as the active continuity baseline:
 - `docs/training-and-matching-rules.md`
 - `docs/PHONE_GATEWAY_CONTRACT.md`
 - `android-gateway/README.md`
+
+---
+
+## Session Handoff (2026-06-23) — open group auth + forward-aware tagging
+
+### What changed
+
+1. **Group chat is now open regardless of `authorizedUsers`** — the
+   `authorizedUsers` whitelist in `config/telegram.json` previously gated both
+   private DMs and group submissions. Adding even one entry (needed for DM
+   access) closed the group to all non-whitelisted members. Officers forwarding
+   requests from colleagues were silently rejected (`shouldSuppressGroupReply`
+   suppressed the auth error). Fixed: `planIntake()` in `bridge.js` no longer
+   checks `authorizedUsers` for group-chat messages — any group member can
+   submit. Private DM authorization is unchanged.
+
+2. **Forwarded message tagging** — `planIntake()` now detects `forward_from` /
+   `forward_sender_name` on incoming messages and stores the original author as
+   `forwardedFrom` metadata on the request. The reply always tags `message.from`
+   (the group member who forwarded), never the original author. Log line now
+   includes `[fwd from: X]` for forwarded messages.
+
+3. **Recovered 3 silently rejected requests** — manually resubmitted via the
+   backend API:
+   - `REQ-20260622-0285-MPLU`: `IMEI-MS` with 4 IMEIs (originally from SI Nazmul Bakerganj, forwarded by Bakerganj Circle)
+   - `REQ-20260622-0286-V7IQ`: `LCL 01726956407`
+   - `REQ-20260622-0287-I12L`: `LRL 01726956407`
+
+### Important files
+
+- `telegram-bridge/bridge.js` — `planIntake()` group auth removed, `forwardedFrom` metadata added
+- `test/telegramBridge.test.js` — 19 tests (was 17), new tests for forwarded message tagging
+
+### Test results
+
+19 bridge tests pass. Full suite not re-run (only `bridge.js` changed).
+
+### Deployed
+
+- `bridge.js` deployed via `scp` + `pm2 restart sms-bridge`
+- Backend unchanged this session
 
 ---
 
