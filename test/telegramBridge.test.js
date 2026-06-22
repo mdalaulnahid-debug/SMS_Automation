@@ -35,42 +35,6 @@ test('planIntake ignores messages from other chats', () => {
   assert.equal(plan.action, 'ignore');
 });
 
-test('planIntake silently ignores a forwarded/quoted copy of a previous combined reply', () => {
-  const echoedReply = [
-    '@oc Banaripara',
-    'LCL: 01790851324',
-    '',
-    '— GP:',
-    '8801790851324',
-    '',
-    'Processed at: 21/06/2026, 20:09:08'
-  ].join('\n');
-  const plan = planIntake(
-    { text: echoedReply, chat: { id: CONFIG.groupChatId }, from: { id: 777888999 }, message_id: 9 },
-    CONFIG
-  );
-  assert.equal(plan.action, 'ignore');
-  assert.equal(plan.reason, 'echoed bot output');
-});
-
-test('planIntake silently ignores a forwarded copy of the intake ack', () => {
-  const plan = planIntake(
-    { text: '✅ Request received — sending to GP. Reply will be posted here when received.', chat: { id: CONFIG.groupChatId }, from: { id: 777888999 }, message_id: 9 },
-    CONFIG
-  );
-  assert.equal(plan.action, 'ignore');
-  assert.equal(plan.reason, 'echoed bot output');
-});
-
-test('planIntake silently ignores a forwarded copy of the "Unsupported command" rejection itself', () => {
-  const plan = planIntake(
-    { text: 'Unsupported command. Supported commands: IMEI-MS, LCL, LRL, MS-NID, NID-MS.', chat: { id: CONFIG.groupChatId }, from: { id: 777888999 }, message_id: 9 },
-    CONFIG
-  );
-  assert.equal(plan.action, 'ignore');
-  assert.equal(plan.reason, 'echoed bot output');
-});
-
 test('handleIntake reports a wrong-chat message once per distinct chat id', async () => {
   const telegram = fakeTelegram();
   const reported = [];
@@ -143,7 +107,7 @@ test('handleIntake relays a backend rejection back into the thread', async () =>
   assert.equal(telegram.sent[0].replyToMessageId, 7);
 });
 
-test('handleIntake still corrects a genuine single-line typo\'d command attempt', async () => {
+test('handleIntake flags every non-command message in the group, including forwarded chat logs and announcements — group is command-only by policy', async () => {
   const telegram = fakeTelegram();
   const backend = {
     submitRequest: async () => ({
@@ -152,48 +116,22 @@ test('handleIntake still corrects a genuine single-line typo\'d command attempt'
       replyText: 'Unsupported command. Supported commands: IMEI-MS, LCL, LRL, MS-NID, NID-MS.'
     })
   };
-  const res = await handleIntake(
-    { text: 'LRLL 01712345678', chat: { id: CONFIG.groupChatId }, from: { id: 777888999 }, message_id: 11 },
-    { config: CONFIG, backend, telegram }
-  );
-  assert.equal(res.action, 'rejected');
-  assert.equal(telegram.sent.length, 1, 'a short single-line attempt should still get the correction');
-});
 
-test('handleIntake stays quiet for "Unsupported command" on a forwarded multi-line chat log', async () => {
-  const telegram = fakeTelegram();
-  const backend = {
-    submitRequest: async () => ({
-      ok: false,
-      errorCode: 'UNSUPPORTED_COMMAND',
-      replyText: 'Unsupported command. Supported commands: IMEI-MS, LCL, LRL, MS-NID, NID-MS.'
-    })
-  };
   const forwardedLog = '[21/06, 20:36] Si Morsed Hizla: IMEI-MS 864268073757900\n[21/06, 20:38] Si Morsed Hizla: MS-NID 01720090547';
-  const res = await handleIntake(
+  const res1 = await handleIntake(
     { text: forwardedLog, chat: { id: CONFIG.groupChatId }, from: { id: 777888999 }, message_id: 12 },
     { config: CONFIG, backend, telegram }
   );
-  assert.equal(res.action, 'rejected');
-  assert.equal(telegram.sent.length, 0, 'a forwarded multi-line chat log is not an attempted command');
-});
+  assert.equal(res1.action, 'rejected');
+  assert.equal(telegram.sent.length, 1, 'every non-command message gets flagged, including forwarded logs');
 
-test('handleIntake stays quiet for "Unsupported command" on an unrelated group announcement', async () => {
-  const telegram = fakeTelegram();
-  const backend = {
-    submitRequest: async () => ({
-      ok: false,
-      errorCode: 'UNSUPPORTED_COMMAND',
-      replyText: 'Unsupported command. Supported commands: IMEI-MS, LCL, LRL, MS-NID, NID-MS.'
-    })
-  };
   const announcement = 'DIG Barishal Range is inviting you to a scheduled Zoom meeting.\nMeeting ID: 476 755 8248\nPasscode: ict2026';
-  const res = await handleIntake(
+  const res2 = await handleIntake(
     { text: announcement, chat: { id: CONFIG.groupChatId }, from: { id: 777888999 }, message_id: 13 },
     { config: CONFIG, backend, telegram }
   );
-  assert.equal(res.action, 'rejected');
-  assert.equal(telegram.sent.length, 0, 'an unrelated administrative announcement is not an attempted command');
+  assert.equal(res2.action, 'rejected');
+  assert.equal(telegram.sent.length, 2, 'including unrelated administrative announcements');
 });
 
 test('handleIntake stays quiet for authorization-style backend rejections', async () => {

@@ -169,6 +169,7 @@
           <button class="sidebar-item active" data-section="overview"><span class="sidebar-label"><span class="material-symbols-outlined">dashboard</span>Overview</span></button>
           <button class="sidebar-item" data-section="requests"><span class="sidebar-label"><span class="material-symbols-outlined">fact_check</span>Requests & Replies</span><span class="sidebar-count" id="countRequests">0</span></button>
           <button class="sidebar-item" data-section="unmatched"><span class="sidebar-label"><span class="material-symbols-outlined">crisis_alert</span>Unmatched SMS</span><span class="sidebar-count" id="countUnmatched">0</span></button>
+          <button class="sidebar-item" data-section="rejected"><span class="sidebar-label"><span class="material-symbols-outlined">report</span>Rejected Messages</span><span class="sidebar-count" id="countRejected">0</span></button>
           <button class="sidebar-item" data-section="audit"><span class="sidebar-label"><span class="material-symbols-outlined">policy</span>Audit</span><span class="sidebar-count" id="countAudit">0</span></button>
           <button class="sidebar-item" data-section="tools"><span class="sidebar-label"><span class="material-symbols-outlined">construction</span>Tools</span></button>
         </aside>
@@ -267,6 +268,26 @@
               </section>
               <section class="data-surface detail-pane">
                 <div class="detail-card" id="unmatchedDetail"><div class="empty">Select an unmatched reply to review likely request candidates.</div></div>
+              </section>
+            </div>
+          </section>
+
+          <section id="section-rejected" class="admin-section">
+            <div class="section-heading">
+              <div>
+                <div class="section-title">Rejected Messages</div>
+                <div class="section-subtitle">Every message in the group that wasn't a valid formatted request, with the exact text that was rejected — not subject to the audit feed's row limit.</div>
+              </div>
+            </div>
+            <div class="exceptions-layout">
+              <section class="data-surface">
+                <div class="table-toolbar">
+                  <input id="rejectedSearch" class="table-search" type="text" placeholder="Search requester or rejected text…" />
+                </div>
+                <div class="list-shell" id="rejectedList"></div>
+              </section>
+              <section class="data-surface detail-pane">
+                <div class="detail-card" id="rejectedDetail"><div class="empty">Select a rejected message to see its full original text.</div></div>
               </section>
             </div>
           </section>

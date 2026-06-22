@@ -28,27 +28,48 @@ before fixing:
    recognizes fingerprints of our own output (`\nProcessed at:` from combined
    replies, the `✅ Request received` ack, the literal "Unsupported
    command..." text) and silently ignores them.
-3. **(Bigger one) The bot scolded ANY non-command group message with
-   "Unsupported command," including unrelated administrative chat.** Pulled
-   the exact raw text straight from the SQLite `audit_logs` table (bridge logs
-   at the time didn't capture it — see fix below) for two real past
-   rejections: a forwarded WhatsApp-style chat log (`[21/06, 20:36] Si Morsed
-   Hizla: IMEI-MS 864268073757900`, prefixed per-line so the parser's first
-   token was `[21/06,` not `IMEI-MS`) and a Bengali Zoom-meeting announcement
-   posted by "LIC Barisal" — neither was a command attempt at all, yet both
-   got the same scolding reply. Fixed: added `looksLikeCommandAttempt()` in
-   `telegram-bridge/bridge.js` — only sends the "Unsupported command"
-   correction when the text is a single short line starting with a
-   word-shaped token; suppresses it for multi-line/long/non-command-shaped
-   text (announcements, forwarded logs, general chat). Genuine single-line
-   typo'd attempts (e.g. `LRLL 01712345678`) still get corrected as before.
-   Also: `handleIntake`'s rejection log line now includes the original input
-   text (truncated), so future incidents don't require a raw SQLite query to
-   diagnose.
-- Verified: 144 tests pass (6 new in `test/telegramBridge.test.js`, including
-  regression tests built directly from the two real rejected messages above),
-  deployed, confirmed `config/telegram.json` survived the deploy this time, confirmed
+- Verified: 141 tests pass (3 new in `test/telegramBridge.test.js`), deployed,
+  confirmed `config/telegram.json` survived the deploy this time, confirmed
   the bridge restarted with the officer's DM access restored.
+
+## Done — 2026-06-22: Confirmed group is command-only by policy; added Rejected Messages visibility
+
+Followed up on the "Unsupported command" investigation above. Pulled the exact
+raw text of two real past rejections straight from the SQLite `audit_logs`
+table (bridge logs at the time didn't capture it): a forwarded WhatsApp-style
+chat log (`[21/06, 20:36] Si Morsed Hizla: IMEI-MS 864268073757900`, prefixed
+per-line so the parser's first token was `[21/06,` not `IMEI-MS`) and a
+Bengali Zoom-meeting announcement posted by "LIC Barisal."
+
+- Initially shipped a fix (`looksLikeCommandAttempt()`) that suppressed the
+  "Unsupported command" reply for messages that didn't look like a real
+  command attempt. **Reverted per explicit instruction**: the group is
+  command-only by policy — no other message should be tolerated there at all,
+  so every non-command message should keep getting flagged, including
+  forwarded logs and announcements. `telegram-bridge/bridge.js` is back to
+  always replying to `UNSUPPORTED_COMMAND` (unless it's an authorization-style
+  suppression, which is a separate, intentional policy).
+- The real, valid complaint was **visibility**, not over-flagging: there was
+  no way to see what a "wrong message" actually said without querying the
+  SQLite `audit_logs` table by hand. `/api/admin/audit` only returns the most
+  recent 250 audit rows total — with ~40+ `SMS_INBOUND`/`SMS_REPLY_UNMATCHED`
+  rows per hour on a busy day, a `REQUEST_VALIDATION_FAILED` entry can scroll
+  out of that window within an hour.
+- Added `GET /api/admin/rejected-messages` (admin-gated) — reads the full
+  in-memory audit log (not the 250-row slice), filters to
+  `REQUEST_VALIDATION_FAILED` only, returns up to 200 with full untruncated
+  `rawText`, requester, chat, and error code. New "Rejected Messages" tab in
+  the web admin console (`public/admin.html`/`admin.js`) lists them with a
+  detail pane showing the complete original text — no more digging through
+  logs or the database to see what was actually rejected.
+- Verified live in the browser preview: submitted the real forwarded-chat-log
+  text against the local dev backend, confirmed it appears in the new panel
+  with full multi-line text intact, confirmed detail pane renders correctly.
+  141 tests still pass (no test changes needed for this pass — the revert
+  brought `test/telegramBridge.test.js` back in line with the original
+  strict-enforcement test, and the new endpoint is a straightforward audit
+  filter with no new business logic to unit test beyond what's already
+  covered).
 
 ## Planned — Domain migration: `licbarishal.duckdns.org` → `opsbarishal.com`
 

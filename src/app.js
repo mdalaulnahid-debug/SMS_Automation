@@ -650,6 +650,27 @@ function createApp(options = {}) {
         const admin = buildAdminData(store, queue);
         return json(res, 200, { unmatched: admin.unmatched, requests: admin.requests });
       }
+      if (req.method === 'GET' && req.url === '/api/admin/rejected-messages') {
+        if (!requireAdmin(req, res)) return undefined;
+        // Reads the FULL in-memory audit log, not the 250-row slice /api/admin/audit uses —
+        // REQUEST_VALIDATION_FAILED is a small fraction of total audit volume (most of it is
+        // SMS_INBOUND/SMS_REPLY_UNMATCHED noise), so a rejected message could otherwise be
+        // pushed out of the visible window within an hour on a busy day, with no way to see
+        // what was actually rejected short of querying the database directly.
+        const rejected = store.auditLogs
+          .filter((row) => row.action === 'REQUEST_VALIDATION_FAILED')
+          .slice(-200)
+          .reverse()
+          .map((row) => ({
+            timestamp: row.timestamp,
+            requesterName: row.details?.requesterName || null,
+            requesterId: row.details?.requesterId || null,
+            chatId: row.details?.chatId || null,
+            errorCode: row.details?.errorCode || null,
+            rawText: row.details?.rawText || null
+          }));
+        return json(res, 200, { rejected });
+      }
       if (req.method === 'GET' && req.url === '/api/admin/audit') {
         if (!requireAdmin(req, res)) return undefined;
         const admin = buildAdminData(store, queue);

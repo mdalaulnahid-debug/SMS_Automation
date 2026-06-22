@@ -13,38 +13,6 @@ function buildMention(replyText, requesterId) {
   return { offset: 0, length: firstLine.length, userId: requesterId };
 }
 
-// Fingerprints of our own bot-authored output. If someone forwards or quotes a previous
-// answer back into the chat (common in a busy operational group — sharing the result with
-// someone else, or replying to ask about it), the parser sees plain text that doesn't start
-// with a known command and would otherwise scold the sender with "Unsupported command" —
-// confusing and noisy, since nobody actually attempted a command. Recognize and silently
-// ignore these rather than parsing them as a request attempt.
-const UNSUPPORTED_COMMAND_TEXT = 'Unsupported command. Supported commands: IMEI-MS, LCL, LRL, MS-NID, NID-MS.';
-
-function looksLikeEchoedBotOutput(text) {
-  // Combined reply drafts (formatCombinedReply) always end with this line — distinctive
-  // enough that no genuine command attempt would ever contain it.
-  if (text.includes('\nProcessed at:')) return true;
-  // The intake ack and our own static rejection message, if forwarded/quoted verbatim.
-  if (text.startsWith('✅ Request received')) return true;
-  if (text === UNSUPPORTED_COMMAND_TEXT) return true;
-  return false;
-}
-
-// The group is also used for general administrative chat — meeting announcements,
-// someone relaying a forwarded WhatsApp log, plain conversation — not exclusively for bot
-// commands. A genuine command attempt (even a typo'd one) is always a single short line
-// starting with something word-shaped. Multi-line, long, or non-Latin-first-token text is
-// essentially never a real attempt, so don't bother correcting it with "Unsupported command"
-// — that reply only makes sense to someone who was actually trying to use the bot.
-function looksLikeCommandAttempt(text) {
-  const trimmed = String(text || '').trim();
-  if (!trimmed || trimmed.includes('\n')) return false;
-  if (trimmed.length > 80) return false;
-  const firstToken = trimmed.split(/\s+/)[0] || '';
-  return /^[A-Za-z][A-Za-z-]{0,15}$/.test(firstToken);
-}
-
 function shouldSuppressGroupReply(result) {
   const suppressed = new Set([
     'REQUEST_DENIED_DISABLED_USER',
@@ -65,9 +33,6 @@ function planIntake(message, config) {
   const isPrivateChat = message.chat && message.chat.type === 'private';
 
   if (!text) return { action: 'ignore', reason: 'no text' };
-  if (looksLikeEchoedBotOutput(text)) {
-    return { action: 'ignore', reason: 'echoed bot output' };
-  }
   if (!isGroupChat && !isPrivateChat) {
     return { action: 'ignore', reason: 'wrong chat', chatId, chatTitle: message.chat?.title || null };
   }
@@ -174,14 +139,7 @@ async function handleIntake(message, {
     // back in-thread (in whichever chat the request came from) so the requester can fix
     // and resend.
     const msg = result.replyText || (result.errors && result.errors.join('; ')) || 'Request rejected.';
-    // "Unsupported command" specifically is only worth correcting when the message plausibly
-    // looks like someone trying to use bot syntax — otherwise it's just noise on top of
-    // ordinary group chat (meeting announcements, forwarded messages, etc.). Every OTHER
-    // rejection (missing identifiers, wrong length, mixed types...) already implies the first
-    // token WAS a recognized command, so the sender clearly was trying — always reply to those.
-    const isUnsupportedCommandOnNonAttempt = result.errorCode === 'UNSUPPORTED_COMMAND'
-      && !looksLikeCommandAttempt(plan.request.text);
-    if (!shouldSuppressGroupReply(result) && !isUnsupportedCommandOnNonAttempt) {
+    if (!shouldSuppressGroupReply(result)) {
       await telegram.sendMessage({
         chatId: plan.request.chatId,
         text: msg,

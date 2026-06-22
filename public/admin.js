@@ -4,10 +4,12 @@ let overviewData = null;
 let requestsData = [];
 let repliesData = [];
 let unmatchedData = [];
+let rejectedData = [];
 let auditLogs = [];
 let auditFilter = 'all';
 let selectedRequestId = null;
 let selectedUnmatchedId = null;
+let selectedRejectedIndex = null;
 
 function showGate(message) {
   document.getElementById('adminApp').style.display = 'none';
@@ -339,6 +341,54 @@ async function renderUnmatchedDetail() {
   }
 }
 
+function renderRejectedList() {
+  const search = document.getElementById('rejectedSearch').value.trim().toLowerCase();
+  const rows = rejectedData.filter((item) => {
+    if (!search) return true;
+    return `${item.requesterName || ''} ${item.rawText || ''}`.toLowerCase().includes(search);
+  });
+  document.getElementById('countRejected').textContent = rejectedData.length;
+  document.getElementById('rejectedList').innerHTML = rows.map((item, index) => `
+    <div class="list-item row-accent danger ${selectedRejectedIndex === index ? 'active' : ''}" data-rejected-index="${index}">
+      <div class="item-head">
+        <div>
+          <div class="item-title">${esc(item.requesterName || 'Unknown sender')}</div>
+          <div class="item-meta">${esc(item.errorCode || '')} · ${relativeTime(item.timestamp)}</div>
+        </div>
+        <span class="chip chip-danger">Rejected</span>
+      </div>
+      <div class="item-meta">${esc((item.rawText || '').slice(0, 140))}</div>
+    </div>`).join('') || '<div class="empty">No rejected messages.</div>';
+
+  document.querySelectorAll('[data-rejected-index]').forEach((el) => {
+    el.addEventListener('click', () => {
+      selectedRejectedIndex = Number(el.dataset.rejectedIndex);
+      renderRejectedList();
+      renderRejectedDetail();
+    });
+  });
+}
+
+function renderRejectedDetail() {
+  const detail = document.getElementById('rejectedDetail');
+  const item = rejectedData[selectedRejectedIndex];
+  if (!item) {
+    detail.innerHTML = '<div class="empty">Select a rejected message to see its full original text.</div>';
+    return;
+  }
+  detail.innerHTML = `
+    <div class="section-eyebrow">Rejected — ${esc(item.errorCode || '')}</div>
+    <div style="font-size:24px;font-weight:800;letter-spacing:-0.04em">${esc(item.requesterName || 'Unknown sender')}</div>
+    <div class="detail-block">
+      <div class="detail-label">Full original text</div>
+      <div class="raw-reply">${esc(item.rawText || '')}</div>
+    </div>
+    <div class="detail-block">
+      <div class="detail-label">Metadata</div>
+      <div class="detail-value">Chat ${esc(item.chatId || 'n/a')} · ${formatAbsoluteTime(item.timestamp)}</div>
+    </div>`;
+}
+
 function renderAuditList() {
   const search = document.getElementById('auditSearch').value.trim().toLowerCase();
   const rows = auditLogs.filter((log) => {
@@ -450,6 +500,7 @@ function exportAuditCsv() {
 
 document.getElementById('requestSearch').addEventListener('input', renderRequestList);
 document.getElementById('unmatchedSearch').addEventListener('input', renderUnmatchedList);
+document.getElementById('rejectedSearch').addEventListener('input', renderRejectedList);
 document.getElementById('auditSearch').addEventListener('input', renderAuditList);
 document.getElementById('auditFilterAll').addEventListener('click', () => setAuditFilter('all'));
 document.getElementById('auditFilterValidation').addEventListener('click', () => setAuditFilter('validation'));
@@ -550,11 +601,12 @@ document.getElementById('operatorContactForm').addEventListener('submit', async 
 });
 
 async function refreshAdmin() {
-  const [overviewRes, requestsRes, repliesRes, unmatchedRes, auditRes] = await Promise.all([
+  const [overviewRes, requestsRes, repliesRes, unmatchedRes, rejectedRes, auditRes] = await Promise.all([
     apiFetch('/api/admin/overview'),
     apiFetch('/api/admin/requests'),
     apiFetch('/api/admin/replies'),
     apiFetch('/api/admin/unmatched'),
+    apiFetch('/api/admin/rejected-messages'),
     apiFetch('/api/admin/audit')
   ]);
   overviewData = await overviewRes.json();
@@ -562,12 +614,15 @@ async function refreshAdmin() {
   repliesData = (await repliesRes.json()).replyDrafts || [];
   const unmatchedPayload = await unmatchedRes.json();
   unmatchedData = unmatchedPayload.unmatched || [];
+  const rejectedPayload = await rejectedRes.json();
+  rejectedData = rejectedPayload.rejected || [];
   const auditPayload = await auditRes.json();
   auditLogs = auditPayload.auditLogs || [];
 
   renderOverview();
   renderRequestList();
   renderUnmatchedList();
+  renderRejectedList();
   renderAuditSummary();
   renderAuditList();
   const integrity = auditPayload.integrity?.ok
