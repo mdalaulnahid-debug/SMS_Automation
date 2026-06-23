@@ -10,7 +10,7 @@ echo "==> Deploying to $VPS..."
 echo "==> Ensuring remote directories..."
 ssh "$VPS" "mkdir -p \
   $REMOTE/src \
-  $REMOTE/public \
+  $REMOTE/public/assets \
   $REMOTE/telegram-bridge \
   $REMOTE/scripts \
   $REMOTE/nginx \
@@ -24,7 +24,8 @@ echo "==> Copying backend source..."
 scp src/*.js "$VPS:$REMOTE/src/"
 
 echo "==> Copying dashboard and setup pages..."
-scp public/* "$VPS:$REMOTE/public/"
+find public -maxdepth 1 -type f -exec scp {} "$VPS:$REMOTE/public/" \;
+scp public/assets/* "$VPS:$REMOTE/public/assets/"
 
 echo "==> Copying Telegram bridge..."
 scp telegram-bridge/*.js "$VPS:$REMOTE/telegram-bridge/"
