@@ -623,9 +623,11 @@ function createApp(options = {}) {
         });
       }
       if (req.method === 'GET' && req.url === '/api/ops/overview') {
+        if (!requireAdmin(req, res)) return undefined;
         return json(res, 200, buildOpsData(store, queue));
       }
       if (req.method === 'GET' && req.url === '/api/ops/activity') {
+        if (!requireAdmin(req, res)) return undefined;
         const ops = buildOpsData(store, queue);
         return json(res, 200, {
           generatedAt: ops.generatedAt,
@@ -634,6 +636,7 @@ function createApp(options = {}) {
         });
       }
       if (req.method === 'GET' && req.url === '/api/ops/gateways') {
+        if (!requireAdmin(req, res)) return undefined;
         const ops = buildOpsData(store, queue);
         return json(res, 200, {
           generatedAt: ops.generatedAt,

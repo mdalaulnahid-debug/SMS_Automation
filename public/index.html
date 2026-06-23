@@ -11,7 +11,9 @@
     <link rel="stylesheet" href="/theme.css" />
     <style>
       :root { --header-height: 72px; --nav-height: 78px; }
-      body { max-width: 480px; margin: 0 auto; position: relative; }
+      body { max-width: 480px; margin: 0 auto; position: relative; min-height: 100vh; }
+      #opsApp { display: none; }
+      #authOverlay { display: flex; }
       #app-header {
         position: fixed; top: 0; left: 50%; transform: translateX(-50%);
         width: 100%; max-width: 480px; height: var(--header-height);
@@ -103,6 +105,7 @@
     </style>
   </head>
   <body>
+    <div id="opsApp">
     <header id="app-header">
       <div class="brand-block">
         <div class="brand-kicker">Operations Surface</div>
@@ -251,16 +254,17 @@
       <button class="nav-item" data-tab="activity"><span class="material-symbols-outlined">timeline</span><span>Activity</span></button>
       <button class="nav-item" data-tab="settings"><span class="material-symbols-outlined">tune</span><span>Access</span></button>
     </nav>
+    </div>
 
-    <div id="authOverlay" style="display:none;position:fixed;inset:0;background:var(--bg-overlay);z-index:40;align-items:center;justify-content:center;padding:20px">
+    <div id="authOverlay" style="position:fixed;inset:0;background:var(--bg-overlay);z-index:40;align-items:center;justify-content:center;padding:20px">
       <div class="data-surface" style="width:min(360px,100%);padding:22px">
         <div class="section-eyebrow">Restricted Access</div>
         <div style="margin-top:8px;font-size:22px;font-weight:800;letter-spacing:-0.03em">Admin key required</div>
-        <div style="margin-top:8px;color:var(--text-secondary);line-height:1.5">Use the supervisor API key to unlock protected review actions from this device.</div>
+        <div style="margin-top:8px;color:var(--text-secondary);line-height:1.5">Enter the admin API key to view this dashboard.</div>
         <input id="authKeyInput" class="input-field" type="password" style="margin-top:16px" placeholder="Admin API key" autocomplete="off" />
+        <div id="authError" style="display:none;margin-top:10px;color:var(--danger)">Invalid API key.</div>
         <div style="display:flex;gap:10px;margin-top:14px">
-          <button class="btn-primary" onclick="submitAuthKey()">Save key</button>
-          <button class="btn-secondary" onclick="document.getElementById('authOverlay').style.display='none'">Cancel</button>
+          <button class="btn-primary" onclick="submitAuthKey()">Unlock</button>
         </div>
       </div>
     </div>

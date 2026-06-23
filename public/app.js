@@ -6,6 +6,10 @@ let activeFilter = 'all';
 let activeSearch = '';
 
 function showAuthDialog() {
+  // Re-locking (e.g. a stored key turned out to be invalid) must hide the app
+  // content again, not just float the gate on top of it — otherwise data already
+  // rendered before the 401 stays visible underneath.
+  document.getElementById('opsApp').style.display = 'none';
   const overlay = document.getElementById('authOverlay');
   const input = document.getElementById('authKeyInput');
   input.value = localStorage.getItem('adminApiKey') || '';
@@ -14,16 +18,30 @@ function showAuthDialog() {
 }
 window.onAuthRequired = showAuthDialog;
 
-function submitAuthKey() {
+async function submitAuthKey() {
   const value = document.getElementById('authKeyInput').value.trim();
-  if (value) {
-    localStorage.setItem('adminApiKey', value);
-    document.getElementById('settingsApiKey').value = value;
-  } else {
-    localStorage.removeItem('adminApiKey');
+  const errorEl = document.getElementById('authError');
+  errorEl.style.display = 'none';
+  if (!value) {
+    errorEl.textContent = 'API key is required.';
+    errorEl.style.display = 'block';
+    return;
   }
+  localStorage.setItem('adminApiKey', value);
+  // Verify the key actually works before revealing anything — apiFetch's 401
+  // handler would otherwise re-trigger this same dialog in an awkward loop.
+  const res = await fetch('/api/ops/overview', { headers: authHeaders() });
+  if (res.status === 401) {
+    localStorage.removeItem('adminApiKey');
+    errorEl.textContent = 'Invalid API key.';
+    errorEl.style.display = 'block';
+    return;
+  }
+  document.getElementById('settingsApiKey').value = value;
   document.getElementById('authOverlay').style.display = 'none';
+  document.getElementById('opsApp').style.display = 'block';
   updateAdminVisibility();
+  boot();
 }
 
 document.getElementById('authKeyInput').addEventListener('keydown', (event) => {
@@ -212,9 +230,22 @@ async function refreshOps() {
   }
 }
 
+let booted = false;
+function boot() {
+  if (booted) return; // avoid stacking duplicate intervals if the gate re-locks and re-unlocks
+  booted = true;
+  pollHealth();
+  setInterval(pollHealth, 30_000);
+  refreshOps();
+  setInterval(refreshOps, 15_000);
+}
+
 window._bootTime = Date.now();
 updateAdminVisibility();
-pollHealth();
-setInterval(pollHealth, 30_000);
-refreshOps();
-setInterval(refreshOps, 15_000);
+if (isAdminUnlocked()) {
+  document.getElementById('authOverlay').style.display = 'none';
+  document.getElementById('opsApp').style.display = 'block';
+  boot();
+} else {
+  showAuthDialog();
+}

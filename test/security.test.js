@@ -114,7 +114,7 @@ test('dashboard snapshot never leaks gateway secret or apiKey', async () => {
   assert.equal(gp.apiKey, undefined);
 });
 
-test('public /api/ops/activity (no auth) never leaks raw SMS content, phone numbers, or IMEI/NID', async () => {
+test('/api/ops/activity requires admin auth and, even authenticated, never includes raw SMS content', async () => {
   const app = appWith({ adminApiKey: 'topsecret' });
 
   // Seed a request and a matched reply containing real-looking sensitive identifiers —
@@ -145,8 +145,14 @@ test('public /api/ops/activity (no auth) never leaks raw SMS content, phone numb
     body: { gatewayId: 'GP_PHONE_01', recipient: '+8801833122144', messageSnippet: 'IMEI-MS 359127130347820' }
   });
 
-  // No admin key on this call — it's the public landing page's data source.
-  const res = await call(app, { method: 'GET', url: '/api/ops/activity' });
+  // No admin key — must be rejected outright now (the page itself requires login
+  // before it ever calls this endpoint).
+  const denied = await call(app, { method: 'GET', url: '/api/ops/activity' });
+  assert.equal(denied.status, 401);
+
+  // Authenticated call — sanitization is still verified as defense in depth, even
+  // though auth is now the primary boundary.
+  const res = await call(app, { method: 'GET', url: '/api/ops/activity', headers: { 'x-api-key': 'topsecret' } });
   assert.equal(res.status, 200);
 
   const raw = res.raw;
