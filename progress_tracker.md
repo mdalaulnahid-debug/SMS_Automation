@@ -1,17 +1,26 @@
 # Progress Tracker
 
-Last updated: **2026-06-23 — opened group auth for forwarded messages + forward-aware tagging**
+Last updated: **2026-06-23 — branding, desktop redesign, light-mode contrast fix**
 
 ---
 
 ## Current Stage
 
-Production backend flow remains live. Two issues found and fixed this session:
+Production backend flow remains live. Most recent work was front-end/asset
+only (insignia branding, desktop layout, light-mode fix) — see `todo.md`'s
+top entry for the full five-commit breakdown
+(`2f1a0c5`, `df996d1`, `8a5278d`, `cee612f`, `edfcd59`). Verified: VPS file
+hashes match git HEAD byte-for-byte after the final deploy; both pm2
+processes online; 142 tests pass.
 
-1. **Group auth was too restrictive** — adding even one user to `authorizedUsers` (needed for private-DM gating) closed the group to all non-whitelisted members. Officers forwarding requests from colleagues were silently rejected. Fixed: group chat is now always open (any member can submit); `authorizedUsers` only gates private DMs.
-2. **Forwarded message tagging** — replies now explicitly tag the group member who forwarded the message (`message.from`), not the original author (`forward_from`). The original author is stored as `forwardedFrom` metadata for audit traceability.
+**Open item**: `support@opsbarishal.com` is listed on the public Contact
+tab but is not yet a live mailbox — create it before officers rely on it.
 
-Three previously rejected requests were manually resubmitted via the API to recover them.
+Earlier this session: group auth was too restrictive — adding a user to
+`authorizedUsers` (for private-DM gating) had closed the group to all
+non-whitelisted members. Fixed: group chat is now always open; `authorizedUsers`
+only gates private DMs. Forwarded-message replies now tag the forwarder
+(`message.from`), not the original author (stored as `forwardedFrom` for audit).
 
 Git and the live VPS should be kept in sync after each deploy from this branch.
 

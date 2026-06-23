@@ -4,6 +4,42 @@ Start with `progress_tracker.md` for the latest session handoff, test results, a
 
 ---
 
+## Done — 2026-06-23: Branding, desktop redesign, and light-mode fix
+
+Five-commit pass on the public web surfaces, all deployed and verified live:
+
+1. **Bangladesh Police insignia branding** (`2f1a0c5`) — navy (`#04014B`) /
+   silver (`#C7CBD4`) palette from the official insignia, applied to
+   `theme.css`, both Android apps' `colors.xml` (Gateway app converted from
+   light teal to dark navy to match), header logos + favicon on both web
+   pages, denser list/row styling inspired by a Netmonitor-style reference
+   app. Both Android modules build clean; installed and visually confirmed
+   on the physical A55 admin phone.
+2. **`deploy.sh` fix** (`df996d1`) — `scp public/*` doesn't recurse into
+   directories and broke once `public/assets/` (the insignia) existed;
+   switched to `find -maxdepth 1 -type f`.
+3. **Desktop redesign of the public ops page** (`8a5278d`) — `index.html`
+   was a phone-app shell (`max-width: 480px`) with huge empty margins on a
+   real monitor. Added a ≥900px breakpoint that switches to a full-width
+   sidebar dashboard (reusing `admin.html`'s proven `.admin-shell` pattern),
+   with new Home/Activity/About/Contact/Help/Access tabs. Mobile (<900px)
+   is pixel-identical to before. About/Help have real content (system
+   description, actual bot command syntax); Contact was a placeholder.
+4. **Real contact details** (`cee612f`) — LIC Barishal phone, email
+   (`support@opsbarishal.com` — **not a live mailbox yet**, create before
+   officers try to use it), Telegram, WhatsApp added to the Contact tab.
+5. **Light-mode contrast fix** (`edfcd59`) — `.kpi-tile` and both pages'
+   headers/sidebars/bottom-nav had hardcoded dark-navy backgrounds totally
+   independent of the light/dark toggle. In light mode this produced dark
+   text directly on near-black blocks — unreadable. Added theme-aware
+   variables (`--kpi-tile-bg`, `--bg-chrome-header`, `--bg-chrome-nav`,
+   `--bg-chrome-sidebar`) with real light-mode values; dark mode unchanged.
+
+Verified throughout: 142 tests pass after every step (all pure front-end/
+asset changes, no backend touched), browser-preview screenshots at 1280px
+and 375px in both themes, VPS file hashes confirmed byte-identical to git
+HEAD (`edfcd59`) after the final deploy.
+
 ## Done — 2026-06-23: `www.opsbarishal.com` added — all three domains live
 
 CNAME added in Cloudflare (`www` → `opsbarishal.com`, DNS-only). Ran
