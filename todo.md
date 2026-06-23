@@ -4,13 +4,14 @@ Start with `progress_tracker.md` for the latest session handoff, test results, a
 
 ---
 
-## Pending — `www.opsbarishal.com` has no DNS record yet
+## Done — 2026-06-23: `www.opsbarishal.com` added — all three domains live
 
-User needs to add a CNAME (`www` → `opsbarishal.com`, proxy OFF/DNS-only,
-same as the apex record) in Cloudflare. Once it propagates, run
+CNAME added in Cloudflare (`www` → `opsbarishal.com`, DNS-only). Ran
 `bash /opt/sms-backend/scripts/setup-ssl.sh licbarishal.duckdns.org opsbarishal.com www.opsbarishal.com`
-to add it to the existing per-domain-cert nginx setup (see
-`docs/domain-migration-plan.md`).
+— `www.opsbarishal.com` got its own independent cert, the other two domains'
+certs were left untouched. All three confirmed `200 OK` on `/api/health`,
+and the login lockdown (see entry below) holds consistently across all of
+them since it's enforced server-side, not per-domain.
 
 ## Done — 2026-06-23: Locked down the entire public ops surface behind login
 
