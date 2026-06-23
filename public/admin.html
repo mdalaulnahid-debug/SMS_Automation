@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>SMS Automation · Admin Command Center</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/police-insignia.svg" />
     <script>
       if (window.innerWidth < 900 && location.search.indexOf('desktop=1') === -1) {
         location.replace('/');
@@ -35,6 +36,8 @@
         padding: 0 20px; background: rgba(8, 17, 31, 0.88); backdrop-filter: blur(18px);
         border-bottom: 1px solid var(--divider);
       }
+      .brand-row { display: flex; align-items: center; gap: 12px; }
+      .brand-logo { width: 40px; height: 40px; object-fit: contain; flex-shrink: 0; }
       .topbar-brand { display: flex; flex-direction: column; gap: 4px; }
       .topbar-brand .kicker { color: var(--warning); font-size: 10px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; }
       .topbar-brand .title { font-size: 22px; font-weight: 800; letter-spacing: -0.04em; }
@@ -85,13 +88,13 @@
       .detail-pane { min-height: 620px; }
       .list-shell { max-height: 720px; overflow: auto; }
       .list-item {
-        padding: 14px 16px; border-bottom: 1px solid var(--divider); cursor: pointer; transition: background 0.18s ease;
+        padding: 10px 16px; border-bottom: 1px solid var(--divider); cursor: pointer; transition: background 0.18s ease;
       }
       .list-item:last-child { border-bottom: none; }
       .list-item:hover, .list-item.active { background: rgba(255,255,255,0.03); }
       .item-head { display: flex; justify-content: space-between; align-items: start; gap: 12px; }
       .item-title { font-size: 13px; font-weight: 800; }
-      .item-meta { margin-top: 6px; color: var(--text-secondary); font-size: 12px; line-height: 1.45; }
+      .item-meta { margin-top: 4px; color: var(--text-secondary); font-size: 12px; line-height: 1.4; font-family: var(--font-mono); }
       .detail-card { padding: 18px; display: grid; gap: 14px; }
       .detail-actions { display: flex; flex-wrap: wrap; gap: 10px; }
       .detail-block { border-top: 1px solid var(--divider); padding-top: 14px; }
@@ -111,7 +114,7 @@
         color: var(--text-secondary); font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; cursor:pointer;
       }
       .audit-filter.active { background: var(--accent-bg); border-color: var(--accent-border); color: var(--accent); }
-      .audit-row-detail-grid { margin-top: 10px; display:grid; gap:8px; }
+      .audit-row-detail-grid { margin-top: 8px; display:grid; gap:6px; }
       .audit-detail-line { display:grid; gap:3px; }
       .audit-detail-label { color: var(--text-muted); font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
       .audit-detail-value { color: var(--text-secondary); font-family: var(--font-mono); font-size: 12px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
@@ -144,10 +147,13 @@
 
     <div id="adminApp">
       <header id="admin-topbar">
-        <div class="topbar-brand">
-          <div class="kicker">Supervisor Surface</div>
-          <div class="title">SMS Automation</div>
-          <div class="sub">Desktop command center for review, audit, and exception handling</div>
+        <div class="brand-row">
+          <img class="brand-logo" src="/assets/police-insignia.svg" alt="Bangladesh Police insignia" />
+          <div class="topbar-brand">
+            <div class="kicker">Supervisor Surface</div>
+            <div class="title">SMS Automation</div>
+            <div class="sub">Desktop command center for review, audit, and exception handling</div>
+          </div>
         </div>
         <div class="topbar-right">
           <div class="env-pill" id="environmentLabel">Production</div>

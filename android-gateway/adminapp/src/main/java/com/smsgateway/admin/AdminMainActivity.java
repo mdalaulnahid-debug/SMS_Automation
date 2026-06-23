@@ -694,14 +694,14 @@ public class AdminMainActivity extends Activity {
     private LinearLayout baseCard(boolean critical) {
         LinearLayout card = new LinearLayout(this);
         card.setOrientation(LinearLayout.VERTICAL);
-        card.setPadding(20, 18, 20, 18);
+        card.setPadding(16, 12, 16, 12);
         card.setBackground(AdminDesignSystem.rowBackground(critical));
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         );
-        params.bottomMargin = 14;
+        params.bottomMargin = 10;
         card.setLayoutParams(params);
         return card;
     }

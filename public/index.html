@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>SMS Automation · Operations</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/police-insignia.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet" />
@@ -22,6 +23,8 @@
         background: rgba(8, 17, 31, 0.86); backdrop-filter: blur(18px);
         border-bottom: 1px solid var(--divider);
       }
+      .brand-row { display: flex; align-items: center; gap: 10px; }
+      .brand-logo { width: 32px; height: 32px; object-fit: contain; flex-shrink: 0; }
       .brand-block { display: flex; flex-direction: column; gap: 3px; }
       .brand-kicker { color: var(--accent); font-size: 10px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; }
       .brand-title { font-size: 20px; font-weight: 800; letter-spacing: -0.03em; }
@@ -107,10 +110,13 @@
   <body>
     <div id="opsApp">
     <header id="app-header">
-      <div class="brand-block">
-        <div class="brand-kicker">Operations Surface</div>
-        <div class="brand-title">SMS Automation</div>
-        <div class="brand-sub">Field monitoring and light-touch action</div>
+      <div class="brand-row">
+        <img class="brand-logo" src="/assets/police-insignia.svg" alt="Bangladesh Police insignia" />
+        <div class="brand-block">
+          <div class="brand-kicker">Operations Surface</div>
+          <div class="brand-title">SMS Automation</div>
+          <div class="brand-sub">Field monitoring and light-touch action</div>
+        </div>
       </div>
       <div style="display:flex;align-items:center;gap:10px">
         <div class="header-status">

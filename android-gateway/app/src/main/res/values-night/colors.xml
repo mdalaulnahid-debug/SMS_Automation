@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Dark navy/silver palette (Bangladesh Police insignia branding) -->
     <color name="bg_primary">#08111F</color>
     <color name="bg_surface">#0F1D31</color>
     <color name="bg_card">#14253D</color>
     <color name="bg_card_elevated">#1C304B</color>
 
-    <color name="accent">#3DD7FF</color>
-    <color name="accent_muted">#7C8CFF</color>
-    <color name="accent_dim">#15303A</color>
-    <color name="accent_on">#041018</color>
+    <color name="accent">#C7CBD4</color>
+    <color name="accent_muted">#8B93A3</color>
+    <color name="accent_dim">#1A2433</color>
+    <color name="accent_on">#04014B</color>
 
     <color name="text_primary">#EBF3FF</color>
     <color name="text_secondary">#B2C0D9</color>

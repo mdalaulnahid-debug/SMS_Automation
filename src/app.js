@@ -409,6 +409,9 @@ function createApp(options = {}) {
       if (req.method === 'GET' && req.url === '/admin.js') {
         return serveFile(res, 'admin.js', 'text/javascript; charset=utf-8');
       }
+      if (req.method === 'GET' && req.url === '/assets/police-insignia.svg') {
+        return serveFile(res, 'assets/police-insignia.svg', 'image/svg+xml; charset=utf-8');
+      }
       if (req.method === 'GET' && req.url === '/api/health') {
         const port = Number(process.env.PORT || 3000);
         const lanAddresses = getLanAddresses();

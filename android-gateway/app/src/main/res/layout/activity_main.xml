@@ -17,6 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/bg_surface"
+            app:logo="@drawable/police_insignia"
+            app:logoDescription="Bangladesh Police insignia"
             app:title="SMS GATEWAY"
             app:titleTextColor="@color/text_primary"
             app:subtitleTextColor="@color/accent" />

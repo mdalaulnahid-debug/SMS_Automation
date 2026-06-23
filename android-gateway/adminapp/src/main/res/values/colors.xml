@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Synced to the Android Gateway App / web "Operations Surface" dark palette
-         (android-gateway/app/src/main/res/values-night/colors.xml) so both phones match. -->
+         (android-gateway/app/src/main/res/values-night/colors.xml) so both phones match.
+         Accent is the Bangladesh Police insignia's silver (was cyan). -->
     <color name="admin_bg_root">#08111F</color>
     <color name="admin_bg_panel">#14253D</color>
     <color name="admin_bg_panel_alt">#1C304B</color>
@@ -10,11 +11,11 @@
     <color name="admin_bg_tab_idle">#0F1D31</color>
     <color name="admin_bg_tab_active">#1C304B</color>
     <color name="admin_border">#243A57</color>
-    <color name="admin_border_active">#3DD7FF</color>
+    <color name="admin_border_active">#C7CBD4</color>
     <color name="admin_text_primary">#EBF3FF</color>
     <color name="admin_text_secondary">#B2C0D9</color>
     <color name="admin_text_dim">#7F91AF</color>
-    <color name="admin_primary">#3DD7FF</color>
+    <color name="admin_primary">#C7CBD4</color>
     <color name="admin_success">#56D88B</color>
     <color name="admin_warning">#FFBF5F</color>
     <color name="admin_danger">#FF6D7F</color>

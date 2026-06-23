@@ -16,6 +16,14 @@
         android:paddingEnd="18dp"
         android:paddingBottom="16dp">
 
+        <ImageView
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="12dp"
+            android:contentDescription="Bangladesh Police insignia"
+            android:scaleType="fitCenter"
+            android:src="@drawable/police_insignia" />
+
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -166,7 +174,7 @@
 
     <HorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="72dp"
+        android:layout_height="60dp"
         android:background="@color/admin_bg_panel"
         android:fillViewport="true"
         android:scrollbars="none">
@@ -176,9 +184,9 @@
             android:layout_height="match_parent"
             android:orientation="horizontal"
             android:paddingStart="8dp"
-            android:paddingTop="8dp"
+            android:paddingTop="6dp"
             android:paddingEnd="8dp"
-            android:paddingBottom="10dp">
+            android:paddingBottom="6dp">
 
             <LinearLayout
                 android:id="@+id/tabOverview"

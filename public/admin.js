@@ -389,25 +389,6 @@ function renderRejectedDetail() {
     </div>`;
 }
 
-function renderAuditList() {
-  const search = document.getElementById('auditSearch').value.trim().toLowerCase();
-  const rows = auditLogs.filter((log) => {
-    if (!search) return true;
-    return `${log.action} ${log.actor || ''} ${log.requestId || ''} ${JSON.stringify(log.details || {})}`.toLowerCase().includes(search);
-  });
-  document.getElementById('auditList').innerHTML = rows.slice().reverse().map((log) => `
-    <div class="list-item row-accent ${statusTone(log.action)}">
-      <div class="item-head">
-        <div>
-          <div class="item-title">${esc(log.action.replaceAll('_', ' '))}</div>
-          <div class="item-meta">${esc(log.actor || 'system')} · ${log.requestId ? esc(log.requestId) + ' · ' : ''}${relativeTime(log.timestamp)}</div>
-        </div>
-        <span class="chip chip-muted">${esc((log.actor || 'system').toUpperCase())}</span>
-      </div>
-      <div class="audit-row-detail">${esc(JSON.stringify(log.details || {}))}</div>
-    </div>`).join('') || '<div class="empty">No audit entries match the current search.</div>';
-}
-
 function filteredAuditLogs(search = '') {
   return auditLogs.filter((log) => {
     if (auditFilter === 'validation' && log.action !== 'REQUEST_VALIDATION_FAILED') return false;
