@@ -4,6 +4,39 @@ Start with `progress_tracker.md` for the latest session handoff, test results, a
 
 ---
 
+## Pending — `www.opsbarishal.com` has no DNS record yet
+
+User needs to add a CNAME (`www` → `opsbarishal.com`, proxy OFF/DNS-only,
+same as the apex record) in Cloudflare. Once it propagates, run
+`bash /opt/sms-backend/scripts/setup-ssl.sh licbarishal.duckdns.org opsbarishal.com www.opsbarishal.com`
+to add it to the existing per-domain-cert nginx setup (see
+`docs/domain-migration-plan.md`).
+
+## Done — 2026-06-23: Locked down the entire public ops surface behind login
+
+Follow-up to the data-exposure fix above. Asked directly "can everybody
+visit opsbarishal.com?" — answer was yes (intentional, no IP restriction),
+but the follow-up decision was to require login for the *whole* surface,
+not just sanitize the public status page.
+
+- `src/app.js`: `/api/ops/overview`, `/api/ops/activity`, `/api/ops/gateways`
+  now require the admin key (`requireAdmin`), same as every other admin
+  endpoint — no longer "public, but sanitized."
+- `public/index.html` + `app.js`: replaced the old dismissible "unlock extra
+  widgets" overlay with a true blocking gate mirroring `admin.html`'s pattern
+  — the entire app (`#opsApp`) stays hidden until a key is entered AND
+  verified against the backend (previously it just trusted whatever was
+  typed). A 401 mid-session re-hides the app rather than leaving stale data
+  rendered underneath the gate.
+- Updated the earlier sanitization test (`test/security.test.js`) — it had
+  asserted unauthenticated access returns 200 (correct at the time); now
+  asserts 401, and still checks sanitization holds for the authenticated
+  case as defense in depth.
+- Verified end to end against both the local dev server and production:
+  server returns 401 with no key / 200 with the right key; client shows
+  nothing but the gate with no key, an error on a wrong key, full dashboard
+  only after a verified key. 142 tests pass.
+
 ## Done — 2026-06-23 (CRITICAL): Fixed unauthenticated data exposure on the public ops feed
 
 While confirming what `opsbarishal.com` exposes to anonymous visitors (asked
