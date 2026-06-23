@@ -4,6 +4,31 @@ Start with `progress_tracker.md` for the latest session handoff, test results, a
 
 ---
 
+## Done — 2026-06-23: Domain migration TLS cutover — opsbarishal.com live, zero downtime
+
+`https://opsbarishal.com` is now live on the VPS alongside the existing
+`https://licbarishal.duckdns.org` — both work simultaneously, full details
+and remaining steps in `docs/domain-migration-plan.md`.
+
+- First attempt used a shared SAN cert via `certbot --expand`, which failed
+  reproducibly with a 405 at Let's Encrypt's finalize step (isolated to the
+  expand-existing-cert path — a fresh standalone cert worked immediately).
+  Redesigned `scripts/setup-ssl.sh` to give each domain its own independent
+  certificate and nginx server block (SNI) — simpler, no shared-cert edge
+  cases, each domain renews on its own.
+- Also fixed a template/reality drift found along the way: the live nginx
+  config had no IP restriction on the admin console (key-only auth), while
+  the repo's `nginx/sms-backend.conf` template had an `ADMIN_IP` allowlist
+  that was never actually applied. Removed it from the template to match
+  reality, rather than letting the next `setup-ssl.sh` run silently
+  introduce a new restriction.
+- Verified both domains return `200 OK` over HTTPS with valid certs and
+  correct security headers. 141 tests still pass (no app code touched, only
+  `scripts/setup-ssl.sh` and `nginx/sms-backend.conf`).
+- **Remaining**: migrate each gateway phone's Backend URL to
+  `https://opsbarishal.com` (no urgency — old domain still works), update
+  the admin bookmark, optionally drop the old domain later.
+
 ## Version History
 
 | Version | Date | Tag | Description |
