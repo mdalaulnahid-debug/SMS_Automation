@@ -4,6 +4,45 @@ Start with `progress_tracker.md` for the latest session handoff, test results, a
 
 ---
 
+## Done — 2026-06-23 (CRITICAL): Fixed unauthenticated data exposure on the public ops feed
+
+While confirming what `opsbarishal.com` exposes to anonymous visitors (asked
+directly: "can everybody visit it?"), found that `/api/ops/activity` and
+`/api/ops/overview` — the public landing page's data source, **no admin auth
+by design** — were leaking real investigation data to anyone, no login
+required. Confirmed live in production before fixing: a real MSISDN, IMEI,
+IMSI, and physical address from an active request were visible to any
+visitor. This almost certainly existed on `licbarishal.duckdns.org` too —
+the domain move didn't cause it, just made it more likely someone would
+notice/visit the cleaner-looking domain.
+
+- **Root cause**: `buildActivityFeed()`'s `summary`/`meta` fields carry raw
+  SMS content for the admin-authenticated audit view, and that was flowing
+  straight through to the public endpoint unfiltered.
+- **First pass only covered 4 "obviously risky" event types** and missed a
+  second leak: `UNAUTHORIZED_SMS_SEND`'s audit row stores the recipient
+  phone number in the `requestId` slot (`src/app.js`'s `/api/gateway/watchdog`
+  handler), which then surfaced as a plain `'audit'`-type event's summary —
+  a field that looked generic enough to seem safe.
+- **Fixed properly**: stripped `summary`/`meta` *unconditionally* for every
+  event type on the public feed, rather than continuing to enumerate which
+  types/actions happen to carry sensitive payloads.
+- Verified against production: 0 of 40 public activity events now carry
+  `summary` or `meta`; admin-authenticated endpoints unaffected.
+- New regression test in `test/security.test.js` seeds real-shaped sensitive
+  content (MSISDN, IMEI, IMSI, address, watchdog-reported number) and
+  asserts none of it reaches the unauthenticated endpoint, while confirming
+  the admin view still shows it.
+- 142 tests pass (1 new). Deployed immediately given severity.
+
+**Open question worth considering**: should `/api/ops/*` require admin auth
+at all, rather than just sanitizing its content? It currently exists to
+power a public-facing "is the system healthy" status page — if that's not
+actually needed by anyone outside the team, gating it entirely would be
+simpler and more defensive than maintaining a sanitizer. Not changed this
+pass since the public status page may be intentional; flagging for a
+decision.
+
 ## Done — 2026-06-23: Domain migration TLS cutover — opsbarishal.com live, zero downtime
 
 `https://opsbarishal.com` is now live on the VPS alongside the existing
