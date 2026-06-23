@@ -48,22 +48,28 @@ document.getElementById('authKeyInput').addEventListener('keydown', (event) => {
   if (event.key === 'Enter') submitAuthKey();
 });
 
-document.querySelectorAll('.nav-item').forEach((button) => {
-  button.addEventListener('click', () => {
-    document.querySelectorAll('.nav-item').forEach((item) => item.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach((panel) => panel.classList.remove('active'));
-    button.classList.add('active');
-    document.getElementById(`panel-${button.dataset.tab}`).classList.add('active');
-    localStorage.setItem('opsTab', button.dataset.tab);
-    if (button.dataset.tab === 'activity') renderActivityFeed();
+function selectTab(tab) {
+  document.querySelectorAll('.nav-item, .ops-sidebar-item').forEach((item) => {
+    const isMatch = item.dataset.tab === tab;
+    item.classList.toggle('active', isMatch);
+    if (isMatch) item.setAttribute('aria-current', 'page');
+    else item.removeAttribute('aria-current');
   });
+  document.querySelectorAll('.tab-panel').forEach((panel) => panel.classList.remove('active'));
+  const panel = document.getElementById(`panel-${tab}`);
+  if (panel) panel.classList.add('active');
+  localStorage.setItem('opsTab', tab);
+  if (tab === 'activity') renderActivityFeed();
+}
+
+document.querySelectorAll('.nav-item, .ops-sidebar-item').forEach((button) => {
+  button.addEventListener('click', () => selectTab(button.dataset.tab));
 });
 
 (function restoreTab() {
   const saved = localStorage.getItem('opsTab');
   if (!saved) return;
-  const button = document.querySelector(`.nav-item[data-tab="${saved}"]`);
-  if (button) button.click();
+  if (document.querySelector(`[data-tab="${saved}"]`)) selectTab(saved);
 })();
 
 function updateAdminVisibility() {
