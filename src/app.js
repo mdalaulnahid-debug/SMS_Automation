@@ -269,6 +269,26 @@ function buildAdminData(store, queue) {
   };
 }
 
+// /api/ops/* has no admin auth (it's the public landing page's data source — see
+// public/index.html). buildActivityFeed()'s summary/meta fields can carry raw SMS
+// content (MSISDN, NID, IMEI, location, addresses) for the admin-authenticated audit
+// view — e.g. UNAUTHORIZED_SMS_SEND stores a phone number in `requestId`, which then
+// surfaces as an audit-type event's `summary`. Rather than enumerate which event types
+// or audit actions happen to carry sensitive payloads (a list that's easy to miss one
+// of, as that case proved), strip summary/meta unconditionally for every event type —
+// the public feed only needs to show "something happened," never the payload.
+function sanitizeActivityForPublicOps(activity) {
+  return activity.map((event) => ({
+    id: event.id,
+    type: event.type,
+    severity: event.severity,
+    occurredAt: event.occurredAt,
+    operator: event.operator,
+    gatewayId: event.gatewayId,
+    title: event.title
+  }));
+}
+
 function buildOpsData(store, queue) {
   const admin = buildAdminData(store, queue);
   return {
@@ -294,7 +314,7 @@ function buildOpsData(store, queue) {
       activeRequestId: queueRow.active?.requestId || null,
       waitingCount: queueRow.waiting.length
     })),
-    activity: admin.activity.slice(0, 40)
+    activity: sanitizeActivityForPublicOps(admin.activity.slice(0, 40))
   };
 }
 

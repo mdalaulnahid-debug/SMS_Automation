@@ -114,6 +114,62 @@ test('dashboard snapshot never leaks gateway secret or apiKey', async () => {
   assert.equal(gp.apiKey, undefined);
 });
 
+test('public /api/ops/activity (no auth) never leaks raw SMS content, phone numbers, or IMEI/NID', async () => {
+  const app = appWith({ adminApiKey: 'topsecret' });
+
+  // Seed a request and a matched reply containing real-looking sensitive identifiers —
+  // MSISDN, IMEI, IMSI, and a physical address — the kind of content an operator's SMS
+  // reply actually carries.
+  await call(app, {
+    method: 'POST',
+    url: '/api/requests',
+    headers: { 'x-api-key': 'topsecret', 'content-type': 'application/json' },
+    body: { requesterId: '8801700000000', requesterName: 'Ofc', text: 'LCL 01974377632' }
+  });
+  const sensitiveBody = 'MSISDN: 8801974377632, BPARTY: 8801924400990, IMEI: 359127130347820, '
+    + 'IMSI: 470039953682678, Address: Vill - Terochar, P.O. - Muladi, District - Barishal.';
+  await call(app, {
+    method: 'POST',
+    url: '/api/sms/inbound',
+    headers: { 'content-type': 'application/json', 'x-gateway-secret': 'gp-secret' },
+    body: { gatewayId: 'GP_PHONE_01', from: '12345', body: sensitiveBody }
+  });
+
+  // The watchdog audit event stores the recipient phone number in the `requestId`
+  // slot (see src/app.js's /api/gateway/watchdog handler) — a real past instance of
+  // sensitive data leaking through a field that looks generic/safe.
+  await call(app, {
+    method: 'POST',
+    url: '/api/gateway/watchdog',
+    headers: { 'content-type': 'application/json', 'x-gateway-secret': 'gp-secret' },
+    body: { gatewayId: 'GP_PHONE_01', recipient: '+8801833122144', messageSnippet: 'IMEI-MS 359127130347820' }
+  });
+
+  // No admin key on this call — it's the public landing page's data source.
+  const res = await call(app, { method: 'GET', url: '/api/ops/activity' });
+  assert.equal(res.status, 200);
+
+  const raw = res.raw;
+  assert.doesNotMatch(raw, /8801974377632/, 'MSISDN must not appear in the public feed');
+  assert.doesNotMatch(raw, /8801924400990/, 'B-party number must not appear in the public feed');
+  assert.doesNotMatch(raw, /359127130347820/, 'IMEI must not appear in the public feed');
+  assert.doesNotMatch(raw, /470039953682678/, 'IMSI must not appear in the public feed');
+  assert.doesNotMatch(raw, /Terochar/, 'address must not appear in the public feed');
+  assert.doesNotMatch(raw, /8801833122144/, 'watchdog-reported recipient number must not appear either');
+
+  // Stronger guarantee: no event on the public feed carries a summary or meta field
+  // at all, regardless of type — those are exactly the fields that have leaked.
+  for (const event of res.json.activity) {
+    assert.equal(event.summary, undefined, `event ${event.id} (${event.type}) must not have a summary field`);
+    assert.equal(event.meta, undefined, `event ${event.id} (${event.type}) must not have a meta field`);
+  }
+
+  // Confirm the SAME data legitimately appears for an admin-authenticated caller —
+  // this is about scoping exposure to auth, not deleting the data.
+  const adminRes = await call(app, { method: 'GET', url: '/api/admin/overview', headers: { 'x-api-key': 'topsecret' } });
+  assert.match(adminRes.raw, /8801974377632/, 'admin view should still show full content');
+});
+
 test('deny-by-default rejects unknown requesters and allows provisioned ones', async () => {
   // adminApiKey empty â†’ admin auth disabled, so we can exercise the deny-unknown flag directly.
   const app = appWith({ denyUnknownRequesters: true });
