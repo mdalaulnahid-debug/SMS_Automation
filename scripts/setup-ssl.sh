@@ -1,34 +1,45 @@
 #!/bin/bash
 # scripts/setup-ssl.sh
 # Run on the VPS as root:
-#   ssh root@45.77.240.195 "bash /opt/sms-backend/scripts/setup-ssl.sh your-domain.duckdns.org your-wifi-ip"
+#   ssh root@45.77.240.195 "bash /opt/sms-backend/scripts/setup-ssl.sh domain1.com [domain2.com ...]"
+#
+# One certificate, multiple domains (SAN cert). The FIRST domain given is the
+# certbot lineage name and the cert directory under /etc/letsencrypt/live/ —
+# pass an EXISTING domain first to expand its current cert (zero-downtime
+# domain migration: old + new domain both work until you're ready to drop
+# the old one), or a single new domain for a first-time setup.
 #
 # PREREQUISITES
-#   1. A domain/subdomain A-record pointing at your VPS IP.
-#      Free option: https://www.duckdns.org (takes ~2 min).
-#      Example: sms-gateway.duckdns.org → 45.77.240.195
+#   1. Every domain/subdomain listed must have an A-record pointing at this
+#      VPS IP already (DNS propagated) before running this.
 #   2. Port 80 and 443 open on the VPS firewall.
 #   3. Run as root.
 #
+# Admin console access: no IP restriction — protected only by the admin API
+# key (src/auth.js). See nginx/sms-backend.conf.
 set -euo pipefail
 
-DOMAIN="${1:-}"
-ADMIN_IP="${2:-}"
 REMOTE="/opt/sms-backend"
-EMAIL="${3:-noreply@${DOMAIN}}"
+DOMAINS=("$@")
+EMAIL="${SSL_EMAIL:-noreply@${DOMAINS[0]:-example.com}}"
 
-if [ -z "$DOMAIN" ] || [ -z "$ADMIN_IP" ]; then
-    echo "Usage: bash setup-ssl.sh <your-domain.com> <admin-wifi-ip> [admin-email]"
+if [ "${#DOMAINS[@]}" -eq 0 ]; then
+    echo "Usage: bash setup-ssl.sh <domain1.com> [domain2.com ...]"
     echo ""
-    echo "Example:  bash setup-ssl.sh licbarishal.duckdns.org 114.130.180.43"
-    echo "Free domain: https://www.duckdns.org"
+    echo "First-time setup:        bash setup-ssl.sh opsbarishal.com"
+    echo "Zero-downtime migration:  bash setup-ssl.sh licbarishal.duckdns.org opsbarishal.com"
+    echo "  (first domain must already have a cert — this expands it to also cover the rest)"
     echo ""
-    echo "ADMIN_IP is your WiFi IP — only this IP can access the dashboard."
-    echo "Find it with: curl -s ifconfig.me"
+    echo "Override the certbot contact email with SSL_EMAIL=you@example.com"
     exit 1
 fi
 
-echo "==> Setting up TLS for $DOMAIN ..."
+CERT_NAME="${DOMAINS[0]}"
+ALL_DOMAINS_SPACED="${DOMAINS[*]}"
+CERTBOT_DOMAIN_ARGS=()
+for d in "${DOMAINS[@]}"; do CERTBOT_DOMAIN_ARGS+=(-d "$d"); done
+
+echo "==> Setting up TLS for: ${ALL_DOMAINS_SPACED} (cert name: ${CERT_NAME}) ..."
 
 # ── Install dependencies ──────────────────────────────────────────────────────
 apt-get update -q
@@ -42,22 +53,22 @@ fi
 
 # ── PHASE 1: HTTP-only config so certbot can complete the ACME challenge ──────
 # The HTTPS server block must NOT exist yet — nginx can't start with cert paths
-# that don't exist.  We add HTTPS in Phase 2 after the cert is on disk.
+# that don't exist. We add HTTPS in Phase 2 after the cert is on disk. Safe to
+# skip if a working HTTPS config for these domains is already live (re-runs).
 
 mkdir -p /var/www/certbot
 
-cat > /etc/nginx/sites-available/sms-backend <<HTTPONLY
+if [ ! -f "/etc/letsencrypt/live/${CERT_NAME}/fullchain.pem" ]; then
+    cat > /etc/nginx/sites-available/sms-backend <<HTTPONLY
 server {
     listen 80;
     listen [::]:80;
-    server_name $DOMAIN;
+    server_name ${ALL_DOMAINS_SPACED};
 
-    # ACME challenge directory (used by certbot to prove domain ownership).
     location /.well-known/acme-challenge/ {
         root /var/www/certbot;
     }
 
-    # Everything else: accept for now (will become a redirect after Phase 2).
     location / {
         proxy_pass http://127.0.0.1:3000;
         proxy_set_header Host \$host;
@@ -66,32 +77,39 @@ server {
 }
 HTTPONLY
 
-ln -sf /etc/nginx/sites-available/sms-backend /etc/nginx/sites-enabled/sms-backend
-rm -f /etc/nginx/sites-enabled/default
+    ln -sf /etc/nginx/sites-available/sms-backend /etc/nginx/sites-enabled/sms-backend
+    rm -f /etc/nginx/sites-enabled/default
 
-nginx -t
-systemctl reload nginx
-echo "==> Phase 1: HTTP nginx running."
+    nginx -t
+    systemctl reload nginx
+    echo "==> Phase 1: HTTP nginx running."
+else
+    echo "==> Phase 1: skipped — cert ${CERT_NAME} already exists, nginx must already be serving its ACME challenge path."
+fi
 
-# ── Obtain the certificate (webroot mode — does NOT modify nginx config) ──────
+# ── Obtain/expand the certificate (webroot mode — does NOT modify nginx config) ─
+# --expand: if CERT_NAME's cert already exists with a different domain set,
+# add the new domains to it instead of erroring. No-op for a brand new cert.
 certbot certonly \
     --webroot \
     --webroot-path /var/www/certbot \
-    -d "$DOMAIN" \
+    "${CERTBOT_DOMAIN_ARGS[@]}" \
+    --cert-name "$CERT_NAME" \
+    --expand \
     --non-interactive \
     --agree-tos \
     --email "$EMAIL"
 
-echo "==> Certificate obtained at /etc/letsencrypt/live/$DOMAIN/"
+echo "==> Certificate ready at /etc/letsencrypt/live/$CERT_NAME/ covering: ${ALL_DOMAINS_SPACED}"
 
 # ── PHASE 2: Full TLS nginx config ───────────────────────────────────────────
-sed -e "s/YOUR_DOMAIN/$DOMAIN/g" -e "s/ADMIN_IP/$ADMIN_IP/g" \
+sed -e "s/YOUR_DOMAINS/$ALL_DOMAINS_SPACED/g" -e "s/YOUR_CERT_NAME/$CERT_NAME/g" \
     "$REMOTE/nginx/sms-backend.conf" \
     > /etc/nginx/sites-available/sms-backend
 
 nginx -t
 systemctl reload nginx
-echo "==> Phase 2: HTTPS nginx active."
+echo "==> Phase 2: HTTPS nginx active for ${ALL_DOMAINS_SPACED}."
 
 # ── Enable auto-renewal ───────────────────────────────────────────────────────
 systemctl enable --now certbot.timer 2>/dev/null || \
@@ -108,10 +126,10 @@ fi
 echo ""
 echo "============================================================"
 echo "  TLS SETUP COMPLETE"
-echo "  Backend URL:  https://$DOMAIN"
+echo "  Reachable at: $(printf 'https://%s ' "${DOMAINS[@]}")"
 echo ""
 echo "  On each gateway phone:"
 echo "    Settings → ADMIN SETUP (PIN) → Backend URL"
-echo "    Change to: https://$DOMAIN"
+echo "    Change to whichever domain you're standardizing on."
 echo "    Tap 'Test Connection' to verify."
 echo "============================================================"
