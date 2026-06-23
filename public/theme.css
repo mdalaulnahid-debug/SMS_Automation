@@ -6,6 +6,10 @@
   --bg-panel-2: rgba(23, 37, 59, 0.98);
   --bg-panel-soft: rgba(18, 30, 49, 0.72);
   --bg-overlay: rgba(4, 10, 20, 0.72);
+  --bg-chrome-header: rgba(8, 17, 31, 0.88);
+  --bg-chrome-nav: rgba(8, 17, 31, 0.92);
+  --bg-chrome-sidebar: rgba(8, 17, 31, 0.55);
+  --kpi-tile-bg: linear-gradient(180deg, rgba(21, 33, 53, 0.95), rgba(14, 23, 39, 0.94));
   --text-primary: #ebf3ff;
   --text-secondary: #b2c0d9;
   --text-muted: #7f91af;
@@ -46,6 +50,10 @@
   --bg-panel-2: rgba(244, 248, 252, 0.98);
   --bg-panel-soft: rgba(244, 248, 252, 0.84);
   --bg-overlay: rgba(14, 24, 42, 0.24);
+  --bg-chrome-header: rgba(255, 255, 255, 0.88);
+  --bg-chrome-nav: rgba(255, 255, 255, 0.92);
+  --bg-chrome-sidebar: rgba(255, 255, 255, 0.55);
+  --kpi-tile-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(244, 248, 252, 0.94));
   --text-primary: #102038;
   --text-secondary: #41536d;
   --text-muted: #72839c;
@@ -181,7 +189,7 @@ code, .mono { font-family: var(--font-mono); }
   overflow: hidden;
   border-radius: var(--radius-md);
   padding: 16px;
-  background: linear-gradient(180deg, rgba(21, 33, 53, 0.95), rgba(14, 23, 39, 0.94));
+  background: var(--kpi-tile-bg);
   border: 1px solid var(--divider);
 }
 .kpi-tile::after {

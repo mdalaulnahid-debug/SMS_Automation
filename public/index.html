@@ -20,7 +20,7 @@
         width: 100%; max-width: 480px; height: var(--header-height);
         display: flex; align-items: center; justify-content: space-between;
         padding: 0 16px; z-index: 20;
-        background: rgba(8, 17, 31, 0.86); backdrop-filter: blur(18px);
+        background: var(--bg-chrome-header); backdrop-filter: blur(18px);
         border-bottom: 1px solid var(--divider);
       }
       .brand-row { display: flex; align-items: center; gap: 10px; }
@@ -95,7 +95,7 @@
       .bottom-nav {
         position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
         width: 100%; max-width: 480px; height: var(--nav-height); padding: 8px 12px 12px;
-        display: flex; gap: 8px; background: rgba(8, 17, 31, 0.92); backdrop-filter: blur(18px);
+        display: flex; gap: 8px; background: var(--bg-chrome-nav); backdrop-filter: blur(18px);
         border-top: 1px solid var(--divider); z-index: 20;
       }
       .nav-item {
@@ -134,7 +134,7 @@
         .ops-sidebar {
           display: block; position: sticky; top: var(--header-height);
           height: calc(100vh - var(--header-height)); padding: 20px 16px;
-          border-right: 1px solid var(--divider); background: rgba(8, 17, 31, 0.5);
+          border-right: 1px solid var(--divider); background: var(--bg-chrome-sidebar);
         }
         .ops-sidebar-item {
           width: 100%; display: flex; align-items: center; gap: 12px;

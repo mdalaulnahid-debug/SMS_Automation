@@ -33,7 +33,7 @@
       #admin-topbar {
         position: sticky; top: 0; z-index: 20;
         height: 72px; display: flex; align-items: center; justify-content: space-between;
-        padding: 0 20px; background: rgba(8, 17, 31, 0.88); backdrop-filter: blur(18px);
+        padding: 0 20px; background: var(--bg-chrome-header); backdrop-filter: blur(18px);
         border-bottom: 1px solid var(--divider);
       }
       .brand-row { display: flex; align-items: center; gap: 12px; }
@@ -48,7 +48,7 @@
       .admin-shell { display: grid; grid-template-columns: 248px minmax(0, 1fr); min-height: calc(100vh - 72px); }
       .admin-sidebar {
         position: sticky; top: 72px; height: calc(100vh - 72px); padding: 18px 14px;
-        border-right: 1px solid var(--divider); background: rgba(8, 17, 31, 0.55);
+        border-right: 1px solid var(--divider); background: var(--bg-chrome-sidebar);
       }
       .sidebar-head { padding: 0 8px 14px; }
       .sidebar-item {
