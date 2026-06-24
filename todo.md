@@ -4,6 +4,51 @@ Start with `progress_tracker.md` for the latest session handoff, test results, a
 
 ---
 
+## Todo — 2026-06-24: Enhanced Security & Admin Controls (IP/Device Tracking + Admin Messages)
+
+**Scope:** Prevent unauthorized access via shared credentials / Telegram Web hijacking + allow admins to post non-command messages (alerts, notices, rules) in the group.
+
+### Phase 1: IP & Device Identity Tracking (foundation)
+- [ ] Add IP address capture to every request (extract from Telegram message metadata or X-Forwarded-For header)
+- [ ] Add device fingerprinting (hash of user_agent + screen resolution + browser + timezone)
+- [ ] Store both in request record: `{ sourceIp, deviceId, deviceInfo: { userAgent, screenResolution, platform, timezone } }`
+- [ ] Persist to database (currently requests are in-memory)
+- [ ] Display in admin dashboard: show request detail view with IP + device + geolocation
+
+### Phase 2: Admin Message Bypass (group hygiene)
+- [ ] Add `isAdmin` boolean field to `authorizedUsers` in `config/telegram.json`
+- [ ] Modify `telegram-bridge/bridge.js` `planIntake()` to recognize `[ADMIN]` prefixed messages from admins
+- [ ] Admin messages bypass command validation (allow alerts, notices, rules in group without rejection)
+- [ ] Non-admin messages still enforced as command-only (current behavior)
+- [ ] Test: admins can post `[ADMIN] ⚠️ Maintenance 2-3 AM tomorrow` without it being flagged as unsupported command
+- [ ] Persist admin messages to database (audit trail)
+
+### Phase 3: Anomaly Detection & Alerting
+- [ ] Flag if same officer submits from 3+ different IPs within 1 hour (possible hijack or travel)
+- [ ] Flag if new IP seen for officer (first time from that country/ISP)
+- [ ] Flag if new device seen for officer (new fingerprint)
+- [ ] Display alerts in admin dashboard with recommendation to investigate
+- [ ] Optionally: auto-email admin when anomaly triggered
+
+### Phase 4: Geolocation & Device Reputation (high-security)
+- [ ] Integrate IP geolocation lookup (MaxMind GeoIP2 or similar) → country, city, ISP
+- [ ] Assign device reputation score: 0 (new/unknown) → 100 (trusted, long history)
+- [ ] New device (score 0) → auto-require manual supervisor approval before request is processed
+- [ ] Auto-disable officer account if 5+ requests from different IPs in <1 hour (brute-force hijack pattern)
+- [ ] Admin can manually override device score (mark device as trusted)
+
+### Phase 5: Admin Audit Log (compliance)
+- [ ] Log who posted what admin message (timestamp, message content, sender)
+- [ ] Log who approved/rejected requests and from which device/IP
+- [ ] Downloadable audit report: "All requests from IP 192.168.x.x in date range Y-Z"
+- [ ] Log all admin overrides (marking device as trusted, disabling account, etc.)
+
+**Why Option C:** Small but high-stakes system (police). Credential sharing is the biggest risk. IP/device tracking + anomaly alerting catches 80% of hijacking attempts. Admin messages reduce friction (no more "use email for alerts" workaround). Geolocation + device reputation adds friction but blocks automated attacks.
+
+**Risk if delayed:** Officers sharing credentials with colleagues (or colleagues borrowing devices) is likely *already happening*. Without auditing, you won't know. Auditing doesn't prevent it, but makes it detectable and reversible.
+
+---
+
 ## Done — 2026-06-23: Branding, desktop redesign, and light-mode fix
 
 Five-commit pass on the public web surfaces, all deployed and verified live:
