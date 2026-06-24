@@ -49,6 +49,51 @@ Start with `progress_tracker.md` for the latest session handoff, test results, a
 
 ---
 
+## Todo — 2026-06-24: Data Encryption at Rest (Optional, Recommended)
+
+**Problem:** If VPS is breached/hacked, attacker can read plaintext database, SMS replies, officer requests from disk. Encryption at rest stops this.
+
+**Current Status:** No encryption on Vultr VPS (checked 2026-06-24; LUKS not detected).
+
+### Phase 1: Add Encrypted Block Storage (Vultr) — RECOMMENDED
+- [ ] Create 50GB encrypted block storage in Vultr control panel (Singapore region)
+  - Cost: ~$5-10/month
+  - Encryption: AES-256, provider-managed
+- [ ] SSH into VPS and mount at `/var/lib/sms-data`
+- [ ] Migrate `/opt/sms-backend/data/` (database) to encrypted volume
+- [ ] Add persistent mount in `/etc/fstab`
+- [ ] Verify: `lsblk` shows encrypted volume; database still accessible
+- [ ] Backup current database before migration
+- [ ] Effort: ~1 hour; Risk: low (with backup)
+
+**Why:** Protects against disk theft, provider snooping, accidental data exposure. Single point of risk: Vultr retains master key (but they have no incentive to snoop).
+
+### Phase 2: Application-Level Encryption (Optional, High Security)
+- [ ] Add encryption functions to `src/database.js` (AES-256-GCM)
+- [ ] Identify sensitive fields to encrypt:
+  - `sms_reply_text` (operator responses with NID/MSISDN/location)
+  - `request_payload` (officer's original request)
+  - Do NOT encrypt: `requestId`, `timestamp`, `requesterName`, `requestType` (needed for indexing/filtering)
+- [ ] Generate encryption key (one-time, 64-char hex) via `openssl rand -hex 32`
+- [ ] Store key in `/opt/sms-backend/encryption.key` (chmod 600, not in git)
+- [ ] Load key at app startup from environment or file
+- [ ] Add `encrypt()` / `decrypt()` wrapper functions
+- [ ] Encrypt on INSERT, decrypt on SELECT
+- [ ] Test: verify data in SQLite is gibberish; app still reads correctly
+- [ ] Effort: 2-3 days; Risk: medium (key management complexity)
+
+**Why:** Protects against root-level attacker on VPS. Even if someone gets root access, they can't read encrypted SMS without the key. Two-layer defense: Vultr's disk encryption + app encryption.
+
+### Phase 3: Key Rotation & Backup (If Implementing Phase 2)
+- [ ] Design key rotation: keep old key for reading, new key for writing
+- [ ] Document backup procedure: encryption key stored encrypted offline (1Password, USB, etc.)
+- [ ] Document restore procedure: if VPS lost, restore with backup key
+- [ ] Quarterly: rotate key, re-encrypt historical data
+
+**Recommendation:** Start with Phase 1 (Vultr encrypted block storage) immediately — low effort, high impact. Phase 2 only if you handle very sensitive data and want maximum protection.
+
+---
+
 ## Todo — 2026-06-24: Add Login & Access Control (Public Ops Page + Admin Console)
 
 **Current problem:** Public ops page (`/`) is open to anyone — no authentication. Anyone with the URL can view system status, dashboard, etc. Admin console (`/admin`) has API key auth (password in localStorage) but no login page UI.
@@ -106,6 +151,213 @@ Start with `progress_tracker.md` for the latest session handoff, test results, a
 - Default admin account (first super-admin to log in) — needs careful setup to avoid lockout
 
 **Why:** Currently anyone with the URL is in. Login gate + approval workflow ensures only authorized officers access the system. Admin approval on first login adds an extra gate against credential sharing or unauthorized access.
+
+---
+
+## Todo — 2026-06-24: Prevent Insider Threats & Unauthorized Access Delegation
+
+**Problem:** Authorized officers (seniors) may:
+- Share credentials with juniors out of laziness ("just use my login")
+- Give juniors access without admin approval (bypass authorization)
+- Not understand security implications (lack technical knowledge)
+- Use one shared account for a whole team (audit trail is useless)
+
+**Goal:** Make unauthorized access **difficult** (not impossible, but flagged + auditable).
+
+### Layer 1: Technical Barriers
+
+#### 1a. Per-Officer Session Binding (Medium Difficulty)
+- [ ] Each login creates a session with device fingerprint
+- [ ] Session only works from same device/IP/browser (original session binding)
+- [ ] If someone tries to use the same token from a different phone/laptop/IP → **new login required**
+- [ ] Prevents: casual credential sharing ("use my Telegram ID from your phone")
+- [ ] Doesn't prevent: determined sharing (attacker logs in fresh from new device)
+- [ ] Effort: 1-2 days
+- [ ] False positives: officer moves between office/home/field → new login each time (friction)
+
+**Code sketch:**
+```javascript
+// Session includes device fingerprint
+const sessionToken = {
+  userId: '8914564310',
+  deviceId: hash(userAgent + screenRes + timezone),
+  issuedAt: Date.now(),
+  expiresAt: Date.now() + 8*60*60*1000
+};
+
+// On next request, verify:
+if (currentDeviceId !== sessionToken.deviceId) {
+  // Device changed → require fresh login
+  redirectToLogin();
+}
+```
+
+#### 1b. Request Signature (High Security, Friction)
+- [ ] Each request requires a fresh confirmation step
+- [ ] Officer taps "Approve" button in app with fingerprint/PIN before submit
+- [ ] Prevents: automated misuse (attacker can't script bulk requests)
+- [ ] Doesn't prevent: determined attacker who physically has the phone
+- [ ] Effort: 1 day (if using fingerprint auth)
+- [ ] Friction: HIGH (every request needs approval)
+
+#### 1c. Rate Limiting by Officer (Medium Difficulty)
+- [ ] Each officer has a daily quota (e.g., 50 requests/day, 10 requests/hour)
+- [ ] Quota resets daily (prevents bulk abuse)
+- [ ] Admin can adjust per officer (field officers get higher quota)
+- [ ] Effort: 2-3 hours
+- [ ] Friction: LOW if quotas are generous
+
+**Example:**
+```
+SI Nazmul (field) → 100 requests/day, 15/hour
+Junior Officer (desk) → 20 requests/day, 5/hour
+Admin → unlimited
+```
+
+---
+
+### Layer 2: Detection & Alerting (Catches Misuse)
+
+#### 2a. Anomaly Detection Dashboard
+- [ ] Supervisor dashboard: see all requests in real-time
+  - Who submitted it
+  - From which IP/device (use Phase 1 IP tracking)
+  - What they requested
+  - When
+- [ ] Flag suspicious patterns:
+  - **Bulk requests**: same officer, 20 requests in 5 minutes → alert
+  - **New device**: officer never seen from this IP/device before → alert
+  - **Off-hours**: request at 3 AM when officer normally sleeps → alert
+  - **Rapid location change**: request from India, then Bangladesh 5 min later → alert
+  - **Quota exceeded**: officer hit their daily limit → auto-block + alert
+- [ ] Supervisor action: **immediately revoke access** for suspicious officer
+- [ ] Effort: 2-3 days (requires dashboard UI + alert logic)
+- [ ] Impact: HIGH (detects most lazy access sharing)
+
+**Alert triggers:**
+```javascript
+const suspiciousPatterns = [
+  { pattern: 'bulk_requests', threshold: '>10 requests in 5 min' },
+  { pattern: 'new_device', threshold: 'device not seen before' },
+  { pattern: 'off_hours', threshold: 'request outside 6 AM - 10 PM' },
+  { pattern: 'location_jump', threshold: 'different country in <10 min' },
+  { pattern: 'quota_exceeded', threshold: 'officer daily limit hit' }
+];
+```
+
+#### 2b. Audit Log for Supervisors
+- [ ] Every request logged with full metadata:
+  - Officer name + ID
+  - Timestamp, IP, device, location
+  - Request type + payload
+  - Approval status (approved/rejected/pending)
+  - Who approved it (supervisor name)
+- [ ] Downloadable report: "All requests by SI Nazmul in June"
+- [ ] Downloadable report: "All requests from IP 203.195.x.x"
+- [ ] Historical view: supervisor can see patterns over weeks/months
+- [ ] Effort: 1-2 days (if database already stores this)
+- [ ] Impact: HIGH (makes misuse traceable; deters lazy sharing)
+
+---
+
+### Layer 3: Operational / Policy (Human Controls)
+
+#### 3a. No Shared Accounts
+- [ ] **Policy:** One officer = one account. No "team login."
+- [ ] **Enforcement:** Each junior must request their own access through admin
+- [ ] **Approval:** Supervisor approves juniors in writing (email + admin dashboard)
+- [ ] **Audit:** Admin logs who approved each junior
+- [ ] Effort: 0 (policy only)
+- [ ] Impact: HIGH (makes unauthorized access traceable to specific person)
+
+#### 3b. Quarterly Access Review
+- [ ] Every 3 months, supervisor reviews who has access
+- [ ] Check: Are all these people still assigned to this role?
+- [ ] Action: Disable inactive officers; approve new joiners
+- [ ] Effort: 1 hour per supervisor per quarter
+- [ ] Impact: MEDIUM (catches stale accounts)
+
+#### 3c. Access Termination on Transfer
+- [ ] When officer transfers to different unit, **immediately disable access**
+- [ ] Admin sends approval email to supervisor (confirm termination)
+- [ ] Officer logs out; can't access dashboard anymore
+- [ ] Effort: 5 min per termination (admin clicks "Disable")
+- [ ] Impact: HIGH (prevents former officers from misusing access)
+
+#### 3d. Officer Training (Awareness)
+- [ ] Email + poster: "Do not share your credentials with juniors. Each person must request their own access."
+- [ ] Explain: Unauthorized access is traceable; misuse penalties apply
+- [ ] Effort: 1 hour (write email + print poster)
+- [ ] Impact: MEDIUM (awareness alone doesn't stop determined sharing, but helps)
+
+---
+
+### Layer 4: Enforcement & Consequences
+
+#### 4a. Catch & Revoke
+- [ ] Supervisor spots suspicious pattern (bulk requests from new device)
+- [ ] Immediately revokes officer's access
+- [ ] Officer locked out; can't submit requests
+- [ ] Supervisor notifies officer: "Your access was disabled due to suspicious activity on 2026-06-24. Contact your commanding officer."
+- [ ] Effort: 5 min per incident
+- [ ] Impact: HIGH (immediate consequence for misuse)
+
+#### 4b. Incident Report
+- [ ] When access is revoked for misuse, admin generates incident report:
+  - Date / time
+  - Officer name
+  - Suspicious pattern detected
+  - Action taken (access revoked)
+- [ ] Report sent to commanding officer
+- [ ] Creates paper trail (compliance + deterrent)
+- [ ] Effort: 2-3 hours to build reporting feature
+- [ ] Impact: HIGH (formal consequences; deters future misuse)
+
+---
+
+## Recommended Rollout (Insider Threat Prevention)
+
+### Week 1: Detection
+- [ ] Add IP/device logging (Phase 1 from security roadmap)
+- [ ] Build anomaly detection (bulk requests, new device, off-hours)
+- [ ] Supervisor dashboard showing alerts
+- [ ] **Goal:** See where misuse is happening
+
+### Week 2: Policy
+- [ ] Announce: "No shared accounts. Each person requests their own access."
+- [ ] Quarterly access review (supervisor checklist)
+- [ ] Access termination process (disable on transfer)
+- [ ] **Goal:** Make unauthorized access harder
+
+### Week 3: Enforcement
+- [ ] Revoke access for suspicious officers
+- [ ] Generate incident reports
+- [ ] Notify commanding officers
+- [ ] **Goal:** Consequences for misuse
+
+### Week 4: Hardening (Optional)
+- [ ] Session device binding (if anomalies continue)
+- [ ] Rate limiting by officer (if bulk requests detected)
+- [ ] Request signature (fingerprint approval) if very high-security needs
+
+---
+
+## Summary: Layered Defense Against Insider Threats
+
+| Layer | What It Does | Cost | Effort | Impact |
+|-------|--------------|------|--------|--------|
+| **Technical Barriers** | Makes unauthorized access harder (session binding, rate limits) | Low | Medium | MEDIUM |
+| **Detection & Alerting** | Flags suspicious patterns in real-time | Low | Medium | HIGH |
+| **Audit Trail** | Makes misuse traceable to specific person | Free | Low | HIGH |
+| **Policy & Training** | Sets expectations; deters lazy sharing | Free | Low | MEDIUM |
+| **Enforcement** | Immediate consequences (revoke access) | Free | Low | HIGH |
+
+**The key insight:** You can't prevent someone determined to share credentials. But you *can* make it:
+1. **Detectable** (audit trail, anomaly alerts)
+2. **Traceable** (who did what, when, from where)
+3. **Consequential** (immediate access revocation)
+
+This deters 90% of casual misuse (lazy seniors sharing with juniors). The remaining 10% (determined attackers) requires additional hardening.
 
 ---
 
