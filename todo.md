@@ -49,6 +49,66 @@ Start with `progress_tracker.md` for the latest session handoff, test results, a
 
 ---
 
+## Todo — 2026-06-24: Add Login & Access Control (Public Ops Page + Admin Console)
+
+**Current problem:** Public ops page (`/`) is open to anyone — no authentication. Anyone with the URL can view system status, dashboard, etc. Admin console (`/admin`) has API key auth (password in localStorage) but no login page UI.
+
+**Scope:** Add proper login gates for both public ops page and admin console.
+
+### Public Ops Page Login (`/`)
+- [ ] Create `/login` page (before the current public ops dashboard)
+- [ ] Login methods (operator ID or username)
+  - Option A: Telegram ID (e.g., `8914564310`) — requires officers already have Telegram
+  - Option B: Username/email + password (new account system)
+  - Option C: Both (Telegram or username+password)
+- [ ] Validate against `authorizedUsers` list in `config/telegram.json`
+- [ ] Redirect unauthenticated users to `/login` (currently they land on `/`)
+- [ ] Store session in browser (JWT token or encrypted localStorage)
+- [ ] Add logout button in header
+- [ ] Display "Logged in as: [Officer Name]" in top-right
+- [ ] Session timeout after 8 hours of inactivity (auto-logout)
+
+### Admin Console Login (`/admin`)
+- [ ] Create dedicated `/admin/login` page (instead of inline API key input)
+- [ ] Admin enters API key or username/password
+- [ ] Validate against `adminApiKey` and new `adminUsers` list
+- [ ] Same session/token system as public login
+- [ ] Require admin approval workflow (optional but recommended):
+  - First-time admin login → email/SMS notification to super-admin
+  - Super-admin approves/denies in dashboard
+  - Only then can new admin access the console
+- [ ] Add audit log: "Admin [Name] logged in from [IP]" (use from Phase 1 IP tracking)
+
+### Optional Enhancements
+- [ ] MFA (multi-factor auth) for admin logins
+  - Admin enters password + 6-digit SMS code sent to registered phone
+  - Dramatically reduces risk of credential sharing
+- [ ] Login attempts logging:
+  - Log failed login attempts (brute-force detection)
+  - Auto-lock account after 5 failed attempts (unlock via admin or after 30 min)
+- [ ] Session device binding:
+  - Can't use same session from different device/IP (prevents token hijacking)
+
+### Files to Create/Modify
+- **New:** `public/login.html` — public ops login page
+- **New:** `public/admin-login.html` — admin login page
+- **Modify:** `public/index.html` — add session check + redirect to login if not authenticated
+- **Modify:** `public/admin.html` — add session check + redirect to admin-login if not authenticated
+- **Modify:** `public/app.js` — add login/logout handlers, session validation
+- **Modify:** `public/admin.js` — same
+- **New:** `src/auth-session.js` — centralized session management (create JWT, validate, expire)
+- **Modify:** `src/routes.js` or wherever auth endpoints live — add `/api/login`, `/api/logout`, `/api/validate-session`
+- **Modify:** `config/telegram.json` — add `adminUsers` list with admin approval status
+
+### Deployment Considerations
+- Update `progress_tracker.md` docs with new login URLs and default admin account setup
+- Add migration guide: existing officers need to "sign up" or get enrolled by admin
+- Default admin account (first super-admin to log in) — needs careful setup to avoid lockout
+
+**Why:** Currently anyone with the URL is in. Login gate + approval workflow ensures only authorized officers access the system. Admin approval on first login adds an extra gate against credential sharing or unauthorized access.
+
+---
+
 ## Done — 2026-06-23: Branding, desktop redesign, and light-mode fix
 
 Five-commit pass on the public web surfaces, all deployed and verified live:
