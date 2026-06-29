@@ -4,6 +4,32 @@ Start with `progress_tracker.md` for the latest session handoff, test results, a
 
 ---
 
+## 🔴 CRITICAL BUG — 2026-06-29: Late-Arriving SMS Replies Lost After Timeout
+
+**Problem:** REQ-20260629-0694-28U1 (MS-NID 01846234464, ROBI):
+- Accepted at 15:29:46
+- **Timed out and posted "TIMEOUT" to Telegram at 15:45:38**
+- **Operator replied AFTER timeout was posted**
+- ❌ Reply was **never received, never processed, never posted** to Telegram
+- Request still shows "WAITING OPERATOR REPLY" on dashboard (can't retry because system thinks no reply came)
+
+**Root cause:** When a request times out and "no reply" is posted to Telegram, **late-arriving SMS replies (from the operator, after the timeout) are being dropped or rejected** instead of being posted as a follow-up message.
+
+**Impact:** Officers see "TIMEOUT" in Telegram but when operator replies hours later (network delay, operator slow response), the reply is lost. System doesn't recover.
+
+**To fix:**
+- [ ] Allow requests in TIMEOUT status to still accept and post SMS replies
+- [ ] When a late reply arrives for a timed-out request, post it to Telegram as a follow-up message to the original request thread
+- [ ] Add logging: "late reply received for timed-out request X, posting as follow-up"
+- [ ] Test: timeout → timeout notification posted → operator replies 1 hour later → reply posted successfully
+
+**Files to check:**
+- `src/service.js` → `timeoutWaitingRequests()` (marks WAITING_OPERATOR_REPLY as TIMEOUT)
+- `telegram-bridge/bridge.js` → `handleIntake()` (rejects incoming SMS after timeout?)
+- `src/persistence.js` → request status transitions (check if TIMEOUT → WAITING_OPERATOR_REPLY is allowed)
+
+---
+
 ## Todo — 2026-06-24: Enhanced Security & Admin Controls (IP/Device Tracking + Admin Messages)
 
 **Scope:** Prevent unauthorized access via shared credentials / Telegram Web hijacking + allow admins to post non-command messages (alerts, notices, rules) in the group.
