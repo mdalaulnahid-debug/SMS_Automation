@@ -4,29 +4,35 @@ Start with `progress_tracker.md` for the latest session handoff, test results, a
 
 ---
 
-## 🔴 CRITICAL BUG — 2026-06-29: Late-Arriving SMS Replies Lost After Timeout
+## 🔴 CRITICAL BUG — 2026-06-29: SMS Reply Not Forwarded from Gateway Phone (ROBI)
 
-**Problem:** REQ-20260629-0694-28U1 (MS-NID 01846234464, ROBI):
-- Accepted at 15:29:46
+**Problem:** REQ-20260629-0694-28U1 (MS-NID 01846234464, sent to ROBI_PHONE_01):
+- Accepted at 15:29:46, SMS sent to ROBI gateway phone ✅
 - **Timed out and posted "TIMEOUT" to Telegram at 15:45:38**
-- **Operator replied AFTER timeout was posted**
-- ❌ Reply was **never received, never processed, never posted** to Telegram
-- Request still shows "WAITING OPERATOR REPLY" on dashboard (can't retry because system thinks no reply came)
+- **Operator replied to the SMS** (confirmed by user)
+- ❌ **Reply NEVER RECEIVED by backend** — no log entry, no processing, no posting
 
-**Root cause:** When a request times out and "no reply" is posted to Telegram, **late-arriving SMS replies (from the operator, after the timeout) are being dropped or rejected** instead of being posted as a follow-up message.
+**Critical finding:** OTHER timed-out requests DO accept and post late replies successfully:
+- REQ-0690-DM1J: timed out 14:38 → reply posted 15:06 (28 min later) ✅
+- REQ-0688-VIC4: timed out 12:50 → reply posted 15:22 (2.5+ HOURS later) ✅
+- REQ-0680-N94B: timed out 11:36 → reply posted 15:22 ✅
 
-**Impact:** Officers see "TIMEOUT" in Telegram but when operator replies hours later (network delay, operator slow response), the reply is lost. System doesn't recover.
+**So WHY NOT 0694?** The system CAN handle late replies. Possible causes:
+1. **ROBI phone didn't forward the SMS** to backend (phone communication issue)
+2. **Backend received SMS but rejected it** as unauthorized (watchdog rejection? But not logged)
+3. **Dispatch routing issue** — request dispatched to ROBI but reply parsing failed for this specific MS-NID
+4. **ROBI phone replied to wrong number** — operator replied but not to the gateway phone
 
-**To fix:**
-- [ ] Allow requests in TIMEOUT status to still accept and post SMS replies
-- [ ] When a late reply arrives for a timed-out request, post it to Telegram as a follow-up message to the original request thread
-- [ ] Add logging: "late reply received for timed-out request X, posting as follow-up"
-- [ ] Test: timeout → timeout notification posted → operator replies 1 hour later → reply posted successfully
+**To investigate:**
+- [ ] Check ROBI_PHONE_01 gateway logs for incoming SMS around 15:45-16:00 (did it receive the reply at all?)
+- [ ] Query dispatch record for REQ-20260629-0694-28U1: was it marked SENT to ROBI? What's dispatch status?
+- [ ] Check if watchdog silently dropped a reply from ROBI (add detailed logging of dropped SMS)
+- [ ] Verify operator actually sent SMS to correct ROBI phone number (not a typo)
 
 **Files to check:**
-- `src/service.js` → `timeoutWaitingRequests()` (marks WAITING_OPERATOR_REPLY as TIMEOUT)
-- `telegram-bridge/bridge.js` → `handleIntake()` (rejects incoming SMS after timeout?)
-- `src/persistence.js` → request status transitions (check if TIMEOUT → WAITING_OPERATOR_REPLY is allowed)
+- `src/smsGateway.js` → ROBI phone reply handling
+- `src/service.js` → dispatch routing for this request
+- `src/persistence.js` → dispatch status tracking
 
 ---
 
