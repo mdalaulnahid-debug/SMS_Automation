@@ -4,35 +4,39 @@ Start with `progress_tracker.md` for the latest session handoff, test results, a
 
 ---
 
-## 🔴 CRITICAL BUG — 2026-06-29: SMS Reply Not Forwarded from Gateway Phone (ROBI)
+## 🔴 CRITICAL BUG — 2026-06-29: Retried Request Reply Not Auto-Matched
 
-**Problem:** REQ-20260629-0694-28U1 (MS-NID 01846234464, sent to ROBI_PHONE_01):
-- Accepted at 15:29:46, SMS sent to ROBI gateway phone ✅
-- **Timed out and posted "TIMEOUT" to Telegram at 15:45:38**
-- **Operator replied to the SMS** (confirmed by user)
-- ❌ **Reply NEVER RECEIVED by backend** — no log entry, no processing, no posting
+**Problem:** REQ-20260629-0694-28U1 (MS-NID 01846234464, ROBI):
+- Created 15:29:46, sent to ROBI ✅
+- Timed out 15:45:38, TIMEOUT posted to Telegram ✅
+- **User manually retried** → request re-sent to ROBI
+- **Operator replied** (MSISDN 8801846234464, NID 4667103669, DoB 10/17/2004) ✅
+- ✅ **Reply received & stored in unmatched SMS inbox**
+- ❌ **Auto-matcher failed to link it to REQ-20260629-0694-28U1**
+- ❌ **Reply NOT posted to Telegram** (stuck in unmatched, requires manual matching)
 
-**Critical finding:** OTHER timed-out requests DO accept and post late replies successfully:
-- REQ-0690-DM1J: timed out 14:38 → reply posted 15:06 (28 min later) ✅
-- REQ-0688-VIC4: timed out 12:50 → reply posted 15:22 (2.5+ HOURS later) ✅
-- REQ-0680-N94B: timed out 11:36 → reply posted 15:22 ✅
+**Root Cause:** `findActiveRequestForGateway()` in `src/store.js` only checks these request statuses:
+- `WAITING_OPERATOR_REPLY`
+- `NEEDS_MANUAL_REVIEW`
+- `TIMEOUT` (within 1 hour)
 
-**So WHY NOT 0694?** The system CAN handle late replies. Possible causes:
-1. **ROBI phone didn't forward the SMS** to backend (phone communication issue)
-2. **Backend received SMS but rejected it** as unauthorized (watchdog rejection? But not logged)
-3. **Dispatch routing issue** — request dispatched to ROBI but reply parsing failed for this specific MS-NID
-4. **ROBI phone replied to wrong number** — operator replied but not to the gateway phone
+When a request is **retried**, its status is set to **QUEUED**, then dispatched. By the time the operator replies 47 minutes later, the request may have transitioned out of matchable statuses OR there's a dispatch timing mismatch.
 
-**To investigate:**
-- [ ] Check ROBI_PHONE_01 gateway logs for incoming SMS around 15:45-16:00 (did it receive the reply at all?)
-- [ ] Query dispatch record for REQ-20260629-0694-28U1: was it marked SENT to ROBI? What's dispatch status?
-- [ ] Check if watchdog silently dropped a reply from ROBI (add detailed logging of dropped SMS)
-- [ ] Verify operator actually sent SMS to correct ROBI phone number (not a typo)
+**Workaround (now):**
+- [ ] Open admin dashboard → find unmatched SMS (MSISDN 8801846234464)
+- [ ] View suggested candidates → REQ-20260629-0694-28U1 will rank highest
+- [ ] Click to manually match → auto-creates reply draft → post to Telegram
 
-**Files to check:**
-- `src/smsGateway.js` → ROBI phone reply handling
-- `src/service.js` → dispatch routing for this request
-- `src/persistence.js` → dispatch status tracking
+**Fix (required):**
+- [ ] Extend reply window for retried requests: when `retryRequest()` is called, flag the dispatch with metadata `{ isRetry: true, retryCount: 1 }`
+- [ ] Modify `findActiveRequestForGateway()` to extend TIMEOUT_WINDOW_MS (currently 1h) to **2 hours** for retried dispatches
+- [ ] Add audit log entry when a retried request's reply is matched (for audit trail showing "reply finally arrived 47min after retry was sent")
+- [ ] Test: retry a timed-out request, wait 90 minutes, verify operator reply still auto-matches
+
+**Files to modify:**
+- `src/service.js` line 545: `retryRequest()` → mark dispatch with `{ isRetry: true }`
+- `src/store.js` line ~570: `findActiveRequestForGateway()` → check for retried dispatch, extend window
+- `src/app.js`: add audit logging for late-matched replies
 
 ---
 

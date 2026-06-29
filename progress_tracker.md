@@ -1,6 +1,6 @@
 # Progress Tracker
 
-Last updated: **2026-06-23 — branding, desktop redesign, light-mode contrast fix**
+Last updated: **2026-06-29 — diagnosed retried-request reply auto-matching bug**
 
 ---
 
@@ -34,6 +34,40 @@ Use these Markdown files as the active continuity baseline:
 - `docs/training-and-matching-rules.md`
 - `docs/PHONE_GATEWAY_CONTRACT.md`
 - `android-gateway/README.md`
+
+---
+
+## Session Handoff (2026-06-29) — diagnosed retried-request reply auto-matching bug
+
+### What was diagnosed
+
+**Incident:** REQ-20260629-0694-28U1 (MS-NID 01846234464 to ROBI):
+- Request timed out at 15:45, TIMEOUT posted to Telegram
+- User manually retried request
+- Operator replied (MSISDN 8801846234464, NID 4667103669, DoB 10/17/2004)
+- ✅ Reply received and stored in unmatched SMS inbox
+- ❌ Auto-matcher failed to link it to the original request
+- ❌ Reply never posted to Telegram (requires manual matching in admin dashboard)
+
+**Root cause:** When `retryRequest()` is called, request status is set to `QUEUED`, then dispatched.
+`findActiveRequestForGateway()` only checks `WAITING_OPERATOR_REPLY`, `NEEDS_MANUAL_REVIEW`, and `TIMEOUT` (within 1 hour).
+If the request transitions to a non-matchable status before the operator's late reply arrives, the auto-matcher won't find it.
+
+**Workaround (immediate):** Manually match the reply in admin dashboard via `rankReplyCandidates()` + `correctMatch()`.
+
+**Fix (required):** Extend reply window for retried requests (currently 1h for TIMEOUT, should be 2h for retried). See `todo.md` for details.
+
+### Important files
+
+- `src/service.js` — `retryRequest()` function at line ~545
+- `src/store.js` — `findActiveRequestForGateway()` function (reply window logic)
+- `todo.md` — comprehensive bug write-up with fix checklist
+
+### Verified
+
+- Both bridge and backend processes running correctly
+- Reply matching system works for direct (non-retried) timed-out requests
+- Manual correction workflow (`rankReplyCandidates` + `correctMatch`) successfully re-matches orphaned replies
 
 ---
 
