@@ -4,7 +4,19 @@ Start with `progress_tracker.md` for the latest session handoff, test results, a
 
 ---
 
-## 🔴 CRITICAL BUG — 2026-06-29: Retried Request Reply Not Auto-Matched
+## ✅ RESOLVED — 2026-06-29: Retried Request Reply Not Auto-Matched
+
+Fixed in commit `0c4839b` ("Phase 0: Fix retried-request reply auto-matching bug"). Retried
+dispatches are now flagged `isRetry: true` with a `retryCount`, and
+`findActiveRequestForGateway()` extends the TIMEOUT match window to 2 hours for retried
+dispatches (was 1 hour for all). Late-matched retried replies are audit-logged
+(`RETRIED_REQUEST_LATE_REPLY_MATCHED`) with the delay and retry count. Original write-up kept
+below for incident history.
+
+<details>
+<summary>Original bug write-up (resolved)</summary>
+
+## CRITICAL BUG — 2026-06-29: Retried Request Reply Not Auto-Matched
 
 **Problem:** REQ-20260629-0694-28U1 (MS-NID 01846234464, ROBI):
 - Created 15:29:46, sent to ROBI ✅
@@ -37,6 +49,61 @@ When a request is **retried**, its status is set to **QUEUED**, then dispatched.
 - `src/service.js` line 545: `retryRequest()` → mark dispatch with `{ isRetry: true }`
 - `src/store.js` line ~570: `findActiveRequestForGateway()` → check for retried dispatch, extend window
 - `src/app.js`: add audit logging for late-matched replies
+
+</details>
+
+---
+
+## 🟡 IN PROGRESS — 2026-06-30: Phase 1 Login & MFA System (Officer/Admin Accounts)
+
+**Goal:** Replace the single shared admin API key with real per-person accounts (email +
+password + email-based MFA), so officer activity is attributable and super-admin credentials
+stay separate from regular admin/officer access.
+
+**Done (backend core, Phase 1.0):**
+- [x] `src/userAuth.js` — SQLite-backed user accounts (`data/auth.db`), scrypt password
+      hashing, email verification tokens (24h expiry), 6-digit MFA codes (10-min expiry),
+      8-hour sessions
+- [x] `src/mailer.js` — Gmail SMTP sender (`opsbarishal@gmail.com` via app password); falls
+      back to console-logging when unconfigured so tests never need real SMTP
+- [x] `config/mail.json` (gitignored) — Gmail credentials + super-admin bootstrap email/password
+      (mirrors the existing `config/auth.json` / `config/telegram.json` pattern, not dotenv)
+- [x] `src/config.js`: `loadMailConfig()` — env vars win over the file, same precedence as
+      `loadAuthConfig()`
+- [x] New routes in `src/app.js`: `POST /api/auth/register`, `GET /verify-email?token=`,
+      `POST /api/auth/login`, `POST /api/auth/mfa/verify`, `POST /api/auth/logout`,
+      `GET /api/auth/me`
+- [x] Super-admin bootstrap: on boot, if `config/mail.json` has `superAdminEmail` +
+      `superAdminPassword` and no account exists yet for that email, a verified `super_admin`
+      account is created automatically (no manual registration step needed for the founder
+      account)
+- [x] `test/userAuth.test.js` (6 new tests) + hardened `test/security.test.js` so neither
+      reads the real `config/mail.json` or sends live email during `node --test`
+- [x] Live SMTP smoke test confirmed: real email sent via `opsbarishal@gmail.com` app password,
+      delivered successfully
+- [x] Full suite: 148/148 passing
+
+**Email setup (done):**
+- Receiving: `support@opsbarishal.com` → Cloudflare Email Routing (free, DNS-level) →
+  `opsbarishal@gmail.com`
+- Sending: backend sends via Gmail SMTP authenticated as `opsbarishal@gmail.com` (app password
+  in `config/mail.json`) — `From:` currently shows `opsbarishal@gmail.com`, not
+  `support@opsbarishal.com` (the Gmail "Send mail as" alias path was abandoned — Cloudflare
+  Email Routing doesn't expose an authenticated outbound SMTP relay, which is what that flow
+  needed). Revisit later if a `support@opsbarishal.com` From address is wanted.
+
+**Remaining for Phase 1 to be usable:**
+- [ ] `config/mail.json` needs to be created directly on the VPS (gitignored, not deployed by
+      `scripts/deploy.sh` — see the script's bootstrap-check step)
+- [ ] `public/login.html` + `public/register.html` wired to the new `/api/auth/*` routes
+- [ ] Gate `public/index.html` (ops dashboard) and `public/admin.html` behind a valid session;
+      role check (`officer` vs `admin` vs `super_admin`) for admin-only pages/routes
+- [ ] Admin UI: list officer accounts, enable/disable, promote to admin (super-admin only)
+- [ ] Decide whether the legacy single `adminApiKey` (`config/auth.json`) is retired once the
+      new login system is live, or kept as a machine-to-machine fallback
+
+**Files:** `src/userAuth.js`, `src/mailer.js`, `src/config.js`, `src/app.js`,
+`config/mail.json` (gitignored), `test/userAuth.test.js`
 
 ---
 

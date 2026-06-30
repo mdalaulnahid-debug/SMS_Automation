@@ -44,7 +44,10 @@ function appWith(authConfig, gatewayConfig) {
   return createApp({
     dbPath: '',
     authConfig: { adminApiKey: '', requireGatewayAuth: false, denyUnknownRequesters: false, ...authConfig },
-    gatewayConfig: gatewayConfig || { GP: { secret: 'gp-secret', trustedSenders: ['12345'] } }
+    gatewayConfig: gatewayConfig || { GP: { secret: 'gp-secret', trustedSenders: ['12345'] } },
+    // Never let tests read the real config/mail.json (Gmail credentials) or send live email.
+    mailConfig: {},
+    bootstrapSuperAdmin: false
   });
 }
 

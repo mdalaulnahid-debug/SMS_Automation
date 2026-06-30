@@ -53,6 +53,13 @@ echo "==> Ensuring config/telegram.json exists on the VPS (first-time bootstrap 
 # the admin console) back to whatever stale state happens to be on this machine's disk.
 ssh "$VPS" "[ -f $REMOTE/config/telegram.json ]" || scp config/telegram.json "$VPS:$REMOTE/config/telegram.json"
 
+echo "==> Ensuring config/mail.json exists on the VPS (first-time bootstrap only)..."
+# Same reasoning as telegram.json above — never overwrite once present. This file holds the
+# Gmail SMTP app password + super-admin bootstrap credentials; it's gitignored and must be
+# created on the VPS by hand (ssh in, paste the JSON in scripts/run-backend.bat / set-admin-key.ps1
+# style) if it doesn't exist yet — this step only protects against accidental overwrite.
+ssh "$VPS" "[ -f $REMOTE/config/mail.json ]" || echo "  (config/mail.json missing on VPS — create it manually, see config/mail.json locally for the shape)"
+
 echo "==> Installing production dependencies..."
 ssh "$VPS" "cd $REMOTE && npm install --omit=dev --quiet"
 

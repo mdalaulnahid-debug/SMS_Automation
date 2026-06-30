@@ -15,9 +15,11 @@ const {
   DEFAULT_SEND_CONFIRMATION_GRACE_MS,
   DEFAULT_DUPLICATE_REQUEST_WINDOW_MS
 } = require('./service');
-const { loadGatewayConfig, loadAuthConfig, loadTelegramConfig } = require('./config');
+const { loadGatewayConfig, loadAuthConfig, loadTelegramConfig, loadMailConfig } = require('./config');
 const { isAdmin, isValidGateway } = require('./auth');
 const { getBackendUrls, getLanAddresses, getPreferredLanIp } = require('./network');
+const { UserAuthStore } = require('./userAuth');
+const mailer = require('./mailer');
 
 // Sliding-window per-requester rate limiter.
 // Admin API key requests are never rate-limited (id will be null/blank).
@@ -372,6 +374,41 @@ function createApp(options = {}) {
     json(res, 401, { error: 'Admin authentication required.' });
     return false;
   };
+
+  // User accounts / login (officers + admins) — separate from the legacy single admin API key.
+  const authDbPath = options.authDbPath !== undefined
+    ? options.authDbPath
+    : (process.env.AUTH_DB_PATH || join(__dirname, '..', 'data', 'auth.db'));
+  const userAuth = options.userAuth || new UserAuthStore(authDbPath);
+  const mailConfig = options.mailConfig || loadMailConfig();
+
+  // Bridge file-based mail config into process.env so mailer.js's transport (which reads
+  // GMAIL_USER/GMAIL_APP_PASSWORD/MAIL_FROM directly) picks it up without further plumbing.
+  if (mailConfig.gmailUser && !process.env.GMAIL_USER) process.env.GMAIL_USER = mailConfig.gmailUser;
+  if (mailConfig.gmailAppPassword && !process.env.GMAIL_APP_PASSWORD) process.env.GMAIL_APP_PASSWORD = mailConfig.gmailAppPassword;
+  if (mailConfig.gmailUser && !process.env.MAIL_FROM) process.env.MAIL_FROM = mailConfig.gmailUser;
+
+  // Super-admin bootstrap: create the founding super_admin account if none exists yet.
+  if (options.bootstrapSuperAdmin !== false && mailConfig.superAdminEmail && mailConfig.superAdminPassword) {
+    if (!userAuth.getUserByEmail(mailConfig.superAdminEmail)) {
+      userAuth.createVerifiedUser({
+        email: mailConfig.superAdminEmail,
+        password: mailConfig.superAdminPassword,
+        name: 'Super Admin',
+        role: 'super_admin'
+      });
+    }
+  }
+
+  function requireSession(req, res) {
+    const token = require('./auth').presentedToken(req);
+    const result = userAuth.validateSession(token);
+    if (!result) {
+      json(res, 401, { error: 'Login required.' });
+      return null;
+    }
+    return result;
+  }
 
   async function handle(req, res) {
     try {
@@ -897,13 +934,73 @@ function createApp(options = {}) {
         if (!requireAdmin(req, res)) return undefined;
         return json(res, 200, { timedOut: await service.timeoutWaitingRequests() });
       }
+      if (req.method === 'POST' && req.url === '/api/auth/register') {
+        const body = await readJson(req);
+        let result;
+        try {
+          result = userAuth.register({ email: body.email, password: body.password, name: body.name, phone: body.phone, role: 'officer' });
+        } catch (error) {
+          return json(res, 400, { error: error.message });
+        }
+        const baseUrl = process.env.PUBLIC_BASE_URL || `http://${req.headers.host}`;
+        const { subject, html, text } = mailer.verificationEmail(baseUrl, result.verifyToken);
+        await mailer.sendMail({ to: result.email, subject, html, text });
+        return json(res, 200, { ok: true, message: 'Registered. Check your email to verify your account.' });
+      }
+      if (req.method === 'GET' && req.url.startsWith('/verify-email')) {
+        const token = new URL(req.url, 'http://x').searchParams.get('token') || '';
+        try {
+          const user = userAuth.verifyEmail(token);
+          res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' });
+          return res.end(`<p>Email verified for ${user.email}. You can now log in.</p>`);
+        } catch (error) {
+          res.writeHead(400, { 'content-type': 'text/html; charset=utf-8' });
+          return res.end(`<p>${error.message}</p>`);
+        }
+      }
+      if (req.method === 'POST' && req.url === '/api/auth/login') {
+        const body = await readJson(req);
+        let result;
+        try {
+          result = userAuth.startLogin({ email: body.email, password: body.password });
+        } catch (error) {
+          return json(res, 401, { error: error.message });
+        }
+        const { subject, html, text } = mailer.mfaCodeEmail(result.mfaCode);
+        await mailer.sendMail({ to: result.email, subject, html, text });
+        return json(res, 200, { ok: true, pendingToken: result.pendingToken, message: 'Enter the code emailed to you.' });
+      }
+      if (req.method === 'POST' && req.url === '/api/auth/mfa/verify') {
+        const body = await readJson(req);
+        try {
+          const result = userAuth.completeLogin({
+            pendingToken: body.pendingToken,
+            code: body.code,
+            ip: req.socket?.remoteAddress,
+            userAgent: req.headers['user-agent']
+          });
+          return json(res, 200, result);
+        } catch (error) {
+          return json(res, 401, { error: error.message });
+        }
+      }
+      if (req.method === 'POST' && req.url === '/api/auth/logout') {
+        const token = require('./auth').presentedToken(req);
+        userAuth.logout(token);
+        return json(res, 200, { ok: true });
+      }
+      if (req.method === 'GET' && req.url === '/api/auth/me') {
+        const session = requireSession(req, res);
+        if (!session) return undefined;
+        return json(res, 200, { user: session.user });
+      }
       return json(res, 404, { error: 'Not found' });
     } catch (error) {
       return json(res, 500, { error: error.message });
     }
   }
 
-  return { handle, store, queue, smsGateway, service, recover };
+  return { handle, store, queue, smsGateway, service, recover, userAuth };
 }
 
 // APK download: accept any registered gateway's secret (not tied to a specific gatewayId).

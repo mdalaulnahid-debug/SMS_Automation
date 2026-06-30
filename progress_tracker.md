@@ -1,20 +1,25 @@
 # Progress Tracker
 
-Last updated: **2026-06-29 — diagnosed retried-request reply auto-matching bug**
+Last updated: **2026-06-30 — Phase 1.0 login/MFA backend core implemented**
 
 ---
 
 ## Current Stage
 
-Production backend flow remains live. Most recent work was front-end/asset
-only (insignia branding, desktop layout, light-mode fix) — see `todo.md`'s
-top entry for the full five-commit breakdown
-(`2f1a0c5`, `df996d1`, `8a5278d`, `cee612f`, `edfcd59`). Verified: VPS file
-hashes match git HEAD byte-for-byte after the final deploy; both pm2
-processes online; 142 tests pass.
+Phase 0 (retried-request reply auto-matching bug) is fixed and deployed
+(`0c4839b`). Phase 1.0 (officer/admin login backend) is implemented and
+tested locally but **not yet deployed to the VPS** — see Session Handoff
+below before continuing. 148 tests pass locally.
 
-**Open item**: `support@opsbarishal.com` is listed on the public Contact
-tab but is not yet a live mailbox — create it before officers rely on it.
+**Open item (resolved this session)**: `support@opsbarishal.com` is now a
+live forwarding address — Cloudflare Email Routing forwards it to
+`opsbarishal@gmail.com`, which sends outbound mail via Gmail SMTP (app
+password, confirmed working with a live test send).
+
+**Open item (new)**: `config/mail.json` (Gmail app password + super-admin
+bootstrap credentials) is gitignored by design and must be created by hand
+directly on the VPS before deploying this session's auth code — it will
+NOT arrive via `scripts/deploy.sh` or `git pull`.
 
 Earlier this session: group auth was too restrictive — adding a user to
 `authorizedUsers` (for private-DM gating) had closed the group to all
@@ -34,6 +39,85 @@ Use these Markdown files as the active continuity baseline:
 - `docs/training-and-matching-rules.md`
 - `docs/PHONE_GATEWAY_CONTRACT.md`
 - `android-gateway/README.md`
+
+---
+
+## Session Handoff (2026-06-30) — Phase 1.0 login/MFA backend core
+
+### What was built
+
+Backend foundation for replacing the single shared admin API key with real
+per-person accounts:
+
+- `src/userAuth.js` — `UserAuthStore` class, own SQLite file (`data/auth.db`,
+  separate from `data/automation.db`). Tables: `auth_users`, `auth_sessions`.
+  Password hashing via `node:crypto` scrypt (no bcrypt dependency). Flow:
+  `register()` → `verifyEmail(token)` → `startLogin()` (password check, issues
+  6-digit MFA code + `pendingToken`) → `completeLogin()` (code check, issues
+  8h session token) → `validateSession()` / `logout()`.
+- `src/mailer.js` — Gmail SMTP via `nodemailer` (new dependency). Reads
+  `GMAIL_USER`/`GMAIL_APP_PASSWORD`/`MAIL_FROM` from `process.env`; logs to
+  console instead of sending if unset (keeps `node --test` offline-safe).
+- `config/mail.json` (gitignored, same pattern as `config/auth.json` —
+  **not** dotenv, to match this repo's existing config convention) holds
+  `gmailUser`, `gmailAppPassword`, `superAdminEmail`, `superAdminPassword`.
+  `src/config.js` adds `loadMailConfig()` (env vars win over file).
+- `src/app.js`: on `createApp()`, `loadMailConfig()` bridges
+  `gmailUser`/`gmailAppPassword` into `process.env` for the mailer, and — if
+  `superAdminEmail`/`superAdminPassword` are set and no account exists yet for
+  that email — auto-creates a verified `super_admin` account (no manual
+  registration needed for the founder account, `mdalaulnahid@gmail.com`).
+  New routes: `POST /api/auth/register`, `GET /verify-email?token=`,
+  `POST /api/auth/login`, `POST /api/auth/mfa/verify`, `POST /api/auth/logout`,
+  `GET /api/auth/me`.
+
+### Email infrastructure decided + confirmed working this session
+
+- **Receiving**: `support@opsbarishal.com` → **Cloudflare Email Routing**
+  (free, DNS-level, domain is already on Cloudflare) → forwards to
+  `opsbarishal@gmail.com`. SendGrid was tried first for this but abandoned —
+  phone verification kept failing during signup ("too many attempts").
+- **Sending**: backend authenticates as `opsbarishal@gmail.com` via a Gmail
+  **app password** (requires 2-Step Verification on that Gmail account first).
+  `From:` currently shows `opsbarishal@gmail.com`, not
+  `support@opsbarishal.com` — the Gmail "Send mail as" custom-SMTP alias path
+  was a dead end (Cloudflare Email Routing has no authenticated outbound SMTP
+  relay to point Gmail at). Revisit with a domain-verified sender (SendGrid/
+  Resend) later if a `support@` From address is wanted.
+- Live smoke test: a real email was sent through `opsbarishal@gmail.com`'s
+  app password and confirmed delivered.
+
+### Verified
+
+- `node --test`: **148/148 passing** (was 142; +6 new in `test/userAuth.test.js`).
+- `test/security.test.js` and `test/userAuth.test.js`'s `appWith()` helpers
+  now explicitly pass `mailConfig: {}` / a nonexistent `SMS_MAIL_CONFIG` path
+  — without this, `createApp()` would read the real (gitignored)
+  `config/mail.json` during test runs and could trigger live Gmail sends.
+  This was caught and fixed before committing.
+- `config/mail.json` confirmed gitignored (`.gitignore` updated) — will not
+  be committed or pushed.
+
+### Not yet done (see `todo.md`'s Phase 1 entry)
+
+- `config/mail.json` must be created **by hand directly on the VPS** —
+  `scripts/deploy.sh` deliberately will not overwrite/create it (same
+  bootstrap-once pattern as `config/telegram.json`).
+- No login/register HTML pages yet — `/api/auth/*` routes exist but nothing
+  in `public/` calls them yet.
+- `public/index.html` / `public/admin.html` are not session-gated yet — the
+  legacy `adminApiKey` single-key auth (`config/auth.json`) is still what
+  actually protects the admin API today.
+
+### Important files
+
+- `src/userAuth.js`, `src/mailer.js`, `src/config.js` (`loadMailConfig`),
+  `src/app.js` (new `/api/auth/*` routes + super-admin bootstrap)
+- `config/mail.json` (gitignored — exists locally and must be replicated to
+  the VPS manually)
+- `test/userAuth.test.js` (new), `test/security.test.js` (hardened)
+- `scripts/deploy.sh` (added a bootstrap-check echo for `config/mail.json`,
+  same shape as the existing `config/telegram.json` check)
 
 ---
 

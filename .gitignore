@@ -3,6 +3,7 @@ node_modules/
 config/gateways.json
 config/telegram.json
 config/auth.json
+config/mail.json
 data/*.db
 data/*.db-wal
 data/*.db-shm
