@@ -552,8 +552,10 @@ class AutomationStore {
     // a 1-hour window — handles the case where the gateway phone was offline during the
     // reply window (WiFi/mobile transition), WorkManager retried after the timeout fired,
     // and the reply would otherwise be silently dropped as unmatched.
+    // For retried requests, extend the window to 2 hours to account for delayed operator replies.
     const LATE_WINDOW_MS = 6 * 60 * 60 * 1000;   // 6h for WAITING / NEEDS_MANUAL_REVIEW
     const TIMEOUT_WINDOW_MS = 60 * 60 * 1000;     // 1h for TIMEOUT (offline-phone recovery)
+    const RETRY_TIMEOUT_WINDOW_MS = 2 * 60 * 60 * 1000; // 2h for retried requests (late operator replies)
     const now = Date.now();
     const lateThreshold = now - LATE_WINDOW_MS;
     const timeoutThreshold = now - TIMEOUT_WINDOW_MS;
@@ -561,7 +563,11 @@ class AutomationStore {
     const pending = this.listRequests()
       .filter((request) => {
         if (request.status === STATUSES.TIMEOUT) {
-          return new Date(request.createdAt).getTime() > timeoutThreshold;
+          const createdTime = new Date(request.createdAt).getTime();
+          // Check if this request has a retried dispatch
+          const isRetried = (request.dispatches || []).some((d) => d.isRetry);
+          const windowThreshold = isRetried ? now - RETRY_TIMEOUT_WINDOW_MS : timeoutThreshold;
+          return createdTime > windowThreshold;
         }
         return [STATUSES.WAITING_OPERATOR_REPLY, STATUSES.NEEDS_MANUAL_REVIEW].includes(request.status)
           && new Date(request.createdAt).getTime() > lateThreshold;

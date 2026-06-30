@@ -275,6 +275,15 @@ class AutomationService {
       } else {
         matchedRequest = matchResult;
         analysis = analyzeOperatorReply({ request: matchedRequest, messageBody: input.body });
+        // Audit late-matched retried request replies (after timeout, still matched via extended window)
+        const isRetried = (matchedRequest.dispatches || []).some((d) => d.isRetry);
+        if (isRetried && matchedRequest.status === STATUSES.TIMEOUT) {
+          const delayMinutes = Math.round((Date.now() - new Date(matchedRequest.createdAt).getTime()) / 60000);
+          this.store.audit('system', 'RETRIED_REQUEST_LATE_REPLY_MATCHED', matchedRequest.requestId, {
+            delayMinutes,
+            retryCount: (matchedRequest.dispatches || []).filter((d) => d.isRetry).length
+          });
+        }
       }
     }
 
@@ -664,6 +673,7 @@ class AutomationService {
       throw new Error(`Request ${requestId} cannot be retried (current: ${request.status}).`);
     }
     // Reset dispatches to QUEUED so they re-enter the per-operator pipeline.
+    // Mark them as retried so late-arriving replies (after timeout) can still match within 2h window.
     for (const dispatch of request.dispatches || []) {
       if (TERMINAL_DISPATCH_STATUSES.includes(dispatch.status)) {
         dispatch.status = DISPATCH_STATUSES.QUEUED;
@@ -671,6 +681,8 @@ class AutomationService {
         dispatch.inboxId = null;
         dispatch.sentAt = null;
         dispatch.repliedAt = null;
+        dispatch.isRetry = true;
+        dispatch.retryCount = (dispatch.retryCount || 0) + 1;
         if (this.store.persistence) this.store.persistence.upsertDispatch(dispatch);
       }
     }
@@ -678,7 +690,7 @@ class AutomationService {
     request.completedAt = null;
     request.failedReason = null;
     this.store.updateRequestStatus(requestId, STATUSES.QUEUED);
-    this.store.audit('admin', 'REQUEST_RETRIED', requestId);
+    this.store.audit('admin', 'REQUEST_RETRIED', requestId, { retryCount: request.dispatches?.filter((d) => d.isRetry).length || 0 });
     this.queue.enqueueExisting(request);
     await Promise.all(request.targetOperators.map((op) => this.smsGateway.dispatchNext(op)));
     return this.store.getRequest(requestId);
