@@ -66,6 +66,18 @@ document.querySelectorAll('.nav-item, .ops-sidebar-item').forEach((button) => {
   button.addEventListener('click', () => selectTab(button.dataset.tab));
 });
 
+function selectSettingsGroup(group) {
+  document.querySelectorAll('.settings-nav-item').forEach((item) => {
+    const isMatch = item.dataset.group === group;
+    item.classList.toggle('active', isMatch);
+    if (isMatch) item.setAttribute('aria-current', 'page');
+    else item.removeAttribute('aria-current');
+  });
+  document.querySelectorAll('.settings-group').forEach((panel) => {
+    panel.classList.toggle('active', panel.dataset.groupPanel === group);
+  });
+}
+
 (function restoreTab() {
   const saved = localStorage.getItem('opsTab');
   if (!saved) return;
@@ -75,7 +87,7 @@ document.querySelectorAll('.nav-item, .ops-sidebar-item').forEach((button) => {
 function updateAdminVisibility() {
   const unlocked = isAdminUnlocked();
   document.querySelectorAll('.admin-only').forEach((element) => {
-    element.style.display = unlocked ? 'block' : 'none';
+    element.hidden = !unlocked;
   });
   const apiKeyStatus = document.getElementById('apiKeyStatus');
   const key = localStorage.getItem('adminApiKey');
@@ -164,16 +176,60 @@ function renderAttentionGrid(overview) {
     </div>`).join('');
 }
 
-function renderOpsActivity(events) {
-  document.getElementById('opsActivity').innerHTML = events.slice(0, 6).map((event) => `
-    <div class="timeline-item">
-      <div class="timeline-marker ${event.severity === 'critical' ? 'danger' : event.severity === 'warning' ? 'warning' : event.severity === 'success' ? 'success' : ''}"></div>
-      <div>
-        <div class="timeline-title">${esc(event.title)}</div>
-        <div class="timeline-meta">${esc(event.summary || '')}${event.operator ? ` · ${esc(event.operator)}` : ''}</div>
-      </div>
-      <div class="timeline-time">${relativeTime(event.occurredAt)}</div>
-    </div>`).join('') || '<div class="empty">No recent activity.</div>';
+const ECG_PATH_D = 'M0 20 L40 20 L48 8 L56 32 L64 4 L72 20 L110 20 L118 12 L126 28 L134 20 L180 20';
+
+function gatewayState(operator) {
+  if (operator.state === 'MOCK') return 'delayed';
+  if (operator.online) return 'online';
+  const lastSeenMs = operator.lastSeenAt ? new Date(operator.lastSeenAt).getTime() : 0;
+  const silentForMs = Date.now() - lastSeenMs;
+  if (lastSeenMs && silentForMs < 30 * 60 * 1000) return 'delayed';
+  return 'offline';
+}
+
+function renderHomeGateways(operators) {
+  const labels = { online: 'Online', delayed: 'Delayed', offline: 'Offline' };
+  document.getElementById('homeGateways').innerHTML = operators.map((operator) => {
+    const state = gatewayState(operator);
+    return `
+    <div class="gateway-card state-${state}">
+      <div class="gateway-name">${esc(operator.operatorName)}</div>
+      <svg class="gateway-ecg" viewBox="0 0 180 40" preserveAspectRatio="none" aria-hidden="true">
+        <path d="${ECG_PATH_D}" />
+      </svg>
+      <div class="gateway-status-row"><span class="gateway-status-dot"></span>${labels[state]}</div>
+      <div class="gateway-meta">${relativeTime(operator.lastSeenAt)}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderHomeSummary(overview) {
+  const alerts = overview.alerts || {};
+  document.getElementById('homeSummary').innerHTML = `
+    <div class="summary-item"><div class="summary-value">${overview.stats?.todayRequests || 0}</div><div class="summary-label">Today</div></div>
+    <div class="summary-item"><div class="summary-value ${alerts.pendingApprovals ? 'warning' : ''}">${alerts.pendingApprovals || 0}</div><div class="summary-label">Needs Review</div></div>
+    <div class="summary-item"><div class="summary-value ${alerts.failedRequests ? 'danger' : ''}">${alerts.failedRequests || 0}</div><div class="summary-label">Failed</div></div>`;
+}
+
+function renderHomeTicker(events) {
+  const latest = (events || [])[0];
+  const ticker = document.getElementById('homeTicker');
+  if (!latest) {
+    ticker.innerHTML = '';
+    return;
+  }
+  ticker.innerHTML = `<span class="material-symbols-outlined">bolt</span>${esc(latest.title)}${latest.operator ? ` · ${esc(latest.operator)}` : ''} · ${relativeTime(latest.occurredAt)}`;
+}
+
+function renderHomeMinimal(overview) {
+  const alerts = overview.alerts || {};
+  const headline = document.getElementById('homeHeadline');
+  headline.textContent = overview.posture?.summary || 'Monitoring nominal';
+  headline.classList.toggle('warning', Boolean(alerts.total));
+  document.getElementById('homeTimestamp').textContent = `Updated ${relativeTime(overview.generatedAt)}`;
+  renderHomeGateways(overview.operators || []);
+  renderHomeSummary(overview);
+  renderHomeTicker(overview.activity || []);
 }
 
 function renderActivitySummary() {
@@ -199,8 +255,8 @@ function renderActivityFeed() {
     return haystack.includes(activeSearch);
   });
 
-  document.getElementById('activityFeed').innerHTML = filtered.map((event) => `
-    <div class="timeline-item row-accent ${event.severity === 'critical' ? 'danger' : event.severity === 'warning' ? 'warning' : event.severity === 'success' ? 'success' : 'info'}">
+  document.getElementById('activityFeed').innerHTML = filtered.map((event, i) => `
+    <div class="timeline-item timeline-in row-accent ${event.severity === 'critical' ? 'danger' : event.severity === 'warning' ? 'warning' : event.severity === 'success' ? 'success' : 'info'}" style="animation-delay:${Math.min(i, 10) * 30}ms">
       <div class="timeline-marker ${event.severity === 'critical' ? 'danger' : event.severity === 'warning' ? 'warning' : event.severity === 'success' ? 'success' : ''}"></div>
       <div>
         <div class="timeline-title">${esc(event.title)}</div>
@@ -225,10 +281,10 @@ async function refreshOps() {
     const activityData = await activityRes.json();
     opsActivity = activityData.activity || [];
 
+    renderHomeMinimal(opsOverview);
     renderPosture(opsOverview);
     renderOperatorStrip(opsOverview.operators || []);
     renderAttentionGrid(opsOverview);
-    renderOpsActivity(opsOverview.activity || []);
     renderActivityFeed();
     document.getElementById('lastRefresh')?.remove();
   } catch (error) {

@@ -30,8 +30,10 @@
       .brand-title { font-size: 20px; font-weight: 800; letter-spacing: -0.03em; }
       .brand-sub { color: var(--text-muted); font-size: 12px; }
       main { padding: calc(var(--header-height) + 12px) 14px calc(var(--nav-height) + 14px); }
+      [hidden] { display: none !important; }
       .tab-panel { display: none; }
-      .tab-panel.active { display: block; }
+      .tab-panel.active { display: block; animation: panel-fade-in 0.2s ease; }
+      @keyframes panel-fade-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
       .ops-stack { display: grid; gap: 14px; }
       .posture-banner { padding: 18px; border-radius: 20px; }
       .posture-top { display: flex; justify-content: space-between; align-items: start; gap: 12px; }
@@ -67,6 +69,8 @@
       .search-wrap .material-symbols-outlined {
         position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 20px;
       }
+      .filter-chip { transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s ease; }
+      .filter-chip:hover { transform: translateY(-1px); }
       .filter-chip.active { background: var(--accent-bg); border-color: var(--accent-border); color: var(--accent); }
       .summary-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
       .summary-item { padding: 12px; border-radius: 14px; background: var(--bg-panel); border: 1px solid var(--divider); }
@@ -102,7 +106,9 @@
         flex: 1; border: 1px solid var(--divider); border-radius: 16px; background: var(--bg-panel);
         color: var(--text-muted); display: flex; flex-direction: column; align-items: center; justify-content: center;
         gap: 4px; cursor: pointer;
+        transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
       }
+      .nav-item:active { transform: scale(0.96); }
       .nav-item.active { color: var(--accent); border-color: var(--accent-border); background: var(--accent-bg); }
       .nav-item span:last-child { font-size: 11px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; }
 
@@ -115,6 +121,108 @@
       .desktop-shell { display: block; }
       .ops-sidebar { display: none; }
       .about-content, .help-content, .contact-content { display: grid; gap: 16px; }
+
+      /* ── Activity tab: monitoring console layout ── */
+      .monitor-rail, .monitor-console { display: grid; gap: 14px; align-content: start; }
+      .timeline-item {
+        transition: background 0.18s ease, transform 0.18s ease;
+      }
+      .timeline-item:hover { transform: translateY(-1px); background: rgba(255, 255, 255, 0.02); }
+      .timeline-item.timeline-in { animation: timeline-in-anim 0.25s ease both; }
+      @keyframes timeline-in-anim { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+      @media (min-width: 900px) {
+        .monitor-shell { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 20px; align-items: start; }
+        .monitor-rail { position: sticky; top: calc(var(--header-height) + 28px); }
+        .monitor-rail .operator-strip { grid-template-columns: 1fr; }
+        .monitor-rail .attention-grid { grid-template-columns: repeat(2, 1fr); }
+      }
+
+      /* ── Settings tab: grouped side panel ── */
+      .settings-groups { display: grid; gap: 14px; }
+      .settings-nav { display: none; }
+
+      @media (min-width: 900px) {
+        .settings-shell { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 20px; align-items: start; }
+        .settings-nav {
+          display: flex; flex-direction: column; gap: 6px;
+          position: sticky; top: calc(var(--header-height) + 28px);
+        }
+        .settings-nav-item {
+          display: flex; align-items: center; gap: 12px;
+          padding: 12px 14px; border: 1px solid transparent; border-radius: 14px;
+          background: transparent; color: var(--text-secondary); cursor: pointer; text-align: left;
+          font: inherit; font-weight: 800; font-size: 13px;
+          transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+        }
+        .settings-nav-item:hover { transform: translateX(2px); color: var(--text-primary); }
+        .settings-nav-item.active { background: var(--accent-bg); border-color: var(--accent-border); color: var(--accent); }
+        .settings-group { display: none; }
+        .settings-group.active { display: block; animation: panel-fade-in 0.2s ease; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .tab-panel.active, .settings-group.active, .timeline-item.timeline-in { animation: none !important; }
+        .timeline-item, .ops-sidebar-item, .nav-item, .filter-chip, .settings-nav-item { transition: none !important; }
+      }
+
+      /* ── Minimal Home tab ── */
+      .home-minimal { display: grid; gap: 28px; padding: 20px 4px 4px; }
+      .home-header-line { text-align: center; }
+      .home-eyebrow { color: var(--text-muted); font-size: 11px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; }
+      .home-headline { margin-top: 10px; font-size: 22px; font-weight: 800; letter-spacing: -0.03em; }
+      .home-headline.warning { color: var(--warning); }
+      .home-sub { margin-top: 6px; color: var(--text-muted); font-size: 12.5px; }
+
+      .telegram-cta {
+        display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        margin: 4px auto 0; padding: 13px 22px; border-radius: 999px;
+        background: var(--accent-bg); border: 1px solid var(--accent-border); color: var(--accent);
+        font-weight: 800; font-size: 13px; text-decoration: none; width: fit-content;
+      }
+      .telegram-cta:active { transform: scale(0.98); }
+
+      .gateway-row { display: grid; grid-template-columns: 1fr; gap: 14px; }
+      .gateway-card {
+        border-radius: 20px; background: var(--bg-panel); border: 1px solid var(--divider);
+        padding: 18px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center;
+      }
+      .gateway-name { font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-secondary); }
+      .gateway-ecg { width: 100%; max-width: 180px; height: 40px; }
+      .gateway-ecg path {
+        fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
+        stroke-dasharray: 300; animation: ecg-travel 2.2s linear infinite;
+      }
+      .gateway-card.state-online .gateway-ecg path { stroke: var(--success); }
+      .gateway-card.state-delayed .gateway-ecg path { stroke: var(--warning); animation-duration: 4s; opacity: 0.85; }
+      .gateway-card.state-offline .gateway-ecg path { stroke: var(--danger); animation: none; stroke-dashoffset: 0; opacity: 0.55; }
+      @keyframes ecg-travel { to { stroke-dashoffset: -300; } }
+      @media (prefers-reduced-motion: reduce) {
+        .gateway-ecg path { animation: none !important; stroke-dashoffset: 0 !important; }
+      }
+      .gateway-status-row { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 800; }
+      .gateway-status-dot { width: 8px; height: 8px; border-radius: 999px; }
+      .state-online .gateway-status-row { color: var(--success); }
+      .state-online .gateway-status-dot { background: var(--success); }
+      .state-delayed .gateway-status-row { color: var(--warning); }
+      .state-delayed .gateway-status-dot { background: var(--warning); }
+      .state-offline .gateway-status-row { color: var(--danger); }
+      .state-offline .gateway-status-dot { background: var(--danger); }
+      .gateway-meta { color: var(--text-muted); font-size: 11px; }
+
+      .home-summary-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+      .home-ticker {
+        display: flex; align-items: center; gap: 8px; justify-content: center;
+        color: var(--text-muted); font-size: 12px; padding: 4px;
+      }
+      .home-ticker .material-symbols-outlined { font-size: 16px; }
+      .home-footer-link { text-align: center; }
+      .home-footer-link a { color: var(--text-muted); font-size: 12px; font-weight: 700; text-decoration: none; border-bottom: 1px dashed var(--divider); padding-bottom: 2px; }
+
+      @media (min-width: 900px) {
+        .home-minimal { max-width: 720px; margin: 0 auto; padding-top: 24px; }
+        .gateway-row { grid-template-columns: repeat(3, 1fr); }
+      }
       .prose-block { line-height: 1.6; color: var(--text-secondary); }
       .prose-block strong { color: var(--text-primary); }
       .command-table { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -141,7 +249,9 @@
           padding: 12px 14px; border: 1px solid transparent; border-radius: 14px;
           background: transparent; color: var(--text-secondary); cursor: pointer; text-align: left;
           font: inherit; font-weight: 800; font-size: 13px;
+          transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
         }
+        .ops-sidebar-item:hover { transform: translateX(2px); color: var(--text-primary); }
         .ops-sidebar-item + .ops-sidebar-item { margin-top: 6px; }
         .ops-sidebar-item.active { background: var(--accent-bg); border-color: var(--accent-border); color: var(--accent); }
         .ops-sidebar-divider { height: 1px; background: var(--divider); margin: 12px 4px; }
@@ -193,111 +303,145 @@
 
     <main id="main-content">
       <section id="panel-home" class="tab-panel active">
-        <div class="ops-stack">
-          <section id="opsPosture" class="posture-banner glass-panel status-strip"></section>
-          <section class="data-surface">
-            <div class="surface-header">
-              <div>
-                <div class="surface-title">Fleet Status</div>
-                <div class="surface-subtitle">Live posture by operator</div>
-              </div>
-            </div>
-            <div class="operator-strip" id="operatorStrip" style="padding:16px"></div>
-          </section>
-          <section class="data-surface">
-            <div class="surface-header">
-              <div>
-                <div class="surface-title">Needs Attention</div>
-                <div class="surface-subtitle">Pending approvals, failures, and exception load</div>
-              </div>
-            </div>
-            <div class="attention-grid" id="attentionGrid" style="padding:16px"></div>
-          </section>
-          <section class="data-surface">
-            <div class="surface-header">
-              <div>
-                <div class="surface-title">Recent Activity</div>
-                <div class="surface-subtitle">Operator replies, dispatches, and alerts</div>
-              </div>
-            </div>
-            <div id="opsActivity" class="activity-list" style="padding:16px"></div>
-          </section>
+        <div class="home-minimal">
+          <div class="home-header-line">
+            <div class="home-eyebrow">Live Status</div>
+            <div class="home-headline" id="homeHeadline">Checking systems…</div>
+            <div class="home-sub" id="homeTimestamp"></div>
+          </div>
+
+          <a class="telegram-cta" href="https://t.me/sms_automation_bd_bot" target="_blank" rel="noopener">
+            <span class="material-symbols-outlined">send</span>
+            Message the bot on Telegram
+          </a>
+
+          <div class="gateway-row" id="homeGateways"></div>
+
+          <div class="home-summary-strip" id="homeSummary"></div>
+
+          <div class="home-ticker" id="homeTicker"></div>
+
+          <div class="home-footer-link">
+            <a href="#" onclick="openActivityTab();return false;">View full activity overview →</a>
+          </div>
         </div>
       </section>
 
       <section id="panel-activity" class="tab-panel">
-        <div class="ops-stack">
-          <section class="data-surface">
-            <div class="surface-header">
-              <div>
-                <div class="surface-title">Activity Console</div>
-                <div class="surface-subtitle">Searchable event stream with severity filters</div>
+        <div class="monitor-shell">
+          <div class="monitor-rail">
+            <section id="opsPosture" class="posture-banner glass-panel status-strip"></section>
+            <section class="data-surface">
+              <div class="surface-header">
+                <div>
+                  <div class="surface-title">Fleet Status</div>
+                  <div class="surface-subtitle">Live posture by operator</div>
+                </div>
               </div>
-            </div>
-            <div class="table-toolbar" style="display:grid;gap:10px">
-              <div class="search-wrap">
-                <span class="material-symbols-outlined">search</span>
-                <input id="activitySearch" type="text" placeholder="Search events, requests, senders, operators…" />
+              <div class="operator-strip" id="operatorStrip" style="padding:16px"></div>
+            </section>
+            <section class="data-surface">
+              <div class="surface-header">
+                <div>
+                  <div class="surface-title">Needs Attention</div>
+                  <div class="surface-subtitle">Pending approvals, failures, and exception load</div>
+                </div>
               </div>
-              <div class="filter-row" id="activityFilters">
-                <button class="filter-chip active" data-filter="all">All</button>
-                <button class="filter-chip" data-filter="critical">Critical</button>
-                <button class="filter-chip" data-filter="warning">Warnings</button>
-                <button class="filter-chip" data-filter="success">Success</button>
-                <button class="filter-chip" data-filter="info">Info</button>
+              <div class="attention-grid" id="attentionGrid" style="padding:16px"></div>
+            </section>
+          </div>
+          <div class="monitor-console">
+            <section class="data-surface">
+              <div class="surface-header">
+                <div>
+                  <div class="surface-title">Activity Console</div>
+                  <div class="surface-subtitle">Live event stream — searchable and filterable by severity</div>
+                </div>
               </div>
-              <div class="summary-strip" id="activitySummary"></div>
-            </div>
-            <div id="activityFeed" class="timeline" style="padding:16px"></div>
-          </section>
+              <div class="table-toolbar" style="display:grid;gap:10px">
+                <div class="search-wrap">
+                  <span class="material-symbols-outlined">search</span>
+                  <input id="activitySearch" type="text" placeholder="Search events, requests, senders, operators…" />
+                </div>
+                <div class="filter-row" id="activityFilters">
+                  <button class="filter-chip active" data-filter="all">All</button>
+                  <button class="filter-chip" data-filter="critical">Critical</button>
+                  <button class="filter-chip" data-filter="warning">Warnings</button>
+                  <button class="filter-chip" data-filter="success">Success</button>
+                  <button class="filter-chip" data-filter="info">Info</button>
+                </div>
+                <div class="summary-strip" id="activitySummary"></div>
+              </div>
+              <div id="activityFeed" class="timeline" style="padding:16px"></div>
+            </section>
+          </div>
         </div>
       </section>
 
       <section id="panel-settings" class="tab-panel">
-        <div class="settings-cluster">
-          <section class="setting-panel">
-            <div class="setting-row">
-              <div>
-                <div class="setting-title">Session theme</div>
-                <div class="setting-note">Keep this surface readable in vehicles, offices, and field conditions.</div>
-              </div>
-              <label class="setting-pill">
-                <input id="themeToggle" type="checkbox" class="visually-hidden" onchange="toggleThemeCheckbox(this)" />
-                Dark
-              </label>
-            </div>
-          </section>
+        <div class="settings-shell">
+          <nav class="settings-nav" aria-label="Settings sections">
+            <button class="settings-nav-item active" data-group="general" onclick="selectSettingsGroup('general')">
+              <span class="material-symbols-outlined">tune</span><span>General</span>
+            </button>
+            <button class="settings-nav-item" data-group="access" onclick="selectSettingsGroup('access')">
+              <span class="material-symbols-outlined">key</span><span>Access</span>
+            </button>
+            <button class="settings-nav-item admin-only" data-group="provisioning" hidden onclick="selectSettingsGroup('provisioning')">
+              <span class="material-symbols-outlined">qr_code_2</span><span>Provisioning</span>
+            </button>
+          </nav>
 
-          <section class="setting-panel">
-            <div class="setting-row">
-              <div>
-                <div class="setting-title">Backend connection</div>
-                <div class="setting-note" id="backendUrlDisplay"></div>
-              </div>
-              <span class="setting-pill">Ops link</span>
-            </div>
-          </section>
+          <div class="settings-groups">
+            <div class="settings-group active" data-group-panel="general">
+              <div class="settings-cluster">
+                <section class="setting-panel">
+                  <div class="setting-row">
+                    <div>
+                      <div class="setting-title">Session theme</div>
+                      <div class="setting-note">Keep this surface readable in vehicles, offices, and field conditions.</div>
+                    </div>
+                    <label class="setting-pill">
+                      <input id="themeToggle" type="checkbox" class="visually-hidden" onchange="toggleThemeCheckbox(this)" />
+                      Dark
+                    </label>
+                  </div>
+                </section>
 
-          <section class="setting-panel admin-access">
-            <div class="setting-row">
-              <div>
-                <div class="setting-title">Escalation access</div>
-                <div class="setting-note">Supervisor and compliance actions stay in the admin command center.</div>
+                <section class="setting-panel">
+                  <div class="setting-row">
+                    <div>
+                      <div class="setting-title">Backend connection</div>
+                      <div class="setting-note" id="backendUrlDisplay"></div>
+                    </div>
+                    <span class="setting-pill">Ops link</span>
+                  </div>
+                </section>
               </div>
-              <a href="/admin" class="quick-actions primary-link">Open admin</a>
             </div>
-            <input id="settingsApiKey" class="input-field" type="password" placeholder="Paste admin API key to unlock local admin widgets" autocomplete="off" />
-            <div class="setting-note" id="apiKeyStatus">Not set</div>
-          </section>
 
-          <section class="setting-panel admin-only" id="adminToolsPanel" style="display:none">
-            <div class="setting-title">Restricted tools</div>
-            <div class="setting-note">These remain available, but intentionally demoted from the normal operations path.</div>
-            <div class="details-shell">
-              <details class="command-fold">
-                <summary><span>Provision gateway</span><span class="material-symbols-outlined">qr_code_2</span></summary>
-                <div class="fold-body">
-                  <div class="fold-grid">
+            <div class="settings-group" data-group-panel="access">
+              <div class="settings-cluster">
+                <section class="setting-panel admin-access">
+                  <div class="setting-row">
+                    <div>
+                      <div class="setting-title">Escalation access</div>
+                      <div class="setting-note">Supervisor and compliance actions stay in the admin command center.</div>
+                    </div>
+                    <a href="/admin" class="quick-actions primary-link">Open admin</a>
+                  </div>
+                  <input id="settingsApiKey" class="input-field" type="password" placeholder="Paste admin API key to unlock local admin widgets" autocomplete="off" />
+                  <div class="setting-note" id="apiKeyStatus">Not set</div>
+                </section>
+              </div>
+            </div>
+
+            <div class="settings-group admin-only" id="adminToolsPanel" data-group-panel="provisioning" hidden>
+              <div class="settings-cluster">
+                <section class="setting-panel">
+                  <div class="setting-title">Provision gateway</div>
+                  <div class="setting-note">Generate a QR payload to onboard a gateway device. These remain available, but intentionally demoted from the normal operations path.</div>
+                  <div class="fold-grid" style="margin-top:14px">
                     <label>Gateway ID<select id="provGwId" class="select-field"><option>GP_PHONE_01</option><option>ROBI_PHONE_01</option><option>BANGLALINK_PHONE_01</option></select></label>
                     <label>Backend URL<input id="provUrl" class="input-field" type="url" /></label>
                     <label>Admin PIN<input id="provPin" class="input-field" type="password" autocomplete="new-password" /></label>
@@ -309,10 +453,10 @@
                       <button class="btn-secondary" onclick="copyProvPayload('#provResult button')">Copy payload</button>
                     </div>
                   </div>
-                </div>
-              </details>
+                </section>
+              </div>
             </div>
-          </section>
+          </div>
         </div>
       </section>
 
