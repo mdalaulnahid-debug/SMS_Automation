@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Register · SMS Automation</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/police-insignia.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/theme.css" />
+    <style>
+      body { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+      .gate-shell { width: min(400px, 100%); padding: 32px; border-radius: 24px; }
+      .brand-row { display: flex; align-items: center; gap: 12px; margin-bottom: 28px; }
+      .brand-logo { width: 40px; height: 40px; object-fit: contain; flex-shrink: 0; }
+      .brand-title { font-size: 16px; font-weight: 800; }
+      .brand-sub { color: var(--text-muted); font-size: 12px; margin-top: 2px; }
+      .gate-heading { font-size: 26px; font-weight: 800; letter-spacing: -0.04em; }
+      .gate-sub { margin-top: 8px; color: var(--text-secondary); line-height: 1.5; font-size: 13px; }
+      .form-group { margin-top: 16px; display: grid; gap: 6px; }
+      .form-label { font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+      .form-hint { font-size: 11px; color: var(--text-muted); }
+      .form-actions { margin-top: 20px; display: grid; gap: 10px; }
+      .error-msg { margin-top: 12px; padding: 10px 14px; border-radius: 12px; background: var(--danger-bg); color: var(--danger); font-size: 13px; border: 1px solid rgba(255,109,127,0.18); display: none; }
+      .footer-link { margin-top: 18px; text-align: center; font-size: 13px; color: var(--text-secondary); }
+      .footer-link a { color: var(--accent); text-decoration: none; font-weight: 700; }
+      .done-panel { text-align: center; padding: 8px 0; }
+      .done-icon { font-size: 52px; line-height: 1; }
+      .done-title { margin-top: 16px; font-size: 22px; font-weight: 800; letter-spacing: -0.03em; }
+      .done-note { margin-top: 10px; color: var(--text-secondary); line-height: 1.6; font-size: 13px; }
+      .btn-loading { opacity: 0.7; pointer-events: none; }
+    </style>
+  </head>
+  <body>
+    <div class="gate-shell glass-panel">
+      <div class="brand-row">
+        <img class="brand-logo" src="/assets/police-insignia.svg" alt="Bangladesh Police" />
+        <div>
+          <div class="brand-title">SMS Automation</div>
+          <div class="brand-sub">LIC Barishal</div>
+        </div>
+      </div>
+
+      <!-- Registration form -->
+      <div id="stepForm">
+        <div class="gate-heading">Create account</div>
+        <div class="gate-sub">Your account will be reviewed by an admin before access is granted.</div>
+        <form id="regForm" onsubmit="submitRegister(event)">
+          <div class="form-group">
+            <label class="form-label" for="regName">Full name</label>
+            <input id="regName" class="input-field" type="text" autocomplete="name" required placeholder="SI Ahmed" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="regEmail">Email</label>
+            <input id="regEmail" class="input-field" type="email" autocomplete="email" required placeholder="officer@example.com" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="regPassword">Password</label>
+            <input id="regPassword" class="input-field" type="password" autocomplete="new-password" required minlength="10" placeholder="••••••••" />
+            <div class="form-hint">At least 10 characters.</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="regConfirm">Confirm password</label>
+            <input id="regConfirm" class="input-field" type="password" autocomplete="new-password" required placeholder="••••••••" />
+          </div>
+          <div id="regError" class="error-msg"></div>
+          <div class="form-actions">
+            <button id="regBtn" class="btn-primary" type="submit">Create account</button>
+          </div>
+        </form>
+        <div class="footer-link">Already have an account? <a href="/login.html">Sign in</a></div>
+      </div>
+
+      <!-- Success state -->
+      <div id="stepDone" style="display:none">
+        <div class="done-panel">
+          <div class="done-icon">✉️</div>
+          <div class="done-title">Check your email</div>
+          <div class="done-note">
+            A verification link was sent to <strong id="doneEmail"></strong>.
+            Click it to activate your account, then sign in.
+          </div>
+        </div>
+        <div class="footer-link" style="margin-top:28px"><a href="/login.html">Go to sign in →</a></div>
+      </div>
+    </div>
+
+    <script>
+      'use strict';
+
+      async function submitRegister(event) {
+        event.preventDefault();
+        const btn = document.getElementById('regBtn');
+        const errorEl = document.getElementById('regError');
+        errorEl.style.display = 'none';
+
+        const password = document.getElementById('regPassword').value;
+        const confirm = document.getElementById('regConfirm').value;
+        if (password !== confirm) {
+          errorEl.textContent = 'Passwords do not match.';
+          errorEl.style.display = 'block';
+          return;
+        }
+
+        const email = document.getElementById('regEmail').value.trim();
+        btn.classList.add('btn-loading');
+        btn.textContent = 'Creating account…';
+        try {
+          const res = await fetch('/api/auth/register', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({
+              name: document.getElementById('regName').value.trim(),
+              email,
+              password
+            })
+          });
+          const data = await res.json();
+          if (!res.ok) {
+            errorEl.textContent = data.error || 'Registration failed.';
+            errorEl.style.display = 'block';
+            return;
+          }
+          document.getElementById('doneEmail').textContent = email;
+          document.getElementById('stepForm').style.display = 'none';
+          document.getElementById('stepDone').style.display = 'block';
+        } catch (_) {
+          errorEl.textContent = 'Network error — check your connection.';
+          errorEl.style.display = 'block';
+        } finally {
+          btn.classList.remove('btn-loading');
+          btn.textContent = 'Create account';
+        }
+      }
+    </script>
+  </body>
+</html>

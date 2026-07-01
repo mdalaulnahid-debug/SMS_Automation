@@ -129,7 +129,7 @@ test('full HTTP register/verify/login/mfa/me/logout flow', async () => {
 
   const user = app.userAuth.getUserByEmail('officer@example.com');
   const verify = await call(app, { method: 'GET', url: `/verify-email?token=${user.verify_token}` });
-  assert.equal(verify.status, 200);
+  assert.equal(verify.status, 302); // redirects to /login.html?verified=1
 
   const login = await call(app, {
     method: 'POST',

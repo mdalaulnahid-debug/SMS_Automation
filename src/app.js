@@ -443,6 +443,12 @@ function createApp(options = {}) {
       if (req.method === 'GET' && req.url === '/admin') {
         return serveFile(res, 'admin.html', 'text/html; charset=utf-8');
       }
+      if (req.method === 'GET' && req.url === '/login.html') {
+        return serveFile(res, 'login.html', 'text/html; charset=utf-8');
+      }
+      if (req.method === 'GET' && req.url === '/register.html') {
+        return serveFile(res, 'register.html', 'text/html; charset=utf-8');
+      }
       if (req.method === 'GET' && req.url === '/admin.js') {
         return serveFile(res, 'admin.js', 'text/javascript; charset=utf-8');
       }
@@ -950,12 +956,12 @@ function createApp(options = {}) {
       if (req.method === 'GET' && req.url.startsWith('/verify-email')) {
         const token = new URL(req.url, 'http://x').searchParams.get('token') || '';
         try {
-          const user = userAuth.verifyEmail(token);
-          res.writeHead(200, { 'content-type': 'text/html; charset=utf-8' });
-          return res.end(`<p>Email verified for ${user.email}. You can now log in.</p>`);
+          userAuth.verifyEmail(token);
+          res.writeHead(302, { location: '/login.html?verified=1' });
+          return res.end();
         } catch (error) {
           res.writeHead(400, { 'content-type': 'text/html; charset=utf-8' });
-          return res.end(`<p>${error.message}</p>`);
+          return res.end(`<!doctype html><html><head><meta charset="utf-8"><title>Verification failed</title></head><body style="font-family:sans-serif;padding:40px;color:#ccc;background:#08111f"><p style="color:#ff6d7f">${error.message}</p><p><a href="/login.html" style="color:#c7cbd4">Go to sign in</a></p></body></html>`);
         }
       }
       if (req.method === 'POST' && req.url === '/api/auth/login') {
