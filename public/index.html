@@ -123,7 +123,8 @@
       .about-content, .help-content, .contact-content { display: grid; gap: 16px; }
 
       /* ── Activity tab: monitoring console layout ── */
-      .monitor-rail, .monitor-console { display: grid; gap: 14px; align-content: start; }
+      .monitor-rail, .monitor-console { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; align-content: start; min-width: 0; }
+      .monitor-rail .kpi-grid { grid-template-columns: 1fr; }
       .timeline-item {
         transition: background 0.18s ease, transform 0.18s ease;
       }
@@ -139,7 +140,7 @@
       }
 
       /* ── Settings tab: grouped side panel ── */
-      .settings-groups { display: grid; gap: 14px; }
+      .settings-groups { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; min-width: 0; }
       .settings-nav { display: none; }
 
       @media (min-width: 900px) {
