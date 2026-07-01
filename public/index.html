@@ -124,7 +124,7 @@
 
       /* ── Activity tab: monitoring console layout ── */
       .monitor-rail, .monitor-console { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; align-content: start; min-width: 0; }
-      .monitor-rail .kpi-grid { grid-template-columns: 1fr; }
+      .monitor-rail .kpi-grid { grid-template-columns: minmax(0, 1fr); }
       .timeline-item {
         transition: background 0.18s ease, transform 0.18s ease;
       }
@@ -135,8 +135,8 @@
       @media (min-width: 900px) {
         .monitor-shell { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 20px; align-items: start; }
         .monitor-rail { position: sticky; top: calc(var(--header-height) + 28px); }
-        .monitor-rail .operator-strip { grid-template-columns: 1fr; }
-        .monitor-rail .attention-grid { grid-template-columns: repeat(2, 1fr); }
+        .monitor-rail .operator-strip { grid-template-columns: minmax(0, 1fr); }
+        .monitor-rail .attention-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       }
 
       /* ── Settings tab: grouped side panel ── */
