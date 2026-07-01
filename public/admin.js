@@ -11,6 +11,126 @@ let selectedRequestId = null;
 let selectedUnmatchedId = null;
 let selectedRejectedIndex = null;
 
+let reqTypeFilter = '';
+let reqStatusFilter = '';
+let reqOperatorFilter = '';
+let reqUserFilter = '';
+let reqChannelFilter = '';
+let reqDateFilter = '';
+let filterUserSearchTerm = '';
+
+const REQ_STATUS_GROUPS = {
+  review: ['NEEDS_MANUAL_REVIEW', 'APPROVED_FOR_POST', 'APPROVED_FOR_EDIT'],
+  live: ['QUEUED', 'WAITING_OPERATOR_REPLY', 'DISPATCHING'],
+  done: ['COMPLETED', 'POSTED', 'REPLY_RECEIVED', 'REPLY_POSTED'],
+  failed: ['FAILED', 'TIMEOUT']
+};
+const REQ_STATUS_LABELS = { review: 'Needs Review', live: 'In Progress', done: 'Completed', failed: 'Failed' };
+const REQ_DATE_LABELS = { today: 'Today', week: 'Last 7 days', month: 'Last 30 days' };
+
+function withinDateRange(iso, range) {
+  if (!iso) return false;
+  const created = new Date(iso);
+  const now = new Date();
+  if (range === 'today') return created.toDateString() === now.toDateString();
+  if (range === 'week') return now - created < 7 * 86_400_000;
+  if (range === 'month') return now - created < 30 * 86_400_000;
+  return true;
+}
+
+// excludeGroup lets us compute "how many results would this option leave" (faceted counts)
+// without that group's own selection narrowing itself out of the count.
+function requestMatchesFilters(request, reply, excludeGroup) {
+  const search = document.getElementById('requestSearch').value.trim().toLowerCase();
+  if (search) {
+    const haystack = `${request.requestId} ${request.requesterName} ${request.payload} ${request.requestType} ${reply?.replyText || ''}`.toLowerCase();
+    if (!haystack.includes(search)) return false;
+  }
+  if (excludeGroup !== 'user' && reqUserFilter && request.requesterName !== reqUserFilter) return false;
+  if (excludeGroup !== 'type' && reqTypeFilter && request.requestType !== reqTypeFilter) return false;
+  if (excludeGroup !== 'status' && reqStatusFilter) {
+    const allowed = REQ_STATUS_GROUPS[reqStatusFilter] || [];
+    if (!allowed.includes(request.status)) return false;
+  }
+  if (excludeGroup !== 'operator' && reqOperatorFilter) {
+    const operators = (request.dispatches || []).map(d => d.operator);
+    if (!operators.includes(reqOperatorFilter)) return false;
+  }
+  if (excludeGroup !== 'channel' && reqChannelFilter && (request.channel || 'manual') !== reqChannelFilter) return false;
+  if (excludeGroup !== 'date' && reqDateFilter && !withinDateRange(request.createdAt, reqDateFilter)) return false;
+  return true;
+}
+
+function activeFilterCount() {
+  return [reqUserFilter, reqTypeFilter, reqStatusFilter, reqOperatorFilter, reqChannelFilter, reqDateFilter].filter(Boolean).length;
+}
+
+function facetCount(excludeGroup, matcher) {
+  return mergedRequestRows().filter(({ request, reply }) => requestMatchesFilters(request, reply, excludeGroup) && matcher(request)).length;
+}
+
+function renderFilterOptionList(containerId, options, activeValue, groupName) {
+  const container = document.getElementById(containerId);
+  if (!options.length) {
+    container.innerHTML = '<div class="filter-option-empty">No values yet</div>';
+    return;
+  }
+  container.innerHTML = options.map(opt => `
+    <button type="button" class="filter-option ${activeValue === opt.value ? 'active' : ''}" data-filter-group="${groupName}" data-filter-value="${esc(opt.value)}">
+      <span>${esc(opt.label)}</span>
+      <span class="filter-option-count">${opt.count}</span>
+    </button>`).join('');
+}
+
+function renderFilterDrawer() {
+  const types = [...new Set(requestsData.map(r => r.requestType).filter(Boolean))].sort();
+  renderFilterOptionList('filterTypeList', [
+    { value: '', label: 'All types', count: facetCount('type', () => true) },
+    ...types.map(t => ({ value: t, label: t, count: facetCount('type', r => r.requestType === t) }))
+  ], reqTypeFilter, 'type');
+
+  const users = [...new Set(requestsData.map(r => r.requesterName).filter(Boolean))].sort();
+  const visibleUsers = filterUserSearchTerm ? users.filter(u => u.toLowerCase().includes(filterUserSearchTerm)) : users;
+  renderFilterOptionList('filterUserList', [
+    ...(filterUserSearchTerm ? [] : [{ value: '', label: 'All requesters', count: facetCount('user', () => true) }]),
+    ...visibleUsers.map(u => ({ value: u, label: u, count: facetCount('user', r => r.requesterName === u) }))
+  ], reqUserFilter, 'user');
+
+  renderFilterOptionList('filterStatusList', [
+    { value: '', label: 'All statuses', count: facetCount('status', () => true) },
+    ...Object.keys(REQ_STATUS_GROUPS).map(key => ({
+      value: key, label: REQ_STATUS_LABELS[key],
+      count: facetCount('status', r => REQ_STATUS_GROUPS[key].includes(r.status))
+    }))
+  ], reqStatusFilter, 'status');
+
+  const operators = [...new Set(requestsData.flatMap(r => (r.dispatches || []).map(d => d.operator)).filter(Boolean))].sort();
+  renderFilterOptionList('filterOperatorList', [
+    { value: '', label: 'All operators', count: facetCount('operator', () => true) },
+    ...operators.map(o => ({ value: o, label: o, count: facetCount('operator', r => (r.dispatches || []).some(d => d.operator === o)) }))
+  ], reqOperatorFilter, 'operator');
+
+  const channels = [...new Set(requestsData.map(r => r.channel || 'manual'))].sort();
+  renderFilterOptionList('filterChannelList', [
+    { value: '', label: 'All channels', count: facetCount('channel', () => true) },
+    ...channels.map(c => ({ value: c, label: c.charAt(0).toUpperCase() + c.slice(1), count: facetCount('channel', r => (r.channel || 'manual') === c) }))
+  ], reqChannelFilter, 'channel');
+
+  renderFilterOptionList('filterDateList', [
+    { value: '', label: 'All time', count: facetCount('date', () => true) },
+    ...Object.keys(REQ_DATE_LABELS).map(key => ({
+      value: key, label: REQ_DATE_LABELS[key],
+      count: facetCount('date', r => withinDateRange(r.createdAt, key))
+    }))
+  ], reqDateFilter, 'date');
+
+  const count = activeFilterCount();
+  const badge = document.getElementById('filterBadge');
+  const toggleBtn = document.getElementById('filterToggleBtn');
+  if (badge) badge.textContent = String(count);
+  if (toggleBtn) toggleBtn.classList.toggle('has-filters', count > 0);
+}
+
 function showGate(message) {
   document.getElementById('adminApp').style.display = 'none';
   document.getElementById('authGate').style.display = 'flex';
@@ -144,11 +264,16 @@ function mergedRequestRows() {
 
 function renderRequestList() {
   const search = document.getElementById('requestSearch').value.trim().toLowerCase();
-  const rows = mergedRequestRows().filter(({ request, reply }) => {
-    if (!search) return true;
-    const haystack = `${request.requestId} ${request.requesterName} ${request.payload} ${request.requestType} ${reply?.replyText || ''}`.toLowerCase();
-    return haystack.includes(search);
-  });
+  const allRows = mergedRequestRows();
+  const rows = allRows.filter(({ request, reply }) => requestMatchesFilters(request, reply, null));
+
+  renderFilterDrawer();
+
+  const countEl = document.getElementById('reqFilterCount');
+  if (countEl) {
+    const isFiltered = search || activeFilterCount() > 0;
+    countEl.textContent = isFiltered ? `${rows.length} of ${allRows.length}` : '';
+  }
 
   document.getElementById('countRequests').textContent = rows.length;
   document.getElementById('requestList').innerHTML = rows.map(({ request, reply }) => `
@@ -480,6 +605,47 @@ function exportAuditCsv() {
 }
 
 document.getElementById('requestSearch').addEventListener('input', renderRequestList);
+
+document.getElementById('filterUserSearch').addEventListener('input', e => {
+  filterUserSearchTerm = e.target.value.trim().toLowerCase();
+  renderFilterDrawer();
+});
+
+document.getElementById('filterDrawer').addEventListener('click', e => {
+  const option = e.target.closest('[data-filter-group]');
+  if (option) {
+    const group = option.dataset.filterGroup;
+    const value = option.dataset.filterValue;
+    if (group === 'type') reqTypeFilter = value;
+    else if (group === 'user') reqUserFilter = value;
+    else if (group === 'status') reqStatusFilter = value;
+    else if (group === 'operator') reqOperatorFilter = value;
+    else if (group === 'channel') reqChannelFilter = value;
+    else if (group === 'date') reqDateFilter = value;
+    renderRequestList();
+    return;
+  }
+  const header = e.target.closest('[data-toggle-group]');
+  if (header) header.closest('.filter-group').classList.toggle('collapsed');
+});
+
+document.getElementById('filterToggleBtn').addEventListener('click', () => {
+  const open = document.getElementById('requestsLayout').classList.toggle('filter-open');
+  document.getElementById('filterToggleBtn').classList.toggle('active', open);
+});
+
+document.getElementById('filterClearAll').addEventListener('click', () => {
+  reqTypeFilter = '';
+  reqUserFilter = '';
+  reqStatusFilter = '';
+  reqOperatorFilter = '';
+  reqChannelFilter = '';
+  reqDateFilter = '';
+  filterUserSearchTerm = '';
+  document.getElementById('filterUserSearch').value = '';
+  renderRequestList();
+});
+
 document.getElementById('unmatchedSearch').addEventListener('input', renderUnmatchedList);
 document.getElementById('rejectedSearch').addEventListener('input', renderRejectedList);
 document.getElementById('auditSearch').addEventListener('input', renderAuditList);

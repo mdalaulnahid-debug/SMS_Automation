@@ -85,7 +85,54 @@
       .activity-surface { padding: 16px; display: grid; gap: 10px; }
 
       .requests-layout, .exceptions-layout { display: grid; grid-template-columns: 1.35fr 0.95fr; gap: 18px; }
+      .requests-layout.filter-open { grid-template-columns: 232px 1.05fr 0.85fr; }
       .detail-pane { min-height: 620px; }
+
+      .filter-toggle-btn {
+        display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 10px;
+        border: 1px solid var(--divider); background: var(--bg-panel); color: var(--text-secondary);
+        font-size: 12px; font-weight: 800; cursor: pointer; flex-shrink: 0;
+      }
+      .filter-toggle-btn .material-symbols-outlined { font-size: 18px; }
+      .filter-toggle-btn.active { background: var(--accent-bg); border-color: var(--accent-border); color: var(--accent); }
+      .filter-toggle-btn .filter-badge {
+        min-width: 18px; height: 18px; border-radius: 999px; background: var(--accent); color: #08110c;
+        font-size: 10px; font-weight: 800; display: none; align-items: center; justify-content: center; padding: 0 5px;
+      }
+      .filter-toggle-btn.has-filters .filter-badge { display: inline-flex; }
+
+      .filter-drawer {
+        display: none; border-radius: 18px; border: 1px solid var(--divider); background: var(--bg-panel);
+        padding: 14px; align-self: start; position: sticky; top: 88px; max-height: calc(100vh - 110px); overflow: auto;
+      }
+      .requests-layout.filter-open .filter-drawer { display: block; }
+      .filter-drawer-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 0 4px; }
+      .filter-drawer-title { font-size: 12px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+      .filter-clear-btn { background: none; border: none; color: var(--accent); font-size: 11px; font-weight: 800; cursor: pointer; padding: 4px; }
+      .filter-group { margin-bottom: 6px; border-bottom: 1px solid var(--divider); padding-bottom: 10px; }
+      .filter-group:last-child { border-bottom: none; }
+      .filter-group-header {
+        display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 8px 4px; cursor: pointer;
+        font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-primary);
+      }
+      .filter-group-header .material-symbols-outlined { font-size: 18px; color: var(--text-muted); transition: transform 0.15s ease; }
+      .filter-group.collapsed .filter-group-header .material-symbols-outlined { transform: rotate(-90deg); }
+      .filter-group-body { display: grid; gap: 2px; }
+      .filter-group.collapsed .filter-group-body, .filter-group.collapsed .filter-mini-search { display: none; }
+      .filter-mini-search {
+        width: 100%; margin: 2px 0 6px; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--divider);
+        background: var(--bg-panel-2); color: var(--text-primary); font-size: 12px; box-sizing: border-box;
+      }
+      .filter-option {
+        display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 10px;
+        background: transparent; border: 1px solid transparent; color: var(--text-secondary); font-size: 12.5px;
+        cursor: pointer; text-align: left; width: 100%;
+      }
+      .filter-option:hover { background: rgba(255,255,255,0.03); }
+      .filter-option.active { background: var(--accent-bg); border-color: var(--accent-border); color: var(--accent); font-weight: 700; }
+      .filter-option .filter-option-count { color: var(--text-muted); font-size: 11px; }
+      .filter-option.active .filter-option-count { color: var(--accent); }
+      .filter-option-empty { padding: 6px 10px; color: var(--text-muted); font-size: 11.5px; }
       .list-shell { max-height: 720px; overflow: auto; }
       .list-item {
         padding: 10px 16px; border-bottom: 1px solid var(--divider); cursor: pointer; transition: background 0.18s ease;
@@ -245,10 +292,53 @@
                 <div class="section-subtitle">Queue list on the left, review drawer on the right.</div>
               </div>
             </div>
-            <div class="requests-layout">
+            <div class="requests-layout" id="requestsLayout">
+              <aside class="filter-drawer" id="filterDrawer">
+                <div class="filter-drawer-head">
+                  <span class="filter-drawer-title">Filters</span>
+                  <button type="button" class="filter-clear-btn" id="filterClearAll">Clear all</button>
+                </div>
+
+                <div class="filter-group" data-group-name="type">
+                  <div class="filter-group-header" data-toggle-group><span>Request Type</span><span class="material-symbols-outlined">expand_more</span></div>
+                  <div class="filter-group-body" id="filterTypeList"></div>
+                </div>
+
+                <div class="filter-group" data-group-name="user">
+                  <div class="filter-group-header" data-toggle-group><span>Requester</span><span class="material-symbols-outlined">expand_more</span></div>
+                  <input id="filterUserSearch" class="filter-mini-search" type="text" placeholder="Search requesters…" />
+                  <div class="filter-group-body" id="filterUserList"></div>
+                </div>
+
+                <div class="filter-group" data-group-name="status">
+                  <div class="filter-group-header" data-toggle-group><span>Status</span><span class="material-symbols-outlined">expand_more</span></div>
+                  <div class="filter-group-body" id="filterStatusList"></div>
+                </div>
+
+                <div class="filter-group" data-group-name="operator">
+                  <div class="filter-group-header" data-toggle-group><span>Operator</span><span class="material-symbols-outlined">expand_more</span></div>
+                  <div class="filter-group-body" id="filterOperatorList"></div>
+                </div>
+
+                <div class="filter-group" data-group-name="channel">
+                  <div class="filter-group-header" data-toggle-group><span>Channel</span><span class="material-symbols-outlined">expand_more</span></div>
+                  <div class="filter-group-body" id="filterChannelList"></div>
+                </div>
+
+                <div class="filter-group" data-group-name="date">
+                  <div class="filter-group-header" data-toggle-group><span>Date</span><span class="material-symbols-outlined">expand_more</span></div>
+                  <div class="filter-group-body" id="filterDateList"></div>
+                </div>
+              </aside>
               <section class="data-surface">
                 <div class="table-toolbar">
-                  <input id="requestSearch" class="table-search" type="text" placeholder="Search request id, requester, payload, operator…" />
+                  <button type="button" class="filter-toggle-btn" id="filterToggleBtn">
+                    <span class="material-symbols-outlined">tune</span>
+                    Filter
+                    <span class="filter-badge" id="filterBadge">0</span>
+                  </button>
+                  <input id="requestSearch" class="table-search" type="text" placeholder="Search ID, requester, payload…" />
+                  <span id="reqFilterCount" style="font-size:11px;color:var(--text-muted);white-space:nowrap;flex-shrink:0;"></span>
                 </div>
                 <div class="list-shell" id="requestList"></div>
               </section>
