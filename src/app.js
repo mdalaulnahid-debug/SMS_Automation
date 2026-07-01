@@ -371,7 +371,22 @@ function createApp(options = {}) {
 
   const requireAdmin = (req, res) => {
     if (isAdmin(req, authConfig)) return true;
+    // Also accept a session token whose role is admin or super_admin.
+    const sessionToken = require('./auth').presentedToken(req);
+    const session = sessionToken && userAuth.validateSession(sessionToken);
+    if (session && (session.user.role === 'admin' || session.user.role === 'super_admin')) return true;
     json(res, 401, { error: 'Admin authentication required.' });
+    return false;
+  };
+
+  // Accepts any authenticated session (any role) OR the legacy admin API key.
+  // Used for the ops dashboard endpoints that officers can also access.
+  const requireAnySession = (req, res) => {
+    if (isAdmin(req, authConfig)) return true;
+    const sessionToken = require('./auth').presentedToken(req);
+    const session = sessionToken && userAuth.validateSession(sessionToken);
+    if (session) return true;
+    json(res, 401, { error: 'Login required.' });
     return false;
   };
 
@@ -669,11 +684,11 @@ function createApp(options = {}) {
         });
       }
       if (req.method === 'GET' && req.url === '/api/ops/overview') {
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireAnySession(req, res)) return undefined;
         return json(res, 200, buildOpsData(store, queue));
       }
       if (req.method === 'GET' && req.url === '/api/ops/activity') {
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireAnySession(req, res)) return undefined;
         const ops = buildOpsData(store, queue);
         return json(res, 200, {
           generatedAt: ops.generatedAt,
@@ -682,7 +697,7 @@ function createApp(options = {}) {
         });
       }
       if (req.method === 'GET' && req.url === '/api/ops/gateways') {
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireAnySession(req, res)) return undefined;
         const ops = buildOpsData(store, queue);
         return json(res, 200, {
           generatedAt: ops.generatedAt,

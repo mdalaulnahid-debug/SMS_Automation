@@ -14,7 +14,7 @@
       :root { --header-height: 72px; --nav-height: 78px; }
       body { max-width: 480px; margin: 0 auto; position: relative; min-height: 100vh; }
       #opsApp { display: none; }
-      #authOverlay { display: flex; }
+      #authOverlay { display: none; }
       #app-header {
         position: fixed; top: 0; left: 50%; transform: translateX(-50%);
         width: 100%; max-width: 480px; height: var(--header-height);
@@ -172,6 +172,9 @@
         </div>
         <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
           <span class="material-symbols-outlined" id="themeIcon">light_mode</span>
+        </button>
+        <button class="icon-btn" onclick="sessionLogout()" title="Sign out">
+          <span class="material-symbols-outlined">logout</span>
         </button>
       </div>
     </header>

@@ -247,11 +247,28 @@ function boot() {
 }
 
 window._bootTime = Date.now();
-updateAdminVisibility();
-if (isAdminUnlocked()) {
-  document.getElementById('authOverlay').style.display = 'none';
-  document.getElementById('opsApp').style.display = 'block';
-  boot();
-} else {
-  showAuthDialog();
-}
+window.onAuthRequired = sessionLogout; // 401 mid-session → clear token and go to login
+
+(async function sessionInit() {
+  const sessionToken = localStorage.getItem('sessionToken');
+  if (sessionToken) {
+    let user = null;
+    try {
+      const res = await fetch('/api/auth/me', { headers: { Authorization: `Bearer ${sessionToken}` } });
+      if (res.ok) user = (await res.json()).user;
+    } catch (_) {}
+    if (user) {
+      localStorage.setItem('sessionUser', JSON.stringify(user));
+      document.getElementById('authOverlay').style.display = 'none';
+      document.getElementById('opsApp').style.display = 'block';
+      updateAdminVisibility();
+      boot();
+      return;
+    }
+    // Token no longer valid — clear and fall through to redirect.
+    localStorage.removeItem('sessionToken');
+    localStorage.removeItem('sessionUser');
+  }
+  // No valid session → go to login page.
+  location.replace('/login.html');
+})();

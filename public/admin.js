@@ -622,10 +622,34 @@ function boot() {
   loadSettings();
 }
 
-(function init() {
+(async function sessionInit() {
+  const sessionToken = localStorage.getItem('sessionToken');
+  if (sessionToken) {
+    let user = null;
+    try {
+      const res = await fetch('/api/auth/me', { headers: { Authorization: `Bearer ${sessionToken}` } });
+      if (res.ok) user = (await res.json()).user;
+    } catch (_) {}
+    if (user && (user.role === 'admin' || user.role === 'super_admin')) {
+      localStorage.setItem('sessionUser', JSON.stringify(user));
+      document.getElementById('authGate').style.display = 'none';
+      document.getElementById('adminApp').style.display = 'block';
+      boot();
+      return;
+    }
+    if (user && user.role === 'officer') {
+      location.replace('/');
+      return;
+    }
+    localStorage.removeItem('sessionToken');
+    localStorage.removeItem('sessionUser');
+  }
+  // Fall back to legacy API key, or redirect to login.
   if (isAdminUnlocked()) {
     document.getElementById('authGate').style.display = 'none';
     document.getElementById('adminApp').style.display = 'block';
     boot();
+    return;
   }
+  location.replace('/login.html');
 })();
