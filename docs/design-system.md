@@ -11,12 +11,28 @@ and if you change a token here, you are very likely also touching
 `android-gateway/app`'s `colors.xml` (see
 [Token parity with the Android Gateway App](#token-parity-with-the-android-gateway-app)).
 
-> **2026-06-18 note:** this doc previously documented an MD3 purple palette
-> (`--accent: #6750a4`) that **no longer exists in the code**. The web UI was
-> rewritten to the "Operations Surface" cyan/slate palette described below.
-> If you're reading an old copy of this file or a cached summary, throw it
-> out — the table in [Color tokens](#color-tokens) is the only one that's
-> still true.
+> **2026-07-04 note:** the web UI was reskinned to a **Material-3 "ROMER
+> Command Grid" system** — a teal interactive accent (`--accent: #44e2cd`
+> dark / `#0f766e` light) over a surface-container elevation ramp, with
+> softer shadows. This supersedes the earlier "Operations Surface"
+> silver/cyan palettes. The [Color tokens](#color-tokens) table below is
+> current; the `public/theme.css` `:root` is the real source of truth if the
+> two ever disagree. The Web Admin Console's review surface was also
+> restructured into an **"Approvals Queue"** master-detail (Pending /
+> Resolved / Archived tabs; request cards with elapsed timers + impact
+> badges; a detail pane with Requested-By / Impact-Analysis / Time-in-Review
+> info cards, the reply draft, and linked operational signals), and the
+> Gateway Fleet cards gained an animated **heartbeat ECG**.
+>
+> **Token-parity caveat:** this reskin landed on the **web only**. The Android
+> Gateway/Admin `colors.xml` files were **not** re-synced, so the
+> [Token parity](#token-parity-with-the-android-gateway-app) section below is
+> temporarily out of date — the Android apps still carry the older
+> silver/cyan tokens. Re-syncing them is a follow-up.
+>
+> _Earlier lineage: an MD3 purple palette (`#6750a4`) → an "Operations
+> Surface" cyan (`#3dd7ff`) → a disciplined silver (`#c7cbd4`) → today's
+> Material-3 teal. Throw out any cached copy citing the older accents._
 
 ## Project context
 
@@ -42,10 +58,12 @@ SMS traffic, and approving reply drafts — one of four client surfaces
 | Android Admin App | `android-gateway/adminapp` | mobile supervisor, separate APK |
 
 This doc covers the first two in full, and the color-token relationship to
-the third and fourth — all four now share the same dark "Operations Surface"
-palette (`accent #3dd7ff`, `bg_primary #08111f`, etc.) so the Gateway App
-phone and the Admin App phone read as the same product. See
-[Token parity](#token-parity-with-the-android-gateway-app) for details.
+the third and fourth. The two web surfaces now run the Material-3 teal ramp
+(`--accent #44e2cd`, `--bg-page #081425`); the two Android apps still carry
+the older silver/cyan tokens (`accent #3dd7ff`, `bg_primary #08111f`) — so
+until they're re-synced, "same product across all four surfaces" is aspirational,
+not literal. See [Token parity](#token-parity-with-the-android-gateway-app)
+for the intended relationship and the re-sync it now needs.
 
 ## Structure: 3 tabs, bottom nav (Web Operations UI)
 
@@ -126,31 +144,34 @@ to `prefers-color-scheme` if nothing is saved.
 
 ## Color tokens
 
+Values below are the Material-3 "Command Grid" ramp (current `public/theme.css`).
+
 | Token | Dark (`:root`, default) | Light (`[data-theme="light"]`) | Use |
 |---|---|---|---|
-| `--bg-page` | `#08111f` | `#edf4fb` | Page background (plus a radial-gradient wash, see `body` rule) |
-| `--bg-page-alt` | `#0b1628` | `#dfeaf6` | Gradient end stop |
-| `--bg-surface` | `rgba(12,20,35,.92)` | `rgba(255,255,255,.94)` | Header/topbar, frosted via `backdrop-filter: blur(18px)` |
-| `--bg-panel` | `rgba(18,29,48,.96)` | `rgba(255,255,255,.98)` | `.data-surface`, `.kpi-tile`, `.timeline-item` |
-| `--bg-panel-2` | `rgba(23,37,59,.98)` | `rgba(244,248,252,.98)` | Inputs, table toolbar, secondary buttons |
-| `--bg-panel-soft` | `rgba(18,30,49,.72)` | `rgba(244,248,252,.84)` | `.icon-btn` resting state |
+| `--bg-page` | `#081425` | `#f5f7fa` | Page background (plus a radial-gradient wash, see `body` rule) |
+| `--bg-page-alt` | `#040e1f` | `#eceef2` | Gradient end stop (M3 `surface-container-lowest`) |
+| `--bg-surface` | `rgba(17,28,45,.92)` | `rgba(255,255,255,.92)` | Header/topbar, frosted via `backdrop-filter: blur(18px)` |
+| `--bg-panel` | `#152031` | `#ffffff` | `.data-surface`, `.kpi-tile`, `.timeline-item` (M3 `surface-container`) |
+| `--bg-panel-2` | `#1f2a3c` | `#f2f4f7` | Inputs, table toolbar, secondary buttons (M3 `surface-container-high`) |
+| `--bg-panel-soft` | `rgba(17,28,45,.72)` | `rgba(242,244,247,.84)` | `.icon-btn` resting state |
 | `--bg-overlay` | `rgba(4,10,20,.72)` | `rgba(14,24,42,.24)` | Auth gate backdrop |
-| `--text-primary` | `#ebf3ff` | `#102038` | Headings, primary text |
-| `--text-secondary` | `#b2c0d9` | `#41536d` | Body text |
-| `--text-muted` | `#7f91af` | `#72839c` | Meta/timestamps/labels |
-| `--divider` / `--divider-strong` | `rgba(128,156,196,.18)` / `.32` | `rgba(36,62,95,.12)` / `.22` | Borders |
-| `--accent` | `#3dd7ff` | `#007fa6` | Brand, focus rings, active nav, `kpi-tile` glow, primary buttons |
-| `--accent-2` | `#7c8cff` | `#4f63e2` | Secondary accent (gradients, `accent_muted` parity) |
-| `--accent-on` | `#041018` | `#ffffff` | Text on accent-filled surfaces |
-| `--accent-bg` / `--accent-border` | `rgba(61,215,255,.12)` / `.34` | `rgba(0,127,166,.1)` / `.25` | Accent chip backgrounds/borders |
+| `--text-primary` | `#d8e3fb` | `#191c1e` | Headings, primary text |
+| `--text-secondary` | `#aab6cf` | `#434654` | Body text |
+| `--text-muted` | `#808da7` | `#6b6f7e` | Meta/timestamps/labels |
+| `--divider` / `--divider-strong` | `rgba(133,160,200,.16)` / `.30` | `rgba(115,118,133,.18)` / `.30` | Borders |
+| `--accent` | `#44e2cd` (teal) | `#0f766e` (deep teal) | Brand, focus rings, active nav, `kpi-tile` glow, primary buttons |
+| `--accent-2` | `#bec6e0` (silver-lavender) | `#003d9b` | Secondary accent |
+| `--accent-on` | `#003029` | `#ffffff` | Text on accent-filled surfaces |
+| `--accent-bg` / `--accent-border` | `rgba(68,226,205,.12)` / `.34` | `rgba(15,118,110,.10)` / `.28` | Accent chip backgrounds/borders |
 | `--success` / `--success-bg` | `#56d88b` / `rgba(86,216,139,.14)` | `#1f9d59` / `rgba(31,157,89,.12)` | Online, completed, sent-ok |
 | `--warning` / `--warning-bg` | `#ffbf5f` / `rgba(255,191,95,.14)` | `#b57000` / `rgba(181,112,0,.12)` | Needs-review, pending |
 | `--danger` / `--danger-bg` | `#ff6d7f` / `rgba(255,109,127,.14)` | `#cf3752` / `rgba(207,55,82,.12)` | Offline, failed, error text |
 | `--violet` / `--violet-bg` | `#9d8cff` / `rgba(157,140,255,.12)` | `#6559d8` / `rgba(101,89,216,.1)` | Reserved supporting accent — not a primary brand color (per `ui-design-guide-v2.md` §3) |
-| `--operator-gp` / `--operator-robi` / `--operator-banglalink` | `#5ad678` / `#ff7997` / `#ffaf59` | *(dark only — see note)* | Operator identity rails (`.fleet-rail`, `.operator-mini .head`) |
-| `--pulse-rgb` | `61, 215, 255` | `0, 127, 166` | Raw channels for the status-pulse `box-shadow` keyframe (can't put rgba inside a hex token) |
-| `--shadow-md` / `--shadow-lg` | dark-tuned | light-tuned | `.glass-panel`/`.surface-panel`/`.data-surface` elevation |
-| `--radius-sm/md/lg` | `10px` / `16px` / `22px` | same | Shared corner radii |
+| `--brand-navy` | `#04014b` | *(inherits)* | Police insignia navy — preserved through the reskin |
+| `--operator-gp` / `--operator-robi` / `--operator-banglalink` | `#5ad678` / `#ff7997` / `#ffaf59` | *(dark only — see note)* | Operator identity rails (`.fleet-rail`, `.operator-rail`, `.fleet-row`) |
+| `--pulse-rgb` | `68, 226, 205` | `15, 118, 110` | Raw channels for the status-pulse `box-shadow` keyframe (can't put rgba inside a hex token) |
+| `--shadow-md` / `--shadow-lg` | `0 10px 30px …/.28` | `0 10px 30px …/.08` (softer M3) | `.glass-panel`/`.surface-panel`/`.data-surface` elevation |
+| `--radius-sm/md/lg` | `10px` / `16px` / `20px` | same | Shared corner radii |
 
 Operator identity colors (`--operator-*`) are currently only defined under
 `:root` (dark) — there's no light-theme override yet. If you're working in
@@ -204,7 +225,15 @@ title.
 
 ## Token parity with the Android Gateway App
 
-`android-gateway/app`'s `colors.xml` / `values-night/colors.xml` are kept
+> **Out of date as of 2026-07-04:** the web reskinned to Material-3 teal
+> (`--accent #44e2cd`) but the Android `colors.xml` files below were **not**
+> touched, so the hex values in this section describe the Android apps'
+> *current* tokens — which the web no longer matches. Re-syncing Android to
+> the teal ramp (or deciding the apps intentionally diverge) is the open
+> follow-up. The parity *principle* below still holds; the shared hex values
+> don't, for now.
+
+`android-gateway/app`'s `colors.xml` / `values-night/colors.xml` were kept
 **hex-for-hex identical** to this file's dark/light tokens (`accent
 #3dd7ff`/`#007fa6`, `bg_primary #08111f`/`#edf4fb`, etc. — same names,
 underscored instead of hyphenated). This is deliberate: the Gateway App's

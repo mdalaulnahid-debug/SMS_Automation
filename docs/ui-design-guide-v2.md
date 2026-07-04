@@ -1,5 +1,14 @@
 # UI Design Guide v2
 
+> **2026-07-04 status:** the web surfaces have since been implemented and
+> reskinned to a **Material-3 "ROMER Command Grid"** system (teal accent,
+> surface-container elevation ramp). This guide captures the *direction and
+> rationale*; for the **current, authoritative tokens and component classes**
+> read [`design-system.md`](design-system.md) and `public/theme.css`. The
+> "Recommended base palette" (§3) below is historical — the shipped accent is
+> teal (`#44e2cd`), not the values first proposed here. The Android apps still
+> await this reskin.
+
 Design direction for turning SMS Automation into a professional product across:
 
 - Web Operations UI
