@@ -71,17 +71,26 @@
       .section-heading { display: flex; justify-content: space-between; align-items: end; gap: 12px; }
       .section-title { font-size: 28px; font-weight: 800; letter-spacing: -0.04em; }
       .section-subtitle { margin-top: 6px; color: var(--text-secondary); }
-      .stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+      .stats-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
       .overview-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 18px; }
       .overview-stack { display: grid; gap: 18px; }
-      .fleet-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-      .fleet-card { border-radius: 18px; border: 1px solid var(--divider); background: var(--bg-panel); overflow: hidden; }
+      .fleet-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+      .fleet-card { border-radius: 18px; border: 1px solid var(--divider); background: var(--bg-panel); overflow: hidden; min-width: 0; }
       .fleet-rail { height: 4px; background: var(--operator-color, var(--accent)); }
-      .fleet-body { padding: 16px; display: grid; gap: 12px; }
-      .fleet-title { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-      .fleet-name { font-size: 13px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
-      .fleet-state { font-size: 22px; font-weight: 800; }
-      .fleet-meta { color: var(--text-secondary); font-size: 12px; line-height: 1.5; }
+      .fleet-body { padding: 16px; display: grid; gap: 10px; min-width: 0; }
+      .fleet-title { display: flex; justify-content: space-between; align-items: center; gap: 8px; min-width: 0; }
+      .fleet-name { font-size: 12px; font-weight: 800; letter-spacing: 0.03em; text-transform: uppercase; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+      /* Gateway id can be a long unbreakable token (BANGLALINK_PHONE_01); render it
+         in mono at a readable size and let it wrap rather than clip out of the card. */
+      .fleet-gwid { font-family: var(--font-mono); font-size: 13.5px; font-weight: 700; letter-spacing: 0.02em; color: var(--text-primary); overflow-wrap: anywhere; }
+      .fleet-heartbeat { width: 100%; height: 30px; }
+      .fleet-heartbeat path { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 300; animation: fleet-ecg 2.4s linear infinite; }
+      .fleet-card.state-online .fleet-heartbeat path { stroke: var(--success); }
+      .fleet-card.state-delayed .fleet-heartbeat path { stroke: var(--warning); animation-duration: 4s; opacity: 0.85; }
+      .fleet-card.state-offline .fleet-heartbeat path { stroke: var(--danger); animation: none; stroke-dashoffset: 0; opacity: 0.5; }
+      @keyframes fleet-ecg { to { stroke-dashoffset: -300; } }
+      @media (prefers-reduced-motion: reduce) { .fleet-heartbeat path { animation: none !important; stroke-dashoffset: 0 !important; } }
+      .fleet-meta { color: var(--text-secondary); font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; }
       .activity-surface { padding: 16px; display: grid; gap: 10px; }
 
       .requests-layout, .exceptions-layout { display: grid; grid-template-columns: 1.35fr 0.95fr; gap: 18px; }
@@ -149,7 +158,7 @@
       .detail-value { margin-top: 8px; color: var(--text-primary); line-height: 1.55; }
       .raw-reply { white-space: pre-wrap; padding: 14px; border-radius: 14px; background: var(--bg-panel-2); border: 1px solid var(--divider); font-family: var(--font-mono); font-size: 12px; }
       .audit-row-detail { margin-top: 8px; color: var(--text-secondary); font-size: 12px; line-height: 1.5; }
-      .audit-summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+      .audit-summary-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
       .audit-kpi { padding: 16px; border-radius: 18px; border: 1px solid var(--divider); background: var(--bg-panel); }
       .audit-kpi-value { font-size: 24px; font-weight: 800; letter-spacing: -0.04em; }
       .audit-kpi-label { margin-top: 6px; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
@@ -165,7 +174,7 @@
       .audit-detail-line { display:grid; gap:3px; }
       .audit-detail-label { color: var(--text-muted); font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
       .audit-detail-value { color: var(--text-secondary); font-family: var(--font-mono); font-size: 12px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
-      .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+      .tools-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
       .tool-panel { padding: 18px; display: grid; gap: 12px; }
       .tool-title { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 800; }
       .tool-note { color: var(--text-secondary); line-height: 1.55; font-size: 12px; }
@@ -175,6 +184,74 @@
       .prov-result img { width: 120px; border-radius: 14px; background: #fff; padding: 8px; }
       .mono-list { font-family: var(--font-mono); font-size: 12px; }
       textarea.text-field { min-height: 104px; resize: vertical; }
+
+      /* ── Approvals Queue: ROMER-style master-detail instrument ── */
+      .approvals-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; }
+      .approvals-head .surface-title { display: inline-flex; align-items: center; gap: 8px; }
+      .approvals-head .surface-title .material-symbols-outlined { color: var(--accent); font-size: 20px; }
+      .queue-tabs { display: inline-flex; gap: 4px; padding: 4px; border-radius: 11px; background: var(--bg-panel-2); border: 1px solid var(--divider); }
+      .queue-tab {
+        padding: 6px 13px; border-radius: 8px; border: none; background: transparent; color: var(--text-muted);
+        font-family: var(--font-mono); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+        cursor: pointer; transition: background 0.18s ease, color 0.18s ease;
+      }
+      .queue-tab:hover { color: var(--text-secondary); }
+      .queue-tab.active { background: var(--accent-bg); color: var(--accent); }
+
+      .req-card { padding: 14px 16px; border-bottom: 1px solid var(--divider); cursor: pointer; display: grid; gap: 10px; transition: background 0.18s ease; }
+      .req-card:last-child { border-bottom: none; }
+      .req-card:hover { background: rgba(255, 255, 255, 0.02); }
+      .req-card.active { background: var(--accent-bg); }
+      .req-card-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+      .req-id { font-family: var(--font-mono); font-size: 11px; font-weight: 700; letter-spacing: 0.04em; color: var(--text-secondary); background: var(--bg-panel-2); border: 1px solid var(--divider); border-radius: 6px; padding: 3px 8px; }
+      .req-timer { font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--text-muted); display: inline-flex; align-items: center; gap: 5px; }
+      .req-timer .material-symbols-outlined { font-size: 14px; }
+      .req-timer.urgent { color: var(--warning); }
+      .req-title { font-size: 14.5px; font-weight: 800; letter-spacing: -0.01em; }
+      .req-desc { color: var(--text-secondary); font-size: 12.5px; line-height: 1.4; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .req-card-bottom { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+      .req-requester { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--text-secondary); min-width: 0; }
+      .req-requester span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .req-avatar { width: 22px; height: 22px; border-radius: 50%; background: var(--bg-panel-2); border: 1px solid var(--divider); display: inline-flex; align-items: center; justify-content: center; color: var(--text-muted); flex: none; }
+      .req-avatar .material-symbols-outlined { font-size: 14px; }
+      .impact-badge { font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; border: 1px solid transparent; flex: none; }
+      .impact-badge.warning { color: var(--warning); border-color: rgba(255, 191, 95, 0.28); background: var(--warning-bg); }
+      .impact-badge.danger { color: var(--danger); border-color: rgba(255, 109, 127, 0.28); background: var(--danger-bg); }
+      .impact-badge.success { color: var(--success); border-color: rgba(86, 216, 139, 0.28); background: var(--success-bg); }
+      .impact-badge.info { color: var(--accent); border-color: var(--accent-border); background: var(--accent-bg); }
+
+      /* Detail pane */
+      .rd-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+      .rd-eyebrow { font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+      .rd-created { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+      .rd-title { margin-top: 12px; font-size: 24px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.12; text-wrap: balance; }
+      .rd-actions { display: flex; gap: 8px; flex-shrink: 0; }
+      .rd-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
+      .rd-card { padding: 14px; border-radius: 14px; border: 1px solid var(--divider); background: var(--bg-panel-2); display: grid; gap: 10px; align-content: start; min-width: 0; }
+      .rd-card-label { font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+      .rd-card-main { display: flex; align-items: center; gap: 10px; min-width: 0; }
+      .rd-card-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex: none; }
+      .rd-card-icon .material-symbols-outlined { font-size: 18px; }
+      .rd-card-icon.warning { background: var(--warning-bg); color: var(--warning); }
+      .rd-card-icon.danger { background: var(--danger-bg); color: var(--danger); }
+      .rd-card-icon.success { background: var(--success-bg); color: var(--success); }
+      .rd-card-icon.info { background: var(--accent-bg); color: var(--accent); }
+      .rd-card-value { font-size: 14px; font-weight: 800; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; }
+      .rd-card-sub { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+      .rd-sla { font-family: var(--font-mono); font-size: 19px; font-weight: 700; letter-spacing: 0.02em; }
+      .rd-sla.urgent { color: var(--warning); }
+
+      .rd-lower { display: grid; gap: 14px; margin-top: 18px; }
+      .signal-panel { border: 1px solid var(--divider); border-radius: 14px; overflow: hidden; }
+      .signal-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--divider); }
+      .signal-head-title { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 800; letter-spacing: 0.04em; }
+      .signal-head-title .material-symbols-outlined { font-size: 16px; color: var(--text-muted); }
+      .signal-count { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); }
+      .signal-row { padding: 11px 14px; border-bottom: 1px solid var(--divider); font-family: var(--font-mono); font-size: 12px; }
+      .signal-row:last-child { border-bottom: none; }
+      .signal-row-title { color: var(--accent); font-weight: 600; }
+      .signal-row-body { margin-top: 4px; color: var(--text-secondary); line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+      .signal-empty { padding: 14px; color: var(--text-muted); font-size: 12px; }
     </style>
   </head>
   <body>
@@ -220,7 +297,7 @@
             <div class="section-eyebrow">Navigation</div>
           </div>
           <button class="sidebar-item active" data-section="overview"><span class="sidebar-label"><span class="material-symbols-outlined">dashboard</span>Overview</span></button>
-          <button class="sidebar-item" data-section="requests"><span class="sidebar-label"><span class="material-symbols-outlined">fact_check</span>Requests & Replies</span><span class="sidebar-count" id="countRequests">0</span></button>
+          <button class="sidebar-item" data-section="requests"><span class="sidebar-label"><span class="material-symbols-outlined">verified_user</span>Approvals Queue</span><span class="sidebar-count" id="countRequests">0</span></button>
           <button class="sidebar-item" data-section="unmatched"><span class="sidebar-label"><span class="material-symbols-outlined">crisis_alert</span>Unmatched SMS</span><span class="sidebar-count" id="countUnmatched">0</span></button>
           <button class="sidebar-item" data-section="rejected"><span class="sidebar-label"><span class="material-symbols-outlined">report</span>Rejected Messages</span><span class="sidebar-count" id="countRejected">0</span></button>
           <button class="sidebar-item" data-section="audit"><span class="sidebar-label"><span class="material-symbols-outlined">policy</span>Audit</span><span class="sidebar-count" id="countAudit">0</span></button>
@@ -288,8 +365,8 @@
           <section id="section-requests" class="admin-section">
             <div class="section-heading">
               <div>
-                <div class="section-title">Requests & Replies</div>
-                <div class="section-subtitle">Queue list on the left, review drawer on the right.</div>
+                <div class="section-title">Approvals Queue</div>
+                <div class="section-subtitle">Pending reply drafts on the left, operational approval detail on the right.</div>
               </div>
             </div>
             <div class="requests-layout" id="requestsLayout">
@@ -331,6 +408,14 @@
                 </div>
               </aside>
               <section class="data-surface">
+                <div class="approvals-head">
+                  <div class="surface-title"><span class="material-symbols-outlined">verified_user</span>Approvals Queue</div>
+                  <div class="queue-tabs" id="queueTabs">
+                    <button type="button" class="queue-tab active" data-queue="pending">Pending</button>
+                    <button type="button" class="queue-tab" data-queue="resolved">Resolved</button>
+                    <button type="button" class="queue-tab" data-queue="archived">Archived</button>
+                  </div>
+                </div>
                 <div class="table-toolbar">
                   <button type="button" class="filter-toggle-btn" id="filterToggleBtn">
                     <span class="material-symbols-outlined">tune</span>

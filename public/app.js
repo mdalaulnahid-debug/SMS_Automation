@@ -123,57 +123,67 @@ document.querySelectorAll('#activityFilters .filter-chip').forEach((chip) => {
 function renderPosture(overview) {
   const posture = overview.posture || {};
   const alerts = overview.alerts || {};
-  document.getElementById('opsPosture').className = `posture-banner glass-panel status-strip${alerts.total ? ' warning' : ''}`;
-  document.getElementById('opsPosture').innerHTML = `
-    <div class="posture-top">
+  const warn = Boolean(alerts.total);
+  const el = document.getElementById('opsPosture');
+  el.className = `posture-banner glass-panel posture-1a${warn ? ' warn' : ''}`;
+  el.innerHTML = `
+    <div class="posture-head-row">
+      <div class="posture-badge"><span></span></div>
       <div>
-        <div class="section-eyebrow">System posture</div>
+        <div class="section-eyebrow">Operational posture · ${relativeTime(overview.generatedAt)}</div>
         <div class="posture-title">${esc(posture.summary || 'Monitoring nominal')}</div>
-        <div class="posture-sub">Backend reachability, fleet state, and exception volume are surfaced here first so operators can scan in seconds.</div>
       </div>
-      <span class="${alerts.total ? 'chip chip-warning' : 'chip chip-success'}">${alerts.total || 0} alert${alerts.total === 1 ? '' : 's'}</span>
     </div>
-    <div class="kpi-grid" style="margin-top:16px">
-      <div class="kpi-tile"><div class="kpi-value">${overview.stats?.todayRequests || 0}</div><div class="kpi-label">Today</div></div>
-      <div class="kpi-tile"><div class="kpi-value warning">${alerts.pendingApprovals || 0}</div><div class="kpi-label">Pending Review</div></div>
-      <div class="kpi-tile"><div class="kpi-value ${alerts.failedRequests ? 'danger' : ''}">${alerts.failedRequests || 0}</div><div class="kpi-label">Failed / Timeout</div></div>
-    </div>
-    <div class="quick-actions" style="margin-top:14px">
-      <button onclick="refreshOps()" class="primary-link">Refresh posture</button>
-      <a href="/admin" class="primary-link">Jump to admin</a>
-      <button onclick="openActivityTab()">Review incidents</button>
+    <div class="posture-sub">${warn
+      ? `${alerts.total} item${alerts.total === 1 ? '' : 's'} need attention — work the queue below.`
+      : 'Audit chain verified · Telegram bridge connected · no failed dispatches recently.'}</div>
+    <div class="posture-actions">
+      <button class="btn-primary" onclick="openActivityTab()">Review queue</button>
+      <button class="btn-secondary" onclick="refreshOps()">Refresh</button>
     </div>`;
 }
 
 function renderOperatorStrip(operators) {
-  document.getElementById('operatorStrip').innerHTML = operators.map((operator) => `
-    <div class="operator-mini" style="--operator-color:${operatorTone(operator.operator)}">
-      <div class="head"></div>
-      <div class="body">
-        <div class="operator-name">${esc(operator.operatorName)}</div>
-        <div class="operator-state">${esc(operator.state)}</div>
-        <div class="operator-meta">${esc(operator.gatewayId)} · ${relativeTime(operator.lastSeenAt)}</div>
+  const labels = { online: 'Online', delayed: 'Delayed', offline: 'Offline' };
+  document.getElementById('operatorStrip').innerHTML = operators.map((operator) => {
+    const state = gatewayState(operator);
+    return `
+    <div class="fleet-row state-${state}" style="--operator-color:${operatorTone(operator.operator)}">
+      <div class="fleet-id">
+        <div class="fleet-name">${esc(operator.operatorName)}</div>
+        <div class="fleet-gw">${esc(operator.gatewayId)}</div>
       </div>
-    </div>`).join('');
+      <svg class="fleet-ecg" viewBox="0 0 180 40" preserveAspectRatio="none" aria-hidden="true"><path d="${ECG_PATH_D}" /></svg>
+      <div class="fleet-state">
+        <div class="fleet-state-label"><span class="fleet-state-dot"></span>${labels[state]}</div>
+        <div class="fleet-last">${relativeTime(operator.lastSeenAt)}</div>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 function renderAttentionGrid(overview) {
   const alerts = overview.alerts || {};
-  const cards = [
-    { title: 'Approvals waiting', value: alerts.pendingApprovals || 0, tone: 'warning', detail: 'Supervisor review queue' },
-    { title: 'Failed / timed out', value: alerts.failedRequests || 0, tone: alerts.failedRequests ? 'danger' : '', detail: 'Requests needing intervention' },
-    { title: 'Unmatched replies', value: alerts.unmatchedSms || 0, tone: alerts.unmatchedSms ? 'warning' : '', detail: 'Potential exception desk work' },
-    { title: 'Offline gateways', value: alerts.offlineGateways || 0, tone: alerts.offlineGateways ? 'danger' : '', detail: 'Fleet availability concern' }
+  const items = [
+    { icon: 'rate_review', tone: 'warning', value: alerts.pendingApprovals || 0, title: 'reply drafts to review', detail: 'Supervisor review queue' },
+    { icon: 'error', tone: 'danger', value: alerts.failedRequests || 0, title: 'failed / timed-out dispatches', detail: 'Requests needing intervention' },
+    { icon: 'link_off', tone: 'accent', value: alerts.unmatchedSms || 0, title: 'unmatched inbound replies', detail: 'Exception desk work' },
+    { icon: 'cell_tower', tone: 'danger', value: alerts.offlineGateways || 0, title: 'offline gateways', detail: 'Fleet availability concern' }
   ];
-  document.getElementById('attentionGrid').innerHTML = cards.map((card) => `
-    <div class="attention-card glass-panel status-strip ${card.tone || 'success'}">
-      <div class="attention-head">
-        <div class="attention-title">${card.title}</div>
-        <span class="${card.value ? `chip chip-${card.tone || 'success'}` : 'chip chip-muted'}">${card.value ? 'Attention' : 'Clear'}</span>
+  document.getElementById('attentionGrid').innerHTML = items.map((item) => {
+    const active = item.value > 0;
+    const tone = active ? item.tone : 'success';
+    const chipTone = active ? (item.tone === 'accent' ? 'accent' : item.tone) : 'muted';
+    return `
+    <div class="attention-item">
+      <span class="attention-icon ${tone}"><span class="material-symbols-outlined">${active ? item.icon : 'check_circle'}</span></span>
+      <div class="attention-body">
+        <div class="attention-item-title">${item.value} ${esc(item.title)}</div>
+        <div class="attention-item-detail">${active ? esc(item.detail) : 'All clear'}</div>
       </div>
-      <div class="attention-value ${card.tone || ''}" style="margin-top:12px">${card.value}</div>
-      <div class="attention-detail">${card.detail}</div>
-    </div>`).join('');
+      <span class="chip chip-${chipTone}">${active ? 'Act' : 'OK'}</span>
+    </div>`;
+  }).join('');
 }
 
 const ECG_PATH_D = 'M0 20 L40 20 L48 8 L56 32 L64 4 L72 20 L110 20 L118 12 L126 28 L134 20 L180 20';

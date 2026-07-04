@@ -1,25 +1,28 @@
 :root {
-  --bg-page: #08111f;
-  --bg-page-alt: #0b1628;
-  --bg-surface: rgba(12, 20, 35, 0.92);
-  --bg-panel: rgba(18, 29, 48, 0.96);
-  --bg-panel-2: rgba(23, 37, 59, 0.98);
-  --bg-panel-soft: rgba(18, 30, 49, 0.72);
+  /* Material-3 dark ramp (ROMER "Command Grid"): surface-container elevation
+     steps + teal secondary as the interactive accent. Token names are kept
+     stable so all existing component CSS reskins in place. */
+  --bg-page: #081425;
+  --bg-page-alt: #040e1f;
+  --bg-surface: rgba(17, 28, 45, 0.92);
+  --bg-panel: #152031;
+  --bg-panel-2: #1f2a3c;
+  --bg-panel-soft: rgba(17, 28, 45, 0.72);
   --bg-overlay: rgba(4, 10, 20, 0.72);
-  --bg-chrome-header: rgba(8, 17, 31, 0.88);
-  --bg-chrome-nav: rgba(8, 17, 31, 0.92);
-  --bg-chrome-sidebar: rgba(8, 17, 31, 0.55);
-  --kpi-tile-bg: linear-gradient(180deg, rgba(21, 33, 53, 0.95), rgba(14, 23, 39, 0.94));
-  --text-primary: #ebf3ff;
-  --text-secondary: #b2c0d9;
-  --text-muted: #7f91af;
-  --divider: rgba(128, 156, 196, 0.18);
-  --divider-strong: rgba(133, 175, 232, 0.32);
-  --accent: #c7cbd4;
-  --accent-2: #5b6b8c;
-  --accent-on: #04014b;
-  --accent-bg: rgba(199, 203, 212, 0.12);
-  --accent-border: rgba(199, 203, 212, 0.34);
+  --bg-chrome-header: rgba(8, 20, 37, 0.88);
+  --bg-chrome-nav: rgba(8, 20, 37, 0.92);
+  --bg-chrome-sidebar: rgba(8, 20, 37, 0.55);
+  --kpi-tile-bg: linear-gradient(180deg, #17233a, #0e1728);
+  --text-primary: #d8e3fb;
+  --text-secondary: #aab6cf;
+  --text-muted: #808da7;
+  --divider: rgba(133, 160, 200, 0.16);
+  --divider-strong: rgba(133, 160, 200, 0.30);
+  --accent: #44e2cd;
+  --accent-2: #bec6e0;
+  --accent-on: #003029;
+  --accent-bg: rgba(68, 226, 205, 0.12);
+  --accent-border: rgba(68, 226, 205, 0.34);
   --brand-navy: #04014b;
   --success: #56d88b;
   --success-bg: rgba(86, 216, 139, 0.14);
@@ -32,38 +35,40 @@
   --operator-gp: #5ad678;
   --operator-robi: #ff7997;
   --operator-banglalink: #ffaf59;
-  --shadow-lg: 0 24px 80px rgba(0, 0, 0, 0.35);
-  --shadow-md: 0 16px 40px rgba(0, 0, 0, 0.24);
+  --shadow-lg: 0 24px 64px rgba(0, 0, 0, 0.42);
+  --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.28);
   --radius-sm: 10px;
   --radius-md: 16px;
-  --radius-lg: 22px;
+  --radius-lg: 20px;
   --font-ui: 'Manrope', system-ui, sans-serif;
   --font-mono: 'IBM Plex Mono', 'Cascadia Code', monospace;
-  --pulse-rgb: 199, 203, 212;
+  --pulse-rgb: 68, 226, 205;
 }
 
 [data-theme="light"] {
-  --bg-page: #edf4fb;
-  --bg-page-alt: #dfeaf6;
-  --bg-surface: rgba(255, 255, 255, 0.94);
-  --bg-panel: rgba(255, 255, 255, 0.98);
-  --bg-panel-2: rgba(244, 248, 252, 0.98);
-  --bg-panel-soft: rgba(244, 248, 252, 0.84);
+  /* Material-3 light ramp: cool near-white surfaces, deep teal accent that
+     keeps AA contrast on white (the dark-mode teal is too light for text). */
+  --bg-page: #f5f7fa;
+  --bg-page-alt: #eceef2;
+  --bg-surface: rgba(255, 255, 255, 0.92);
+  --bg-panel: #ffffff;
+  --bg-panel-2: #f2f4f7;
+  --bg-panel-soft: rgba(242, 244, 247, 0.84);
   --bg-overlay: rgba(14, 24, 42, 0.24);
-  --bg-chrome-header: rgba(255, 255, 255, 0.88);
-  --bg-chrome-nav: rgba(255, 255, 255, 0.92);
-  --bg-chrome-sidebar: rgba(255, 255, 255, 0.55);
-  --kpi-tile-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(244, 248, 252, 0.94));
-  --text-primary: #102038;
-  --text-secondary: #41536d;
-  --text-muted: #72839c;
-  --divider: rgba(36, 62, 95, 0.12);
-  --divider-strong: rgba(36, 62, 95, 0.22);
-  --accent: #04014b;
-  --accent-2: #4f63e2;
+  --bg-chrome-header: rgba(248, 250, 252, 0.88);
+  --bg-chrome-nav: rgba(248, 250, 252, 0.92);
+  --bg-chrome-sidebar: rgba(248, 250, 252, 0.6);
+  --kpi-tile-bg: linear-gradient(180deg, #ffffff, #f2f4f7);
+  --text-primary: #191c1e;
+  --text-secondary: #434654;
+  --text-muted: #6b6f7e;
+  --divider: rgba(115, 118, 133, 0.18);
+  --divider-strong: rgba(115, 118, 133, 0.30);
+  --accent: #0f766e;
+  --accent-2: #003d9b;
   --accent-on: #ffffff;
-  --accent-bg: rgba(4, 1, 75, 0.1);
-  --accent-border: rgba(4, 1, 75, 0.25);
+  --accent-bg: rgba(15, 118, 110, 0.10);
+  --accent-border: rgba(15, 118, 110, 0.28);
   --success: #1f9d59;
   --success-bg: rgba(31, 157, 89, 0.12);
   --warning: #b57000;
@@ -72,9 +77,9 @@
   --danger-bg: rgba(207, 55, 82, 0.12);
   --violet: #6559d8;
   --violet-bg: rgba(101, 89, 216, 0.1);
-  --shadow-lg: 0 20px 60px rgba(23, 38, 61, 0.14);
-  --shadow-md: 0 12px 32px rgba(23, 38, 61, 0.1);
-  --pulse-rgb: 4, 1, 75;
+  --shadow-lg: 0 20px 56px rgba(23, 38, 61, 0.12);
+  --shadow-md: 0 10px 30px rgba(23, 38, 61, 0.08);
+  --pulse-rgb: 15, 118, 110;
 }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -83,8 +88,8 @@ body {
   min-height: 100vh;
   color: var(--text-primary);
   background:
-    radial-gradient(circle at top left, rgba(199, 203, 212, 0.1), transparent 24%),
-    radial-gradient(circle at 85% 15%, rgba(91, 107, 140, 0.12), transparent 22%),
+    radial-gradient(circle at top left, rgba(68, 226, 205, 0.08), transparent 24%),
+    radial-gradient(circle at 85% 15%, rgba(80, 99, 226, 0.1), transparent 24%),
     linear-gradient(180deg, var(--bg-page) 0%, var(--bg-page-alt) 100%);
 }
 a { color: inherit; }
@@ -170,7 +175,7 @@ code, .mono { font-family: var(--font-mono); }
 
 .status-strip {
   border-left: 3px solid var(--accent);
-  background: linear-gradient(90deg, rgba(199, 203, 212, 0.12), rgba(199, 203, 212, 0.02));
+  background: linear-gradient(90deg, rgba(68, 226, 205, 0.12), rgba(68, 226, 205, 0.02));
 }
 .status-strip.warning { border-left-color: var(--warning); background: linear-gradient(90deg, rgba(255, 191, 95, 0.12), rgba(255, 191, 95, 0.02)); }
 .status-strip.danger { border-left-color: var(--danger); background: linear-gradient(90deg, rgba(255, 109, 127, 0.12), rgba(255, 109, 127, 0.02)); }
@@ -275,7 +280,7 @@ code, .mono { font-family: var(--font-mono); }
 .select-field:focus,
 .text-field:focus {
   border-color: var(--accent-border);
-  box-shadow: 0 0 0 4px rgba(199, 203, 212, 0.12);
+  box-shadow: 0 0 0 4px rgba(68, 226, 205, 0.16);
 }
 
 table.data-table {
@@ -360,7 +365,7 @@ table.data-table tbody tr:last-child td { border-bottom: none; }
 .btn-secondary:hover,
 .btn-danger:hover,
 .btn-ghost:hover { transform: translateY(-1px); }
-.btn-primary { background: linear-gradient(135deg, var(--accent), #eef0f4); color: var(--accent-on); }
+.btn-primary { background: var(--accent); color: var(--accent-on); }
 .btn-secondary { background: var(--bg-panel-2); border-color: var(--divider); color: var(--text-primary); }
 .btn-danger { background: var(--danger-bg); border-color: rgba(255, 109, 127, 0.28); color: var(--danger); }
 .btn-ghost,

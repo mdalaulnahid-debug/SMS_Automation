@@ -28,6 +28,35 @@ const REQ_STATUS_GROUPS = {
 const REQ_STATUS_LABELS = { review: 'Needs Review', live: 'In Progress', done: 'Completed', failed: 'Failed' };
 const REQ_DATE_LABELS = { today: 'Today', week: 'Last 7 days', month: 'Last 30 days' };
 
+// Shared heartbeat/ECG waveform for the gateway fleet cards.
+const ADMIN_ECG_PATH = 'M0 20 L44 20 L52 8 L60 32 L68 4 L76 20 L120 20 L128 12 L136 28 L144 20 L200 20';
+
+// Approvals Queue coarse tabs (ROMER-style): map to the status groups above.
+let reqQueueTab = 'pending';
+const QUEUE_TAB_STATUSES = {
+  pending: [...REQ_STATUS_GROUPS.review, ...REQ_STATUS_GROUPS.live],
+  resolved: [...REQ_STATUS_GROUPS.done],
+  archived: [...REQ_STATUS_GROUPS.failed]
+};
+
+// Elapsed HH:MM:SS since a request was created — the queue "time in review" clock.
+function fmtElapsed(iso) {
+  if (!iso) return '—';
+  let s = Math.max(0, Math.floor((Date.now() - new Date(iso).getTime()) / 1000));
+  const h = Math.floor(s / 3600); s -= h * 3600;
+  const m = Math.floor(s / 60); s -= m * 60;
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${pad(h)}:${pad(m)}:${pad(s)}`;
+}
+
+// Severity/impact read of a request, derived from its lifecycle status.
+function requestImpact(status) {
+  if (REQ_STATUS_GROUPS.failed.includes(status)) return { tone: 'danger', label: 'Failed', icon: 'error', crit: 'High criticality', critSub: 'Dispatch failed or timed out' };
+  if (REQ_STATUS_GROUPS.review.includes(status)) return { tone: 'warning', label: 'Review', icon: 'rate_review', crit: 'Needs review', critSub: 'Operator reply awaiting approval' };
+  if (REQ_STATUS_GROUPS.live.includes(status)) return { tone: 'info', label: 'In flight', icon: 'bolt', crit: 'In progress', critSub: 'Dispatched, awaiting operator' };
+  return { tone: 'success', label: 'Sent', icon: 'check_circle', crit: 'Delivered', critSub: 'Reply posted to requester' };
+}
+
 function withinDateRange(iso, range) {
   if (!iso) return false;
   const created = new Date(iso);
@@ -204,18 +233,24 @@ function renderOverview() {
       <div class="kpi-subtext">${label === 'Online gateways' ? 'Fleet availability' : 'Command-center signal'}</div>
     </div>`).join('');
 
-  document.getElementById('gatewayCards').innerHTML = (overviewData.gatewayHealth || []).map((gateway) => `
-    <div class="fleet-card" style="--operator-color:${operatorTone(gateway.operator)}">
+  document.getElementById('gatewayCards').innerHTML = (overviewData.gatewayHealth || []).map((gateway) => {
+    const state = gateway.status === 'MOCK' ? 'delayed' : gateway.online ? 'online' : 'offline';
+    const stateChip = state === 'online' ? 'chip chip-success' : state === 'delayed' ? 'chip chip-muted' : 'chip chip-danger';
+    const stateLabel = gateway.status === 'MOCK' ? 'MOCK' : gateway.online ? 'ONLINE' : 'OFFLINE';
+    return `
+    <div class="fleet-card state-${state}" style="--operator-color:${operatorTone(gateway.operator)}">
       <div class="fleet-rail"></div>
       <div class="fleet-body">
         <div class="fleet-title">
           <div class="fleet-name">${esc(gateway.operatorName)}</div>
-          <span class="${gateway.status === 'MOCK' ? 'chip chip-muted' : gateway.online ? 'chip chip-success' : 'chip chip-danger'}">${gateway.status === 'MOCK' ? 'MOCK' : gateway.online ? 'ONLINE' : 'OFFLINE'}</span>
+          <span class="${stateChip}">${stateLabel}</span>
         </div>
-        <div class="fleet-state">${esc(gateway.id)}</div>
-        <div class="fleet-meta">${gateway.gatewayUrl || 'No URL registered'}<br />Last seen ${relativeTime(gateway.lastSeenAt)}<br />Delayed sends ${delayedByGateway.get(gateway.id) || 0}</div>
+        <div class="fleet-gwid">${esc(gateway.id)}</div>
+        <svg class="fleet-heartbeat" viewBox="0 0 200 40" preserveAspectRatio="none" aria-hidden="true"><path d="${ADMIN_ECG_PATH}" /></svg>
+        <div class="fleet-meta">${esc(gateway.gatewayUrl || 'No URL registered')}<br />Last seen ${relativeTime(gateway.lastSeenAt)} · Delayed sends ${delayedByGateway.get(gateway.id) || 0}</div>
       </div>
-    </div>`).join('');
+    </div>`;
+  }).join('');
 
   document.getElementById('queuesBody').innerHTML = (overviewData.queues || []).map((queue) => `
     <tr>
@@ -265,30 +300,39 @@ function mergedRequestRows() {
 function renderRequestList() {
   const search = document.getElementById('requestSearch').value.trim().toLowerCase();
   const allRows = mergedRequestRows();
-  const rows = allRows.filter(({ request, reply }) => requestMatchesFilters(request, reply, null));
+  let rows = allRows.filter(({ request, reply }) => requestMatchesFilters(request, reply, null));
+  const tabStatuses = QUEUE_TAB_STATUSES[reqQueueTab];
+  if (tabStatuses) rows = rows.filter(({ request }) => tabStatuses.includes(request.status));
 
   renderFilterDrawer();
 
   const countEl = document.getElementById('reqFilterCount');
   if (countEl) {
     const isFiltered = search || activeFilterCount() > 0;
-    countEl.textContent = isFiltered ? `${rows.length} of ${allRows.length}` : '';
+    countEl.textContent = isFiltered ? `${rows.length} of ${allRows.length}` : `${rows.length}`;
   }
 
   document.getElementById('countRequests').textContent = rows.length;
-  document.getElementById('requestList').innerHTML = rows.map(({ request, reply }) => `
-    <div class="list-item row-accent ${statusTone(request.status)} ${selectedRequestId === request.requestId ? 'active' : ''}" data-request-id="${esc(request.requestId)}">
-      <div class="item-head">
-        <div>
-          <div class="item-title">${esc(request.requestId)}</div>
-          <div class="item-meta">${esc(request.requestType)} · ${esc(request.payload)}</div>
-        </div>
-        <span class="${statusChipClass(request.status)}">${esc(request.status.replaceAll('_', ' '))}</span>
+  document.getElementById('requestList').innerHTML = rows.map(({ request, reply }) => {
+    const imp = requestImpact(request.status);
+    const urgent = imp.tone === 'warning' || imp.tone === 'danger';
+    const desc = (reply && reply.replyText) ? reply.replyText : request.payload;
+    return `
+    <div class="req-card ${selectedRequestId === request.requestId ? 'active' : ''}" data-request-id="${esc(request.requestId)}">
+      <div class="req-card-top">
+        <span class="req-id">${esc(request.requestId)}</span>
+        <span class="req-timer ${urgent ? 'urgent' : ''}"><span class="material-symbols-outlined">schedule</span>${fmtElapsed(request.createdAt)}</span>
       </div>
-      <div class="item-meta">@${esc(request.requesterName)} · ${relativeTime(request.createdAt)}</div>
-      ${renderDispatches(request.dispatches)}
-      ${reply ? `<div class="item-meta" style="margin-top:8px">Draft: ${esc(reply.sentStatus)}</div>` : ''}
-    </div>`).join('') || '<div class="empty">No requests match the current search.</div>';
+      <div>
+        <div class="req-title">${esc(request.requestType)} · ${esc(request.payload)}</div>
+        <div class="req-desc">${esc(desc)}</div>
+      </div>
+      <div class="req-card-bottom">
+        <span class="req-requester"><span class="req-avatar"><span class="material-symbols-outlined">person</span></span><span>${esc(request.requesterName)}</span></span>
+        <span class="impact-badge ${imp.tone}">${esc(imp.label)}</span>
+      </div>
+    </div>`;
+  }).join('') || '<div class="empty">No requests in this queue.</div>';
 
   document.querySelectorAll('[data-request-id]').forEach((item) => {
     item.addEventListener('click', () => {
@@ -298,9 +342,17 @@ function renderRequestList() {
     });
   });
 
-  if (!selectedRequestId && rows.length) {
+  // Keep a valid selection: if none, or the selected request fell out of the
+  // active tab/filter, snap to the first row in view.
+  const selectedInView = rows.some(({ request }) => request.requestId === selectedRequestId);
+  if (!selectedInView && rows.length) {
     selectedRequestId = rows[0].request.requestId;
     renderRequestList();
+    renderRequestDetail();
+    return;
+  }
+  if (!rows.length) {
+    selectedRequestId = null;
     renderRequestDetail();
   }
 }
@@ -316,35 +368,75 @@ function renderRequestDetail() {
   const canApprove = reply && reply.sentStatus === 'DRAFT' && request.status === 'NEEDS_MANUAL_REVIEW';
   const canReject = request.status === 'NEEDS_MANUAL_REVIEW';
   const canRetry = ['NEEDS_MANUAL_REVIEW', 'FAILED', 'TIMEOUT'].includes(request.status);
+  const imp = requestImpact(request.status);
+  const urgent = imp.tone === 'warning' || imp.tone === 'danger';
+  const eyebrowColor = imp.tone === 'danger' ? 'var(--danger)' : imp.tone === 'warning' ? 'var(--warning)' : imp.tone === 'success' ? 'var(--success)' : 'var(--accent)';
+  const eyebrowText = canApprove ? 'Operational approval required' : `${imp.label} · ${request.status.replaceAll('_', ' ')}`;
+
+  const dispatches = request.dispatches || [];
+  const signalsHtml = dispatches.length ? dispatches.map((d) => {
+    const meta = [d.gatewayId, d.shortcode ? `→ ${d.shortcode}` : '', d.sentAt ? relativeTime(d.sentAt) : '']
+      .filter(Boolean).join(' · ');
+    return `
+    <div class="signal-row">
+      <div class="signal-row-title">[${esc(d.operator || 'OP')}] ${esc((d.status || d.sentStatus || 'dispatch')).toString().replaceAll('_', ' ')}</div>
+      <div class="signal-row-body">${esc(meta || 'Queued')}</div>
+    </div>`;
+  }).join('') : '<div class="signal-empty">No dispatch signals recorded yet.</div>';
 
   detail.innerHTML = `
-    <div class="section-eyebrow">Review drawer</div>
-    <div style="font-size:26px;font-weight:800;letter-spacing:-0.04em">${esc(request.requestId)}</div>
-    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-      <span class="${statusChipClass(request.status)}">${esc(request.status.replaceAll('_', ' '))}</span>
-      <span class="chip chip-muted">${esc(request.requestType)}</span>
-      <span class="chip chip-violet">${esc(request.payload)}</span>
+    <div class="rd-top">
+      <div style="min-width:0">
+        <div class="rd-eyebrow" style="color:${eyebrowColor}">${esc(eyebrowText)}</div>
+        <div class="rd-created">Created ${formatAbsoluteTime(request.createdAt)}</div>
+        <div class="rd-title">${esc(request.requestType)} · ${esc(request.payload)}
+          <span style="display:block;margin-top:4px;font-family:var(--font-mono);font-size:15px;font-weight:700;color:var(--text-muted)">${esc(request.requestId)}</span>
+        </div>
+      </div>
+      <div class="rd-actions">
+        ${canReject ? '<button id="rejectRequestBtn" class="btn-danger">Deny</button>' : ''}
+        ${canApprove ? '<button id="approveReplyBtn" class="btn-primary">Approve</button>' : ''}
+        ${canRetry ? '<button id="retryRequestBtn" class="btn-secondary">Retry</button>' : ''}
+      </div>
     </div>
-    <div class="detail-actions">
-      ${canApprove ? '<button id="approveReplyBtn" class="btn-primary">Approve and post</button>' : ''}
-      ${canReject ? '<button id="rejectRequestBtn" class="btn-danger">Reject</button>' : ''}
-      ${canRetry ? '<button id="retryRequestBtn" class="btn-secondary">Retry</button>' : ''}
+    <div class="rd-cards">
+      <div class="rd-card">
+        <div class="rd-card-label">Requested by</div>
+        <div class="rd-card-main">
+          <span class="rd-card-icon info"><span class="material-symbols-outlined">person</span></span>
+          <div style="min-width:0"><div class="rd-card-value">${esc(request.requesterName)}</div><div class="rd-card-sub">${esc(request.channel || 'manual')} channel</div></div>
+        </div>
+      </div>
+      <div class="rd-card">
+        <div class="rd-card-label">Impact analysis</div>
+        <div class="rd-card-main">
+          <span class="rd-card-icon ${imp.tone}"><span class="material-symbols-outlined">${imp.icon}</span></span>
+          <div style="min-width:0"><div class="rd-card-value">${esc(imp.crit)}</div><div class="rd-card-sub">${esc(imp.critSub)}</div></div>
+        </div>
+      </div>
+      <div class="rd-card">
+        <div class="rd-card-label">Time in review</div>
+        <div class="rd-sla ${urgent ? 'urgent' : ''}">${fmtElapsed(request.createdAt)}</div>
+        <div class="rd-card-sub">${urgent ? 'Action needed' : 'Within normal window'}</div>
+      </div>
     </div>
-    <div class="detail-block">
-      <div class="detail-label">Requester</div>
-      <div class="detail-value">@${esc(request.requesterName)} · ${esc(request.channel || 'manual')}</div>
-    </div>
-    <div class="detail-block">
-      <div class="detail-label">Dispatch posture</div>
-      <div class="detail-value">${renderDispatches(request.dispatches)}</div>
-    </div>
-    <div class="detail-block">
-      <div class="detail-label">Reply draft</div>
-      <div class="detail-value">${reply ? `<div class="raw-reply">${esc(reply.replyText)}</div>` : 'No reply draft yet.'}</div>
-    </div>
-    <div class="detail-block">
-      <div class="detail-label">Created</div>
-      <div class="detail-value">${formatAbsoluteTime(request.createdAt)}</div>
+    <div class="rd-lower">
+      <div class="signal-panel">
+        <div class="signal-head">
+          <span class="signal-head-title"><span class="material-symbols-outlined">draft</span>Reply Draft</span>
+          <span class="signal-count">${reply ? esc(reply.sentStatus) : 'none'}</span>
+        </div>
+        ${reply
+          ? `<div class="signal-row"><div class="signal-row-body" style="color:var(--text-primary)">${esc(reply.replyText)}</div></div>`
+          : '<div class="signal-empty">No reply draft yet. The operator has not responded.</div>'}
+      </div>
+      <div class="signal-panel">
+        <div class="signal-head">
+          <span class="signal-head-title"><span class="material-symbols-outlined">sensors</span>Linked Operational Signals</span>
+          <span class="signal-count">${dispatches.length} total</span>
+        </div>
+        ${signalsHtml}
+      </div>
     </div>`;
 
   if (canApprove) {
@@ -605,6 +697,15 @@ function exportAuditCsv() {
 }
 
 document.getElementById('requestSearch').addEventListener('input', renderRequestList);
+
+document.getElementById('queueTabs').addEventListener('click', (event) => {
+  const tab = event.target.closest('[data-queue]');
+  if (!tab) return;
+  reqQueueTab = tab.dataset.queue;
+  document.querySelectorAll('#queueTabs .queue-tab').forEach((t) => t.classList.toggle('active', t === tab));
+  selectedRequestId = null;
+  renderRequestList();
+});
 
 document.getElementById('filterUserSearch').addEventListener('input', e => {
   filterUserSearchTerm = e.target.value.trim().toLowerCase();

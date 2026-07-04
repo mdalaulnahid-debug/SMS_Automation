@@ -222,7 +222,7 @@
 
       @media (min-width: 900px) {
         .home-minimal { max-width: 720px; margin: 0 auto; padding-top: 24px; }
-        .gateway-row { grid-template-columns: repeat(3, 1fr); }
+        .gateway-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       }
       .prose-block { line-height: 1.6; color: var(--text-secondary); }
       .prose-block strong { color: var(--text-primary); }
@@ -262,6 +262,62 @@
           grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
         }
       }
+
+      /* ── 1a "Deep Command" refinements ── */
+      /* Posture ribbon: circular status badge + eyebrow + headline + actions */
+      .posture-1a { display: grid; gap: 14px; }
+      .posture-head-row { display: flex; align-items: center; gap: 14px; }
+      .posture-badge {
+        width: 52px; height: 52px; flex: none; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        background: var(--success-bg); border: 1px solid rgba(86, 216, 139, 0.35);
+      }
+      .posture-badge span { width: 12px; height: 12px; border-radius: 50%; background: var(--success); animation: pulse-ring 2.4s ease-in-out infinite; }
+      .posture-1a.warn .posture-badge { background: var(--warning-bg); border-color: rgba(255, 191, 95, 0.35); }
+      .posture-1a.warn .posture-badge span { background: var(--warning); }
+      .posture-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+      .posture-actions .btn-primary, .posture-actions .btn-secondary { padding: 8px 13px; font-size: 12.5px; }
+
+      /* Gateway fleet: horizontal rows with inline ECG */
+      #operatorStrip { display: block; }
+      .fleet-row { position: relative; display: flex; align-items: center; gap: 12px; padding: 13px 14px 13px 17px; border-bottom: 1px solid var(--divider); }
+      .fleet-row:last-child { border-bottom: none; }
+      .fleet-row::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--operator-color, var(--accent)); }
+      .fleet-id { flex: none; }
+      .fleet-name { font-size: 12px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; }
+      .fleet-gw { margin-top: 3px; font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); }
+      .fleet-ecg { flex: 1; height: 30px; min-width: 0; }
+      .fleet-ecg path { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 300; animation: ecg-travel 2.2s linear infinite; }
+      .fleet-row.state-online .fleet-ecg path { stroke: var(--success); }
+      .fleet-row.state-delayed .fleet-ecg path { stroke: var(--warning); animation-duration: 4s; opacity: 0.85; }
+      .fleet-row.state-offline .fleet-ecg path { stroke: var(--danger); animation: none; stroke-dashoffset: 0; opacity: 0.55; }
+      .fleet-state { flex: none; text-align: right; }
+      .fleet-state-label { display: flex; align-items: center; justify-content: flex-end; gap: 6px; font-size: 12px; font-weight: 800; }
+      .fleet-state-dot { width: 7px; height: 7px; border-radius: 50%; }
+      .fleet-row.state-online .fleet-state-label { color: var(--success); } .fleet-row.state-online .fleet-state-dot { background: var(--success); }
+      .fleet-row.state-delayed .fleet-state-label { color: var(--warning); } .fleet-row.state-delayed .fleet-state-dot { background: var(--warning); }
+      .fleet-row.state-offline .fleet-state-label { color: var(--danger); } .fleet-row.state-offline .fleet-state-dot { background: var(--danger); }
+      .fleet-last { margin-top: 3px; font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); }
+
+      /* Needs attention: icon-chip list rows */
+      #attentionGrid { display: block; }
+      .attention-item { display: flex; align-items: center; gap: 12px; padding: 12px; }
+      .attention-item + .attention-item { border-top: 1px solid var(--divider); }
+      .attention-icon { width: 34px; height: 34px; flex: none; border-radius: 9px; display: flex; align-items: center; justify-content: center; }
+      .attention-icon .material-symbols-outlined { font-size: 18px; }
+      .attention-icon.warning { background: var(--warning-bg); color: var(--warning); }
+      .attention-icon.danger { background: var(--danger-bg); color: var(--danger); }
+      .attention-icon.accent { background: var(--accent-bg); color: var(--accent); }
+      .attention-icon.success { background: var(--success-bg); color: var(--success); }
+      .attention-body { flex: 1; min-width: 0; }
+      .attention-item-title { font-size: 12.5px; font-weight: 800; }
+      .attention-item-detail { margin-top: 2px; font-size: 11.5px; color: var(--text-muted); }
+
+      /* Sidebar officer channel card */
+      .sidebar-officer { margin-top: 16px; padding: 13px; border-radius: 12px; border: 1px solid var(--divider); background: var(--bg-panel-soft); }
+      .sidebar-officer .officer-label { font-size: 10px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); }
+      .sidebar-officer a { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 12px; font-weight: 800; color: var(--accent); text-decoration: none; }
+      .sidebar-officer a .material-symbols-outlined { font-size: 16px; }
     </style>
   </head>
   <body>
@@ -271,7 +327,7 @@
       <div class="brand-row">
         <img class="brand-logo" src="/assets/police-insignia.svg" alt="Bangladesh Police insignia" />
         <div class="brand-block">
-          <div class="brand-kicker">Operations Surface</div>
+          <div class="brand-kicker">Bangladesh Police · LIC Barishal</div>
           <div class="brand-title">SMS Automation</div>
           <div class="brand-sub">Field monitoring and light-touch action</div>
         </div>
@@ -300,6 +356,12 @@
       <button class="ops-sidebar-item" data-tab="help"><span class="material-symbols-outlined">help</span><span>Help</span></button>
       <div class="ops-sidebar-divider"></div>
       <button class="ops-sidebar-item" data-tab="settings"><span class="material-symbols-outlined">tune</span><span>Access</span></button>
+      <div class="sidebar-officer">
+        <div class="officer-label">Officer channel</div>
+        <a href="https://t.me/sms_automation_bd_bot" target="_blank" rel="noopener">
+          <span class="material-symbols-outlined">send</span>Telegram bot
+        </a>
+      </div>
     </nav>
 
     <main id="main-content">
@@ -339,7 +401,7 @@
                   <div class="surface-subtitle">Live posture by operator</div>
                 </div>
               </div>
-              <div class="operator-strip" id="operatorStrip" style="padding:16px"></div>
+              <div class="operator-strip" id="operatorStrip"></div>
             </section>
             <section class="data-surface">
               <div class="surface-header">
@@ -348,7 +410,7 @@
                   <div class="surface-subtitle">Pending approvals, failures, and exception load</div>
                 </div>
               </div>
-              <div class="attention-grid" id="attentionGrid" style="padding:16px"></div>
+              <div class="attention-grid" id="attentionGrid" style="padding:8px"></div>
             </section>
           </div>
           <div class="monitor-console">
