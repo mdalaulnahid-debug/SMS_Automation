@@ -2,6 +2,47 @@
 
 Start with `progress_tracker.md` for the latest session handoff, test results, and environment details.
 
+**Priority legend:** `P1` = next up / high impact · `P2` = medium · `P3` = nice-to-have.
+
+---
+
+## 🔜 PLANNED — React + Vite frontend migration · `P1` (large, multi-session)
+
+Migrate the vanilla static frontend to a **React + Vite SPA** so React-native AI
+design tools (magic MCP, v0, shadcn/ui, Claude Design code export) can drop in
+directly, instead of being hand-translated into vanilla CSS/JS. **Staged: build
++ verify fully on localhost first, deploy to the VPS only after a signed-off
+parity pass.** Full write-up in this session's handoff in `progress_tracker.md`.
+
+**Recommended stack (pending user sign-off):** React 18 + Vite + **TypeScript** +
+**Tailwind** (port `theme.css` teal M3 tokens into the Tailwind theme) + optional
+shadcn/ui. New app lives in **`web/`**; existing `public/` stays serving until the
+final deploy step (instant rollback).
+
+**Pending decisions before Phase 0:**
+- [ ] TypeScript + Tailwind (rec) vs. lower-risk JS / plain CSS variables?
+- [ ] shadcn/ui primitives in the mix, or own components only?
+- [ ] Confirm app location `web/`.
+
+**Phases (each verified on localhost before the next):**
+- [ ] **P1** Phase 0 — scaffold `web/` (Vite+React+TS+Tailwind), port `theme.css` tokens, dev proxy `/api` → :3000
+- [ ] **P1** Phase 1 — foundation: port `shared.js` → typed API module + hooks, auth context (session token + legacy key), theme provider, base UI primitives
+- [ ] **P1** Phase 2 — auth pages (`login`, `register`)
+- [ ] **P1** Phase 3 — Ops UI (Home, Activity monitor-console, Access/settings) from `index.html` + `app.js`
+- [ ] **P1** Phase 4 — Admin console (Approvals Queue, Unmatched, Rejected, Audit, Tools) from `admin.html` + `admin.js` — largest piece (~880 lines)
+- [ ] **P1** Phase 5 — React Router + SPA shell; `src/server.js` serves the built bundle with SPA fallback (backend logic unchanged)
+- [ ] **P1** Phase 6 — full localhost verification: feature-parity checklist across every screen/flow, dark+light, mobile+desktop
+- [ ] **P2** Phase 7 — update `deploy.sh` to `npm run build` → ship `web/dist/`; staged VPS deploy + verify; keep old `public/` for rollback
+
+**Unchanged by this migration:** backend `src/`, Telegram bridge, Android apps,
+auth model, all API contracts, data.
+
+## Open follow-ups (from 2026-07-04 redesign)
+
+- [ ] **P2** Re-sync Android `colors.xml` (Gateway + Admin apps) to the teal Material-3 ramp — web/Android token parity is currently broken (see `docs/design-system.md`).
+- [ ] **P3** Design polish: remove `.status-strip` / `.admin-access` side-stripe borders + em-dash overuse (design-linter flags).
+- [ ] **P3** Extend the teal treatment to admin Signals/Audit/Tools sections; adopt the M3 `headline-lg` type scale.
+
 ---
 
 ## ✅ SHIPPED — 2026-07-04: Web UI redesign, Material-3 reskin, Approvals Queue
@@ -15,9 +56,7 @@ Redesigned and **deployed** the web UI (commit `97e691a`; docs `86c86e8`; pushed
 - [x] Deployed to VPS (both PM2 services restarted, verified live); synced the 4 admin authorized users and restarted `sms-bridge` to activate the 2 newest officers.
 - [x] Synced design docs (`design-system.md`, `claude-design-brief.md`, `ui-design-guide-v2.md`).
 
-**Open follow-ups:**
-- [ ] Re-sync Android `colors.xml` (Gateway + Admin apps) to the teal Material-3 ramp — web/Android token parity is currently broken (see `docs/design-system.md`).
-- [ ] Optional polish: remove `.status-strip` / `.admin-access` side-stripe borders and em-dash overuse (design-linter flags); extend teal treatment to admin Signals/Audit/Tools; adopt M3 `headline-lg` type scale.
+_Open follow-ups from this work are tracked, prioritized, in the "Open follow-ups (from 2026-07-04 redesign)" section near the top._
 
 ---
 

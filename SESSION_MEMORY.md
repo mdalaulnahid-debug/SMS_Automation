@@ -62,11 +62,32 @@ Web UI runs a **Material-3 "ROMER Command Grid"** reskin (2026-07-04): **teal**
 interactive accent (`--accent #44e2cd` dark / `#0f766e` light), surface-container
 elevation ramp, softer shadows, dark + light (AA contrast), brand navy `#04014b`
 kept for the insignia. Tokens live in `public/theme.css` (`:root` = dark default,
-`[data-theme="light"]` override) — **the source of truth**; narrative doc is
-`docs/design-system.md`. Admin review surface is an **"Approvals Queue"**
-master-detail (Pending/Resolved/Archived tabs). Icons: Material Symbols Outlined.
-Fonts: Manrope (UI) + IBM Plex Mono (`--font-mono`, IDs/logs).
+`[data-theme="light"]` override) — **the token source of truth**. Admin review
+surface is an **"Approvals Queue"** master-detail (Pending/Resolved/Archived
+tabs). Icons: Material Symbols Outlined. Fonts: Manrope (UI) + IBM Plex Mono
+(`--font-mono`, IDs/logs).
+
+**→ Full design system:** [`docs/design-system.md`](docs/design-system.md) is the
+maintained narrative doc (color-token table, component patterns, Android parity,
+changelog). Read it before touching any token or component class; it cross-links
+back here for project context.
+
 **Open follow-up:** Android `colors.xml` not yet re-synced to teal (parity broken).
+
+## Frontend stack & planned direction
+
+**Current:** vanilla static HTML/CSS/JS, **no build step, no framework** — the
+browser runs `public/*.html` + `*.js` directly, and `deploy.sh` just copies the
+files. Simple, but React-native AI design tools (magic MCP, v0, shadcn/ui, Claude
+Design code export) can't drop their output in; it has to be hand-translated.
+
+**Planned (`P1`, staged, not started):** migrate `public/` → a **React + Vite
+SPA** (recommended: TypeScript + Tailwind with the teal M3 tokens ported into the
+Tailwind theme; new app in `web/`) so those AI tools work directly. Build + verify
+on **localhost first**, deploy to VPS only after a parity pass; old `public/` kept
+for rollback. This adds a `npm run build` step to the deploy pipeline. Full plan +
+phase list with priorities in `todo.md` (PLANNED section) and
+`progress_tracker.md` (latest handoff). Backend/bridge/Android/auth/APIs unchanged.
 
 ## Conventions / gotchas
 

@@ -1,7 +1,10 @@
 # Design System — SMS Automation Web UI
 
 Single source of truth for the **web** token/component implementation in
-`public/`. For the product-level direction this implements, read
+`public/`. For a fast project orientation first, read
+[`../SESSION_MEMORY.md`](../SESSION_MEMORY.md) (what the product is, the four
+surfaces, deploy, conventions) — it links back here for the full design system.
+For the product-level design *direction* this implements, read
 [`ui-design-guide-v2.md`](ui-design-guide-v2.md) (visual direction, why we
 moved off Material purple) and [`system-design-v2.md`](system-design-v2.md)
 (the four-surface architecture this doc's "two apps, one backend" section
@@ -10,6 +13,15 @@ either web page, so new work reuses what's here instead of re-deriving it —
 and if you change a token here, you are very likely also touching
 `android-gateway/app`'s `colors.xml` (see
 [Token parity with the Android Gateway App](#token-parity-with-the-android-gateway-app)).
+
+> **Planned migration (`P1`, not started):** the web frontend is slated to move
+> from vanilla static HTML/CSS/JS to a **React + Vite SPA** (recommended:
+> TypeScript + Tailwind, with the teal M3 tokens below ported into the Tailwind
+> theme; new app in `web/`). When that lands, this doc's token *values* stay the
+> design source of truth but their *implementation* shifts from `theme.css`
+> CSS-variables to the Tailwind config, and component patterns become React
+> components. Until then, everything here describes the current `public/theme.css`
+> reality. Plan + phases: `todo.md` (PLANNED) and `progress_tracker.md`.
 
 > **2026-07-04 note:** the web UI was reskinned to a **Material-3 "ROMER
 > Command Grid" system** — a teal interactive accent (`--accent: #44e2cd`

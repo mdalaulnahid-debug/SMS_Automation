@@ -7,7 +7,10 @@
 > read [`design-system.md`](design-system.md) and `public/theme.css`. The
 > "Recommended base palette" (§3) below is historical — the shipped accent is
 > teal (`#44e2cd`), not the values first proposed here. The Android apps still
-> await this reskin.
+> await this reskin. A **React + Vite frontend migration** (`P1`, staged,
+> not started) is also planned — see `todo.md` / `progress_tracker.md`; it will
+> re-express this direction in React + Tailwind. Orientation:
+> [`../SESSION_MEMORY.md`](../SESSION_MEMORY.md).
 
 Design direction for turning SMS Automation into a professional product across:
 

@@ -84,14 +84,31 @@ Use these Markdown files as the active continuity baseline:
   `sms-bridge` to activate the 2 newest (ASP Ujirpur Circle, ASP Moladi Circle).
   `telegram.json` is gitignored, so the deploy script never overwrites it.
 
+### Planned next — React + Vite frontend migration (`P1`, large, plan approved in principle)
+
+Migrate the vanilla static frontend (`public/`) to a **React + Vite SPA** so
+React-native AI design tools (magic MCP, v0, shadcn/ui, Claude Design code
+export) can be used directly instead of hand-translated into vanilla CSS/JS.
+**Staged:** scaffold + build + verify entirely on **localhost** first; deploy to
+the VPS only after a signed-off feature-parity pass; old `public/` kept for
+instant rollback. Recommended stack (pending final sign-off): React 18 + Vite +
+TypeScript + Tailwind (port `theme.css` teal M3 tokens into the Tailwind theme) +
+optional shadcn/ui; new app in `web/`. The **deploy pipeline changes**:
+`deploy.sh` gains a `npm run build` step and ships `web/dist/` instead of raw
+`public/`; `src/server.js` gains SPA-fallback static serving. Backend logic,
+Telegram bridge, Android apps, auth model, and API contracts are **unchanged**.
+Phase-by-phase task list with priorities lives in `todo.md` (PLANNED section).
+Open decisions before Phase 0: TS+Tailwind vs JS/plain-CSS; shadcn or not;
+confirm `web/` location.
+
 ### Open follow-ups
 
 - Re-sync Android `colors.xml` (Gateway + Admin apps) to the teal Material-3
   ramp, or decide the apps intentionally diverge (`docs/design-system.md`
-  token-parity section flags this).
+  token-parity section flags this). `P2`
 - Optional polish: `.status-strip` / `.admin-access` left-accent side-stripes
   and a few em-dashes flagged by the design linter; teal treatment for the
-  remaining admin sections (Signals/Audit/Tools); M3 `headline-lg` type scale.
+  remaining admin sections (Signals/Audit/Tools); M3 `headline-lg` type scale. `P3`
 
 ---
 
