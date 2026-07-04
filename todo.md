@@ -4,6 +4,23 @@ Start with `progress_tracker.md` for the latest session handoff, test results, a
 
 ---
 
+## ✅ SHIPPED — 2026-07-04: Web UI redesign, Material-3 reskin, Approvals Queue
+
+Redesigned and **deployed** the web UI (commit `97e691a`; docs `86c86e8`; pushed).
+
+- [x] Full **Material-3 "ROMER Command Grid" reskin** in `public/theme.css` — teal accent (`#44e2cd` dark / `#0f766e` light), surface-container elevation ramp, softer shadows; dark + light, WCAG AA verified; brand navy kept.
+- [x] Ops page **1a "Deep Command"** refinements (posture ribbon, inline-ECG fleet rows, needs-attention list, sidebar officer card).
+- [x] Admin **Approvals Queue** master-detail (Pending/Resolved/Archived tabs, request cards, info-card detail, linked signals) — existing approve/reject/retry endpoints unchanged.
+- [x] Fixed Gateway Fleet card overflow (`BANGLALINK_PHONE_01` clipping) + added heartbeat ECG; hardened grid tracks to `minmax(0,1fr)`.
+- [x] Deployed to VPS (both PM2 services restarted, verified live); synced the 4 admin authorized users and restarted `sms-bridge` to activate the 2 newest officers.
+- [x] Synced design docs (`design-system.md`, `claude-design-brief.md`, `ui-design-guide-v2.md`).
+
+**Open follow-ups:**
+- [ ] Re-sync Android `colors.xml` (Gateway + Admin apps) to the teal Material-3 ramp — web/Android token parity is currently broken (see `docs/design-system.md`).
+- [ ] Optional polish: remove `.status-strip` / `.admin-access` side-stripe borders and em-dash overuse (design-linter flags); extend teal treatment to admin Signals/Audit/Tools; adopt M3 `headline-lg` type scale.
+
+---
+
 ## ✅ RESOLVED — 2026-06-29: Retried Request Reply Not Auto-Matched
 
 Fixed in commit `0c4839b` ("Phase 0: Fix retried-request reply auto-matching bug"). Retried

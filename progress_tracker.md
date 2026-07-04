@@ -1,10 +1,20 @@
 # Progress Tracker
 
-Last updated: **2026-06-30 — Phase 1.0 login/MFA backend core implemented**
+Last updated: **2026-07-04 — Web UI redesign (Material-3 reskin + Approvals Queue) shipped & deployed**
 
 ---
 
 ## Current Stage
+
+**2026-07-04:** the web UI was redesigned and **deployed to the VPS** (commit
+`97e691a`; docs `86c86e8`; both pushed to GitHub). Shipped: a full Material-3
+"ROMER Command Grid" reskin (teal accent, surface-container elevation ramp),
+the 1a "Deep Command" ops refinements, and a restructured admin **Approvals
+Queue** master-detail. Both PM2 services restarted cleanly; verified live. The
+4 admin authorized users were synced local↔VPS and `sms-bridge` restarted to
+activate the 2 newest officers. See Session Handoff (2026-07-04) below.
+**Follow-up:** the Android apps' `colors.xml` were not re-synced to the teal
+ramp, so web/Android design-token parity is currently broken.
 
 Phase 0 (retried-request reply auto-matching bug) is fixed and deployed
 (`0c4839b`). Phase 1.0 (officer/admin login backend) is implemented and
@@ -39,6 +49,49 @@ Use these Markdown files as the active continuity baseline:
 - `docs/training-and-matching-rules.md`
 - `docs/PHONE_GATEWAY_CONTRACT.md`
 - `android-gateway/README.md`
+
+---
+
+## Session Handoff (2026-07-04) — Web UI redesign, reskin, deploy
+
+### What shipped (committed `97e691a`, docs `86c86e8`, pushed)
+
+- **Material-3 "ROMER Command Grid" reskin** in `public/theme.css` — token
+  *values* remapped (names kept, so every page reskins in place): teal
+  interactive accent (`--accent #44e2cd` dark / `#0f766e` light), M3
+  surface-container elevation ramp, softer shadows. Dark + light, WCAG AA
+  contrast verified. Brand navy preserved for the insignia.
+- **Ops page 1a "Deep Command"** (`index.html` + `app.js`): posture ribbon
+  with pulsing status badge, gateway fleet as inline-ECG rows, needs-attention
+  icon-chip list, sidebar officer-channel card.
+- **Admin "Approvals Queue"** (`admin.html` + `admin.js`): the old
+  Requests & Replies section restructured into a ROMER master-detail —
+  Pending/Resolved/Archived tabs, request cards (elapsed timer + impact badge),
+  detail pane with Requested-By / Impact-Analysis / Time-in-Review info cards,
+  reply draft, and linked operational signals. Wired to the existing
+  approve/reject/retry endpoints unchanged.
+- **Bug fix:** Gateway Fleet card overflow (long gateway ids like
+  `BANGLALINK_PHONE_01` clipping out of the card) fixed — mono id with
+  `overflow-wrap:anywhere`, grid tracks hardened to `minmax(0,1fr)`, plus a
+  heartbeat ECG added to each card.
+
+### Deploy + runtime
+
+- `bash scripts/deploy.sh` → VPS `root@45.77.240.195`, both `sms-backend` and
+  `sms-bridge` restarted, health 200, files verified on the VPS.
+- Admin authorized users: VPS had 4 (source of truth via the admin panel);
+  local had 1. Synced local `config/telegram.json` to all 4, restarted
+  `sms-bridge` to activate the 2 newest (ASP Ujirpur Circle, ASP Moladi Circle).
+  `telegram.json` is gitignored, so the deploy script never overwrites it.
+
+### Open follow-ups
+
+- Re-sync Android `colors.xml` (Gateway + Admin apps) to the teal Material-3
+  ramp, or decide the apps intentionally diverge (`docs/design-system.md`
+  token-parity section flags this).
+- Optional polish: `.status-strip` / `.admin-access` left-accent side-stripes
+  and a few em-dashes flagged by the design linter; teal treatment for the
+  remaining admin sections (Signals/Audit/Tools); M3 `headline-lg` type scale.
 
 ---
 
