@@ -20,3 +20,9 @@ data/telegram-offset.json
 config/vps.md
 Training Data/Automation/~$*.xlsx
 Training Data/Automation/*.tmp
+
+# graphify: keep the queryable index (graph.json, report, manifest); ignore the
+# heavy regenerable bits (interactive HTML, rebuild cache, interpreter markers)
+graphify-out/cache/
+graphify-out/*.html
+graphify-out/.graphify_*

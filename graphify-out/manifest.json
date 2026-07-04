@@ -1,0 +1,427 @@
+{
+  "android-gateway/adminapp/build.gradle.kts": {
+    "mtime": 1781758777.868218,
+    "ast_hash": "2845e8d79ccd25367724ae8d7d45af50",
+    "semantic_hash": "2845e8d79ccd25367724ae8d7d45af50"
+  },
+  "android-gateway/adminapp/src/main/java/com/smsgateway/admin/AdminBackendClient.java": {
+    "mtime": 1781779161.5761442,
+    "ast_hash": "a3b661df8aa3da38b2bfa0a342891b38",
+    "semantic_hash": "a3b661df8aa3da38b2bfa0a342891b38"
+  },
+  "android-gateway/adminapp/src/main/java/com/smsgateway/admin/AdminDesignSystem.java": {
+    "mtime": 1781780584.2436674,
+    "ast_hash": "3447540a231ef37920179cde734669b5",
+    "semantic_hash": "3447540a231ef37920179cde734669b5"
+  },
+  "android-gateway/adminapp/src/main/java/com/smsgateway/admin/AdminMainActivity.java": {
+    "mtime": 1782214111.023279,
+    "ast_hash": "ac82831fec470d35a7a7d3a20eec5aed",
+    "semantic_hash": "ac82831fec470d35a7a7d3a20eec5aed"
+  },
+  "android-gateway/app/build.gradle.kts": {
+    "mtime": 1781758777.8738146,
+    "ast_hash": "eca893dac4a9d45b710170352ff721b5",
+    "semantic_hash": "eca893dac4a9d45b710170352ff721b5"
+  },
+  "android-gateway/app/src/main/java/com/smsgateway/AdminActivity.kt": {
+    "mtime": 1781761670.5902324,
+    "ast_hash": "4e30a388c5516a7e6e4f01bf3c7b7edf",
+    "semantic_hash": "4e30a388c5516a7e6e4f01bf3c7b7edf"
+  },
+  "android-gateway/app/src/main/java/com/smsgateway/BackendClient.kt": {
+    "mtime": 1781790903.957722,
+    "ast_hash": "12eb2dc421dc8cc1452d9fa389b60842",
+    "semantic_hash": "12eb2dc421dc8cc1452d9fa389b60842"
+  },
+  "android-gateway/app/src/main/java/com/smsgateway/BackendDiscovery.kt": {
+    "mtime": 1781159558.214177,
+    "ast_hash": "e22151e6f83a8698f7bf5dffdf514187",
+    "semantic_hash": "e22151e6f83a8698f7bf5dffdf514187"
+  },
+  "android-gateway/app/src/main/java/com/smsgateway/BootReceiver.kt": {
+    "mtime": 1781444583.5278952,
+    "ast_hash": "0423278d975cb76989d3d850c8169778",
+    "semantic_hash": "0423278d975cb76989d3d850c8169778"
+  },
+  "android-gateway/app/src/main/java/com/smsgateway/BottomNavHelper.kt": {
+    "mtime": 1781707593.4636211,
+    "ast_hash": "c284ae1347b85608f1591d6b987a7bca",
+    "semantic_hash": "c284ae1347b85608f1591d6b987a7bca"
+  },
+  "android-gateway/app/src/main/java/com/smsgateway/DispatchTracker.kt": {
+    "mtime": 1781596614.6834702,
+    "ast_hash": "fcb78db00edc1b0715a544fdd5fda1d8",
+    "semantic_hash": "fcb78db00edc1b0715a544fdd5fda1d8"
+  },
+  "android-gateway/app/src/main/java/com/smsgateway/GatewayApplication.kt": {
+    "mtime": 1781533430.898422,
+    "ast_hash": "4b93fdab5c04f9ea2fd437eeb7b86d55",
+    "semantic_hash": "4b93fdab5c04f9ea2fd437eeb7b86d55"
+  },
+  "android-gateway/app/src/main/java/com/smsgateway/GatewayForegroundService.kt": {
+    "mtime": 1781935575.4859326,
+    "ast_hash": "935b987f9e63e38881fcbc9149e1f233",
+    "semantic_hash": "935b987f9e63e38881fcbc9149e1f233"
+  },
+  "android-gateway/app/src/main/java/com/smsgateway/HttpServer.kt": {
+    "mtime": 1781345122.0642922,
+    "ast_hash": "c9dd040019e782abc39dd4d573bd5b2e",
+    "semantic_hash": "c9dd040019e782abc39dd4d573bd5b2e"
+  },
+  "android-gateway/app/src/main/java/com/smsgateway/LogActivity.kt": {
+    "mtime": 1781705327.4409902,
+    "ast_hash": "acca6f1e789d83da4fb41b386232073e",
+    "semantic_hash": "acca6f1e789d83da4fb41b386232073e"
+  },
+  "android-gateway/app/src/main/java/com/smsgateway/MainActivity.kt": {
+    "mtime": 1781933886.3356576,
+    "ast_hash": "06ec2cb00a3bc4878d430e02c507d6c2",
+    "semantic_hash": "06ec2cb00a3bc4878d430e02c507d6c2"
+  },
+  "android-gateway/app/src/main/java/com/smsgateway/NetworkUtils.kt": {
+    "mtime": 1781159558.2184346,
+    "ast_hash": "9f414882cae1209c47dc6d173e750e11",
+    "semantic_hash": "9f414882cae1209c47dc6d173e750e11"
+  },
+  "android-gateway/app/src/main/java/com/smsgateway/PermissionsActivity.kt": {
+    "mtime": 1781443258.236869,
+    "ast_hash": "3867a768eeb6045e8859738ac2c51c38",
+    "semantic_hash": "3867a768eeb6045e8859738ac2c51c38"
+  },
+  "android-gateway/app/src/main/java/com/smsgateway/PhoneUtils.kt": {
+    "mtime": 1781159558.21944,
+    "ast_hash": "37bbd3dd622143336e0b0a0961540a2b",
+    "semantic_hash": "37bbd3dd622143336e0b0a0961540a2b"
+  },
+  "android-gateway/app/src/main/java/com/smsgateway/Prefs.kt": {
+    "mtime": 1781533425.1498773,
+    "ast_hash": "3da65dd1da53b8d670bad0be8c3aeeb0",
+    "semantic_hash": "3da65dd1da53b8d670bad0be8c3aeeb0"
+  },
+  "android-gateway/app/src/main/java/com/smsgateway/QrScanActivity.kt": {
+    "mtime": 1781529902.1243856,
+    "ast_hash": "683d1feddd7cb5f40a55bc5c2ff38f4d",
+    "semantic_hash": "683d1feddd7cb5f40a55bc5c2ff38f4d"
+  },
+  "android-gateway/app/src/main/java/com/smsgateway/RetryWorker.kt": {
+    "mtime": 1781930884.345687,
+    "ast_hash": "9b92cfca726290f7a6e8fd51ce499959",
+    "semantic_hash": "9b92cfca726290f7a6e8fd51ce499959"
+  },
+  "android-gateway/app/src/main/java/com/smsgateway/ServiceEvents.kt": {
+    "mtime": 1781790912.1412878,
+    "ast_hash": "2d7a6c8191f3e34cd18e91505cd398fa",
+    "semantic_hash": "2d7a6c8191f3e34cd18e91505cd398fa"
+  },
+  "android-gateway/app/src/main/java/com/smsgateway/SettingsActivity.kt": {
+    "mtime": 1781758777.8738146,
+    "ast_hash": "d85cc912e2b69058a49bdf840c08e1ad",
+    "semantic_hash": "d85cc912e2b69058a49bdf840c08e1ad"
+  },
+  "android-gateway/app/src/main/java/com/smsgateway/SmsReceiver.kt": {
+    "mtime": 1781930884.3499396,
+    "ast_hash": "8afb6ddcd616eb0e3ea4f882d8d1e23d",
+    "semantic_hash": "8afb6ddcd616eb0e3ea4f882d8d1e23d"
+  },
+  "android-gateway/app/src/main/java/com/smsgateway/SmsSender.kt": {
+    "mtime": 1781594905.536517,
+    "ast_hash": "d3e37311815d569495bef07ee91baa99",
+    "semantic_hash": "d3e37311815d569495bef07ee91baa99"
+  },
+  "android-gateway/app/src/main/java/com/smsgateway/SmsStatusReceiver.kt": {
+    "mtime": 1781345143.3676789,
+    "ast_hash": "1751d25f40cddf49fca0b4a3d42c321e",
+    "semantic_hash": "1751d25f40cddf49fca0b4a3d42c321e"
+  },
+  "android-gateway/app/src/main/java/com/smsgateway/SmsWatchdog.kt": {
+    "mtime": 1781596628.5966268,
+    "ast_hash": "28950b2ad3c993f5ac7102eb565c04d5",
+    "semantic_hash": "28950b2ad3c993f5ac7102eb565c04d5"
+  },
+  "android-gateway/app/src/main/java/com/smsgateway/UpdateChecker.kt": {
+    "mtime": 1781436303.6995873,
+    "ast_hash": "2f94fd1afe3dbe4ea8a95d975b4c2fa3",
+    "semantic_hash": "2f94fd1afe3dbe4ea8a95d975b4c2fa3"
+  },
+  "android-gateway/app/src/main/java/com/smsgateway/UpdateInstaller.kt": {
+    "mtime": 1781434248.1227095,
+    "ast_hash": "8cb3f34dc930904e15cce7a1690e9ae7",
+    "semantic_hash": "8cb3f34dc930904e15cce7a1690e9ae7"
+  },
+  "android-gateway/app/src/main/java/com/smsgateway/WebhookSender.kt": {
+    "mtime": 1781930884.3499396,
+    "ast_hash": "84a29ffd12a9d197fdeacbb675c522c1",
+    "semantic_hash": "84a29ffd12a9d197fdeacbb675c522c1"
+  },
+  "android-gateway/app/src/main/java/com/smsgateway/db/AppDatabase.kt": {
+    "mtime": 1781930884.3499396,
+    "ast_hash": "208c7cf0fef02ff42958d2de53946a75",
+    "semantic_hash": "208c7cf0fef02ff42958d2de53946a75"
+  },
+  "android-gateway/app/src/main/java/com/smsgateway/db/LogDao.kt": {
+    "mtime": 1781345107.0886438,
+    "ast_hash": "aeed715857cd50b94f1a751fb68393a6",
+    "semantic_hash": "aeed715857cd50b94f1a751fb68393a6"
+  },
+  "android-gateway/app/src/main/java/com/smsgateway/db/LogEntry.kt": {
+    "mtime": 1781930884.3499396,
+    "ast_hash": "3347aa136642deb3831f9300e3f44324",
+    "semantic_hash": "3347aa136642deb3831f9300e3f44324"
+  },
+  "android-gateway/build.gradle.kts": {
+    "mtime": 1781159558.2219267,
+    "ast_hash": "12b548773cf8e9f93a2be7c699ba33ca",
+    "semantic_hash": "12b548773cf8e9f93a2be7c699ba33ca"
+  },
+  "android-gateway/settings.gradle.kts": {
+    "mtime": 1781758777.8842504,
+    "ast_hash": "1a2b112ef3ab4de207cd27d5fcd61968",
+    "semantic_hash": "1a2b112ef3ab4de207cd27d5fcd61968"
+  },
+  "public/admin.js": {
+    "mtime": 1783151206.6063282,
+    "ast_hash": "0aba1202cd82e791d54a8399a64fc40b",
+    "semantic_hash": "0aba1202cd82e791d54a8399a64fc40b"
+  },
+  "public/app-version.json": {
+    "mtime": 1781535614.0538485,
+    "ast_hash": "2ef7d7ba77ec9421592e0163bc5c1ab7",
+    "semantic_hash": "2ef7d7ba77ec9421592e0163bc5c1ab7"
+  },
+  "public/app.js": {
+    "mtime": 1782971673.1771908,
+    "ast_hash": "f83743284dd209b719615b1427588413",
+    "semantic_hash": "f83743284dd209b719615b1427588413"
+  },
+  "public/shared.js": {
+    "mtime": 1782893470.0603824,
+    "ast_hash": "0317b16585e628cae715507c5e77e94f",
+    "semantic_hash": "0317b16585e628cae715507c5e77e94f"
+  },
+  "scripts/backup.sh": {
+    "mtime": 1781596737.5161057,
+    "ast_hash": "86efbb569b3649b579776cea453a9d15",
+    "semantic_hash": "86efbb569b3649b579776cea453a9d15"
+  },
+  "scripts/deploy.sh": {
+    "mtime": 1782825470.9638553,
+    "ast_hash": "eb448a79d452f164add9fb896c4604fc",
+    "semantic_hash": "eb448a79d452f164add9fb896c4604fc"
+  },
+  "scripts/ensure-firewall-3000.ps1": {
+    "mtime": 1781159558.2219267,
+    "ast_hash": "adefee92d570b078661e67e9618d0a7d",
+    "semantic_hash": "adefee92d570b078661e67e9618d0a7d"
+  },
+  "scripts/get-lan-ip.ps1": {
+    "mtime": 1781159558.2219267,
+    "ast_hash": "966d334789f9f1996e3f440e2e906e76",
+    "semantic_hash": "966d334789f9f1996e3f440e2e906e76"
+  },
+  "scripts/importTrainingData.js": {
+    "mtime": 1781930884.3537364,
+    "ast_hash": "0eab6edd5ec228f16c2ee14c8a85a7f6",
+    "semantic_hash": "0eab6edd5ec228f16c2ee14c8a85a7f6"
+  },
+  "scripts/is-port-listening.ps1": {
+    "mtime": 1781159558.2350595,
+    "ast_hash": "67312bbe2e4592bb0cd63d90b87edcf4",
+    "semantic_hash": "67312bbe2e4592bb0cd63d90b87edcf4"
+  },
+  "scripts/publish-apk.ps1": {
+    "mtime": 1781351485.3916771,
+    "ast_hash": "e9c5b89334b58e8d5f963546f0597571",
+    "semantic_hash": "e9c5b89334b58e8d5f963546f0597571"
+  },
+  "scripts/reorganizeTrainingData.js": {
+    "mtime": 1781105853.2222486,
+    "ast_hash": "98458b332e507b3f24bc23649e32c2dd",
+    "semantic_hash": "98458b332e507b3f24bc23649e32c2dd"
+  },
+  "scripts/set-admin-key.ps1": {
+    "mtime": 1781352956.0348384,
+    "ast_hash": "1e42a6315e0ef919e489c1913a1725be",
+    "semantic_hash": "1e42a6315e0ef919e489c1913a1725be"
+  },
+  "scripts/setup-ssl.sh": {
+    "mtime": 1782200953.798168,
+    "ast_hash": "7bfcbd50f54c03ddbf0c74b7b27bbcb4",
+    "semantic_hash": "7bfcbd50f54c03ddbf0c74b7b27bbcb4"
+  },
+  "scripts/setup-workstation.ps1": {
+    "mtime": 1781711604.6781843,
+    "ast_hash": "c3f1606cacfe2925c3ba5b74a173c663",
+    "semantic_hash": "c3f1606cacfe2925c3ba5b74a173c663"
+  },
+  "scripts/stop-backend-port.ps1": {
+    "mtime": 1781159558.2350595,
+    "ast_hash": "4401bca54ae5bf06c0ad8b6e87b549eb",
+    "semantic_hash": "4401bca54ae5bf06c0ad8b6e87b549eb"
+  },
+  "scripts/vps-setup.sh": {
+    "mtime": 1781452746.4219735,
+    "ast_hash": "691542780e01dd0058fe9c6c54455530",
+    "semantic_hash": "691542780e01dd0058fe9c6c54455530"
+  },
+  "src/app.js": {
+    "mtime": 1782893486.8383,
+    "ast_hash": "129bcdc93e87b70171724e9f590251c9",
+    "semantic_hash": "129bcdc93e87b70171724e9f590251c9"
+  },
+  "src/auth.js": {
+    "mtime": 1781176645.424532,
+    "ast_hash": "6a9807614cd10083c4f758b097f17e3a",
+    "semantic_hash": "6a9807614cd10083c4f758b097f17e3a"
+  },
+  "src/config.js": {
+    "mtime": 1782825225.1159449,
+    "ast_hash": "561a62e2f1c22ce9859db9f1b2498715",
+    "semantic_hash": "561a62e2f1c22ce9859db9f1b2498715"
+  },
+  "src/domain.js": {
+    "mtime": 1781788714.0680149,
+    "ast_hash": "1c3f53096b34a8bcaea31c8d9d5cd7d1",
+    "semantic_hash": "1c3f53096b34a8bcaea31c8d9d5cd7d1"
+  },
+  "src/mailer.js": {
+    "mtime": 1782824307.043289,
+    "ast_hash": "a7132bd705f5110dcbea3116bcb8a34a",
+    "semantic_hash": "a7132bd705f5110dcbea3116bcb8a34a"
+  },
+  "src/maintenance.js": {
+    "mtime": 1781711604.761545,
+    "ast_hash": "de7092ba0b451dcfc69070fad5212ee0",
+    "semantic_hash": "de7092ba0b451dcfc69070fad5212ee0"
+  },
+  "src/manualReviewStore.js": {
+    "mtime": 1781930884.3537364,
+    "ast_hash": "d040426bab23d9d2a38e15fe7d67c5e3",
+    "semantic_hash": "d040426bab23d9d2a38e15fe7d67c5e3"
+  },
+  "src/network.js": {
+    "mtime": 1781159558.2367334,
+    "ast_hash": "5881ade60645403c8e7025a99ce33a18",
+    "semantic_hash": "5881ade60645403c8e7025a99ce33a18"
+  },
+  "src/parser.js": {
+    "mtime": 1781930884.3537364,
+    "ast_hash": "e206f79dd7cd923722983c12c8704ed1",
+    "semantic_hash": "e206f79dd7cd923722983c12c8704ed1"
+  },
+  "src/persistence.js": {
+    "mtime": 1781617863.7383819,
+    "ast_hash": "eb76f810670d69f6605c3bcf3c383de6",
+    "semantic_hash": "eb76f810670d69f6605c3bcf3c383de6"
+  },
+  "src/queue.js": {
+    "mtime": 1781344968.331813,
+    "ast_hash": "61e7f703a86e4a13915d46ba35b0a582",
+    "semantic_hash": "61e7f703a86e4a13915d46ba35b0a582"
+  },
+  "src/replyAnalyzer.js": {
+    "mtime": 1781955997.6221437,
+    "ast_hash": "320e9d067b5dd15bb40aabd221a40030",
+    "semantic_hash": "320e9d067b5dd15bb40aabd221a40030"
+  },
+  "src/server.js": {
+    "mtime": 1781952374.8314965,
+    "ast_hash": "c2ddb13641a9fcb3398445932020564b",
+    "semantic_hash": "c2ddb13641a9fcb3398445932020564b"
+  },
+  "src/service.js": {
+    "mtime": 1782818070.2153177,
+    "ast_hash": "2f40e0be3516d7a9b7db0cbe644680e0",
+    "semantic_hash": "2f40e0be3516d7a9b7db0cbe644680e0"
+  },
+  "src/settingsStore.js": {
+    "mtime": 1781953751.4730878,
+    "ast_hash": "1984472680f8023ed895f29f3087b548",
+    "semantic_hash": "1984472680f8023ed895f29f3087b548"
+  },
+  "src/smsGateway.js": {
+    "mtime": 1781349470.8459048,
+    "ast_hash": "b3a4f73f626432c7cebb2b6f05196ca1",
+    "semantic_hash": "b3a4f73f626432c7cebb2b6f05196ca1"
+  },
+  "src/store.js": {
+    "mtime": 1782818057.3235092,
+    "ast_hash": "51d32aa3ff89b15f57045788ec2ed807",
+    "semantic_hash": "51d32aa3ff89b15f57045788ec2ed807"
+  },
+  "src/trainingData.js": {
+    "mtime": 1781932611.377723,
+    "ast_hash": "11bcb3c17399ffb58f989b28ea1d899e",
+    "semantic_hash": "11bcb3c17399ffb58f989b28ea1d899e"
+  },
+  "src/userAuth.js": {
+    "mtime": 1782824296.4593203,
+    "ast_hash": "556afdccc8eca7c396a1e3ec7c0eb36c",
+    "semantic_hash": "556afdccc8eca7c396a1e3ec7c0eb36c"
+  },
+  "telegram-bridge/backendClient.js": {
+    "mtime": 1781953073.9096093,
+    "ast_hash": "652215324991b8dd16d35b900fdf3a84",
+    "semantic_hash": "652215324991b8dd16d35b900fdf3a84"
+  },
+  "telegram-bridge/bridge.js": {
+    "mtime": 1782198329.594228,
+    "ast_hash": "a7dcc8bc4516cf10421b8532be7296d9",
+    "semantic_hash": "a7dcc8bc4516cf10421b8532be7296d9"
+  },
+  "telegram-bridge/start.js": {
+    "mtime": 1781953136.5201514,
+    "ast_hash": "fa4173df0f1b26985e9eb64efd2e5e83",
+    "semantic_hash": "fa4173df0f1b26985e9eb64efd2e5e83"
+  },
+  "telegram-bridge/telegramClient.js": {
+    "mtime": 1781524278.3144994,
+    "ast_hash": "9e99c28bd96d29d36c7f76e231c9dc96",
+    "semantic_hash": "9e99c28bd96d29d36c7f76e231c9dc96"
+  },
+  "test/manualReviewStore.test.js": {
+    "mtime": 1781930884.356914,
+    "ast_hash": "5f94c56a9022b30f75110b372fef160e",
+    "semantic_hash": "5f94c56a9022b30f75110b372fef160e"
+  },
+  "test/persistence.test.js": {
+    "mtime": 1781930884.356914,
+    "ast_hash": "cfec7c5c5793373d20cf53b1f8a614ef",
+    "semantic_hash": "cfec7c5c5793373d20cf53b1f8a614ef"
+  },
+  "test/replyMatching.test.js": {
+    "mtime": 1781956245.3681343,
+    "ast_hash": "a8079e0aa411dce2bba14ba3f4456637",
+    "semantic_hash": "a8079e0aa411dce2bba14ba3f4456637"
+  },
+  "test/security.test.js": {
+    "mtime": 1782825278.6775305,
+    "ast_hash": "a3d87c15defb5f5819f9badf3c388ca0",
+    "semantic_hash": "a3d87c15defb5f5819f9badf3c388ca0"
+  },
+  "test/settingsStore.test.js": {
+    "mtime": 1781953803.087737,
+    "ast_hash": "7c4e34465799821c15d66fc46766accd",
+    "semantic_hash": "7c4e34465799821c15d66fc46766accd"
+  },
+  "test/telegramBridge.test.js": {
+    "mtime": 1782198329.594228,
+    "ast_hash": "d36c5d94a83e8779ee2afb450376174d",
+    "semantic_hash": "d36c5d94a83e8779ee2afb450376174d"
+  },
+  "test/trainingData.test.js": {
+    "mtime": 1781932655.6479502,
+    "ast_hash": "5d6b8ae7b5fb343a7e673dc0c646d4a4",
+    "semantic_hash": "5d6b8ae7b5fb343a7e673dc0c646d4a4"
+  },
+  "test/userAuth.test.js": {
+    "mtime": 1782893072.4177456,
+    "ast_hash": "007a0e18dbb34ee3a5121681ab0d5436",
+    "semantic_hash": "007a0e18dbb34ee3a5121681ab0d5436"
+  },
+  "test/workflow.test.js": {
+    "mtime": 1781952383.274621,
+    "ast_hash": "9d31384c5e15a5f5f9500eafe1e0796e",
+    "semantic_hash": "9d31384c5e15a5f5f9500eafe1e0796e"
+  }
+}
