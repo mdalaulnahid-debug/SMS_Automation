@@ -89,6 +89,17 @@ for rollback. This adds a `npm run build` step to the deploy pipeline. Full plan
 phase list with priorities in `todo.md` (PLANNED section) and
 `progress_tracker.md` (latest handoff). Backend/bridge/Android/auth/APIs unchanged.
 
+## Planned feature — Lost/Stolen Phone Recovery Watch (GD-linked)
+
+**Design only (2026-07-06), not started, `P2`.** Register a GD (police General
+Diary entry) -linked "watch" on stolen IMEIs; the system re-runs `IMEI-MS`
+against all operators every 24h and DMs admins/IO if the phone resurfaces on a
+new number after the GD date. Reuses the existing request/dispatch/reply
+pipeline (new `channel: 'gd-watch'`) rather than building a parallel system —
+see full design, data model, and edge cases in
+[`docs/gd-lost-phone-watch-design.md`](docs/gd-lost-phone-watch-design.md).
+To be built and tested entirely on **localhost first**, per standing policy.
+
 ## Conventions / gotchas
 
 - Grid tracks that hold long tokens (gateway ids, `REQ-…`) must use
@@ -107,5 +118,6 @@ phase list with priorities in `todo.md` (PLANNED section) and
 - Backend contract → `docs/PHONE_GATEWAY_CONTRACT.md`, `docs/telegram-bridge.md`
 - Matching/validation rules → `docs/training-and-matching-rules.md`
 - Design tokens/components → `docs/design-system.md`, `public/theme.css`
+- Planned: lost-phone recovery watch (GD-linked) → `docs/gd-lost-phone-watch-design.md`
 - Code knowledge graph (if built) → `graphify-out/GRAPH_REPORT.md` + `graph.json`
   (query with `graphify query "<question>"` instead of re-reading files)

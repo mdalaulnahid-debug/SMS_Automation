@@ -211,7 +211,14 @@ Invariants (from `vision.md`):
 - Extractor tests generated from training-data rows (expected fields per real reply).
 - End-to-end test mode: `testDestination` on `POST /api/requests` sends to a real phone you control, which replies manually; its number is added to `trustedSenders`. This validates the full loop without touching operator shortcodes.
 
-## 14. Workstation portability
+## 14. Planned extensions
+
+- **Lost/Stolen Phone Recovery Watch (GD-linked), not started.** Reuses this
+  same request/dispatch/reply pipeline via a new `channel: 'gd-watch'` rather
+  than a parallel system. Full design in
+  [`docs/gd-lost-phone-watch-design.md`](docs/gd-lost-phone-watch-design.md).
+
+## 15. Workstation portability
 
 The repo is portable enough to continue development from multiple PCs, but the portability boundary
 is important:

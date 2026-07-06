@@ -85,6 +85,35 @@ reads `content://sms/inbox` and POSTs it to `/api/gateway/inbox-dump` → admin 
 
 ---
 
+## 🔜 PLANNED — Lost/Stolen Phone Recovery Watch (GD-linked) · `P2` (design done, not started)
+
+Register a GD (police General Diary entry) -linked watch on stolen/lost
+phone IMEIs. The system re-queries all three operators for each watched IMEI
+every 24h via the existing `IMEI-MS` fan-out mechanism, and DMs admins/the
+Investigating Officer if the phone resurfaces on a new SIM number after the
+GD date. Reuses the existing request/dispatch/reply-matching pipeline (new
+`channel: 'gd-watch'`) instead of a parallel system. **Must be built and
+fully tested on localhost only before any VPS deployment.**
+
+Full design (data model, detection algorithm, API surface, scheduler,
+security checklist, edge cases): [`docs/gd-lost-phone-watch-design.md`](docs/gd-lost-phone-watch-design.md).
+
+**Key decisions already made (2026-07-06 design interview):**
+- Detection: new (number, date) after the GD date, excluding the victim's known number
+- Notify: DM to admins/IO only, never the open group
+- Recheck interval: 24h per watched IMEI
+- One GD case can list several IMEIs
+- Case creation restricted to admins/authorized users only
+- GD image upload: web admin console form only
+- Case stays `WATCHING` after a hit until an admin manually closes it
+
+- [ ] **`P2`** Implement data model (`gd_case`, `gd_watched_imei`, `gd_imei_history`, `gd_hit`, `gd_recheck_log`)
+- [ ] **`P2`** `gd-watch` channel dispatch + exclusion from duplicate-blocking guard
+- [ ] **`P2`** Detection/diff algorithm + unit tests (baseline seeding, check-digit normalization, date/number filtering)
+- [ ] **`P2`** Scheduler (24h recheck sweep, similar shape to existing timeout sweep)
+- [ ] **`P2`** Admin console UI (case list/detail, new-case form + image upload)
+- [ ] **`P2`** Local end-to-end simulation before any deploy conversation
+
 ## 🔜 PLANNED — React + Vite frontend migration · `P1` (large, multi-session)
 
 Migrate the vanilla static frontend to a **React + Vite SPA** so React-native AI

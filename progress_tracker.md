@@ -1,6 +1,38 @@
 # Progress Tracker
 
-Last updated: **2026-07-04 — Web UI redesign (Material-3 reskin + Approvals Queue) shipped & deployed**
+Last updated: **2026-07-06 — Android theme sync + admin phone-inbox viewer + Telegram bridge flood fix, deployed; GD lost-phone watch designed (not started)**
+
+---
+
+## Session Handoff (2026-07-06)
+
+**Shipped & deployed:**
+- Gateway app v2.7.0(48) + Admin app v0.2.0(2): teal Material-3 theme sync,
+  admin console live phone-inbox viewer (Gateways tab: Live Inbox/Refresh per
+  card). Installed via USB on both gateway phones + the Galaxy A55 admin device.
+- Fixed a real production bug: `authHeaders()` let a stale officer-login
+  `sessionToken` silently shadow a freshly-entered admin API key, causing
+  "invalid or expired API key" even with the correct key. Fixed in
+  `admin.js`/`app.js`; verified live against the backend.
+- Diagnosed and fixed a Telegram-group flood incident: the bridge's
+  "already notified" seed step had no retry and silently treated failure as
+  "nothing to seed," so a restart-time race re-announced ~100 old
+  TIMEOUT/FAILED requests at once (some from 2026-06-13), hitting Telegram's
+  rate limit. Fixed: `seedNotifiedTimeouts()` retries every poll cycle until
+  it succeeds (skipping the notify pass, not replies/edits, until then); all
+  outgoing Telegram sends now throttled/serialized with 429 backoff via
+  `telegramClient.js`. 161/161 tests pass. Verified live — the same race
+  recurred on this deploy's restart and correctly paused instead of flooding.
+- Fixed the graphify post-commit hook: `.graphify_root` stored an MSYS-style
+  path a native Windows Python misread, silently breaking every rebuild since
+  2026-07-04. Fixed + full rebuild (14,502 nodes). Standing rule now: fold
+  the regenerated graph into the next commit automatically.
+
+**Designed, not started — `P2`:** Lost/Stolen Phone Recovery Watch
+(GD-linked). Full write-up in
+[`docs/gd-lost-phone-watch-design.md`](docs/gd-lost-phone-watch-design.md),
+tracked in `todo.md`. Must be built and tested entirely on localhost before
+any deployment discussion.
 
 ---
 

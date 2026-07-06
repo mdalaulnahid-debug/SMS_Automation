@@ -163,6 +163,15 @@ Typical patterns from training data:
 - then `MSISDN` + date rows
 - or `No data found`
 
+Each `MSISDN` + date row is effectively a historical SIM-usage record for that
+IMEI (which number used that device, and when) — multiple rows mean the
+device has been used with more than one number over time. This is exactly
+the signal the planned **Lost/Stolen Phone Recovery Watch** feature depends
+on (detecting when a watched IMEI shows up with a number it hasn't been seen
+with before); see
+[`docs/gd-lost-phone-watch-design.md`](gd-lost-phone-watch-design.md) §4 for
+the detection algorithm built on this format.
+
 ## Matching Safety Rules
 
 - Do not auto-match a reply to a request only because both belong to the same gateway/operator.
