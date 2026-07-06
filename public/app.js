@@ -27,16 +27,19 @@ async function submitAuthKey() {
     errorEl.style.display = 'block';
     return;
   }
-  localStorage.setItem('adminApiKey', value);
-  // Verify the key actually works before revealing anything — apiFetch's 401
-  // handler would otherwise re-trigger this same dialog in an awkward loop.
-  const res = await fetch('/api/ops/overview', { headers: authHeaders() });
+  // Verify with the entered key explicitly (not authHeaders()) — a stale sessionToken from an
+  // earlier login session would otherwise win over this key (see authHeaders()) and make a
+  // correct key look "invalid".
+  const res = await fetch('/api/ops/overview', { headers: { 'x-api-key': value } });
   if (res.status === 401) {
-    localStorage.removeItem('adminApiKey');
     errorEl.textContent = 'Invalid API key.';
     errorEl.style.display = 'block';
     return;
   }
+  // Clear any stale user-login session so it can't keep shadowing this key on later requests.
+  localStorage.removeItem('sessionToken');
+  localStorage.removeItem('sessionUser');
+  localStorage.setItem('adminApiKey', value);
   document.getElementById('settingsApiKey').value = value;
   document.getElementById('authOverlay').style.display = 'none';
   document.getElementById('opsApp').style.display = 'block';
@@ -98,8 +101,15 @@ function updateAdminVisibility() {
 document.getElementById('settingsApiKey').value = localStorage.getItem('adminApiKey') || '';
 document.getElementById('settingsApiKey').addEventListener('input', (event) => {
   const value = event.target.value.trim();
-  if (value) localStorage.setItem('adminApiKey', value);
-  else localStorage.removeItem('adminApiKey');
+  if (value) {
+    // A stale sessionToken from an earlier login session would otherwise win over this key
+    // on every request (see authHeaders()), silently making a correct key look broken.
+    localStorage.removeItem('sessionToken');
+    localStorage.removeItem('sessionUser');
+    localStorage.setItem('adminApiKey', value);
+  } else {
+    localStorage.removeItem('adminApiKey');
+  }
   updateAdminVisibility();
 });
 

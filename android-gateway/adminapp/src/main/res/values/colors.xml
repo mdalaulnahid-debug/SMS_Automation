@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Synced to the Android Gateway App / web "Operations Surface" dark palette
-         (android-gateway/app/src/main/res/values-night/colors.xml) so both phones match.
-         Accent is the Bangladesh Police insignia's silver (was cyan). -->
-    <color name="admin_bg_root">#08111F</color>
-    <color name="admin_bg_panel">#14253D</color>
-    <color name="admin_bg_panel_alt">#1C304B</color>
-    <color name="admin_bg_panel_soft">#0F1D31</color>
-    <color name="admin_bg_input">#14253D</color>
-    <color name="admin_bg_tab_idle">#0F1D31</color>
-    <color name="admin_bg_tab_active">#1C304B</color>
-    <color name="admin_border">#243A57</color>
-    <color name="admin_border_active">#C7CBD4</color>
-    <color name="admin_text_primary">#EBF3FF</color>
-    <color name="admin_text_secondary">#B2C0D9</color>
-    <color name="admin_text_dim">#7F91AF</color>
-    <color name="admin_primary">#C7CBD4</color>
+    <!-- Material-3 teal "ROMER Command Grid" palette, synced to the web
+         theme.css dark ramp (public/theme.css :root) and the gateway app so
+         both phones and the console match. -->
+    <color name="admin_bg_root">#081425</color>
+    <color name="admin_bg_panel">#152031</color>
+    <color name="admin_bg_panel_alt">#1F2A3C</color>
+    <color name="admin_bg_panel_soft">#101B2C</color>
+    <color name="admin_bg_input">#152031</color>
+    <color name="admin_bg_tab_idle">#101B2C</color>
+    <color name="admin_bg_tab_active">#1F2A3C</color>
+    <color name="admin_border">#22304A</color>
+    <color name="admin_border_active">#44E2CD</color>
+    <color name="admin_text_primary">#D8E3FB</color>
+    <color name="admin_text_secondary">#AAB6CF</color>
+    <color name="admin_text_dim">#808DA7</color>
+    <color name="admin_primary">#44E2CD</color>
     <color name="admin_success">#56D88B</color>
     <color name="admin_warning">#FFBF5F</color>
     <color name="admin_danger">#FF6D7F</color>
-    <color name="admin_chip_bg">#08111F</color>
+    <color name="admin_chip_bg">#081425</color>
     <color name="admin_incident_bg">#3A1620</color>
-    <color name="admin_live_strip">#0F1D31</color>
+    <color name="admin_live_strip">#101B2C</color>
 </resources>

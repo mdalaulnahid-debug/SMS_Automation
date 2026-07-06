@@ -176,12 +176,17 @@ window.onAuthRequired = () => showGate('Invalid or expired API key.');
 async function unlockAdmin() {
   const value = document.getElementById('gateKeyInput').value.trim();
   if (!value) return showGate('API key is required.');
-  localStorage.setItem('adminApiKey', value);
-  const response = await fetch('/api/gateways', { headers: authHeaders() });
+  // Verify with the entered key explicitly (not authHeaders()) — a stale sessionToken from an
+  // earlier Telegram-login session would otherwise win over this key (see authHeaders()) and
+  // make a correct key look "invalid".
+  const response = await fetch('/api/gateways', { headers: { 'x-api-key': value } });
   if (response.status === 401) {
-    localStorage.removeItem('adminApiKey');
     return showGate('Invalid API key.');
   }
+  // Clear any stale user-login session so it can't keep shadowing this key on later requests.
+  localStorage.removeItem('sessionToken');
+  localStorage.removeItem('sessionUser');
+  localStorage.setItem('adminApiKey', value);
   document.getElementById('authGate').style.display = 'none';
   document.getElementById('adminApp').style.display = 'block';
   boot();

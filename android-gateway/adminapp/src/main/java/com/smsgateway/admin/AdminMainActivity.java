@@ -269,13 +269,199 @@ public class AdminMainActivity extends Activity {
         for (int i = 0; i < gateways.length(); i++) {
             JSONObject gateway = gateways.optJSONObject(i);
             if (gateway == null) continue;
-            layoutGatewaysList.addView(buildSystemStatusRow(
-                gateway.optBoolean("online") ? "ONLINE" : "OFFLINE",
-                gateway.optString("operatorName"),
-                gateway.optString("id"),
-                gateway.optString("gatewayUrl", "(not registered)"),
-                gateway.optString("lastSeenAt", "unknown")
-            ));
+            layoutGatewaysList.addView(buildGatewayInboxCard(gateway));
+        }
+    }
+
+    // Gateway card with a live phone-inbox viewer — same pull-model command channel the web
+    // console uses. "Live inbox" queues a DUMP_INBOX command; the phone answers on its next
+    // poll and we render the returned SMS snapshot (address/date/body). "Refresh" just shows
+    // the last captured snapshot without re-requesting.
+    private View buildGatewayInboxCard(JSONObject gateway) {
+        LinearLayout card = baseCard(false);
+        final String gatewayId = gateway.optString("id", "-");
+        card.addView(buildHeaderRow(
+            gateway.optBoolean("online") ? "ONLINE" : "OFFLINE",
+            gateway.optString("operatorName", "Gateway"),
+            gatewayId));
+        card.addView(buildSystemMetricRow("Endpoint", gateway.optString("gatewayUrl", "(not registered)")));
+        card.addView(buildSystemMetricRow("Last Seen", gateway.optString("lastSeenAt", "unknown")));
+
+        final TextView status = new TextView(this);
+        status.setTextColor(AdminDesignSystem.Palette.TEXT_DIM);
+        status.setTextSize(11f);
+        status.setPadding(0, 12, 0, 0);
+        status.setVisibility(View.GONE);
+
+        final LinearLayout inboxContainer = new LinearLayout(this);
+        inboxContainer.setOrientation(LinearLayout.VERTICAL);
+
+        LinearLayout footer = new LinearLayout(this);
+        footer.setOrientation(LinearLayout.HORIZONTAL);
+        footer.setGravity(Gravity.END);
+        footer.setPadding(0, 14, 0, 0);
+        footer.addView(buildActionChip("LIVE INBOX", "#44E2CD",
+            () -> requestPhoneInbox(gatewayId, inboxContainer, status)));
+        footer.addView(buildActionChip("REFRESH", "#AAB6CF",
+            () -> refreshPhoneInbox(gatewayId, inboxContainer, status)));
+
+        card.addView(footer);
+        card.addView(status);
+        card.addView(inboxContainer);
+        return card;
+    }
+
+    private void requestPhoneInbox(String gatewayId, LinearLayout container, TextView status) {
+        final String baseUrl = etBackendUrl.getText().toString().trim();
+        final String apiKey = etAdminApiKey.getText().toString().trim();
+        if (baseUrl.isEmpty() || apiKey.isEmpty()) {
+            Toast.makeText(this, "Configure backend URL and admin key first.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        status.setVisibility(View.VISIBLE);
+        status.setTextColor(AdminDesignSystem.Palette.TEXT_DIM);
+        status.setText("Requesting inbox from " + gatewayId + "… waiting for the phone to poll (a few seconds).");
+        new Thread(() -> {
+            try {
+                String before = optDumpReceivedAt(baseUrl, apiKey, gatewayId);
+                AdminBackendClient.postJson(baseUrl,
+                    "/api/admin/gateways/" + encodePath(gatewayId) + "/request-inbox",
+                    apiKey, new JSONObject().put("limit", 50));
+                for (int tries = 0; tries < 20; tries++) {
+                    Thread.sleep(2000);
+                    JSONObject dump = fetchDump(baseUrl, apiKey, gatewayId);
+                    String received = dump == null ? null : dump.optString("receivedAt", "");
+                    if (dump != null && received != null && !received.isEmpty() && !received.equals(before)) {
+                        final JSONObject finalDump = dump;
+                        runOnUiThread(() -> {
+                            renderInboxMessages(container, finalDump);
+                            status.setText("Received " + messageCount(finalDump) + " message(s) "
+                                + formatRelative(finalDump.optString("receivedAt", "")));
+                        });
+                        return;
+                    }
+                }
+                runOnUiThread(() -> status.setText("No response yet — the phone may be offline, slow to poll, "
+                    + "or on an app version without inbox support. Try Refresh shortly."));
+            } catch (Exception error) {
+                runOnUiThread(() -> {
+                    status.setTextColor(AdminDesignSystem.Palette.DANGER);
+                    status.setText("Request failed: " + error.getMessage());
+                });
+            }
+        }).start();
+    }
+
+    private void refreshPhoneInbox(String gatewayId, LinearLayout container, TextView status) {
+        final String baseUrl = etBackendUrl.getText().toString().trim();
+        final String apiKey = etAdminApiKey.getText().toString().trim();
+        if (baseUrl.isEmpty() || apiKey.isEmpty()) {
+            Toast.makeText(this, "Configure backend URL and admin key first.", Toast.LENGTH_LONG).show();
+            return;
+        }
+        status.setVisibility(View.VISIBLE);
+        status.setTextColor(AdminDesignSystem.Palette.TEXT_DIM);
+        status.setText("Loading last captured inbox…");
+        new Thread(() -> {
+            final JSONObject dump = fetchDump(baseUrl, apiKey, gatewayId);
+            runOnUiThread(() -> {
+                if (dump == null) {
+                    container.removeAllViews();
+                    status.setText("No inbox captured yet — tap \"Live inbox\".");
+                    return;
+                }
+                renderInboxMessages(container, dump);
+                status.setText("Last captured " + formatRelative(dump.optString("receivedAt", ""))
+                    + " · " + messageCount(dump) + " message(s).");
+            });
+        }).start();
+    }
+
+    private JSONObject fetchDump(String baseUrl, String apiKey, String gatewayId) {
+        try {
+            JSONObject res = AdminBackendClient.getJson(baseUrl,
+                "/api/admin/gateways/" + encodePath(gatewayId) + "/inbox", apiKey);
+            return res.isNull("dump") ? null : res.optJSONObject("dump");
+        } catch (Exception error) {
+            return null;
+        }
+    }
+
+    private String optDumpReceivedAt(String baseUrl, String apiKey, String gatewayId) {
+        JSONObject dump = fetchDump(baseUrl, apiKey, gatewayId);
+        return dump == null ? null : dump.optString("receivedAt", "");
+    }
+
+    private int messageCount(JSONObject dump) {
+        JSONArray messages = dump == null ? null : dump.optJSONArray("messages");
+        return messages == null ? 0 : messages.length();
+    }
+
+    private String encodePath(String value) {
+        try {
+            return java.net.URLEncoder.encode(value, "UTF-8");
+        } catch (Exception error) {
+            return value;
+        }
+    }
+
+    private void renderInboxMessages(LinearLayout container, JSONObject dump) {
+        container.removeAllViews();
+        JSONArray messages = dump == null ? null : dump.optJSONArray("messages");
+        if (messages == null || messages.length() == 0) {
+            TextView empty = new TextView(this);
+            empty.setText("Phone inbox is empty.");
+            empty.setTextColor(AdminDesignSystem.Palette.TEXT_DIM);
+            empty.setTextSize(12f);
+            empty.setPadding(0, 10, 0, 0);
+            container.addView(empty);
+            return;
+        }
+        int density = (int) getResources().getDisplayMetrics().density;
+        for (int i = 0; i < messages.length(); i++) {
+            JSONObject m = messages.optJSONObject(i);
+            if (m == null) continue;
+
+            LinearLayout row = new LinearLayout(this);
+            row.setOrientation(LinearLayout.VERTICAL);
+            row.setBackground(AdminDesignSystem.chipBackground(AdminDesignSystem.Palette.BORDER));
+            row.setPadding(12, 10, 12, 10);
+            LinearLayout.LayoutParams rowParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            rowParams.topMargin = 8 * density;
+            row.setLayoutParams(rowParams);
+
+            LinearLayout head = new LinearLayout(this);
+            head.setOrientation(LinearLayout.HORIZONTAL);
+            head.setGravity(Gravity.CENTER_VERTICAL);
+
+            TextView address = new TextView(this);
+            String sender = m.optString("address", m.optString("from", ""));
+            address.setText(sender.isEmpty() ? "unknown sender" : sender);
+            address.setTextColor(AdminDesignSystem.Palette.TEXT_PRIMARY);
+            address.setTextSize(13f);
+            address.setTypeface(address.getTypeface(), android.graphics.Typeface.BOLD);
+            LinearLayout.LayoutParams addressParams = new LinearLayout.LayoutParams(
+                0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f);
+            address.setLayoutParams(addressParams);
+            head.addView(address);
+
+            TextView date = new TextView(this);
+            date.setText(m.optString("date", m.optString("receivedAt", "")));
+            date.setTextColor(AdminDesignSystem.Palette.TEXT_DIM);
+            date.setTextSize(11f);
+            head.addView(date);
+            row.addView(head);
+
+            TextView body = new TextView(this);
+            body.setText(m.optString("body", ""));
+            body.setTextColor(AdminDesignSystem.Palette.TEXT_SECONDARY);
+            body.setTextSize(13f);
+            body.setLineSpacing(0f, 1.2f);
+            body.setPadding(0, 4, 0, 0);
+            row.addView(body);
+
+            container.addView(row);
         }
     }
 
@@ -410,7 +596,7 @@ public class AdminMainActivity extends Activity {
             footer.addView(buildActionChip("APPROVE", "#56D88B", () ->
                 performAction("/api/reply-drafts/" + requestId + "/approve", null, "Reply approved")));
         }
-        footer.addView(buildActionChip("RETRY", "#3DD7FF", () ->
+        footer.addView(buildActionChip("RETRY", "#44E2CD", () ->
             performAction("/api/requests/" + requestId + "/retry", null, "Request re-queued")));
         footer.addView(buildActionChip("REJECT", "#FF6D7F", () ->
             performAction("/api/requests/" + requestId + "/reject", new JSONObject(), "Request rejected")));
@@ -780,7 +966,7 @@ public class AdminMainActivity extends Activity {
         if ("OFFLINE".equals(eyebrow) || "CRITICAL".equals(eyebrow) || "ERROR".equals(eyebrow)) {
             return "#FF6D7F";
         }
-        return "#3DD7FF";
+        return "#44E2CD";
     }
 
     private void showPanel(int index) {

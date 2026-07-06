@@ -13,20 +13,21 @@ import android.widget.TextView;
 public final class AdminDesignSystem {
     private AdminDesignSystem() {}
 
-    // Synced to the Android Gateway App / web "Operations Surface" dark palette
-    // (android-gateway/app/src/main/res/values-night/colors.xml) so both phones match.
+    // Material-3 teal "ROMER Command Grid" palette, synced to the web theme.css
+    // dark ramp (public/theme.css :root) and the gateway app so both phones and
+    // the console match.
     public static final class Palette {
-        public static final int BG_PANEL = Color.parseColor("#14253D");
-        public static final int BG_PANEL_ALT = Color.parseColor("#1C304B");
-        public static final int BG_SOFT = Color.parseColor("#0F1D31");
+        public static final int BG_PANEL = Color.parseColor("#152031");
+        public static final int BG_PANEL_ALT = Color.parseColor("#1F2A3C");
+        public static final int BG_SOFT = Color.parseColor("#101B2C");
         public static final int BG_INCIDENT = Color.parseColor("#3A1620");
-        public static final int BG_CHIP = Color.parseColor("#08111F");
-        public static final int BORDER = Color.parseColor("#243A57");
-        public static final int BORDER_ACTIVE = Color.parseColor("#3DD7FF");
-        public static final int TEXT_PRIMARY = Color.parseColor("#EBF3FF");
-        public static final int TEXT_SECONDARY = Color.parseColor("#B2C0D9");
-        public static final int TEXT_DIM = Color.parseColor("#7F91AF");
-        public static final int PRIMARY = Color.parseColor("#3DD7FF");
+        public static final int BG_CHIP = Color.parseColor("#081425");
+        public static final int BORDER = Color.parseColor("#22304A");
+        public static final int BORDER_ACTIVE = Color.parseColor("#44E2CD");
+        public static final int TEXT_PRIMARY = Color.parseColor("#D8E3FB");
+        public static final int TEXT_SECONDARY = Color.parseColor("#AAB6CF");
+        public static final int TEXT_DIM = Color.parseColor("#808DA7");
+        public static final int PRIMARY = Color.parseColor("#44E2CD");
         public static final int SUCCESS = Color.parseColor("#56D88B");
         public static final int WARNING = Color.parseColor("#FFBF5F");
         public static final int DANGER = Color.parseColor("#FF6D7F");

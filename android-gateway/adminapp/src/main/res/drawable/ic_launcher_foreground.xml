@@ -6,11 +6,11 @@
     android:viewportHeight="108">
     <!-- Shield: straight-edge polygon only, no arcs, renders cleanly at any size -->
     <path
-        android:fillColor="#3DD7FF"
+        android:fillColor="#44E2CD"
         android:pathData="M40,30 L68,30 L74,46 L54,82 L34,46 Z" />
     <!-- Checkmark: oversight/approval glyph, stroked for a confident weight -->
     <path
-        android:strokeColor="#08111F"
+        android:strokeColor="#081425"
         android:strokeWidth="6"
         android:strokeLineCap="round"
         android:strokeLineJoin="round"

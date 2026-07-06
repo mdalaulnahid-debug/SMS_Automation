@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Dark navy/silver palette (Bangladesh Police insignia branding) -->
+    <!-- Material-3 teal "ROMER Command Grid" palette, synced to the web
+         theme.css dark ramp (public/theme.css :root) so phones match the console. -->
     <!-- Identical to values-night/colors.xml: the app is dark-always now, -->
     <!-- regardless of system day/night setting, matching the Admin app and web console. -->
-    <color name="bg_primary">#08111F</color>
-    <color name="bg_surface">#0F1D31</color>
-    <color name="bg_card">#14253D</color>
-    <color name="bg_card_elevated">#1C304B</color>
+    <color name="bg_primary">#081425</color>
+    <color name="bg_surface">#101B2C</color>
+    <color name="bg_card">#152031</color>
+    <color name="bg_card_elevated">#1F2A3C</color>
 
-    <color name="accent">#C7CBD4</color>
-    <color name="accent_muted">#8B93A3</color>
-    <color name="accent_dim">#1A2433</color>
-    <color name="accent_on">#04014B</color>
+    <color name="accent">#44E2CD</color>
+    <color name="accent_muted">#BEC6E0</color>
+    <color name="accent_dim">#0C2B28</color>
+    <color name="accent_on">#003029</color>
 
-    <color name="text_primary">#EBF3FF</color>
-    <color name="text_secondary">#B2C0D9</color>
-    <color name="text_muted">#7F91AF</color>
+    <color name="text_primary">#D8E3FB</color>
+    <color name="text_secondary">#AAB6CF</color>
+    <color name="text_muted">#808DA7</color>
 
     <color name="success">#56D88B</color>
     <color name="success_dim">#112F23</color>
@@ -27,7 +28,7 @@
     <color name="sim2_color">#9D8CFF</color>
     <color name="sim2_dim">#2C2552</color>
 
-    <color name="divider">#243A57</color>
+    <color name="divider">#22304A</color>
     <color name="chip_running_bg">@color/success_dim</color>
     <color name="chip_stopped_bg">@color/danger_dim</color>
 

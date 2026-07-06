@@ -39,7 +39,7 @@ $json = [PSCustomObject]@{
     versionName  = $versionName
     releaseNotes = $notes
 } | ConvertTo-Json
-$json | Out-File -FilePath $verFile -Encoding utf8
+[System.IO.File]::WriteAllText((Resolve-Path (Split-Path $verFile -Parent)).Path + "\" + (Split-Path $verFile -Leaf), $json, (New-Object System.Text.UTF8Encoding($false)))
 
 Write-Host "==> Published: $verFile" -ForegroundColor Green
 Write-Host ($json)

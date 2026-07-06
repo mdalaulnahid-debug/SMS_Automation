@@ -6,10 +6,10 @@
     android:viewportHeight="108">
     <!-- Accent badge circle, inset within the adaptive-icon safe zone -->
     <path
-        android:fillColor="#3DD7FF"
+        android:fillColor="#44E2CD"
         android:pathData="M21,54 A33,33 0 1 0 87,54 A33,33 0 1 0 21,54 Z" />
     <!-- Forward/relay dart: simple solid polygon, reads clean at any size -->
     <path
-        android:fillColor="#08111F"
+        android:fillColor="#081425"
         android:pathData="M73,54 L39,37 L54,54 L39,71 Z" />
 </vector>
