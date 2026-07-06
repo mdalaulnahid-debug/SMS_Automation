@@ -14,7 +14,7 @@ const { readFileSync, writeFileSync, existsSync } = require('node:fs');
 const { join } = require('node:path');
 const { TelegramClient } = require('./telegramClient');
 const { BackendClient } = require('./backendClient');
-const { handleIntake, postApprovedReplies, postLiveEdits, notifyTimeouts } = require('./bridge');
+const { handleIntake, postApprovedReplies, postLiveEdits, notifyTimeouts, seedNotifiedTimeouts } = require('./bridge');
 
 function loadConfig() {
   const path = join(__dirname, '..', 'config', 'telegram.json');
@@ -100,17 +100,14 @@ async function intakeLoop(config, telegram, backend) {
 
 async function postingLoop(config, telegram, backend) {
   const interval = config.pollPostIntervalMs || 3000;
-  // Seed with already-terminal requests so a restart doesn't re-notify old timeouts.
-  const notifiedTimeouts = new Set();
-  try {
-    const existing = await backend.listRecentRequests();
-    for (const r of existing) {
-      if (['TIMEOUT', 'FAILED'].includes(r.status)) notifiedTimeouts.add(r.requestId);
-    }
-    log(`posting loop: seeded ${notifiedTimeouts.size} already-notified timeout(s)`);
-  } catch (e) {
-    log(`posting loop: could not seed timeouts — ${e.message}`);
-  }
+  // Seeding "already notified" state can fail transiently (e.g. the backend is still coming
+  // up after a paired restart). Treating that failure as "nothing was notified yet" is exactly
+  // what caused every old TIMEOUT/FAILED request — some weeks old — to get re-announced in one
+  // burst. So notifiedTimeouts starts as null (not an empty Set) and the timeout-notify pass is
+  // skipped entirely, retried every cycle, until seeding succeeds at least once. Replies and
+  // live edits are unaffected and keep posting normally in the meantime.
+  let notifiedTimeouts = null;
+  let seedPauseLogged = false;
   log(`posting loop started (poll every ${interval}ms)`);
   for (;;) {
     try {
@@ -123,11 +120,23 @@ async function postingLoop(config, telegram, backend) {
     } catch (error) {
       log(`postLiveEdits error: ${error.message}`);
     }
-    try {
-      await notifyTimeouts({ backend, telegram, notifiedSet: notifiedTimeouts, log });
-    } catch (error) {
-      log(`notifyTimeouts error: ${error.message}`);
+
+    if (notifiedTimeouts === null) {
+      notifiedTimeouts = await seedNotifiedTimeouts({ backend, log });
+      if (notifiedTimeouts === null && !seedPauseLogged) {
+        log('posting loop: timeout notifications paused until seeding succeeds (retrying every cycle)');
+        seedPauseLogged = true;
+      }
     }
+
+    if (notifiedTimeouts) {
+      try {
+        await notifyTimeouts({ backend, telegram, notifiedSet: notifiedTimeouts, log });
+      } catch (error) {
+        log(`notifyTimeouts error: ${error.message}`);
+      }
+    }
+
     await sleep(interval);
   }
 }

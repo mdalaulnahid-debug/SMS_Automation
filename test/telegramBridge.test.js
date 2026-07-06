@@ -2,7 +2,7 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
-const { buildMention, planIntake, handleIntake, postApprovedReplies, shouldSuppressGroupReply } = require('../telegram-bridge/bridge');
+const { buildMention, planIntake, handleIntake, postApprovedReplies, notifyTimeouts, seedNotifiedTimeouts, shouldSuppressGroupReply } = require('../telegram-bridge/bridge');
 
 const CONFIG = {
   groupChatId: '-1001234567890',
@@ -301,4 +301,38 @@ test('postApprovedReplies leaves a draft queued if posting throws', async () => 
   const posted = await postApprovedReplies({ backend, telegram });
   assert.deepEqual(posted, []);
   assert.equal(markedCalled, false);
+});
+
+test('seedNotifiedTimeouts returns the set of currently-terminal request ids', async () => {
+  const backend = {
+    listRecentRequests: async () => [
+      { requestId: 'REQ-1', status: 'TIMEOUT' },
+      { requestId: 'REQ-2', status: 'FAILED' },
+      { requestId: 'REQ-3', status: 'COMPLETED' }
+    ]
+  };
+  const seeded = await seedNotifiedTimeouts({ backend });
+  assert.deepEqual([...seeded].sort(), ['REQ-1', 'REQ-2']);
+});
+
+test('seedNotifiedTimeouts returns null (not an empty Set) when the backend call fails — the caller must be able to tell "nothing to seed" apart from "could not ask"', async () => {
+  const backend = {
+    listRecentRequests: async () => { throw new Error('fetch failed'); }
+  };
+  const seeded = await seedNotifiedTimeouts({ backend });
+  assert.equal(seeded, null);
+});
+
+test('notifyTimeouts never re-announces a request already in the seeded set', async () => {
+  const telegram = fakeTelegram();
+  const backend = {
+    listRecentRequests: async () => [
+      { requestId: 'REQ-OLD', channel: 'telegram', status: 'TIMEOUT', requesterName: 'Officer Rahim', requestType: 'LRL', payload: '01712345678', chatId: CONFIG.groupChatId, sourceMessageId: 1 },
+      { requestId: 'REQ-NEW', channel: 'telegram', status: 'TIMEOUT', requesterName: 'Officer Rahim', requestType: 'LRL', payload: '01799999999', chatId: CONFIG.groupChatId, sourceMessageId: 2 }
+    ]
+  };
+  // Simulates a restart that already seeded REQ-OLD successfully — only REQ-NEW is unseen.
+  const notifiedSet = new Set(['REQ-OLD']);
+  const posted = await notifyTimeouts({ backend, telegram, notifiedSet });
+  assert.deepEqual(posted, ['REQ-NEW'], 'only the request missing from the seeded set gets notified');
 });

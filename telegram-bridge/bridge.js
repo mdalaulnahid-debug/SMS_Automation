@@ -216,6 +216,28 @@ async function postLiveEdits({ backend, telegram, log = () => {} }) {
   return edited;
 }
 
+// Ask the backend which requests are currently terminal (TIMEOUT/FAILED) so the caller can
+// seed its "already notified" set and avoid re-announcing old failures after a restart.
+// Single attempt — the caller (start.js's poll loop) retries every cycle until this succeeds,
+// reusing the loop's own cadence instead of a separate backoff schedule. Returns null (not an
+// empty Set) on failure so the caller can tell "nothing to seed" apart from "couldn't ask" —
+// treating a failed seed as an empty Set is exactly the bug that caused every old timeout to
+// be re-announced at once after a restart.
+async function seedNotifiedTimeouts({ backend, log = () => {} }) {
+  try {
+    const existing = await backend.listRecentRequests();
+    const seeded = new Set();
+    for (const r of existing) {
+      if (['TIMEOUT', 'FAILED'].includes(r.status)) seeded.add(r.requestId);
+    }
+    log(`posting loop: seeded ${seeded.size} already-notified timeout(s)`);
+    return seeded;
+  } catch (e) {
+    log(`posting loop: seed attempt failed — ${e.message}`);
+    return null;
+  }
+}
+
 // Notify the group when requests time out or fail without any reply.
 // Tracks which request IDs have been notified to avoid repeats.
 async function notifyTimeouts({ backend, telegram, notifiedSet, log = () => {} }) {
@@ -252,4 +274,4 @@ async function notifyTimeouts({ backend, telegram, notifiedSet, log = () => {} }
   return posted;
 }
 
-module.exports = { buildMention, planIntake, handleIntake, postApprovedReplies, postLiveEdits, notifyTimeouts, shouldSuppressGroupReply };
+module.exports = { buildMention, planIntake, handleIntake, postApprovedReplies, postLiveEdits, notifyTimeouts, seedNotifiedTimeouts, shouldSuppressGroupReply };
