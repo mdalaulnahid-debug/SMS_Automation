@@ -99,6 +99,11 @@ pipeline (new `channel: 'gd-watch'`) rather than building a parallel system —
 see full design, data model, and edge cases in
 [`docs/gd-lost-phone-watch-design.md`](docs/gd-lost-phone-watch-design.md).
 To be built and tested entirely on **localhost first**, per standing policy.
+**Being built on its own branch, `feature/gd-lost-phone-watch`, kept fully
+isolated from this `main` branch/production** — implementation progress is
+tracked branch-locally in
+[`docs/gd-lost-phone-watch-STATUS.md`](docs/gd-lost-phone-watch-STATUS.md)
+(that file only exists on the feature branch, not here on `main`).
 
 ## Conventions / gotchas
 

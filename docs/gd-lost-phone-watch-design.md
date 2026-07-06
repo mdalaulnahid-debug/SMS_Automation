@@ -8,7 +8,9 @@ Cross-links: [`SESSION_MEMORY.md`](../SESSION_MEMORY.md) (project orientation) �
 [`docs/training-and-matching-rules.md`](training-and-matching-rules.md)
 (`IMEI-MS` reply format this design depends on) · [`todo.md`](../todo.md)
 (planned-work tracker) · [`progress_tracker.md`](../progress_tracker.md)
-(session handoff log).
+(session handoff log) ·
+[`docs/gd-lost-phone-watch-STATUS.md`](gd-lost-phone-watch-STATUS.md)
+(branch-local implementation progress — `feature/gd-lost-phone-watch` only).
 
 ## 1. Goals & non-goals
 
