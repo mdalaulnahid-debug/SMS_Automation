@@ -553,9 +553,15 @@ class AutomationStore {
     // reply window (WiFi/mobile transition), WorkManager retried after the timeout fired,
     // and the reply would otherwise be silently dropped as unmatched.
     // For retried requests, extend the window to 2 hours to account for delayed operator replies.
-    const LATE_WINDOW_MS = 6 * 60 * 60 * 1000;   // 6h for WAITING / NEEDS_MANUAL_REVIEW
-    const TIMEOUT_WINDOW_MS = 60 * 60 * 1000;     // 1h for TIMEOUT (offline-phone recovery)
-    const RETRY_TIMEOUT_WINDOW_MS = 2 * 60 * 60 * 1000; // 2h for retried requests (late operator replies)
+    // Windows widened 2026-07-06 after the 2026-07-05 operator/gateway blackout:
+    // replies arrived ~6h late and fell outside the old 1h TIMEOUT window, so 94
+    // legitimate replies landed unmatched. A wider window is only safe because the
+    // content gate in service.js (replyContradictsPayload) now rejects replies
+    // whose identifiers don't match the request — so a stale request in-window
+    // can no longer capture an unrelated reply.
+    const LATE_WINDOW_MS = 12 * 60 * 60 * 1000;   // 12h for WAITING / NEEDS_MANUAL_REVIEW
+    const TIMEOUT_WINDOW_MS = 12 * 60 * 60 * 1000;     // 12h for TIMEOUT (delayed-operator recovery)
+    const RETRY_TIMEOUT_WINDOW_MS = 12 * 60 * 60 * 1000; // 12h for retried requests
     const now = Date.now();
     const lateThreshold = now - LATE_WINDOW_MS;
     const timeoutThreshold = now - TIMEOUT_WINDOW_MS;

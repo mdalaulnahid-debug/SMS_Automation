@@ -6,6 +6,52 @@ Start with `progress_tracker.md` for the latest session handoff, test results, a
 
 ---
 
+## 🐞 INCIDENT — 2026-07-05 operator blackout: reply cross-matching + lost DM replies
+
+Root-caused via read-only VPS DB queries (see this session's `/debug`). A multi-hour
+operator/gateway delay on 2026-07-05 exposed two matching bugs.
+
+### Fixes — implemented locally, tested (150/150), NOT yet deployed
+
+- [x] **`P1` Content gate** — `src/replyAnalyzer.js` `replyContradictsPayload()` +
+  wired into both attach paths in `src/service.js`. Rejects a reply whose echoed
+  identifiers (IMEIs/MSISDNs) are disjoint from the request payload → routes to
+  unmatched instead of cross-attaching. New audit action `SMS_REPLY_PAYLOAD_MISMATCH`.
+  Regression tests added in `test/replyMatching.test.js`.
+- [x] **`P1` Wider late-reply window** — `src/store.js` `findActiveRequestForGateway`
+  TIMEOUT/LATE windows widened 1h→12h (operators ran ~6h late; 94 replies landed
+  unmatched). Safe now because the content gate guards correctness.
+- [ ] **`P1` DEPLOY** the two fixes to the VPS (gated — needs explicit go-ahead).
+- [ ] **`P2` Background re-match job** for the 7,395-row unmatched backlog (optional;
+  the wider window handles future late replies going forward).
+
+### Data correction — prepared, needs supervised apply (production, law-enforcement data)
+
+8 IMEI-MS requests ever had a wrong operator reply attached (officers got wrong
+subscriber data for that operator). Correct replies still exist in the inbox.
+Apply via the admin **Exception desk / correct-match** flow (audited), reviewing each:
+
+- [ ] `REQ-20260621-0159-RQNE` (BANGLALINK) · `REQ-20260621-0186-UQR7` (ROBI)
+- [ ] `REQ-20260623-0345-SM4E` (GP) · `REQ-20260628-0645-I1Z6` (BANGLALINK+GP)
+- [ ] `REQ-20260704-1045-E49U` (GP) · `REQ-20260704-1064-SXBT` (GP)
+- [ ] `REQ-20260705-1249-3IIZ` (GP) · `REQ-20260705-1276-07SE` (BANGLALINK+GP)
+- [ ] Recover the 2 timed-out DM LCL replies (01987273584 → Banglalink, 01837379567
+  → Robi) from the unmatched inbox via manual-match.
+
+### Operational
+
+- [ ] **`P1` ROBI gateway** last checked in 2026-07-05 22:13 (GP/BL current). Verify the
+  Robi gateway phone is back online.
+
+### Feature (from this incident)
+
+- [ ] **`P2` Split review streams** — route group-origin vs DM-origin requests to two
+  different Telegram review groups for easier filtering. Needs a second review-group
+  chat id in `config/telegram.json` + channel-based post-back routing in the bridge;
+  admin console already has a `channel` filter. Design before building.
+
+---
+
 ## 🔜 PLANNED — React + Vite frontend migration · `P1` (large, multi-session)
 
 Migrate the vanilla static frontend to a **React + Vite SPA** so React-native AI

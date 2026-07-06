@@ -2,7 +2,7 @@
 
 const { OPERATORS, STATUSES, DISPATCH_STATUSES, TERMINAL_DISPATCH_STATUSES } = require('./domain');
 const { parseRequestText } = require('./parser');
-const { analyzeOperatorReply, inferReplyFamilies } = require('./replyAnalyzer');
+const { analyzeOperatorReply, inferReplyFamilies, replyContradictsPayload } = require('./replyAnalyzer');
 
 const DEFAULT_REPLY_WINDOW_MS = 15 * 60 * 1000;
 const DEFAULT_SEND_CONFIRMATION_GRACE_MS = 15 * 60 * 1000;
@@ -225,8 +225,13 @@ class AutomationService {
           createdAt: new Date(request.createdAt).getTime()
         };
       });
-      const narrowed = scored.filter((candidate) => candidate.typeScore > -3);
-      const viable = narrowed.length ? narrowed : scored;
+      // Content gate: drop candidates whose payload the reply's echoed identifiers
+      // contradict (reply belongs to a different request). If every candidate is
+      // contradicted, fall through to unmatched below.
+      const contentOk = scored.filter((c) => !replyContradictsPayload(c.request, input.body));
+      const gated = contentOk.length ? contentOk : [];
+      const narrowed = gated.filter((candidate) => candidate.typeScore > -3);
+      const viable = narrowed.length ? narrowed : gated;
       viable.sort((a, b) => {
         if (b.typeScore !== a.typeScore) return b.typeScore - a.typeScore;
         if (b.trainingScore !== a.trainingScore) return b.trainingScore - a.trainingScore;
@@ -240,12 +245,21 @@ class AutomationService {
       const hasUniqueTopScore = viable.length < 2 || viable[0].score > viable[1].score;
       const hasUniqueTopPayload = viable.length < 2 || viable[0].payloadMatches > viable[1].payloadMatches;
       if (
+        viable.length > 0 &&
         viable[0].typeScore >= 0 &&
         (viable[0].trainingScore > 0 || viable[0].score > 0) &&
         (hasUniqueTopType || hasUniqueTopTraining || hasUniqueTopScore || hasUniqueTopPayload)
       ) {
         matchedRequest = viable[0].request;
         analysis = viable[0].analysis;
+      } else if (viable.length === 0) {
+        // Every candidate's payload was contradicted by the reply's content.
+        this.store.audit('system', 'SMS_REPLY_PAYLOAD_MISMATCH', null, {
+          gatewayId: input.gatewayId,
+          senderNumber: input.from,
+          inferredReplyFamilies,
+          contradictedCandidates: scored.map((s) => s.request.requestId)
+        });
       } else {
         this.store.audit('system', 'SMS_REPLY_AMBIGUOUS', null, {
           gatewayId: input.gatewayId,
@@ -271,6 +285,17 @@ class AutomationService {
           requestId: matchResult.requestId,
           requestType: matchResult.requestType,
           inferredReplyFamilies
+        });
+      } else if (replyContradictsPayload(matchResult, input.body)) {
+        // Content gate: the reply echoes identifiers (IMEIs/MSISDNs) that are
+        // disjoint from this request's payload — it belongs to a different
+        // request. Route to unmatched rather than cross-attach (root cause of the
+        // 2026-07-05 blackout cross-matching). Left as unmatched for manual match.
+        this.store.audit('system', 'SMS_REPLY_PAYLOAD_MISMATCH', matchResult.requestId, {
+          gatewayId: input.gatewayId,
+          senderNumber: input.from,
+          requestType: matchResult.requestType,
+          payload: matchResult.payload
         });
       } else {
         matchedRequest = matchResult;

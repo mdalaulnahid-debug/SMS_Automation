@@ -7,7 +7,7 @@ const { OperatorQueue } = require('../src/queue');
 const { SmsGatewayClient } = require('../src/smsGateway');
 const { AutomationService } = require('../src/service');
 const { STATUSES } = require('../src/domain');
-const { inferReplyFamilies } = require('../src/replyAnalyzer');
+const { inferReplyFamilies, replyContradictsPayload } = require('../src/replyAnalyzer');
 
 function createHarness(gatewayConfig = {}, serviceOptions = {}) {
   const store = new AutomationStore(gatewayConfig);
@@ -25,6 +25,47 @@ test('inferReplyFamilies recognizes "no records found for IMEI" mid-sentence (li
 test('inferReplyFamilies recognizes "no records found for NID" mid-sentence (line-anchor regression)', () => {
   const result = inferReplyFamilies('Sorry No records found for NID: 1234567890123 [GP]');
   assert.ok(result.strongTypes.includes('NID-MS'));
+});
+
+test('replyContradictsPayload flags IMEI replies whose IMEIs are disjoint from the request', () => {
+  const request = { requestType: 'IMEI-MS', payload: '866129064492044 866129064492051' };
+  // reply echoes only OTHER requests' IMEIs → contradiction (2026-07-05 cross-match)
+  assert.equal(replyContradictsPayload(request, 'Sorry No records found for IMEI: 358197546383805 [GP]'), true);
+  // reply echoes one of the request's own IMEIs → no contradiction
+  assert.equal(replyContradictsPayload(request, 'IMEI: 866129064492044 No data found. [Robi]'), false);
+  // reply echoes no IMEIs at all (bare no-data) → no opinion, preserve type+timing behavior
+  assert.equal(replyContradictsPayload(request, 'No data available - Banglalink'), false);
+});
+
+test('content gate: an IMEI reply for a different request is not cross-attached (blackout regression)', async () => {
+  const { store, service } = createHarness();
+  const reqA = await service.submitRequest({
+    chatId: 'operations', requesterName: 'Addl SP Crime & Ops', requesterId: '8914564310',
+    text: 'IMEI-MS 864284063426220 864284063426238'
+  });
+  const reqB = await service.submitRequest({
+    chatId: 'operations', requesterName: 'Addl SP Crime & Ops', requesterId: '8914564310',
+    text: 'IMEI-MS 866129064492044 866129064492051'
+  });
+
+  // GP replies with ONLY reqA's IMEIs, while both A and B are pending on GP.
+  const gpReply = service.receiveSmsWebhook({
+    gatewayId: 'GP_PHONE_01', from: '12345',
+    body: 'IMEI: 864284063426220 864284063426220, 8801603853502, 20251130 [GP] Sorry No records found for IMEI: 864284063426238 [GP]'
+  });
+  // must attach to A (whose IMEIs it contains), never B
+  assert.equal(gpReply.request?.requestId, reqA.request.requestId);
+
+  // A GP reply echoing IMEIs that belong to NEITHER request must go unmatched, not cross-attach.
+  const orphan = service.receiveSmsWebhook({
+    gatewayId: 'GP_PHONE_01', from: '12345',
+    body: 'Sorry No records found for IMEI: 358197546383805 [GP] IMEI: 869206088883767 869206088883760, 8801745235710, 20260604 [GP]'
+  });
+  assert.equal(orphan.ok, false);
+  assert.equal(orphan.needsManualReview, true);
+  assert.ok(store.auditLogs.some((r) => r.action === 'SMS_REPLY_PAYLOAD_MISMATCH'));
+  // reqB never received GP's reply
+  assert.ok(!store.getRequest(reqB.request.requestId).receivedOperators.includes('GP'));
 });
 
 test('an unrelated IMEI "no records" reply does not steal an open LRL request', async () => {

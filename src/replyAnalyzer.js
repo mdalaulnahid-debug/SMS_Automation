@@ -132,6 +132,49 @@ function payloadInReply(payload, body) {
   };
 }
 
+// ── Content gate ──────────────────────────────────────────────────────────
+// Identifiers an operator reply is expected to echo, per request type. Used to
+// REJECT a reply whose echoed identifiers are disjoint from the request's payload
+// (the 2026-07-05 blackout cross-matched IMEI replies onto the wrong request
+// because the matcher only checked gateway + sender + time window, never content).
+// Only gated types are checked; MS-NID is intentionally omitted (bare NID digit
+// runs are too ambiguous to gate safely).
+const REPLY_IDENTIFIER_EXTRACTORS = Object.freeze({
+  [REQUEST_TYPES.IMEI_MS]: (body) => body.match(/\b\d{14,15}\b/g) || [],
+  [REQUEST_TYPES.NID_MS]: (body) => body.match(/\b(?:8801|01)\d{8,9}\b/g) || [],
+  [REQUEST_TYPES.LRL]: (body) => body.match(/\b(?:8801|01)\d{8,9}\b/g) || [],
+  [REQUEST_TYPES.LCL]: (body) => body.match(/\b(?:8801|01)\d{8,9}\b/g) || []
+});
+
+function stripMsisdnPrefix(digits) {
+  return String(digits).replace(/^(?:\+?880|0)/, '');
+}
+
+// True when the reply clearly echoes identifiers of the request's type but NONE
+// of them match the request's payload — a strong signal the reply belongs to a
+// different request and must not be auto-attached. Returns false (no opinion)
+// for untracked types or replies that echo no identifiers (e.g. bare "no data"),
+// preserving the existing type+timing behavior for those.
+function replyContradictsPayload(request, messageBody) {
+  const extractor = REPLY_IDENTIFIER_EXTRACTORS[request.requestType];
+  if (!extractor) return false;
+  const body = String(messageBody || '');
+  const echoed = extractor(body).map((d) => d.replace(/[\s\-().]/g, ''));
+  if (echoed.length === 0) return false;
+  const payloadIds = String(request.payload || '')
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean)
+    .map((d) => d.replace(/[\s\-().]/g, ''));
+  const payloadSet = new Set();
+  for (const id of payloadIds) {
+    payloadSet.add(id);
+    payloadSet.add(stripMsisdnPrefix(id));
+  }
+  const anyOverlap = echoed.some((e) => payloadSet.has(e) || payloadSet.has(stripMsisdnPrefix(e)));
+  return !anyOverlap;
+}
+
 function matchTrainingPattern(request, body) {
   return matchReplyAgainstTraining({
     requestType: request.requestType,
@@ -152,5 +195,6 @@ module.exports = {
   REPLY_PATTERNS,
   analyzeOperatorReply,
   inferReplyFamilies,
-  matchTrainingPattern
+  matchTrainingPattern,
+  replyContradictsPayload
 };
