@@ -122,11 +122,15 @@ class AutomationService {
         duplicateRequestId: duplicate.requestId,
         duplicateStatus: duplicate.status
       });
+      const timedOut = duplicate.status === STATUSES.TIMEOUT;
+      const guidance = timedOut
+        ? `A recent request for this exists as ${duplicate.requestId} but timed out. Use Retry on that request from the admin console — resending creates a duplicate the operator's late reply can't be attributed to.`
+        : `A similar request is already active as ${duplicate.requestId}. Wait for that result or use retry from admin.`;
       return {
         ok: false,
         errorCode: 'DUPLICATE_ACTIVE_REQUEST',
         errors: [`A similar request is already active as ${duplicate.requestId}.`],
-        replyText: `A similar request is already active as ${duplicate.requestId}. Wait for that result or use retry from admin.`,
+        replyText: guidance,
         duplicateRequestId: duplicate.requestId
       };
     }

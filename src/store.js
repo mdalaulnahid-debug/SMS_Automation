@@ -24,7 +24,15 @@ const DUPLICATE_BLOCKING_STATUSES = Object.freeze([
   STATUSES.SMS_SENT,
   STATUSES.WAITING_OPERATOR_REPLY,
   STATUSES.REPLY_RECEIVED,
-  STATUSES.NEEDS_MANUAL_REVIEW
+  STATUSES.NEEDS_MANUAL_REVIEW,
+  // TIMEOUT included (2026-07-06): re-querying a just-timed-out number used to be
+  // allowed, creating a competing duplicate. When the operator's (often only
+  // slightly late) reply then arrived, it could not be attributed between the
+  // timed-out original and the fresh duplicate and was parked unmatched — the
+  // real cause of the 2026-07-05 DM "no reply" cases. Blocking within the window
+  // keeps a single request so the late reply matches it cleanly; the block
+  // response directs the requester to Retry (which re-runs the original).
+  STATUSES.TIMEOUT
 ]);
 
 function randomId(prefix) {

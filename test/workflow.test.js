@@ -1137,6 +1137,33 @@ test('retry re-queues a timed-out request', async () => {
   assert.equal(retried.status, STATUSES.WAITING_OPERATOR_REPLY);
 });
 
+test('re-querying a timed-out number is blocked as a duplicate, not allowed to create a competing request (2026-07-05 DM regression)', async () => {
+  const { store, service } = createHarness();
+  const first = await service.submitRequest({
+    chatId: 'operations', requesterName: 'Officer Rahim', requesterId: '8801700000000',
+    text: 'LRL 01712345678'
+  });
+  // Drive it to TIMEOUT.
+  store.claimPendingJobs('GP_PHONE_01');
+  store.ackOutboxJob(store.smsOutbox[0].id, { ok: true, providerMessageId: 'sms_x' });
+  store.smsOutbox[0].sendResult.confirmedAt = new Date(Date.now() - 16 * 60 * 1000).toISOString();
+  await service.timeoutWaitingRequests();
+  assert.equal(store.getRequest(first.request.requestId).status, STATUSES.TIMEOUT);
+
+  // Re-querying the same number within the dedup window must be blocked (TIMEOUT is now
+  // a duplicate-blocking status) — otherwise a competing duplicate is created and the
+  // operator's late reply can't be attributed between them (parks unmatched).
+  const second = await service.submitRequest({
+    chatId: 'operations', requesterName: 'Officer Rahim', requesterId: '8801700000000',
+    text: 'LRL 01712345678'
+  });
+  assert.equal(second.ok, false);
+  assert.equal(second.errorCode, 'DUPLICATE_ACTIVE_REQUEST');
+  assert.match(second.replyText, /Retry/i);
+  // Only the original request exists — no competing duplicate was created.
+  assert.equal(store.listRequests().length, 1);
+});
+
 test('manual match links an unmatched inbox to a waiting request', async () => {
   const { store, service } = createHarness();
   const submitted = await service.submitRequest({

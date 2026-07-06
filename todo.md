@@ -19,9 +19,21 @@ operator/gateway delay on 2026-07-05 exposed two matching bugs.
   unmatched instead of cross-attaching. New audit action `SMS_REPLY_PAYLOAD_MISMATCH`.
   Regression tests added in `test/replyMatching.test.js`.
 - [x] **`P1` Wider late-reply window** — `src/store.js` `findActiveRequestForGateway`
-  TIMEOUT/LATE windows widened 1h→12h (operators ran ~6h late; 94 replies landed
-  unmatched). Safe now because the content gate guards correctness.
-- [ ] **`P1` DEPLOY** the two fixes to the VPS (gated — needs explicit go-ahead).
+  TIMEOUT/LATE windows widened 1h→12h. Helps genuinely-late replies; safe now
+  because the content gate guards correctness.
+- [x] **`P1` Duplicate-blocking on TIMEOUT** — `src/store.js` added `TIMEOUT` to
+  `DUPLICATE_BLOCKING_STATUSES`. **This is the real cause of the DM "no reply"
+  cases** (NOT a late-reply/window issue — my first read was wrong: the reply came
+  ~1 min later, not 6h; that was a UTC/BDT mix-up). Re-querying a just-timed-out
+  number was allowed, creating a competing duplicate; the operator's reply then
+  couldn't be attributed between the two identical requests and parked unmatched.
+  Blocking on TIMEOUT keeps one request so the reply matches cleanly; block message
+  directs the requester to Retry. Regression test in `test/workflow.test.js`.
+  **No DM/group logic disparity exists** — both are `channel=telegram`, matched by
+  the identical chat-agnostic code path (verified).
+- [x] **`P1` DEPLOYED** the content-gate + window fixes (commit b0412fc). Dedup fix
+  pending deploy below.
+- [ ] **`P1` DEPLOY** the duplicate-blocking-on-TIMEOUT fix (gated — needs go-ahead).
 - [ ] **`P2` Background re-match job** for the 7,395-row unmatched backlog (optional;
   the wider window handles future late replies going forward).
 
