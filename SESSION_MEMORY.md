@@ -91,13 +91,24 @@ phase list with priorities in `todo.md` (PLANNED section) and
 
 ## Planned feature — Lost/Stolen Phone Recovery Watch (GD-linked)
 
-**Design only (2026-07-06), not started, `P2`.** Register a GD (police General
-Diary entry) -linked "watch" on stolen IMEIs; the system re-runs `IMEI-MS`
-against all operators every 24h and DMs admins/IO if the phone resurfaces on a
-new number after the GD date. Reuses the existing request/dispatch/reply
-pipeline (new `channel: 'gd-watch'`) rather than building a parallel system —
-see full design, data model, and edge cases in
+**Design + codebase-alignment review done (2026-07-06), not started, `P2`.**
+Register a GD (police General Diary entry) -linked "watch" on stolen IMEIs;
+the system re-runs `IMEI-MS` against all operators every 24h and DMs admins/IO
+if the phone resurfaces on a new number after the GD date. Reuses the existing
+request/dispatch/reply pipeline (new `channel: 'gd-watch'`) rather than
+building a parallel system — see full design, data model, edge cases, and the
+implementation-review findings appended at the bottom in
 [`docs/gd-lost-phone-watch-design.md`](docs/gd-lost-phone-watch-design.md).
+The review (checked against real code, not just the spec) found the core
+reuse plan is sound, but flagged **5 open decisions before coding starts**:
+(1) the second-reviewer approval gate is unenforceable via the legacy shared
+admin key — needs session-auth-only; (2) no existing mapping from an admin
+account to a Telegram chat to DM; (3) **highest risk** — multi-IMEI batching
+has no real evidence operators reliably attribute history rows to the right
+IMEI, recommend one-IMEI-per-SMS for Phase 1 instead; (4) GD image upload has
+zero file-upload precedent in this codebase; (5) gd-watch requests will
+pollute existing admin dashboard stats unless explicitly filtered. Full detail
+in `docs/gd-lost-phone-watch-STATUS.md` (branch-local).
 To be built and tested entirely on **localhost first**, per standing policy.
 **Being built on its own branch, `feature/gd-lost-phone-watch`, kept fully
 isolated from this `main` branch/production** — implementation progress is

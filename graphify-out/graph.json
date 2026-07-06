@@ -4,116 +4,6 @@
   "graph": {},
   "nodes": [
     {
-      "label": "SESSION_MEMORY.md",
-      "file_type": "document",
-      "source_file": "SESSION_MEMORY.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "session_memory",
-      "community": 595,
-      "norm_label": "session_memory.md"
-    },
-    {
-      "label": "Session Memory \u2014 SMS Automation",
-      "file_type": "document",
-      "source_file": "SESSION_MEMORY.md",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "session_memory_session_memory_sms_automation",
-      "community": 369,
-      "norm_label": "session memory \u2014 sms automation"
-    },
-    {
-      "label": "What this project is",
-      "file_type": "document",
-      "source_file": "SESSION_MEMORY.md",
-      "source_location": "L7",
-      "_origin": "ast",
-      "id": "session_memory_what_this_project_is",
-      "community": 369,
-      "norm_label": "what this project is"
-    },
-    {
-      "label": "Architecture \u2014 four surfaces, one backend",
-      "file_type": "document",
-      "source_file": "SESSION_MEMORY.md",
-      "source_location": "L19",
-      "_origin": "ast",
-      "id": "session_memory_architecture_four_surfaces_one_backend",
-      "community": 369,
-      "norm_label": "architecture \u2014 four surfaces, one backend"
-    },
-    {
-      "label": "Auth model",
-      "file_type": "document",
-      "source_file": "SESSION_MEMORY.md",
-      "source_location": "L36",
-      "_origin": "ast",
-      "id": "session_memory_auth_model",
-      "community": 369,
-      "norm_label": "auth model"
-    },
-    {
-      "label": "Deploy \u2014 production VPS",
-      "file_type": "document",
-      "source_file": "SESSION_MEMORY.md",
-      "source_location": "L46",
-      "_origin": "ast",
-      "id": "session_memory_deploy_production_vps",
-      "community": 369,
-      "norm_label": "deploy \u2014 production vps"
-    },
-    {
-      "label": "Design system (current)",
-      "file_type": "document",
-      "source_file": "SESSION_MEMORY.md",
-      "source_location": "L59",
-      "_origin": "ast",
-      "id": "session_memory_design_system_current",
-      "community": 369,
-      "norm_label": "design system (current)"
-    },
-    {
-      "label": "Frontend stack & planned direction",
-      "file_type": "document",
-      "source_file": "SESSION_MEMORY.md",
-      "source_location": "L77",
-      "_origin": "ast",
-      "id": "session_memory_frontend_stack_planned_direction",
-      "community": 369,
-      "norm_label": "frontend stack & planned direction"
-    },
-    {
-      "label": "Planned feature \u2014 Lost/Stolen Phone Recovery Watch (GD-linked)",
-      "file_type": "document",
-      "source_file": "SESSION_MEMORY.md",
-      "source_location": "L92",
-      "_origin": "ast",
-      "id": "session_memory_planned_feature_lost_stolen_phone_recovery_watch_gd_linked",
-      "community": 369,
-      "norm_label": "planned feature \u2014 lost/stolen phone recovery watch (gd-linked)"
-    },
-    {
-      "label": "Conventions / gotchas",
-      "file_type": "document",
-      "source_file": "SESSION_MEMORY.md",
-      "source_location": "L108",
-      "_origin": "ast",
-      "id": "session_memory_conventions_gotchas",
-      "community": 369,
-      "norm_label": "conventions / gotchas"
-    },
-    {
-      "label": "Where to look next",
-      "file_type": "document",
-      "source_file": "SESSION_MEMORY.md",
-      "source_location": "L119",
-      "_origin": "ast",
-      "id": "session_memory_where_to_look_next",
-      "community": 369,
-      "norm_label": "where to look next"
-    },
-    {
       "label": "gd-lost-phone-watch-STATUS.md",
       "file_type": "document",
       "source_file": "docs/gd-lost-phone-watch-STATUS.md",
@@ -134,20 +24,20 @@
       "norm_label": "gd lost-phone watch \u2014 implementation status (branch-local)"
     },
     {
-      "label": "Status by component",
+      "label": "Status by component (rollout order per design doc's Testing & rollout section)",
       "file_type": "document",
       "source_file": "docs/gd-lost-phone-watch-STATUS.md",
-      "source_location": "L19",
+      "source_location": "L23",
       "_origin": "ast",
-      "id": "docs_gd_lost_phone_watch_status_status_by_component",
+      "id": "docs_gd_lost_phone_watch_status_status_by_component_rollout_order_per_design_doc_s_testing_rollout_section",
       "community": 595,
-      "norm_label": "status by component"
+      "norm_label": "status by component (rollout order per design doc's testing & rollout section)"
     },
     {
       "label": "Latest update",
       "file_type": "document",
       "source_file": "docs/gd-lost-phone-watch-STATUS.md",
-      "source_location": "L31",
+      "source_location": "L35",
       "_origin": "ast",
       "id": "docs_gd_lost_phone_watch_status_latest_update",
       "community": 595,
@@ -157,7 +47,7 @@
       "label": "Open questions to resolve during implementation",
       "file_type": "document",
       "source_file": "docs/gd-lost-phone-watch-STATUS.md",
-      "source_location": "L37",
+      "source_location": "L45",
       "_origin": "ast",
       "id": "docs_gd_lost_phone_watch_status_open_questions_to_resolve_during_implementation",
       "community": 595,
@@ -174,114 +64,204 @@
       "norm_label": "gd-lost-phone-watch-design.md"
     },
     {
-      "label": "Lost/Stolen Phone Recovery Watch \u2014 System Design (Planned, `P2`)",
+      "label": "System Design: GD Lost-Phone Watch \u2014 Phase 1 (locked scope)",
       "file_type": "document",
       "source_file": "docs/gd-lost-phone-watch-design.md",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "docs_gd_lost_phone_watch_design_lost_stolen_phone_recovery_watch_system_design_planned_p2",
-      "community": 497,
-      "norm_label": "lost/stolen phone recovery watch \u2014 system design (planned, `p2`)"
+      "id": "docs_gd_lost_phone_watch_design_system_design_gd_lost_phone_watch_phase_1_locked_scope",
+      "community": 595,
+      "norm_label": "system design: gd lost-phone watch \u2014 phase 1 (locked scope)"
     },
     {
-      "label": "1. Goals & non-goals",
+      "label": "What this is",
       "file_type": "document",
       "source_file": "docs/gd-lost-phone-watch-design.md",
-      "source_location": "L15",
+      "source_location": "L17",
       "_origin": "ast",
-      "id": "docs_gd_lost_phone_watch_design_1_goals_non_goals",
-      "community": 497,
-      "norm_label": "1. goals & non-goals"
+      "id": "docs_gd_lost_phone_watch_design_what_this_is",
+      "community": 595,
+      "norm_label": "what this is"
     },
     {
-      "label": "2. Where this sits in the existing architecture",
+      "label": "Explicitly OUT OF SCOPE for this phase \u2014 do not build, suggest, or stub any of",
       "file_type": "document",
       "source_file": "docs/gd-lost-phone-watch-design.md",
-      "source_location": "L38",
+      "source_location": "L26",
       "_origin": "ast",
-      "id": "docs_gd_lost_phone_watch_design_2_where_this_sits_in_the_existing_architecture",
-      "community": 497,
-      "norm_label": "2. where this sits in the existing architecture"
+      "id": "docs_gd_lost_phone_watch_design_explicitly_out_of_scope_for_this_phase_do_not_build_suggest_or_stub_any_of",
+      "community": 595,
+      "norm_label": "explicitly out of scope for this phase \u2014 do not build, suggest, or stub any of"
     },
     {
-      "label": "3. Data model",
+      "label": "Data model (new tables, additive only \u2014 do not touch `requests`/`request_dispatches`)",
       "file_type": "document",
       "source_file": "docs/gd-lost-phone-watch-design.md",
-      "source_location": "L96",
+      "source_location": "L40",
       "_origin": "ast",
-      "id": "docs_gd_lost_phone_watch_design_3_data_model",
-      "community": 497,
-      "norm_label": "3. data model"
+      "id": "docs_gd_lost_phone_watch_design_data_model_new_tables_additive_only_do_not_touch_requests_request_dispatches",
+      "community": 595,
+      "norm_label": "data model (new tables, additive only \u2014 do not touch `requests`/`request_dispatches`)"
     },
     {
-      "label": "4. Detection algorithm (step by step)",
+      "label": "Workflow",
       "file_type": "document",
       "source_file": "docs/gd-lost-phone-watch-design.md",
-      "source_location": "L114",
+      "source_location": "L64",
       "_origin": "ast",
-      "id": "docs_gd_lost_phone_watch_design_4_detection_algorithm_step_by_step",
-      "community": 497,
-      "norm_label": "4. detection algorithm (step by step)"
+      "id": "docs_gd_lost_phone_watch_design_workflow",
+      "community": 595,
+      "norm_label": "workflow"
     },
     {
-      "label": "5. API surface (conceptual \u2014 no implementation yet)",
+      "label": "Required fixes to existing code (not new subsystems \u2014 targeted edits)",
+      "file_type": "document",
+      "source_file": "docs/gd-lost-phone-watch-design.md",
+      "source_location": "L99",
+      "_origin": "ast",
+      "id": "docs_gd_lost_phone_watch_design_required_fixes_to_existing_code_not_new_subsystems_targeted_edits",
+      "community": 595,
+      "norm_label": "required fixes to existing code (not new subsystems \u2014 targeted edits)"
+    },
+    {
+      "label": "API surface (admin-auth gated, never reachable from the Telegram group)",
+      "file_type": "document",
+      "source_file": "docs/gd-lost-phone-watch-design.md",
+      "source_location": "L126",
+      "_origin": "ast",
+      "id": "docs_gd_lost_phone_watch_design_api_surface_admin_auth_gated_never_reachable_from_the_telegram_group",
+      "community": 595,
+      "norm_label": "api surface (admin-auth gated, never reachable from the telegram group)"
+    },
+    {
+      "label": "Security (same posture as the rest of the system, nothing new invented)",
       "file_type": "document",
       "source_file": "docs/gd-lost-phone-watch-design.md",
       "source_location": "L137",
       "_origin": "ast",
-      "id": "docs_gd_lost_phone_watch_design_5_api_surface_conceptual_no_implementation_yet",
-      "community": 497,
-      "norm_label": "5. api surface (conceptual \u2014 no implementation yet)"
+      "id": "docs_gd_lost_phone_watch_design_security_same_posture_as_the_rest_of_the_system_nothing_new_invented",
+      "community": 595,
+      "norm_label": "security (same posture as the rest of the system, nothing new invented)"
     },
     {
-      "label": "6. Scheduler design",
+      "label": "Testing & rollout order",
       "file_type": "document",
       "source_file": "docs/gd-lost-phone-watch-design.md",
-      "source_location": "L152",
+      "source_location": "L145",
       "_origin": "ast",
-      "id": "docs_gd_lost_phone_watch_design_6_scheduler_design",
-      "community": 497,
-      "norm_label": "6. scheduler design"
+      "id": "docs_gd_lost_phone_watch_design_testing_rollout_order",
+      "community": 595,
+      "norm_label": "testing & rollout order"
     },
     {
-      "label": "7. Security architecture",
+      "label": "SESSION_MEMORY.md",
       "file_type": "document",
-      "source_file": "docs/gd-lost-phone-watch-design.md",
-      "source_location": "L171",
+      "source_file": "SESSION_MEMORY.md",
+      "source_location": "L1",
       "_origin": "ast",
-      "id": "docs_gd_lost_phone_watch_design_7_security_architecture",
-      "community": 497,
-      "norm_label": "7. security architecture"
+      "community": 508,
+      "norm_label": "session_memory.md",
+      "id": "session_memory"
     },
     {
-      "label": "8. Edge cases to design against",
+      "label": "Session Memory \u2014 SMS Automation",
       "file_type": "document",
-      "source_file": "docs/gd-lost-phone-watch-design.md",
-      "source_location": "L187",
+      "source_file": "SESSION_MEMORY.md",
+      "source_location": "L1",
       "_origin": "ast",
-      "id": "docs_gd_lost_phone_watch_design_8_edge_cases_to_design_against",
-      "community": 497,
-      "norm_label": "8. edge cases to design against"
+      "community": 369,
+      "norm_label": "session memory \u2014 sms automation",
+      "id": "session_memory_session_memory_sms_automation"
     },
     {
-      "label": "9. Testing & rollout plan",
+      "label": "What this project is",
       "file_type": "document",
-      "source_file": "docs/gd-lost-phone-watch-design.md",
-      "source_location": "L202",
+      "source_file": "SESSION_MEMORY.md",
+      "source_location": "L7",
       "_origin": "ast",
-      "id": "docs_gd_lost_phone_watch_design_9_testing_rollout_plan",
-      "community": 497,
-      "norm_label": "9. testing & rollout plan"
+      "community": 369,
+      "norm_label": "what this project is",
+      "id": "session_memory_what_this_project_is"
     },
     {
-      "label": "10. Key decisions already made (2026-07-06 design interview)",
+      "label": "Architecture \u2014 four surfaces, one backend",
       "file_type": "document",
-      "source_file": "docs/gd-lost-phone-watch-design.md",
-      "source_location": "L213",
+      "source_file": "SESSION_MEMORY.md",
+      "source_location": "L19",
       "_origin": "ast",
-      "id": "docs_gd_lost_phone_watch_design_10_key_decisions_already_made_2026_07_06_design_interview",
-      "community": 497,
-      "norm_label": "10. key decisions already made (2026-07-06 design interview)"
+      "community": 369,
+      "norm_label": "architecture \u2014 four surfaces, one backend",
+      "id": "session_memory_architecture_four_surfaces_one_backend"
+    },
+    {
+      "label": "Auth model",
+      "file_type": "document",
+      "source_file": "SESSION_MEMORY.md",
+      "source_location": "L36",
+      "_origin": "ast",
+      "community": 369,
+      "norm_label": "auth model",
+      "id": "session_memory_auth_model"
+    },
+    {
+      "label": "Deploy \u2014 production VPS",
+      "file_type": "document",
+      "source_file": "SESSION_MEMORY.md",
+      "source_location": "L46",
+      "_origin": "ast",
+      "community": 369,
+      "norm_label": "deploy \u2014 production vps",
+      "id": "session_memory_deploy_production_vps"
+    },
+    {
+      "label": "Design system (current)",
+      "file_type": "document",
+      "source_file": "SESSION_MEMORY.md",
+      "source_location": "L59",
+      "_origin": "ast",
+      "community": 369,
+      "norm_label": "design system (current)",
+      "id": "session_memory_design_system_current"
+    },
+    {
+      "label": "Frontend stack & planned direction",
+      "file_type": "document",
+      "source_file": "SESSION_MEMORY.md",
+      "source_location": "L77",
+      "_origin": "ast",
+      "community": 369,
+      "norm_label": "frontend stack & planned direction",
+      "id": "session_memory_frontend_stack_planned_direction"
+    },
+    {
+      "label": "Planned feature \u2014 Lost/Stolen Phone Recovery Watch (GD-linked)",
+      "file_type": "document",
+      "source_file": "SESSION_MEMORY.md",
+      "source_location": "L92",
+      "_origin": "ast",
+      "community": 369,
+      "norm_label": "planned feature \u2014 lost/stolen phone recovery watch (gd-linked)",
+      "id": "session_memory_planned_feature_lost_stolen_phone_recovery_watch_gd_linked"
+    },
+    {
+      "label": "Conventions / gotchas",
+      "file_type": "document",
+      "source_file": "SESSION_MEMORY.md",
+      "source_location": "L108",
+      "_origin": "ast",
+      "community": 369,
+      "norm_label": "conventions / gotchas",
+      "id": "session_memory_conventions_gotchas"
+    },
+    {
+      "label": "Where to look next",
+      "file_type": "document",
+      "source_file": "SESSION_MEMORY.md",
+      "source_location": "L119",
+      "_origin": "ast",
+      "community": 369,
+      "norm_label": "where to look next",
+      "id": "session_memory_where_to_look_next"
     },
     {
       "label": "architecture.md",
@@ -11449,7 +11429,7 @@
       "source_file": ".agents/skills/impeccable/scripts/live-accept.mjs",
       "source_location": "L183",
       "_origin": "ast",
-      "community": 201,
+      "community": 119,
       "norm_label": "scrubmanualeditsagainstoriginalblock()",
       "id": "agents_skills_impeccable_scripts_live_accept_scrubmanualeditsagainstoriginalblock"
     },
@@ -11499,7 +11479,7 @@
       "source_file": ".agents/skills/impeccable/scripts/live-accept.mjs",
       "source_location": "L230",
       "_origin": "ast",
-      "community": 201,
+      "community": 119,
       "norm_label": "scrubmanualeditsagainstfile()",
       "id": "agents_skills_impeccable_scripts_live_accept_scrubmanualeditsagainstfile"
     },
@@ -17519,7 +17499,7 @@
       "source_file": ".agents/skills/impeccable/scripts/live-discard-manual-edits.mjs",
       "source_location": "L37",
       "_origin": "ast",
-      "community": 138,
+      "community": 119,
       "norm_label": "cwd",
       "id": "agents_skills_impeccable_scripts_live_discard_manual_edits_cwd"
     },
@@ -18539,7 +18519,7 @@
       "source_file": ".agents/skills/impeccable/scripts/live-server.mjs",
       "source_location": "L135",
       "_origin": "ast",
-      "community": 138,
+      "community": 119,
       "norm_label": "chatagentlikelyactive()",
       "id": "agents_skills_impeccable_scripts_live_server_chatagentlikelyactive"
     },
@@ -20199,7 +20179,7 @@
       "source_file": ".agents/skills/impeccable/scripts/live/manual-edit-routes.mjs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 138,
+      "community": 119,
       "norm_label": "manual-edit-routes.mjs",
       "id": "agents_skills_impeccable_scripts_live_manual_edit_routes"
     },
@@ -20209,7 +20189,7 @@
       "source_file": ".agents/skills/impeccable/scripts/live/manual-edit-routes.mjs",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 138,
+      "community": 119,
       "norm_label": "createmanualeditroutes()",
       "id": "agents_skills_impeccable_scripts_live_manual_edit_routes_createmanualeditroutes"
     },
@@ -20219,7 +20199,7 @@
       "source_file": ".agents/skills/impeccable/scripts/live/manual-edit-routes.mjs",
       "source_location": "L340",
       "_origin": "ast",
-      "community": 138,
+      "community": 119,
       "norm_label": "sendjson()",
       "id": "agents_skills_impeccable_scripts_live_manual_edit_routes_sendjson"
     },
@@ -20229,7 +20209,7 @@
       "source_file": ".agents/skills/impeccable/scripts/live/manual-edit-routes.mjs",
       "source_location": "L345",
       "_origin": "ast",
-      "community": 138,
+      "community": 119,
       "norm_label": "summarizependingmanualeditbatch()",
       "id": "agents_skills_impeccable_scripts_live_manual_edit_routes_summarizependingmanualeditbatch"
     },
@@ -22239,7 +22219,7 @@
       "source_file": ".claude/skills/impeccable/scripts/context.mjs",
       "source_location": "L127",
       "_origin": "ast",
-      "community": 301,
+      "community": 596,
       "norm_label": "resolvetargetselection()",
       "id": "claude_skills_impeccable_scripts_context_resolvetargetselection"
     },
@@ -22669,7 +22649,7 @@
       "source_file": ".claude/skills/impeccable/scripts/context.mjs",
       "source_location": "L721",
       "_origin": "ast",
-      "community": 77,
+      "community": 598,
       "norm_label": "readlocalskillversion()",
       "id": "claude_skills_impeccable_scripts_context_readlocalskillversion"
     },
@@ -22679,7 +22659,7 @@
       "source_file": ".claude/skills/impeccable/scripts/context.mjs",
       "source_location": "L733",
       "_origin": "ast",
-      "community": 77,
+      "community": 598,
       "norm_label": "readupdatecache()",
       "id": "claude_skills_impeccable_scripts_context_readupdatecache"
     },
@@ -22689,7 +22669,7 @@
       "source_file": ".claude/skills/impeccable/scripts/context.mjs",
       "source_location": "L741",
       "_origin": "ast",
-      "community": 77,
+      "community": 598,
       "norm_label": "writeupdatecache()",
       "id": "claude_skills_impeccable_scripts_context_writeupdatecache"
     },
@@ -22699,7 +22679,7 @@
       "source_file": ".claude/skills/impeccable/scripts/context.mjs",
       "source_location": "L751",
       "_origin": "ast",
-      "community": 77,
+      "community": 598,
       "norm_label": "comparesemver()",
       "id": "claude_skills_impeccable_scripts_context_comparesemver"
     },
@@ -22709,7 +22689,7 @@
       "source_file": ".claude/skills/impeccable/scripts/context.mjs",
       "source_location": "L761",
       "_origin": "ast",
-      "community": 77,
+      "community": 598,
       "norm_label": "fetchlatestskillversion()",
       "id": "claude_skills_impeccable_scripts_context_fetchlatestskillversion"
     },
@@ -22719,7 +22699,7 @@
       "source_file": ".claude/skills/impeccable/scripts/context.mjs",
       "source_location": "L772",
       "_origin": "ast",
-      "community": 77,
+      "community": 598,
       "norm_label": "buildupdatedirective()",
       "id": "claude_skills_impeccable_scripts_context_buildupdatedirective"
     },
@@ -22729,7 +22709,7 @@
       "source_file": ".claude/skills/impeccable/scripts/context.mjs",
       "source_location": "L791",
       "_origin": "ast",
-      "community": 77,
+      "community": 598,
       "norm_label": "updatecheckdisabledbyconfig()",
       "id": "claude_skills_impeccable_scripts_context_updatecheckdisabledbyconfig"
     },
@@ -22739,7 +22719,7 @@
       "source_file": ".claude/skills/impeccable/scripts/context.mjs",
       "source_location": "L802",
       "_origin": "ast",
-      "community": 77,
+      "community": 598,
       "norm_label": "computeupdatedirective()",
       "id": "claude_skills_impeccable_scripts_context_computeupdatedirective"
     },
@@ -22749,7 +22729,7 @@
       "source_file": ".claude/skills/impeccable/scripts/context.mjs",
       "source_location": "L837",
       "_origin": "ast",
-      "community": 77,
+      "community": 596,
       "norm_label": "cli()",
       "id": "claude_skills_impeccable_scripts_context_cli"
     },
@@ -22759,7 +22739,7 @@
       "source_file": ".claude/skills/impeccable/scripts/context.mjs",
       "source_location": "L891",
       "_origin": "ast",
-      "community": 77,
+      "community": 301,
       "norm_label": "parseclioptions()",
       "id": "claude_skills_impeccable_scripts_context_parseclioptions"
     },
@@ -22769,7 +22749,7 @@
       "source_file": ".claude/skills/impeccable/scripts/context.mjs",
       "source_location": "L895",
       "_origin": "ast",
-      "community": 77,
+      "community": 596,
       "norm_label": "hastargetoption()",
       "id": "claude_skills_impeccable_scripts_context_hastargetoption"
     },
@@ -22779,7 +22759,7 @@
       "source_file": ".claude/skills/impeccable/scripts/context.mjs",
       "source_location": "L899",
       "_origin": "ast",
-      "community": 77,
+      "community": 596,
       "norm_label": "pathexistsfortarget()",
       "id": "claude_skills_impeccable_scripts_context_pathexistsfortarget"
     },
@@ -22789,7 +22769,7 @@
       "source_file": ".claude/skills/impeccable/scripts/context.mjs",
       "source_location": "L904",
       "_origin": "ast",
-      "community": 77,
+      "community": 596,
       "norm_label": "buildresolvedcontextdirective()",
       "id": "claude_skills_impeccable_scripts_context_buildresolvedcontextdirective"
     },
@@ -22799,7 +22779,7 @@
       "source_file": ".claude/skills/impeccable/scripts/context.mjs",
       "source_location": "L916",
       "_origin": "ast",
-      "community": 77,
+      "community": 596,
       "norm_label": "shouldwarnmissingtarget()",
       "id": "claude_skills_impeccable_scripts_context_shouldwarnmissingtarget"
     },
@@ -22809,7 +22789,7 @@
       "source_file": ".claude/skills/impeccable/scripts/context.mjs",
       "source_location": "L927",
       "_origin": "ast",
-      "community": 77,
+      "community": 596,
       "norm_label": "buildmissingtargetdirective()",
       "id": "claude_skills_impeccable_scripts_context_buildmissingtargetdirective"
     },
@@ -22819,7 +22799,7 @@
       "source_file": ".claude/skills/impeccable/scripts/context.mjs",
       "source_location": "L936",
       "_origin": "ast",
-      "community": 77,
+      "community": 596,
       "norm_label": "buildtargetselectiondirective()",
       "id": "claude_skills_impeccable_scripts_context_buildtargetselectiondirective"
     },
@@ -26759,7 +26739,7 @@
       "source_file": ".claude/skills/impeccable/scripts/detector/engines/static-html/css-cascade.mjs",
       "source_location": "L752",
       "_origin": "ast",
-      "community": 147,
+      "community": 406,
       "norm_label": ".classname()",
       "id": "claude_skills_impeccable_scripts_detector_engines_static_html_css_cascade_staticelement_classname"
     },
@@ -31619,7 +31599,7 @@
       "source_file": ".claude/skills/impeccable/scripts/live-accept.mjs",
       "source_location": "L183",
       "_origin": "ast",
-      "community": 197,
+      "community": 207,
       "norm_label": "scrubmanualeditsagainstoriginalblock()",
       "id": "claude_skills_impeccable_scripts_live_accept_scrubmanualeditsagainstoriginalblock"
     },
@@ -31669,7 +31649,7 @@
       "source_file": ".claude/skills/impeccable/scripts/live-accept.mjs",
       "source_location": "L230",
       "_origin": "ast",
-      "community": 197,
+      "community": 207,
       "norm_label": "scrubmanualeditsagainstfile()",
       "id": "claude_skills_impeccable_scripts_live_accept_scrubmanualeditsagainstfile"
     },
@@ -37689,7 +37669,7 @@
       "source_file": ".claude/skills/impeccable/scripts/live-discard-manual-edits.mjs",
       "source_location": "L37",
       "_origin": "ast",
-      "community": 207,
+      "community": 139,
       "norm_label": "cwd",
       "id": "claude_skills_impeccable_scripts_live_discard_manual_edits_cwd"
     },
@@ -38099,7 +38079,7 @@
       "source_file": ".claude/skills/impeccable/scripts/live-manual-edit-evidence.mjs",
       "source_location": "L39",
       "_origin": "ast",
-      "community": 207,
+      "community": 232,
       "norm_label": "buildmanualeditevidence()",
       "id": "claude_skills_impeccable_scripts_live_manual_edit_evidence_buildmanualeditevidence"
     },
@@ -40329,7 +40309,7 @@
       "source_file": ".claude/skills/impeccable/scripts/live/manual-apply.mjs",
       "source_location": "L900",
       "_origin": "ast",
-      "community": 139,
+      "community": 207,
       "norm_label": "summarizemanualapplyfailures()",
       "id": "claude_skills_impeccable_scripts_live_manual_apply_summarizemanualapplyfailures"
     },
@@ -40339,7 +40319,7 @@
       "source_file": ".claude/skills/impeccable/scripts/live/manual-apply.mjs",
       "source_location": "L913",
       "_origin": "ast",
-      "community": 139,
+      "community": 207,
       "norm_label": "summarizemanualdiagnostics()",
       "id": "claude_skills_impeccable_scripts_live_manual_apply_summarizemanualdiagnostics"
     },
@@ -40349,7 +40329,7 @@
       "source_file": ".claude/skills/impeccable/scripts/live/manual-apply.mjs",
       "source_location": "L927",
       "_origin": "ast",
-      "community": 139,
+      "community": 207,
       "norm_label": "summarizemanuallogfile()",
       "id": "claude_skills_impeccable_scripts_live_manual_apply_summarizemanuallogfile"
     },
@@ -40359,7 +40339,7 @@
       "source_file": ".claude/skills/impeccable/scripts/live/manual-apply.mjs",
       "source_location": "L934",
       "_origin": "ast",
-      "community": 139,
+      "community": 207,
       "norm_label": "compactmanuallogtext()",
       "id": "claude_skills_impeccable_scripts_live_manual_apply_compactmanuallogtext"
     },
@@ -40489,7 +40469,7 @@
       "source_file": ".claude/skills/impeccable/scripts/live/manual-edits-buffer.mjs",
       "source_location": "L130",
       "_origin": "ast",
-      "community": 207,
+      "community": 120,
       "norm_label": "countbypage()",
       "id": "claude_skills_impeccable_scripts_live_manual_edits_buffer_countbypage"
     },
@@ -40809,7 +40789,7 @@
       "source_file": ".claude/skills/impeccable/scripts/live/svelte-component.mjs",
       "source_location": "L255",
       "_origin": "ast",
-      "community": 197,
+      "community": 152,
       "norm_label": "readmanifest()",
       "id": "claude_skills_impeccable_scripts_live_svelte_component_readmanifest"
     },
@@ -41109,7 +41089,7 @@
       "source_file": ".claude/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 157,
+      "community": 590,
       "norm_label": "sveltekit-adapter.mjs",
       "id": "claude_skills_impeccable_scripts_live_sveltekit_adapter"
     },
@@ -41119,7 +41099,7 @@
       "source_file": ".claude/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L18",
       "_origin": "ast",
-      "community": 157,
+      "community": 590,
       "norm_label": "detectsveltekitproject()",
       "id": "claude_skills_impeccable_scripts_live_sveltekit_adapter_detectsveltekitproject"
     },
@@ -41129,7 +41109,7 @@
       "source_file": ".claude/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L39",
       "_origin": "ast",
-      "community": 157,
+      "community": 590,
       "norm_label": "applysveltekitliveadapter()",
       "id": "claude_skills_impeccable_scripts_live_sveltekit_adapter_applysveltekitliveadapter"
     },
@@ -41139,7 +41119,7 @@
       "source_file": ".claude/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L65",
       "_origin": "ast",
-      "community": 157,
+      "community": 590,
       "norm_label": "removesveltekitliveadapter()",
       "id": "claude_skills_impeccable_scripts_live_sveltekit_adapter_removesveltekitliveadapter"
     },
@@ -41149,7 +41129,7 @@
       "source_file": ".claude/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L97",
       "_origin": "ast",
-      "community": 157,
+      "community": 590,
       "norm_label": "patchsveltelayout()",
       "id": "claude_skills_impeccable_scripts_live_sveltekit_adapter_patchsveltelayout"
     },
@@ -41159,7 +41139,7 @@
       "source_file": ".claude/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L124",
       "_origin": "ast",
-      "community": 157,
+      "community": 590,
       "norm_label": "unpatchsveltelayout()",
       "id": "claude_skills_impeccable_scripts_live_sveltekit_adapter_unpatchsveltelayout"
     },
@@ -41169,7 +41149,7 @@
       "source_file": ".claude/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L139",
       "_origin": "ast",
-      "community": 157,
+      "community": 590,
       "norm_label": "ensuresvelteliverootcomponent()",
       "id": "claude_skills_impeccable_scripts_live_sveltekit_adapter_ensuresvelteliverootcomponent"
     },
@@ -41179,7 +41159,7 @@
       "source_file": ".claude/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L146",
       "_origin": "ast",
-      "community": 157,
+      "community": 590,
       "norm_label": "buildsvelteliverootcomponent()",
       "id": "claude_skills_impeccable_scripts_live_sveltekit_adapter_buildsvelteliverootcomponent"
     },
@@ -41189,7 +41169,7 @@
       "source_file": ".claude/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L207",
       "_origin": "ast",
-      "community": 157,
+      "community": 590,
       "norm_label": "findsveltekitapphtml()",
       "id": "claude_skills_impeccable_scripts_live_sveltekit_adapter_findsveltekitapphtml"
     },
@@ -41199,7 +41179,7 @@
       "source_file": ".claude/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L220",
       "_origin": "ast",
-      "community": 157,
+      "community": 590,
       "norm_label": "findsveltekitlayout()",
       "id": "claude_skills_impeccable_scripts_live_sveltekit_adapter_findsveltekitlayout"
     },
@@ -41209,7 +41189,7 @@
       "source_file": ".claude/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L231",
       "_origin": "ast",
-      "community": 157,
+      "community": 590,
       "norm_label": "defaultsveltelayout()",
       "id": "claude_skills_impeccable_scripts_live_sveltekit_adapter_defaultsveltelayout"
     },
@@ -41219,7 +41199,7 @@
       "source_file": ".claude/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L235",
       "_origin": "ast",
-      "community": 157,
+      "community": 590,
       "norm_label": "packagehassveltekit()",
       "id": "claude_skills_impeccable_scripts_live_sveltekit_adapter_packagehassveltekit"
     },
@@ -41229,7 +41209,7 @@
       "source_file": ".claude/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L251",
       "_origin": "ast",
-      "community": 157,
+      "community": 590,
       "norm_label": "fileincludes()",
       "id": "claude_skills_impeccable_scripts_live_sveltekit_adapter_fileincludes"
     },
@@ -41239,7 +41219,7 @@
       "source_file": ".claude/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L259",
       "_origin": "ast",
-      "community": 157,
+      "community": 590,
       "norm_label": "pruneemptydir()",
       "id": "claude_skills_impeccable_scripts_live_sveltekit_adapter_pruneemptydir"
     },
@@ -41249,7 +41229,7 @@
       "source_file": ".claude/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L272",
       "_origin": "ast",
-      "community": 157,
+      "community": 590,
       "norm_label": "escaperegexp()",
       "id": "claude_skills_impeccable_scripts_live_sveltekit_adapter_escaperegexp"
     },
@@ -42379,7 +42359,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/context.mjs",
       "source_location": "L61",
       "_origin": "ast",
-      "community": 303,
+      "community": 389,
       "norm_label": "loadcontext()",
       "id": "cursor_skills_impeccable_scripts_context_loadcontext"
     },
@@ -42409,7 +42389,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/context.mjs",
       "source_location": "L127",
       "_origin": "ast",
-      "community": 590,
+      "community": 78,
       "norm_label": "resolvetargetselection()",
       "id": "cursor_skills_impeccable_scripts_context_resolvetargetselection"
     },
@@ -42809,7 +42789,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/context.mjs",
       "source_location": "L682",
       "_origin": "ast",
-      "community": 303,
+      "community": 389,
       "norm_label": "saferead()",
       "id": "cursor_skills_impeccable_scripts_context_saferead"
     },
@@ -42839,7 +42819,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/context.mjs",
       "source_location": "L721",
       "_origin": "ast",
-      "community": 591,
+      "community": 78,
       "norm_label": "readlocalskillversion()",
       "id": "cursor_skills_impeccable_scripts_context_readlocalskillversion"
     },
@@ -42849,7 +42829,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/context.mjs",
       "source_location": "L733",
       "_origin": "ast",
-      "community": 591,
+      "community": 78,
       "norm_label": "readupdatecache()",
       "id": "cursor_skills_impeccable_scripts_context_readupdatecache"
     },
@@ -42859,7 +42839,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/context.mjs",
       "source_location": "L741",
       "_origin": "ast",
-      "community": 591,
+      "community": 78,
       "norm_label": "writeupdatecache()",
       "id": "cursor_skills_impeccable_scripts_context_writeupdatecache"
     },
@@ -42869,7 +42849,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/context.mjs",
       "source_location": "L751",
       "_origin": "ast",
-      "community": 591,
+      "community": 78,
       "norm_label": "comparesemver()",
       "id": "cursor_skills_impeccable_scripts_context_comparesemver"
     },
@@ -42879,7 +42859,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/context.mjs",
       "source_location": "L761",
       "_origin": "ast",
-      "community": 591,
+      "community": 78,
       "norm_label": "fetchlatestskillversion()",
       "id": "cursor_skills_impeccable_scripts_context_fetchlatestskillversion"
     },
@@ -42889,7 +42869,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/context.mjs",
       "source_location": "L772",
       "_origin": "ast",
-      "community": 591,
+      "community": 78,
       "norm_label": "buildupdatedirective()",
       "id": "cursor_skills_impeccable_scripts_context_buildupdatedirective"
     },
@@ -42899,7 +42879,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/context.mjs",
       "source_location": "L791",
       "_origin": "ast",
-      "community": 591,
+      "community": 78,
       "norm_label": "updatecheckdisabledbyconfig()",
       "id": "cursor_skills_impeccable_scripts_context_updatecheckdisabledbyconfig"
     },
@@ -42909,7 +42889,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/context.mjs",
       "source_location": "L802",
       "_origin": "ast",
-      "community": 591,
+      "community": 78,
       "norm_label": "computeupdatedirective()",
       "id": "cursor_skills_impeccable_scripts_context_computeupdatedirective"
     },
@@ -42919,7 +42899,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/context.mjs",
       "source_location": "L837",
       "_origin": "ast",
-      "community": 590,
+      "community": 78,
       "norm_label": "cli()",
       "id": "cursor_skills_impeccable_scripts_context_cli"
     },
@@ -42939,7 +42919,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/context.mjs",
       "source_location": "L895",
       "_origin": "ast",
-      "community": 590,
+      "community": 78,
       "norm_label": "hastargetoption()",
       "id": "cursor_skills_impeccable_scripts_context_hastargetoption"
     },
@@ -42949,7 +42929,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/context.mjs",
       "source_location": "L899",
       "_origin": "ast",
-      "community": 590,
+      "community": 78,
       "norm_label": "pathexistsfortarget()",
       "id": "cursor_skills_impeccable_scripts_context_pathexistsfortarget"
     },
@@ -42959,7 +42939,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/context.mjs",
       "source_location": "L904",
       "_origin": "ast",
-      "community": 590,
+      "community": 78,
       "norm_label": "buildresolvedcontextdirective()",
       "id": "cursor_skills_impeccable_scripts_context_buildresolvedcontextdirective"
     },
@@ -42969,7 +42949,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/context.mjs",
       "source_location": "L916",
       "_origin": "ast",
-      "community": 590,
+      "community": 78,
       "norm_label": "shouldwarnmissingtarget()",
       "id": "cursor_skills_impeccable_scripts_context_shouldwarnmissingtarget"
     },
@@ -42979,7 +42959,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/context.mjs",
       "source_location": "L927",
       "_origin": "ast",
-      "community": 590,
+      "community": 78,
       "norm_label": "buildmissingtargetdirective()",
       "id": "cursor_skills_impeccable_scripts_context_buildmissingtargetdirective"
     },
@@ -42989,7 +42969,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/context.mjs",
       "source_location": "L936",
       "_origin": "ast",
-      "community": 590,
+      "community": 78,
       "norm_label": "buildtargetselectiondirective()",
       "id": "cursor_skills_impeccable_scripts_context_buildtargetselectiondirective"
     },
@@ -43009,7 +42989,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/critique-storage.mjs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 116,
+      "community": 389,
       "norm_label": "critique-storage.mjs",
       "id": "cursor_skills_impeccable_scripts_critique_storage"
     },
@@ -43019,7 +42999,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/critique-storage.mjs",
       "source_location": "L43",
       "_origin": "ast",
-      "community": 116,
+      "community": 389,
       "norm_label": "slugfromtarget()",
       "id": "cursor_skills_impeccable_scripts_critique_storage_slugfromtarget"
     },
@@ -43029,7 +43009,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/critique-storage.mjs",
       "source_location": "L70",
       "_origin": "ast",
-      "community": 116,
+      "community": 389,
       "norm_label": "kebab()",
       "id": "cursor_skills_impeccable_scripts_critique_storage_kebab"
     },
@@ -43039,7 +43019,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/critique-storage.mjs",
       "source_location": "L87",
       "_origin": "ast",
-      "community": 116,
+      "community": 389,
       "norm_label": "nowfilenamestamp()",
       "id": "cursor_skills_impeccable_scripts_critique_storage_nowfilenamestamp"
     },
@@ -43049,7 +43029,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/critique-storage.mjs",
       "source_location": "L99",
       "_origin": "ast",
-      "community": 116,
+      "community": 389,
       "norm_label": "writesnapshot()",
       "id": "cursor_skills_impeccable_scripts_critique_storage_writesnapshot"
     },
@@ -43059,7 +43039,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/critique-storage.mjs",
       "source_location": "L114",
       "_origin": "ast",
-      "community": 116,
+      "community": 389,
       "norm_label": "serializefrontmatter()",
       "id": "cursor_skills_impeccable_scripts_critique_storage_serializefrontmatter"
     },
@@ -43069,7 +43049,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/critique-storage.mjs",
       "source_location": "L127",
       "_origin": "ast",
-      "community": 116,
+      "community": 389,
       "norm_label": "parsefrontmatter()",
       "id": "cursor_skills_impeccable_scripts_critique_storage_parsefrontmatter"
     },
@@ -43079,7 +43059,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/critique-storage.mjs",
       "source_location": "L149",
       "_origin": "ast",
-      "community": 116,
+      "community": 389,
       "norm_label": "listsnapshotsforslug()",
       "id": "cursor_skills_impeccable_scripts_critique_storage_listsnapshotsforslug"
     },
@@ -43089,7 +43069,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/critique-storage.mjs",
       "source_location": "L163",
       "_origin": "ast",
-      "community": 116,
+      "community": 389,
       "norm_label": "readlatestsnapshot()",
       "id": "cursor_skills_impeccable_scripts_critique_storage_readlatestsnapshot"
     },
@@ -43099,7 +43079,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/critique-storage.mjs",
       "source_location": "L175",
       "_origin": "ast",
-      "community": 116,
+      "community": 389,
       "norm_label": "readtrend()",
       "id": "cursor_skills_impeccable_scripts_critique_storage_readtrend"
     },
@@ -43109,7 +43089,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/critique-storage.mjs",
       "source_location": "L183",
       "_origin": "ast",
-      "community": 116,
+      "community": 389,
       "norm_label": "main()",
       "id": "cursor_skills_impeccable_scripts_critique_storage_main"
     },
@@ -43119,7 +43099,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/critique-storage.mjs",
       "source_location": "L225",
       "_origin": "ast",
-      "community": 116,
+      "community": 389,
       "norm_label": "ismainmodule()",
       "id": "cursor_skills_impeccable_scripts_critique_storage_ismainmodule"
     },
@@ -44039,7 +44019,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/detector/cli/main.mjs",
       "source_location": "L74",
       "_origin": "ast",
-      "community": 158,
+      "community": 168,
       "norm_label": "confirm()",
       "id": "cursor_skills_impeccable_scripts_detector_cli_main_confirm"
     },
@@ -44139,7 +44119,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/detector/design-system.mjs",
       "source_location": "L53",
       "_origin": "ast",
-      "community": 128,
+      "community": 168,
       "norm_label": "parsefrontmatter()",
       "id": "cursor_skills_impeccable_scripts_detector_design_system_parsefrontmatter"
     },
@@ -44379,7 +44359,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/detector/design-system.mjs",
       "source_location": "L358",
       "_origin": "ast",
-      "community": 128,
+      "community": 168,
       "norm_label": "loaddesignsystemforcwd()",
       "id": "cursor_skills_impeccable_scripts_detector_design_system_loaddesignsystemforcwd"
     },
@@ -46929,7 +46909,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/detector/engines/static-html/css-cascade.mjs",
       "source_location": "L752",
       "_origin": "ast",
-      "community": 140,
+      "community": 391,
       "norm_label": ".classname()",
       "id": "cursor_skills_impeccable_scripts_detector_engines_static_html_css_cascade_staticelement_classname"
     },
@@ -47059,7 +47039,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/detector/engines/static-html/css-cascade.mjs",
       "source_location": "L835",
       "_origin": "ast",
-      "community": 185,
+      "community": 452,
       "norm_label": ".body()",
       "id": "cursor_skills_impeccable_scripts_detector_engines_static_html_css_cascade_staticdocument_body"
     },
@@ -48209,7 +48189,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/detector/rules/checks.mjs",
       "source_location": "L2050",
       "_origin": "ast",
-      "community": 46,
+      "community": 168,
       "norm_label": "checkpagetypography()",
       "id": "cursor_skills_impeccable_scripts_detector_rules_checks_checkpagetypography"
     },
@@ -51629,7 +51609,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/lib/impeccable-paths.mjs",
       "source_location": "L118",
       "_origin": "ast",
-      "community": 116,
+      "community": 389,
       "norm_label": "getcritiquedir()",
       "id": "cursor_skills_impeccable_scripts_lib_impeccable_paths_getcritiquedir"
     },
@@ -51659,7 +51639,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/lib/is-generated.mjs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 140,
+      "community": 602,
       "norm_label": "is-generated.mjs",
       "id": "cursor_skills_impeccable_scripts_lib_is_generated"
     },
@@ -51669,7 +51649,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/lib/is-generated.mjs",
       "source_location": "L21",
       "_origin": "ast",
-      "community": 140,
+      "community": 602,
       "norm_label": "header_markers",
       "id": "cursor_skills_impeccable_scripts_lib_is_generated_header_markers"
     },
@@ -51679,7 +51659,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/lib/is-generated.mjs",
       "source_location": "L33",
       "_origin": "ast",
-      "community": 140,
+      "community": 602,
       "norm_label": "isgeneratedfile()",
       "id": "cursor_skills_impeccable_scripts_lib_is_generated_isgeneratedfile"
     },
@@ -51689,7 +51669,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/lib/is-generated.mjs",
       "source_location": "L42",
       "_origin": "ast",
-      "community": 140,
+      "community": 602,
       "norm_label": "isgitignored()",
       "id": "cursor_skills_impeccable_scripts_lib_is_generated_isgitignored"
     },
@@ -51699,7 +51679,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/lib/is-generated.mjs",
       "source_location": "L56",
       "_origin": "ast",
-      "community": 140,
+      "community": 602,
       "norm_label": "hasgeneratedheader()",
       "id": "cursor_skills_impeccable_scripts_lib_is_generated_hasgeneratedheader"
     },
@@ -52169,7 +52149,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L263",
       "_origin": "ast",
-      "community": 70,
+      "community": 262,
       "norm_label": "inithighlight()",
       "id": "cursor_skills_impeccable_scripts_live_browser_inithighlight"
     },
@@ -52179,7 +52159,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L290",
       "_origin": "ast",
-      "community": 70,
+      "community": 29,
       "norm_label": "shouldshowhighlighttagtooltip()",
       "id": "cursor_skills_impeccable_scripts_live_browser_shouldshowhighlighttagtooltip"
     },
@@ -52189,7 +52169,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L295",
       "_origin": "ast",
-      "community": 70,
+      "community": 29,
       "norm_label": "hidehighlighttagtooltip()",
       "id": "cursor_skills_impeccable_scripts_live_browser_hidehighlighttagtooltip"
     },
@@ -52199,7 +52179,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L301",
       "_origin": "ast",
-      "community": 70,
+      "community": 29,
       "norm_label": "showhighlight()",
       "id": "cursor_skills_impeccable_scripts_live_browser_showhighlight"
     },
@@ -52409,7 +52389,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L868",
       "_origin": "ast",
-      "community": 262,
+      "community": 29,
       "norm_label": "stripmanualeditruntimestate()",
       "id": "cursor_skills_impeccable_scripts_live_browser_stripmanualeditruntimestate"
     },
@@ -52419,7 +52399,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L891",
       "_origin": "ast",
-      "community": 262,
+      "community": 29,
       "norm_label": "sanitizedcontextouterhtml()",
       "id": "cursor_skills_impeccable_scripts_live_browser_sanitizedcontextouterhtml"
     },
@@ -52429,7 +52409,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L898",
       "_origin": "ast",
-      "community": 262,
+      "community": 70,
       "norm_label": "extractcontext()",
       "id": "cursor_skills_impeccable_scripts_live_browser_extractcontext"
     },
@@ -52489,7 +52469,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L1003",
       "_origin": "ast",
-      "community": 262,
+      "community": 29,
       "norm_label": "normalizemanualcontexttext()",
       "id": "cursor_skills_impeccable_scripts_live_browser_normalizemanualcontexttext"
     },
@@ -52499,7 +52479,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L1024",
       "_origin": "ast",
-      "community": 75,
+      "community": 262,
       "norm_label": "initbar()",
       "id": "cursor_skills_impeccable_scripts_live_browser_initbar"
     },
@@ -52569,7 +52549,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L1190",
       "_origin": "ast",
-      "community": 75,
+      "community": 95,
       "norm_label": "syncconfigureinputchrome()",
       "id": "cursor_skills_impeccable_scripts_live_browser_syncconfigureinputchrome"
     },
@@ -52839,7 +52819,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L1634",
       "_origin": "ast",
-      "community": 75,
+      "community": 29,
       "norm_label": "layoutflowchildren()",
       "id": "cursor_skills_impeccable_scripts_live_browser_layoutflowchildren"
     },
@@ -52909,7 +52889,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L1751",
       "_origin": "ast",
-      "community": 70,
+      "community": 262,
       "norm_label": "cursorforinsertaxis()",
       "id": "cursor_skills_impeccable_scripts_live_browser_cursorforinsertaxis"
     },
@@ -52989,7 +52969,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L1829",
       "_origin": "ast",
-      "community": 75,
+      "community": 29,
       "norm_label": "cursorforplaceholderedge()",
       "id": "cursor_skills_impeccable_scripts_live_browser_cursorforplaceholderedge"
     },
@@ -53039,7 +53019,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L1930",
       "_origin": "ast",
-      "community": 70,
+      "community": 262,
       "norm_label": "setpageinteractioncursor()",
       "id": "cursor_skills_impeccable_scripts_live_browser_setpageinteractioncursor"
     },
@@ -53049,7 +53029,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L1950",
       "_origin": "ast",
-      "community": 70,
+      "community": 262,
       "norm_label": "syncpageinteractioncursor()",
       "id": "cursor_skills_impeccable_scripts_live_browser_syncpageinteractioncursor"
     },
@@ -53099,7 +53079,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L2015",
       "_origin": "ast",
-      "community": 75,
+      "community": 70,
       "norm_label": "buildinsertplaceholdersnapshotfromdom()",
       "id": "cursor_skills_impeccable_scripts_live_browser_buildinsertplaceholdersnapshotfromdom"
     },
@@ -53159,7 +53139,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L2098",
       "_origin": "ast",
-      "community": 75,
+      "community": 29,
       "norm_label": "buildplaceholderresizehandles()",
       "id": "cursor_skills_impeccable_scripts_live_browser_buildplaceholderresizehandles"
     },
@@ -53379,7 +53359,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L2770",
       "_origin": "ast",
-      "community": 75,
+      "community": 262,
       "norm_label": "initactionpicker()",
       "id": "cursor_skills_impeccable_scripts_live_browser_initactionpicker"
     },
@@ -53389,7 +53369,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L2844",
       "_origin": "ast",
-      "community": 75,
+      "community": 262,
       "norm_label": "toggleactionpicker()",
       "id": "cursor_skills_impeccable_scripts_live_browser_toggleactionpicker"
     },
@@ -53429,7 +53409,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L2940",
       "_origin": "ast",
-      "community": 75,
+      "community": 262,
       "norm_label": "initparamspanel()",
       "id": "cursor_skills_impeccable_scripts_live_browser_initparamspanel"
     },
@@ -53439,7 +53419,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L2989",
       "_origin": "ast",
-      "community": 29,
+      "community": 106,
       "norm_label": "getmountedsveltecomponentanchor()",
       "id": "cursor_skills_impeccable_scripts_live_browser_getmountedsveltecomponentanchor"
     },
@@ -53479,7 +53459,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L3035",
       "_origin": "ast",
-      "community": 75,
+      "community": 106,
       "norm_label": "applyparamvalue()",
       "id": "cursor_skills_impeccable_scripts_live_browser_applyparamvalue"
     },
@@ -53499,7 +53479,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L3058",
       "_origin": "ast",
-      "community": 75,
+      "community": 106,
       "norm_label": "formatrangevalue()",
       "id": "cursor_skills_impeccable_scripts_live_browser_formatrangevalue"
     },
@@ -53509,7 +53489,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L3065",
       "_origin": "ast",
-      "community": 75,
+      "community": 106,
       "norm_label": "buildparamspanel()",
       "id": "cursor_skills_impeccable_scripts_live_browser_buildparamspanel"
     },
@@ -53539,7 +53519,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L3267",
       "_origin": "ast",
-      "community": 262,
+      "community": 29,
       "norm_label": "unwrapmixedcontenttextnodes()",
       "id": "cursor_skills_impeccable_scripts_live_browser_unwrapmixedcontenttextnodes"
     },
@@ -53679,7 +53659,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L3475",
       "_origin": "ast",
-      "community": 262,
+      "community": 29,
       "norm_label": "documentrefforelement()",
       "id": "cursor_skills_impeccable_scripts_live_browser_documentrefforelement"
     },
@@ -53689,7 +53669,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L3492",
       "_origin": "ast",
-      "community": 262,
+      "community": 29,
       "norm_label": "documentrefsegment()",
       "id": "cursor_skills_impeccable_scripts_live_browser_documentrefsegment"
     },
@@ -53699,7 +53679,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L3497",
       "_origin": "ast",
-      "community": 262,
+      "community": 29,
       "norm_label": "documentrefidsuffix()",
       "id": "cursor_skills_impeccable_scripts_live_browser_documentrefidsuffix"
     },
@@ -53709,7 +53689,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L3501",
       "_origin": "ast",
-      "community": 262,
+      "community": 29,
       "norm_label": "documentrefclasssuffix()",
       "id": "cursor_skills_impeccable_scripts_live_browser_documentrefclasssuffix"
     },
@@ -53719,7 +53699,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L3512",
       "_origin": "ast",
-      "community": 262,
+      "community": 29,
       "norm_label": "normalizedocumentreftoken()",
       "id": "cursor_skills_impeccable_scripts_live_browser_normalizedocumentreftoken"
     },
@@ -53729,7 +53709,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L3516",
       "_origin": "ast",
-      "community": 262,
+      "community": 29,
       "norm_label": "indexamongsametag()",
       "id": "cursor_skills_impeccable_scripts_live_browser_indexamongsametag"
     },
@@ -53739,7 +53719,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L3530",
       "_origin": "ast",
-      "community": 262,
+      "community": 29,
       "norm_label": "copyeditleafcontext()",
       "id": "cursor_skills_impeccable_scripts_live_browser_copyeditleafcontext"
     },
@@ -53749,7 +53729,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L3544",
       "_origin": "ast",
-      "community": 262,
+      "community": 29,
       "norm_label": "nearbyeditabletextsformanualedit()",
       "id": "cursor_skills_impeccable_scripts_live_browser_nearbyeditabletextsformanualedit"
     },
@@ -53759,7 +53739,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L3564",
       "_origin": "ast",
-      "community": 262,
+      "community": 29,
       "norm_label": "copyeditcontainercontext()",
       "id": "cursor_skills_impeccable_scripts_live_browser_copyeditcontainercontext"
     },
@@ -53799,7 +53779,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L3663",
       "_origin": "ast",
-      "community": 158,
+      "community": 262,
       "norm_label": "positionpendingdock()",
       "id": "cursor_skills_impeccable_scripts_live_browser_positionpendingdock"
     },
@@ -54019,7 +53999,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L3996",
       "_origin": "ast",
-      "community": 158,
+      "community": 29,
       "norm_label": "onpendingtrashclick()",
       "id": "cursor_skills_impeccable_scripts_live_browser_onpendingtrashclick"
     },
@@ -54099,7 +54079,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L4184",
       "_origin": "ast",
-      "community": 262,
+      "community": 29,
       "norm_label": "restorediscardedmanualedits()",
       "id": "cursor_skills_impeccable_scripts_live_browser_restorediscardedmanualedits"
     },
@@ -54109,7 +54089,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L4203",
       "_origin": "ast",
-      "community": 262,
+      "community": 29,
       "norm_label": "canrestoremanualeditelement()",
       "id": "cursor_skills_impeccable_scripts_live_browser_canrestoremanualeditelement"
     },
@@ -54119,7 +54099,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L4209",
       "_origin": "ast",
-      "community": 262,
+      "community": 29,
       "norm_label": "mixedtextwraprestorehint()",
       "id": "cursor_skills_impeccable_scripts_live_browser_mixedtextwraprestorehint"
     },
@@ -54129,7 +54109,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L4220",
       "_origin": "ast",
-      "community": 262,
+      "community": 29,
       "norm_label": "restoremixedtextnodemanualedit()",
       "id": "cursor_skills_impeccable_scripts_live_browser_restoremixedtextnodemanualedit"
     },
@@ -54139,7 +54119,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L4238",
       "_origin": "ast",
-      "community": 262,
+      "community": 29,
       "norm_label": "directmixedtextrestorenodes()",
       "id": "cursor_skills_impeccable_scripts_live_browser_directmixedtextrestorenodes"
     },
@@ -54149,7 +54129,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L4248",
       "_origin": "ast",
-      "community": 262,
+      "community": 29,
       "norm_label": "findmanualeditrestoreelement()",
       "id": "cursor_skills_impeccable_scripts_live_browser_findmanualeditrestoreelement"
     },
@@ -54159,7 +54139,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L4267",
       "_origin": "ast",
-      "community": 262,
+      "community": 29,
       "norm_label": "querymanualeditref()",
       "id": "cursor_skills_impeccable_scripts_live_browser_querymanualeditref"
     },
@@ -54169,7 +54149,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L4287",
       "_origin": "ast",
-      "community": 262,
+      "community": 29,
       "norm_label": "parsemanualeditrefsegment()",
       "id": "cursor_skills_impeccable_scripts_live_browser_parsemanualeditrefsegment"
     },
@@ -54179,7 +54159,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L4303",
       "_origin": "ast",
-      "community": 262,
+      "community": 29,
       "norm_label": "elementmatchesmanualrefsegment()",
       "id": "cursor_skills_impeccable_scripts_live_browser_elementmatchesmanualrefsegment"
     },
@@ -54379,7 +54359,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L4733",
       "_origin": "ast",
-      "community": 75,
+      "community": 70,
       "norm_label": "toggletunepopover()",
       "id": "cursor_skills_impeccable_scripts_live_browser_toggletunepopover"
     },
@@ -54469,7 +54449,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L4842",
       "_origin": "ast",
-      "community": 29,
+      "community": 106,
       "norm_label": "parseoriginalmarkupelement()",
       "id": "cursor_skills_impeccable_scripts_live_browser_parseoriginalmarkupelement"
     },
@@ -54479,7 +54459,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L4848",
       "_origin": "ast",
-      "community": 29,
+      "community": 106,
       "norm_label": "normalizeelementclassname()",
       "id": "cursor_skills_impeccable_scripts_live_browser_normalizeelementclassname"
     },
@@ -54499,7 +54479,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L4870",
       "_origin": "ast",
-      "community": 29,
+      "community": 106,
       "norm_label": "isusableinjectionanchor()",
       "id": "cursor_skills_impeccable_scripts_live_browser_isusableinjectionanchor"
     },
@@ -54509,7 +54489,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L4878",
       "_origin": "ast",
-      "community": 29,
+      "community": 106,
       "norm_label": "elementmatchesoriginalmarkup()",
       "id": "cursor_skills_impeccable_scripts_live_browser_elementmatchesoriginalmarkup"
     },
@@ -54519,7 +54499,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L4899",
       "_origin": "ast",
-      "community": 29,
+      "community": 106,
       "norm_label": "findliveelementfromanchorsnapshot()",
       "id": "cursor_skills_impeccable_scripts_live_browser_findliveelementfromanchorsnapshot"
     },
@@ -54529,7 +54509,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L4922",
       "_origin": "ast",
-      "community": 29,
+      "community": 106,
       "norm_label": "findliveelementfororiginalmarkup()",
       "id": "cursor_skills_impeccable_scripts_live_browser_findliveelementfororiginalmarkup"
     },
@@ -54539,7 +54519,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L4962",
       "_origin": "ast",
-      "community": 29,
+      "community": 106,
       "norm_label": "resolveliveinjectionanchor()",
       "id": "cursor_skills_impeccable_scripts_live_browser_resolveliveinjectionanchor"
     },
@@ -54549,7 +54529,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L4986",
       "_origin": "ast",
-      "community": 29,
+      "community": 106,
       "norm_label": "issvelteinsertmanifest()",
       "id": "cursor_skills_impeccable_scripts_live_browser_issvelteinsertmanifest"
     },
@@ -54589,7 +54569,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L5036",
       "_origin": "ast",
-      "community": 29,
+      "community": 106,
       "norm_label": "loadsvelteruntime()",
       "id": "cursor_skills_impeccable_scripts_live_browser_loadsvelteruntime"
     },
@@ -54729,7 +54709,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L5234",
       "_origin": "ast",
-      "community": 29,
+      "community": 106,
       "norm_label": "mountsveltecomponentvariant()",
       "id": "cursor_skills_impeccable_scripts_live_browser_mountsveltecomponentvariant"
     },
@@ -54749,7 +54729,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L5303",
       "_origin": "ast",
-      "community": 29,
+      "community": 106,
       "norm_label": "applyoriginalattrstosvelteanchor()",
       "id": "cursor_skills_impeccable_scripts_live_browser_applyoriginalattrstosvelteanchor"
     },
@@ -54759,7 +54739,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L5318",
       "_origin": "ast",
-      "community": 29,
+      "community": 106,
       "norm_label": "commitacceptedsveltecomponenttodom()",
       "id": "cursor_skills_impeccable_scripts_live_browser_commitacceptedsveltecomponenttodom"
     },
@@ -55019,7 +54999,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L6245",
       "_origin": "ast",
-      "community": 95,
+      "community": 70,
       "norm_label": "checkpointpayload()",
       "id": "cursor_skills_impeccable_scripts_live_browser_checkpointpayload"
     },
@@ -55029,7 +55009,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L6264",
       "_origin": "ast",
-      "community": 95,
+      "community": 70,
       "norm_label": "sendcheckpoint()",
       "id": "cursor_skills_impeccable_scripts_live_browser_sendcheckpoint"
     },
@@ -55059,7 +55039,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L6296",
       "_origin": "ast",
-      "community": 70,
+      "community": 29,
       "norm_label": "handlemousemove()",
       "id": "cursor_skills_impeccable_scripts_live_browser_handlemousemove"
     },
@@ -55139,7 +55119,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L6686",
       "_origin": "ast",
-      "community": 75,
+      "community": 70,
       "norm_label": "handleinsertcreate()",
       "id": "cursor_skills_impeccable_scripts_live_browser_handleinsertcreate"
     },
@@ -55279,7 +55259,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L7048",
       "_origin": "ast",
-      "community": 275,
+      "community": 70,
       "norm_label": "captureandemit()",
       "id": "cursor_skills_impeccable_scripts_live_browser_captureandemit"
     },
@@ -55409,7 +55389,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L7458",
       "_origin": "ast",
-      "community": 70,
+      "community": 75,
       "norm_label": "handleaccept()",
       "id": "cursor_skills_impeccable_scripts_live_browser_handleaccept"
     },
@@ -55639,7 +55619,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L7813",
       "_origin": "ast",
-      "community": 70,
+      "community": 106,
       "norm_label": "restorefromactivesessions()",
       "id": "cursor_skills_impeccable_scripts_live_browser_restorefromactivesessions"
     },
@@ -55719,7 +55699,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L7915",
       "_origin": "ast",
-      "community": 75,
+      "community": 70,
       "norm_label": "dismisstoast()",
       "id": "cursor_skills_impeccable_scripts_live_browser_dismisstoast"
     },
@@ -55789,7 +55769,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L8229",
       "_origin": "ast",
-      "community": 75,
+      "community": 262,
       "norm_label": "detectpagetheme()",
       "id": "cursor_skills_impeccable_scripts_live_browser_detectpagetheme"
     },
@@ -55799,7 +55779,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L8267",
       "_origin": "ast",
-      "community": 75,
+      "community": 262,
       "norm_label": "barpalettefortheme()",
       "id": "cursor_skills_impeccable_scripts_live_browser_barpalettefortheme"
     },
@@ -55809,7 +55789,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L8296",
       "_origin": "ast",
-      "community": 75,
+      "community": 262,
       "norm_label": "pagechatpalette()",
       "id": "cursor_skills_impeccable_scripts_live_browser_pagechatpalette"
     },
@@ -55839,7 +55819,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L8317",
       "_origin": "ast",
-      "community": 95,
+      "community": 262,
       "norm_label": "syncglobalbarexpandedlabels()",
       "id": "cursor_skills_impeccable_scripts_live_browser_syncglobalbarexpandedlabels"
     },
@@ -56079,7 +56059,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L8617",
       "_origin": "ast",
-      "community": 75,
+      "community": 262,
       "norm_label": "buildsteerprocessingdots()",
       "id": "cursor_skills_impeccable_scripts_live_browser_buildsteerprocessingdots"
     },
@@ -56269,7 +56249,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L8968",
       "_origin": "ast",
-      "community": 95,
+      "community": 75,
       "norm_label": "configurevoicecontext()",
       "id": "cursor_skills_impeccable_scripts_live_browser_configurevoicecontext"
     },
@@ -56289,7 +56269,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L8989",
       "_origin": "ast",
-      "community": 95,
+      "community": 75,
       "norm_label": "toggleconfigurevoice()",
       "id": "cursor_skills_impeccable_scripts_live_browser_toggleconfigurevoice"
     },
@@ -56349,7 +56329,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L9230",
       "_origin": "ast",
-      "community": 158,
+      "community": 262,
       "norm_label": "brandmarksvg()",
       "id": "cursor_skills_impeccable_scripts_live_browser_brandmarksvg"
     },
@@ -56359,7 +56339,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L9237",
       "_origin": "ast",
-      "community": 158,
+      "community": 262,
       "norm_label": "syncagentpollingui()",
       "id": "cursor_skills_impeccable_scripts_live_browser_syncagentpollingui"
     },
@@ -56369,7 +56349,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L9257",
       "_origin": "ast",
-      "community": 75,
+      "community": 262,
       "norm_label": "ensureagentpolltooltip()",
       "id": "cursor_skills_impeccable_scripts_live_browser_ensureagentpolltooltip"
     },
@@ -56379,7 +56359,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L9286",
       "_origin": "ast",
-      "community": 158,
+      "community": 262,
       "norm_label": "showagentpolltooltip()",
       "id": "cursor_skills_impeccable_scripts_live_browser_showagentpolltooltip"
     },
@@ -56389,7 +56369,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L9301",
       "_origin": "ast",
-      "community": 158,
+      "community": 262,
       "norm_label": "hideagentpolltooltip()",
       "id": "cursor_skills_impeccable_scripts_live_browser_hideagentpolltooltip"
     },
@@ -56399,7 +56379,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L9307",
       "_origin": "ast",
-      "community": 158,
+      "community": 262,
       "norm_label": "stopagentstatuspoll()",
       "id": "cursor_skills_impeccable_scripts_live_browser_stopagentstatuspoll"
     },
@@ -56409,7 +56389,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L9314",
       "_origin": "ast",
-      "community": 158,
+      "community": 262,
       "norm_label": "fetchagentpollingstatus()",
       "id": "cursor_skills_impeccable_scripts_live_browser_fetchagentpollingstatus"
     },
@@ -56419,7 +56399,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L9323",
       "_origin": "ast",
-      "community": 158,
+      "community": 262,
       "norm_label": "startagentstatuspoll()",
       "id": "cursor_skills_impeccable_scripts_live_browser_startagentstatuspoll"
     },
@@ -56429,7 +56409,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L9329",
       "_origin": "ast",
-      "community": 158,
+      "community": 262,
       "norm_label": "initglobalbar()",
       "id": "cursor_skills_impeccable_scripts_live_browser_initglobalbar"
     },
@@ -56439,7 +56419,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L9768",
       "_origin": "ast",
-      "community": 70,
+      "community": 262,
       "norm_label": "updateglobalbarstate()",
       "id": "cursor_skills_impeccable_scripts_live_browser_updateglobalbarstate"
     },
@@ -56449,7 +56429,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L9819",
       "_origin": "ast",
-      "community": 158,
+      "community": 262,
       "norm_label": "requestdetectscan()",
       "id": "cursor_skills_impeccable_scripts_live_browser_requestdetectscan"
     },
@@ -56459,7 +56439,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L9830",
       "_origin": "ast",
-      "community": 158,
+      "community": 262,
       "norm_label": "toggledetect()",
       "id": "cursor_skills_impeccable_scripts_live_browser_toggledetect"
     },
@@ -56489,7 +56469,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L9902",
       "_origin": "ast",
-      "community": 158,
+      "community": 262,
       "norm_label": "loaddetectscript()",
       "id": "cursor_skills_impeccable_scripts_live_browser_loaddetectscript"
     },
@@ -56499,7 +56479,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L9911",
       "_origin": "ast",
-      "community": 158,
+      "community": 262,
       "norm_label": "ondetectmessage()",
       "id": "cursor_skills_impeccable_scripts_live_browser_ondetectmessage"
     },
@@ -56509,7 +56489,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L9935",
       "_origin": "ast",
-      "community": 158,
+      "community": 262,
       "norm_label": "teardown()",
       "id": "cursor_skills_impeccable_scripts_live_browser_teardown"
     },
@@ -56519,7 +56499,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L10022",
       "_origin": "ast",
-      "community": 29,
+      "community": 262,
       "norm_label": "loaddesignprefs()",
       "id": "cursor_skills_impeccable_scripts_live_browser_loaddesignprefs"
     },
@@ -56539,7 +56519,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L10045",
       "_origin": "ast",
-      "community": 29,
+      "community": 262,
       "norm_label": "initdesignpanel()",
       "id": "cursor_skills_impeccable_scripts_live_browser_initdesignpanel"
     },
@@ -56549,7 +56529,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L10095",
       "_origin": "ast",
-      "community": 29,
+      "community": 262,
       "norm_label": "designpanelcss()",
       "id": "cursor_skills_impeccable_scripts_live_browser_designpanelcss"
     },
@@ -56559,7 +56539,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L10370",
       "_origin": "ast",
-      "community": 29,
+      "community": 262,
       "norm_label": "renderdesignchrome()",
       "id": "cursor_skills_impeccable_scripts_live_browser_renderdesignchrome"
     },
@@ -56569,7 +56549,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L10389",
       "_origin": "ast",
-      "community": 29,
+      "community": 262,
       "norm_label": "builddesignheader()",
       "id": "cursor_skills_impeccable_scripts_live_browser_builddesignheader"
     },
@@ -56579,7 +56559,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L10428",
       "_origin": "ast",
-      "community": 29,
+      "community": 262,
       "norm_label": "toggledesignpanel()",
       "id": "cursor_skills_impeccable_scripts_live_browser_toggledesignpanel"
     },
@@ -56589,7 +56569,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L10438",
       "_origin": "ast",
-      "community": 29,
+      "community": 262,
       "norm_label": "fetchdesignsystem()",
       "id": "cursor_skills_impeccable_scripts_live_browser_fetchdesignsystem"
     },
@@ -56939,7 +56919,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-browser.js",
       "source_location": "L11131",
       "_origin": "ast",
-      "community": 70,
+      "community": 262,
       "norm_label": "init()",
       "id": "cursor_skills_impeccable_scripts_live_browser_init"
     },
@@ -57819,7 +57799,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-discard-manual-edits.mjs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 236,
+      "community": 315,
       "norm_label": "live-discard-manual-edits.mjs",
       "id": "cursor_skills_impeccable_scripts_live_discard_manual_edits"
     },
@@ -57829,7 +57809,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-discard-manual-edits.mjs",
       "source_location": "L21",
       "_origin": "ast",
-      "community": 236,
+      "community": 315,
       "norm_label": "argval()",
       "id": "cursor_skills_impeccable_scripts_live_discard_manual_edits_argval"
     },
@@ -57839,7 +57819,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-discard-manual-edits.mjs",
       "source_location": "L30",
       "_origin": "ast",
-      "community": 236,
+      "community": 315,
       "norm_label": "args",
       "id": "cursor_skills_impeccable_scripts_live_discard_manual_edits_args"
     },
@@ -57849,7 +57829,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-discard-manual-edits.mjs",
       "source_location": "L36",
       "_origin": "ast",
-      "community": 236,
+      "community": 315,
       "norm_label": "pageurlfilter",
       "id": "cursor_skills_impeccable_scripts_live_discard_manual_edits_pageurlfilter"
     },
@@ -57859,7 +57839,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-discard-manual-edits.mjs",
       "source_location": "L37",
       "_origin": "ast",
-      "community": 141,
+      "community": 315,
       "norm_label": "cwd",
       "id": "cursor_skills_impeccable_scripts_live_discard_manual_edits_cwd"
     },
@@ -57869,7 +57849,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-discard-manual-edits.mjs",
       "source_location": "L41",
       "_origin": "ast",
-      "community": 236,
+      "community": 315,
       "norm_label": "buffer",
       "id": "cursor_skills_impeccable_scripts_live_discard_manual_edits_buffer"
     },
@@ -57879,7 +57859,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-discard-manual-edits.mjs",
       "source_location": "L50",
       "_origin": "ast",
-      "community": 236,
+      "community": 315,
       "norm_label": "remaining",
       "id": "cursor_skills_impeccable_scripts_live_discard_manual_edits_remaining"
     },
@@ -57989,7 +57969,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-inject.mjs",
       "source_location": "L243",
       "_origin": "ast",
-      "community": 303,
+      "community": 159,
       "norm_label": "resolvefiles()",
       "id": "cursor_skills_impeccable_scripts_live_inject_resolvefiles"
     },
@@ -57999,7 +57979,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-inject.mjs",
       "source_location": "L291",
       "_origin": "ast",
-      "community": 303,
+      "community": 159,
       "norm_label": "globtoregex()",
       "id": "cursor_skills_impeccable_scripts_live_inject_globtoregex"
     },
@@ -58879,7 +58859,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-server.mjs",
       "source_location": "L135",
       "_origin": "ast",
-      "community": 141,
+      "community": 315,
       "norm_label": "chatagentlikelyactive()",
       "id": "cursor_skills_impeccable_scripts_live_server_chatagentlikelyactive"
     },
@@ -59149,7 +59129,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live-server.mjs",
       "source_location": "L974",
       "_origin": "ast",
-      "community": 154,
+      "community": 601,
       "norm_label": "applylegacydeferredacceptsonstartup()",
       "id": "cursor_skills_impeccable_scripts_live_server_applylegacydeferredacceptsonstartup"
     },
@@ -60499,7 +60479,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/manual-apply.mjs",
       "source_location": "L900",
       "_origin": "ast",
-      "community": 141,
+      "community": 315,
       "norm_label": "summarizemanualapplyfailures()",
       "id": "cursor_skills_impeccable_scripts_live_manual_apply_summarizemanualapplyfailures"
     },
@@ -60509,7 +60489,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/manual-apply.mjs",
       "source_location": "L913",
       "_origin": "ast",
-      "community": 141,
+      "community": 315,
       "norm_label": "summarizemanualdiagnostics()",
       "id": "cursor_skills_impeccable_scripts_live_manual_apply_summarizemanualdiagnostics"
     },
@@ -60519,7 +60499,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/manual-apply.mjs",
       "source_location": "L927",
       "_origin": "ast",
-      "community": 141,
+      "community": 315,
       "norm_label": "summarizemanuallogfile()",
       "id": "cursor_skills_impeccable_scripts_live_manual_apply_summarizemanuallogfile"
     },
@@ -60529,7 +60509,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/manual-apply.mjs",
       "source_location": "L934",
       "_origin": "ast",
-      "community": 141,
+      "community": 315,
       "norm_label": "compactmanuallogtext()",
       "id": "cursor_skills_impeccable_scripts_live_manual_apply_compactmanuallogtext"
     },
@@ -60539,7 +60519,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/manual-edit-routes.mjs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 141,
+      "community": 315,
       "norm_label": "manual-edit-routes.mjs",
       "id": "cursor_skills_impeccable_scripts_live_manual_edit_routes"
     },
@@ -60549,7 +60529,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/manual-edit-routes.mjs",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 141,
+      "community": 315,
       "norm_label": "createmanualeditroutes()",
       "id": "cursor_skills_impeccable_scripts_live_manual_edit_routes_createmanualeditroutes"
     },
@@ -60559,7 +60539,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/manual-edit-routes.mjs",
       "source_location": "L340",
       "_origin": "ast",
-      "community": 141,
+      "community": 315,
       "norm_label": "sendjson()",
       "id": "cursor_skills_impeccable_scripts_live_manual_edit_routes_sendjson"
     },
@@ -60569,7 +60549,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/manual-edit-routes.mjs",
       "source_location": "L345",
       "_origin": "ast",
-      "community": 141,
+      "community": 315,
       "norm_label": "summarizependingmanualeditbatch()",
       "id": "cursor_skills_impeccable_scripts_live_manual_edit_routes_summarizependingmanualeditbatch"
     },
@@ -60579,7 +60559,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/manual-edits-buffer.mjs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 236,
+      "community": 315,
       "norm_label": "manual-edits-buffer.mjs",
       "id": "cursor_skills_impeccable_scripts_live_manual_edits_buffer"
     },
@@ -60589,7 +60569,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/manual-edits-buffer.mjs",
       "source_location": "L20",
       "_origin": "ast",
-      "community": 236,
+      "community": 315,
       "norm_label": "getbufferpath()",
       "id": "cursor_skills_impeccable_scripts_live_manual_edits_buffer_getbufferpath"
     },
@@ -60599,7 +60579,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/manual-edits-buffer.mjs",
       "source_location": "L24",
       "_origin": "ast",
-      "community": 236,
+      "community": 315,
       "norm_label": "readbuffer()",
       "id": "cursor_skills_impeccable_scripts_live_manual_edits_buffer_readbuffer"
     },
@@ -60609,7 +60589,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/manual-edits-buffer.mjs",
       "source_location": "L28",
       "_origin": "ast",
-      "community": 236,
+      "community": 315,
       "norm_label": "readbufferstrict()",
       "id": "cursor_skills_impeccable_scripts_live_manual_edits_buffer_readbufferstrict"
     },
@@ -60619,7 +60599,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/manual-edits-buffer.mjs",
       "source_location": "L32",
       "_origin": "ast",
-      "community": 236,
+      "community": 315,
       "norm_label": "readbufferinternal()",
       "id": "cursor_skills_impeccable_scripts_live_manual_edits_buffer_readbufferinternal"
     },
@@ -60629,7 +60609,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/manual-edits-buffer.mjs",
       "source_location": "L50",
       "_origin": "ast",
-      "community": 236,
+      "community": 315,
       "norm_label": "writebuffer()",
       "id": "cursor_skills_impeccable_scripts_live_manual_edits_buffer_writebuffer"
     },
@@ -60639,7 +60619,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/manual-edits-buffer.mjs",
       "source_location": "L64",
       "_origin": "ast",
-      "community": 236,
+      "community": 315,
       "norm_label": "stageentry()",
       "id": "cursor_skills_impeccable_scripts_live_manual_edits_buffer_stageentry"
     },
@@ -60649,7 +60629,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/manual-edits-buffer.mjs",
       "source_location": "L111",
       "_origin": "ast",
-      "community": 236,
+      "community": 315,
       "norm_label": "removeentries()",
       "id": "cursor_skills_impeccable_scripts_live_manual_edits_buffer_removeentries"
     },
@@ -60659,7 +60639,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/manual-edits-buffer.mjs",
       "source_location": "L130",
       "_origin": "ast",
-      "community": 121,
+      "community": 315,
       "norm_label": "countbypage()",
       "id": "cursor_skills_impeccable_scripts_live_manual_edits_buffer_countbypage"
     },
@@ -60669,7 +60649,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/manual-edits-buffer.mjs",
       "source_location": "L146",
       "_origin": "ast",
-      "community": 236,
+      "community": 315,
       "norm_label": "truncatebuffer()",
       "id": "cursor_skills_impeccable_scripts_live_manual_edits_buffer_truncatebuffer"
     },
@@ -60969,7 +60949,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/svelte-component.mjs",
       "source_location": "L236",
       "_origin": "ast",
-      "community": 154,
+      "community": 601,
       "norm_label": "findsveltecomponentmanifest()",
       "id": "cursor_skills_impeccable_scripts_live_svelte_component_findsveltecomponentmanifest"
     },
@@ -60979,7 +60959,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/svelte-component.mjs",
       "source_location": "L255",
       "_origin": "ast",
-      "community": 154,
+      "community": 601,
       "norm_label": "readmanifest()",
       "id": "cursor_skills_impeccable_scripts_live_svelte_component_readmanifest"
     },
@@ -61229,7 +61209,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/svelte-component.mjs",
       "source_location": "L744",
       "_origin": "ast",
-      "community": 154,
+      "community": 601,
       "norm_label": "deferredacceptspath()",
       "id": "cursor_skills_impeccable_scripts_live_svelte_component_deferredacceptspath"
     },
@@ -61239,7 +61219,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/svelte-component.mjs",
       "source_location": "L749",
       "_origin": "ast",
-      "community": 154,
+      "community": 601,
       "norm_label": "readdeferredaccepts()",
       "id": "cursor_skills_impeccable_scripts_live_svelte_component_readdeferredaccepts"
     },
@@ -61249,7 +61229,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/svelte-component.mjs",
       "source_location": "L758",
       "_origin": "ast",
-      "community": 154,
+      "community": 601,
       "norm_label": "writedeferredaccept()",
       "id": "cursor_skills_impeccable_scripts_live_svelte_component_writedeferredaccept"
     },
@@ -61259,7 +61239,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/svelte-component.mjs",
       "source_location": "L767",
       "_origin": "ast",
-      "community": 154,
+      "community": 601,
       "norm_label": "applydeferredsveltecomponentaccepts()",
       "id": "cursor_skills_impeccable_scripts_live_svelte_component_applydeferredsveltecomponentaccepts"
     },
@@ -61279,7 +61259,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 559,
+      "community": 159,
       "norm_label": "sveltekit-adapter.mjs",
       "id": "cursor_skills_impeccable_scripts_live_sveltekit_adapter"
     },
@@ -61289,7 +61269,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L18",
       "_origin": "ast",
-      "community": 559,
+      "community": 159,
       "norm_label": "detectsveltekitproject()",
       "id": "cursor_skills_impeccable_scripts_live_sveltekit_adapter_detectsveltekitproject"
     },
@@ -61299,7 +61279,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L39",
       "_origin": "ast",
-      "community": 559,
+      "community": 159,
       "norm_label": "applysveltekitliveadapter()",
       "id": "cursor_skills_impeccable_scripts_live_sveltekit_adapter_applysveltekitliveadapter"
     },
@@ -61309,7 +61289,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L65",
       "_origin": "ast",
-      "community": 559,
+      "community": 159,
       "norm_label": "removesveltekitliveadapter()",
       "id": "cursor_skills_impeccable_scripts_live_sveltekit_adapter_removesveltekitliveadapter"
     },
@@ -61319,7 +61299,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L97",
       "_origin": "ast",
-      "community": 559,
+      "community": 159,
       "norm_label": "patchsveltelayout()",
       "id": "cursor_skills_impeccable_scripts_live_sveltekit_adapter_patchsveltelayout"
     },
@@ -61329,7 +61309,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L124",
       "_origin": "ast",
-      "community": 559,
+      "community": 159,
       "norm_label": "unpatchsveltelayout()",
       "id": "cursor_skills_impeccable_scripts_live_sveltekit_adapter_unpatchsveltelayout"
     },
@@ -61339,7 +61319,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L139",
       "_origin": "ast",
-      "community": 559,
+      "community": 159,
       "norm_label": "ensuresvelteliverootcomponent()",
       "id": "cursor_skills_impeccable_scripts_live_sveltekit_adapter_ensuresvelteliverootcomponent"
     },
@@ -61349,7 +61329,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L146",
       "_origin": "ast",
-      "community": 559,
+      "community": 159,
       "norm_label": "buildsvelteliverootcomponent()",
       "id": "cursor_skills_impeccable_scripts_live_sveltekit_adapter_buildsvelteliverootcomponent"
     },
@@ -61359,7 +61339,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L207",
       "_origin": "ast",
-      "community": 559,
+      "community": 159,
       "norm_label": "findsveltekitapphtml()",
       "id": "cursor_skills_impeccable_scripts_live_sveltekit_adapter_findsveltekitapphtml"
     },
@@ -61369,7 +61349,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L220",
       "_origin": "ast",
-      "community": 559,
+      "community": 159,
       "norm_label": "findsveltekitlayout()",
       "id": "cursor_skills_impeccable_scripts_live_sveltekit_adapter_findsveltekitlayout"
     },
@@ -61379,7 +61359,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L231",
       "_origin": "ast",
-      "community": 559,
+      "community": 159,
       "norm_label": "defaultsveltelayout()",
       "id": "cursor_skills_impeccable_scripts_live_sveltekit_adapter_defaultsveltelayout"
     },
@@ -61389,7 +61369,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L235",
       "_origin": "ast",
-      "community": 559,
+      "community": 159,
       "norm_label": "packagehassveltekit()",
       "id": "cursor_skills_impeccable_scripts_live_sveltekit_adapter_packagehassveltekit"
     },
@@ -61399,7 +61379,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L251",
       "_origin": "ast",
-      "community": 559,
+      "community": 159,
       "norm_label": "fileincludes()",
       "id": "cursor_skills_impeccable_scripts_live_sveltekit_adapter_fileincludes"
     },
@@ -61409,7 +61389,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L259",
       "_origin": "ast",
-      "community": 559,
+      "community": 159,
       "norm_label": "pruneemptydir()",
       "id": "cursor_skills_impeccable_scripts_live_sveltekit_adapter_pruneemptydir"
     },
@@ -61419,7 +61399,7 @@
       "source_file": ".cursor/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L272",
       "_origin": "ast",
-      "community": 559,
+      "community": 159,
       "norm_label": "escaperegexp()",
       "id": "cursor_skills_impeccable_scripts_live_sveltekit_adapter_escaperegexp"
     },
@@ -62579,7 +62559,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/context.mjs",
       "source_location": "L127",
       "_origin": "ast",
-      "community": 592,
+      "community": 306,
       "norm_label": "resolvetargetselection()",
       "id": "gemini_skills_impeccable_scripts_context_resolvetargetselection"
     },
@@ -63009,7 +62989,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/context.mjs",
       "source_location": "L721",
       "_origin": "ast",
-      "community": 593,
+      "community": 79,
       "norm_label": "readlocalskillversion()",
       "id": "gemini_skills_impeccable_scripts_context_readlocalskillversion"
     },
@@ -63019,7 +62999,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/context.mjs",
       "source_location": "L733",
       "_origin": "ast",
-      "community": 593,
+      "community": 79,
       "norm_label": "readupdatecache()",
       "id": "gemini_skills_impeccable_scripts_context_readupdatecache"
     },
@@ -63029,7 +63009,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/context.mjs",
       "source_location": "L741",
       "_origin": "ast",
-      "community": 593,
+      "community": 79,
       "norm_label": "writeupdatecache()",
       "id": "gemini_skills_impeccable_scripts_context_writeupdatecache"
     },
@@ -63039,7 +63019,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/context.mjs",
       "source_location": "L751",
       "_origin": "ast",
-      "community": 593,
+      "community": 79,
       "norm_label": "comparesemver()",
       "id": "gemini_skills_impeccable_scripts_context_comparesemver"
     },
@@ -63049,7 +63029,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/context.mjs",
       "source_location": "L761",
       "_origin": "ast",
-      "community": 593,
+      "community": 79,
       "norm_label": "fetchlatestskillversion()",
       "id": "gemini_skills_impeccable_scripts_context_fetchlatestskillversion"
     },
@@ -63059,7 +63039,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/context.mjs",
       "source_location": "L772",
       "_origin": "ast",
-      "community": 593,
+      "community": 79,
       "norm_label": "buildupdatedirective()",
       "id": "gemini_skills_impeccable_scripts_context_buildupdatedirective"
     },
@@ -63069,7 +63049,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/context.mjs",
       "source_location": "L791",
       "_origin": "ast",
-      "community": 593,
+      "community": 79,
       "norm_label": "updatecheckdisabledbyconfig()",
       "id": "gemini_skills_impeccable_scripts_context_updatecheckdisabledbyconfig"
     },
@@ -63079,7 +63059,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/context.mjs",
       "source_location": "L802",
       "_origin": "ast",
-      "community": 593,
+      "community": 79,
       "norm_label": "computeupdatedirective()",
       "id": "gemini_skills_impeccable_scripts_context_computeupdatedirective"
     },
@@ -63089,7 +63069,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/context.mjs",
       "source_location": "L837",
       "_origin": "ast",
-      "community": 592,
+      "community": 79,
       "norm_label": "cli()",
       "id": "gemini_skills_impeccable_scripts_context_cli"
     },
@@ -63099,7 +63079,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/context.mjs",
       "source_location": "L891",
       "_origin": "ast",
-      "community": 306,
+      "community": 79,
       "norm_label": "parseclioptions()",
       "id": "gemini_skills_impeccable_scripts_context_parseclioptions"
     },
@@ -63109,7 +63089,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/context.mjs",
       "source_location": "L895",
       "_origin": "ast",
-      "community": 592,
+      "community": 79,
       "norm_label": "hastargetoption()",
       "id": "gemini_skills_impeccable_scripts_context_hastargetoption"
     },
@@ -63119,7 +63099,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/context.mjs",
       "source_location": "L899",
       "_origin": "ast",
-      "community": 592,
+      "community": 79,
       "norm_label": "pathexistsfortarget()",
       "id": "gemini_skills_impeccable_scripts_context_pathexistsfortarget"
     },
@@ -63129,7 +63109,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/context.mjs",
       "source_location": "L904",
       "_origin": "ast",
-      "community": 592,
+      "community": 79,
       "norm_label": "buildresolvedcontextdirective()",
       "id": "gemini_skills_impeccable_scripts_context_buildresolvedcontextdirective"
     },
@@ -63139,7 +63119,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/context.mjs",
       "source_location": "L916",
       "_origin": "ast",
-      "community": 592,
+      "community": 79,
       "norm_label": "shouldwarnmissingtarget()",
       "id": "gemini_skills_impeccable_scripts_context_shouldwarnmissingtarget"
     },
@@ -63149,7 +63129,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/context.mjs",
       "source_location": "L927",
       "_origin": "ast",
-      "community": 592,
+      "community": 79,
       "norm_label": "buildmissingtargetdirective()",
       "id": "gemini_skills_impeccable_scripts_context_buildmissingtargetdirective"
     },
@@ -63159,7 +63139,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/context.mjs",
       "source_location": "L936",
       "_origin": "ast",
-      "community": 592,
+      "community": 79,
       "norm_label": "buildtargetselectiondirective()",
       "id": "gemini_skills_impeccable_scripts_context_buildtargetselectiondirective"
     },
@@ -63179,7 +63159,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/critique-storage.mjs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 117,
+      "community": 592,
       "norm_label": "critique-storage.mjs",
       "id": "gemini_skills_impeccable_scripts_critique_storage"
     },
@@ -63189,7 +63169,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/critique-storage.mjs",
       "source_location": "L43",
       "_origin": "ast",
-      "community": 117,
+      "community": 592,
       "norm_label": "slugfromtarget()",
       "id": "gemini_skills_impeccable_scripts_critique_storage_slugfromtarget"
     },
@@ -63199,7 +63179,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/critique-storage.mjs",
       "source_location": "L70",
       "_origin": "ast",
-      "community": 117,
+      "community": 592,
       "norm_label": "kebab()",
       "id": "gemini_skills_impeccable_scripts_critique_storage_kebab"
     },
@@ -63209,7 +63189,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/critique-storage.mjs",
       "source_location": "L87",
       "_origin": "ast",
-      "community": 117,
+      "community": 592,
       "norm_label": "nowfilenamestamp()",
       "id": "gemini_skills_impeccable_scripts_critique_storage_nowfilenamestamp"
     },
@@ -63219,7 +63199,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/critique-storage.mjs",
       "source_location": "L99",
       "_origin": "ast",
-      "community": 117,
+      "community": 592,
       "norm_label": "writesnapshot()",
       "id": "gemini_skills_impeccable_scripts_critique_storage_writesnapshot"
     },
@@ -63229,7 +63209,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/critique-storage.mjs",
       "source_location": "L114",
       "_origin": "ast",
-      "community": 117,
+      "community": 592,
       "norm_label": "serializefrontmatter()",
       "id": "gemini_skills_impeccable_scripts_critique_storage_serializefrontmatter"
     },
@@ -63239,7 +63219,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/critique-storage.mjs",
       "source_location": "L127",
       "_origin": "ast",
-      "community": 117,
+      "community": 592,
       "norm_label": "parsefrontmatter()",
       "id": "gemini_skills_impeccable_scripts_critique_storage_parsefrontmatter"
     },
@@ -63249,7 +63229,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/critique-storage.mjs",
       "source_location": "L149",
       "_origin": "ast",
-      "community": 117,
+      "community": 592,
       "norm_label": "listsnapshotsforslug()",
       "id": "gemini_skills_impeccable_scripts_critique_storage_listsnapshotsforslug"
     },
@@ -63259,7 +63239,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/critique-storage.mjs",
       "source_location": "L163",
       "_origin": "ast",
-      "community": 117,
+      "community": 592,
       "norm_label": "readlatestsnapshot()",
       "id": "gemini_skills_impeccable_scripts_critique_storage_readlatestsnapshot"
     },
@@ -63269,7 +63249,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/critique-storage.mjs",
       "source_location": "L175",
       "_origin": "ast",
-      "community": 117,
+      "community": 592,
       "norm_label": "readtrend()",
       "id": "gemini_skills_impeccable_scripts_critique_storage_readtrend"
     },
@@ -63279,7 +63259,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/critique-storage.mjs",
       "source_location": "L183",
       "_origin": "ast",
-      "community": 117,
+      "community": 592,
       "norm_label": "main()",
       "id": "gemini_skills_impeccable_scripts_critique_storage_main"
     },
@@ -63289,7 +63269,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/critique-storage.mjs",
       "source_location": "L225",
       "_origin": "ast",
-      "community": 117,
+      "community": 592,
       "norm_label": "ismainmodule()",
       "id": "gemini_skills_impeccable_scripts_critique_storage_ismainmodule"
     },
@@ -63639,7 +63619,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L719",
       "_origin": "ast",
-      "community": 315,
+      "community": 67,
       "norm_label": "clampbyte()",
       "id": "gemini_skills_impeccable_scripts_detector_browser_injected_index_clampbyte"
     },
@@ -63649,7 +63629,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L723",
       "_origin": "ast",
-      "community": 315,
+      "community": 67,
       "norm_label": "blendrgba()",
       "id": "gemini_skills_impeccable_scripts_detector_browser_injected_index_blendrgba"
     },
@@ -63659,7 +63639,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L737",
       "_origin": "ast",
-      "community": 315,
+      "community": 67,
       "norm_label": "pickworstcontrastcolor()",
       "id": "gemini_skills_impeccable_scripts_detector_browser_injected_index_pickworstcontrastcolor"
     },
@@ -63669,7 +63649,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L752",
       "_origin": "ast",
-      "community": 315,
+      "community": 67,
       "norm_label": "firstcssurl()",
       "id": "gemini_skills_impeccable_scripts_detector_browser_injected_index_firstcssurl"
     },
@@ -63679,7 +63659,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L758",
       "_origin": "ast",
-      "community": 315,
+      "community": 67,
       "norm_label": "getlayervalue()",
       "id": "gemini_skills_impeccable_scripts_detector_browser_injected_index_getlayervalue"
     },
@@ -63689,7 +63669,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L762",
       "_origin": "ast",
-      "community": 315,
+      "community": 67,
       "norm_label": "parsepositiontoken()",
       "id": "gemini_skills_impeccable_scripts_detector_browser_injected_index_parsepositiontoken"
     },
@@ -63699,7 +63679,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L774",
       "_origin": "ast",
-      "community": 315,
+      "community": 67,
       "norm_label": "parsepositionpair()",
       "id": "gemini_skills_impeccable_scripts_detector_browser_injected_index_parsepositionpair"
     },
@@ -63709,7 +63689,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L784",
       "_origin": "ast",
-      "community": 315,
+      "community": 67,
       "norm_label": "resolvepaintedimagerect()",
       "id": "gemini_skills_impeccable_scripts_detector_browser_injected_index_resolvepaintedimagerect"
     },
@@ -63719,7 +63699,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L821",
       "_origin": "ast",
-      "community": 315,
+      "community": 67,
       "norm_label": "parseobjectposition()",
       "id": "gemini_skills_impeccable_scripts_detector_browser_injected_index_parseobjectposition"
     },
@@ -63729,7 +63709,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L825",
       "_origin": "ast",
-      "community": 315,
+      "community": 67,
       "norm_label": "resolveobjectimagerect()",
       "id": "gemini_skills_impeccable_scripts_detector_browser_injected_index_resolveobjectimagerect"
     },
@@ -63739,7 +63719,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L856",
       "_origin": "ast",
-      "community": 315,
+      "community": 67,
       "norm_label": "pointtoimagesource()",
       "id": "gemini_skills_impeccable_scripts_detector_browser_injected_index_pointtoimagesource"
     },
@@ -63749,7 +63729,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L871",
       "_origin": "ast",
-      "community": 315,
+      "community": 67,
       "norm_label": "loadvisualcontrastimage()",
       "id": "gemini_skills_impeccable_scripts_detector_browser_injected_index_loadvisualcontrastimage"
     },
@@ -63759,7 +63739,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L900",
       "_origin": "ast",
-      "community": 315,
+      "community": 67,
       "norm_label": "sampledrawablepixel()",
       "id": "gemini_skills_impeccable_scripts_detector_browser_injected_index_sampledrawablepixel"
     },
@@ -63769,7 +63749,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L956",
       "_origin": "ast",
-      "community": 315,
+      "community": 67,
       "norm_label": "samplecssbackground()",
       "id": "gemini_skills_impeccable_scripts_detector_browser_injected_index_samplecssbackground"
     },
@@ -63779,7 +63759,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L985",
       "_origin": "ast",
-      "community": 315,
+      "community": 67,
       "norm_label": "sampleimageelement()",
       "id": "gemini_skills_impeccable_scripts_detector_browser_injected_index_sampleimageelement"
     },
@@ -63789,7 +63769,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L1008",
       "_origin": "ast",
-      "community": 315,
+      "community": 67,
       "norm_label": "textsamplepoints()",
       "id": "gemini_skills_impeccable_scripts_detector_browser_injected_index_textsamplepoints"
     },
@@ -63799,7 +63779,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L1026",
       "_origin": "ast",
-      "community": 315,
+      "community": 67,
       "norm_label": "samplevisualbackgroundatpoint()",
       "id": "gemini_skills_impeccable_scripts_detector_browser_injected_index_samplevisualbackgroundatpoint"
     },
@@ -63809,7 +63789,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L1087",
       "_origin": "ast",
-      "community": 315,
+      "community": 67,
       "norm_label": "analyzevisualcontrastcandidate()",
       "id": "gemini_skills_impeccable_scripts_detector_browser_injected_index_analyzevisualcontrastcandidate"
     },
@@ -64299,7 +64279,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/design-system.mjs",
       "source_location": "L42",
       "_origin": "ast",
-      "community": 130,
+      "community": 175,
       "norm_label": "resolvedesignsidecarpath()",
       "id": "gemini_skills_impeccable_scripts_detector_design_system_resolvedesignsidecarpath"
     },
@@ -64309,7 +64289,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/design-system.mjs",
       "source_location": "L53",
       "_origin": "ast",
-      "community": 130,
+      "community": 175,
       "norm_label": "parsefrontmatter()",
       "id": "gemini_skills_impeccable_scripts_detector_design_system_parsefrontmatter"
     },
@@ -64369,7 +64349,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/design-system.mjs",
       "source_location": "L147",
       "_origin": "ast",
-      "community": 130,
+      "community": 175,
       "norm_label": "safereadjson()",
       "id": "gemini_skills_impeccable_scripts_detector_design_system_safereadjson"
     },
@@ -64549,7 +64529,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/design-system.mjs",
       "source_location": "L358",
       "_origin": "ast",
-      "community": 130,
+      "community": 175,
       "norm_label": "loaddesignsystemforcwd()",
       "id": "gemini_skills_impeccable_scripts_detector_design_system_loaddesignsystemforcwd"
     },
@@ -67539,7 +67519,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/profile/profiler.mjs",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 175,
+      "community": 73,
       "norm_label": "createdetectorprofile()",
       "id": "gemini_skills_impeccable_scripts_detector_profile_profiler_createdetectorprofile"
     },
@@ -68319,7 +68299,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/rules/checks.mjs",
       "source_location": "L1917",
       "_origin": "ast",
-      "community": 64,
+      "community": 73,
       "norm_label": "checkrepeatedsectionkickersfromdoc()",
       "id": "gemini_skills_impeccable_scripts_detector_rules_checks_checkrepeatedsectionkickersfromdoc"
     },
@@ -68379,7 +68359,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/rules/checks.mjs",
       "source_location": "L2050",
       "_origin": "ast",
-      "community": 175,
+      "community": 64,
       "norm_label": "checkpagetypography()",
       "id": "gemini_skills_impeccable_scripts_detector_rules_checks_checkpagetypography"
     },
@@ -68959,7 +68939,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/shared/inline-ignores.mjs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 541,
+      "community": 73,
       "norm_label": "inline-ignores.mjs",
       "id": "gemini_skills_impeccable_scripts_detector_shared_inline_ignores"
     },
@@ -68969,7 +68949,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/shared/inline-ignores.mjs",
       "source_location": "L42",
       "_origin": "ast",
-      "community": 541,
+      "community": 73,
       "norm_label": "normalizerule()",
       "id": "gemini_skills_impeccable_scripts_detector_shared_inline_ignores_normalizerule"
     },
@@ -68979,7 +68959,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/shared/inline-ignores.mjs",
       "source_location": "L50",
       "_origin": "ast",
-      "community": 541,
+      "community": 73,
       "norm_label": "parserulelist()",
       "id": "gemini_skills_impeccable_scripts_detector_shared_inline_ignores_parserulelist"
     },
@@ -68989,7 +68969,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/shared/inline-ignores.mjs",
       "source_location": "L60",
       "_origin": "ast",
-      "community": 541,
+      "community": 73,
       "norm_label": "addrules()",
       "id": "gemini_skills_impeccable_scripts_detector_shared_inline_ignores_addrules"
     },
@@ -68999,7 +68979,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/shared/inline-ignores.mjs",
       "source_location": "L64",
       "_origin": "ast",
-      "community": 541,
+      "community": 73,
       "norm_label": "getset()",
       "id": "gemini_skills_impeccable_scripts_detector_shared_inline_ignores_getset"
     },
@@ -69009,7 +68989,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/shared/inline-ignores.mjs",
       "source_location": "L84",
       "_origin": "ast",
-      "community": 541,
+      "community": 73,
       "norm_label": "parseinlineignores()",
       "id": "gemini_skills_impeccable_scripts_detector_shared_inline_ignores_parseinlineignores"
     },
@@ -69019,7 +68999,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/shared/inline-ignores.mjs",
       "source_location": "L115",
       "_origin": "ast",
-      "community": 541,
+      "community": 73,
       "norm_label": "setmatches()",
       "id": "gemini_skills_impeccable_scripts_detector_shared_inline_ignores_setmatches"
     },
@@ -69029,7 +69009,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/shared/inline-ignores.mjs",
       "source_location": "L119",
       "_origin": "ast",
-      "community": 541,
+      "community": 73,
       "norm_label": "isinlineignored()",
       "id": "gemini_skills_impeccable_scripts_detector_shared_inline_ignores_isinlineignored"
     },
@@ -69039,7 +69019,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/shared/inline-ignores.mjs",
       "source_location": "L131",
       "_origin": "ast",
-      "community": 541,
+      "community": 73,
       "norm_label": "hasdirectives()",
       "id": "gemini_skills_impeccable_scripts_detector_shared_inline_ignores_hasdirectives"
     },
@@ -69049,7 +69029,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/detector/shared/inline-ignores.mjs",
       "source_location": "L141",
       "_origin": "ast",
-      "community": 541,
+      "community": 73,
       "norm_label": "applyinlineignores()",
       "id": "gemini_skills_impeccable_scripts_detector_shared_inline_ignores_applyinlineignores"
     },
@@ -71479,7 +71459,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/lib/impeccable-config.mjs",
       "source_location": "L427",
       "_origin": "ast",
-      "community": 175,
+      "community": 131,
       "norm_label": "shouldignoredetectionfile()",
       "id": "gemini_skills_impeccable_scripts_lib_impeccable_config_shouldignoredetectionfile"
     },
@@ -71799,7 +71779,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/lib/impeccable-paths.mjs",
       "source_location": "L118",
       "_origin": "ast",
-      "community": 117,
+      "community": 592,
       "norm_label": "getcritiquedir()",
       "id": "gemini_skills_impeccable_scripts_lib_impeccable_paths_getcritiquedir"
     },
@@ -71959,7 +71939,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live-accept.mjs",
       "source_location": "L183",
       "_origin": "ast",
-      "community": 123,
+      "community": 203,
       "norm_label": "scrubmanualeditsagainstoriginalblock()",
       "id": "gemini_skills_impeccable_scripts_live_accept_scrubmanualeditsagainstoriginalblock"
     },
@@ -72009,7 +71989,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live-accept.mjs",
       "source_location": "L230",
       "_origin": "ast",
-      "community": 123,
+      "community": 203,
       "norm_label": "scrubmanualeditsagainstfile()",
       "id": "gemini_skills_impeccable_scripts_live_accept_scrubmanualeditsagainstfile"
     },
@@ -77719,7 +77699,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live-copy-edit-agent.mjs",
       "source_location": "L137",
       "_origin": "ast",
-      "community": 122,
+      "community": 208,
       "norm_label": "runcopyeditpostapplychecks()",
       "id": "gemini_skills_impeccable_scripts_live_copy_edit_agent_runcopyeditpostapplychecks"
     },
@@ -77989,7 +77969,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live-discard-manual-edits.mjs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 123,
+      "community": 541,
       "norm_label": "live-discard-manual-edits.mjs",
       "id": "gemini_skills_impeccable_scripts_live_discard_manual_edits"
     },
@@ -77999,7 +77979,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live-discard-manual-edits.mjs",
       "source_location": "L21",
       "_origin": "ast",
-      "community": 123,
+      "community": 541,
       "norm_label": "argval()",
       "id": "gemini_skills_impeccable_scripts_live_discard_manual_edits_argval"
     },
@@ -78009,7 +77989,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live-discard-manual-edits.mjs",
       "source_location": "L30",
       "_origin": "ast",
-      "community": 123,
+      "community": 541,
       "norm_label": "args",
       "id": "gemini_skills_impeccable_scripts_live_discard_manual_edits_args"
     },
@@ -78019,7 +77999,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live-discard-manual-edits.mjs",
       "source_location": "L36",
       "_origin": "ast",
-      "community": 123,
+      "community": 541,
       "norm_label": "pageurlfilter",
       "id": "gemini_skills_impeccable_scripts_live_discard_manual_edits_pageurlfilter"
     },
@@ -78029,7 +78009,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live-discard-manual-edits.mjs",
       "source_location": "L37",
       "_origin": "ast",
-      "community": 123,
+      "community": 144,
       "norm_label": "cwd",
       "id": "gemini_skills_impeccable_scripts_live_discard_manual_edits_cwd"
     },
@@ -78039,7 +78019,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live-discard-manual-edits.mjs",
       "source_location": "L41",
       "_origin": "ast",
-      "community": 123,
+      "community": 541,
       "norm_label": "buffer",
       "id": "gemini_skills_impeccable_scripts_live_discard_manual_edits_buffer"
     },
@@ -78049,7 +78029,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live-discard-manual-edits.mjs",
       "source_location": "L50",
       "_origin": "ast",
-      "community": 123,
+      "community": 541,
       "norm_label": "remaining",
       "id": "gemini_skills_impeccable_scripts_live_discard_manual_edits_remaining"
     },
@@ -79049,7 +79029,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live-server.mjs",
       "source_location": "L135",
       "_origin": "ast",
-      "community": 123,
+      "community": 144,
       "norm_label": "chatagentlikelyactive()",
       "id": "gemini_skills_impeccable_scripts_live_server_chatagentlikelyactive"
     },
@@ -79319,7 +79299,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live-server.mjs",
       "source_location": "L974",
       "_origin": "ast",
-      "community": 149,
+      "community": 143,
       "norm_label": "applylegacydeferredacceptsonstartup()",
       "id": "gemini_skills_impeccable_scripts_live_server_applylegacydeferredacceptsonstartup"
     },
@@ -80709,7 +80689,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live/manual-edit-routes.mjs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 123,
+      "community": 541,
       "norm_label": "manual-edit-routes.mjs",
       "id": "gemini_skills_impeccable_scripts_live_manual_edit_routes"
     },
@@ -80719,7 +80699,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live/manual-edit-routes.mjs",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 123,
+      "community": 144,
       "norm_label": "createmanualeditroutes()",
       "id": "gemini_skills_impeccable_scripts_live_manual_edit_routes_createmanualeditroutes"
     },
@@ -80729,7 +80709,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live/manual-edit-routes.mjs",
       "source_location": "L340",
       "_origin": "ast",
-      "community": 123,
+      "community": 144,
       "norm_label": "sendjson()",
       "id": "gemini_skills_impeccable_scripts_live_manual_edit_routes_sendjson"
     },
@@ -80739,7 +80719,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live/manual-edit-routes.mjs",
       "source_location": "L345",
       "_origin": "ast",
-      "community": 123,
+      "community": 541,
       "norm_label": "summarizependingmanualeditbatch()",
       "id": "gemini_skills_impeccable_scripts_live_manual_edit_routes_summarizependingmanualeditbatch"
     },
@@ -80749,7 +80729,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live/manual-edits-buffer.mjs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 123,
+      "community": 541,
       "norm_label": "manual-edits-buffer.mjs",
       "id": "gemini_skills_impeccable_scripts_live_manual_edits_buffer"
     },
@@ -80759,7 +80739,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live/manual-edits-buffer.mjs",
       "source_location": "L20",
       "_origin": "ast",
-      "community": 123,
+      "community": 541,
       "norm_label": "getbufferpath()",
       "id": "gemini_skills_impeccable_scripts_live_manual_edits_buffer_getbufferpath"
     },
@@ -80769,7 +80749,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live/manual-edits-buffer.mjs",
       "source_location": "L24",
       "_origin": "ast",
-      "community": 123,
+      "community": 541,
       "norm_label": "readbuffer()",
       "id": "gemini_skills_impeccable_scripts_live_manual_edits_buffer_readbuffer"
     },
@@ -80779,7 +80759,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live/manual-edits-buffer.mjs",
       "source_location": "L28",
       "_origin": "ast",
-      "community": 123,
+      "community": 541,
       "norm_label": "readbufferstrict()",
       "id": "gemini_skills_impeccable_scripts_live_manual_edits_buffer_readbufferstrict"
     },
@@ -80789,7 +80769,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live/manual-edits-buffer.mjs",
       "source_location": "L32",
       "_origin": "ast",
-      "community": 123,
+      "community": 541,
       "norm_label": "readbufferinternal()",
       "id": "gemini_skills_impeccable_scripts_live_manual_edits_buffer_readbufferinternal"
     },
@@ -80799,7 +80779,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live/manual-edits-buffer.mjs",
       "source_location": "L50",
       "_origin": "ast",
-      "community": 123,
+      "community": 541,
       "norm_label": "writebuffer()",
       "id": "gemini_skills_impeccable_scripts_live_manual_edits_buffer_writebuffer"
     },
@@ -80809,7 +80789,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live/manual-edits-buffer.mjs",
       "source_location": "L64",
       "_origin": "ast",
-      "community": 123,
+      "community": 541,
       "norm_label": "stageentry()",
       "id": "gemini_skills_impeccable_scripts_live_manual_edits_buffer_stageentry"
     },
@@ -80819,7 +80799,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live/manual-edits-buffer.mjs",
       "source_location": "L111",
       "_origin": "ast",
-      "community": 123,
+      "community": 541,
       "norm_label": "removeentries()",
       "id": "gemini_skills_impeccable_scripts_live_manual_edits_buffer_removeentries"
     },
@@ -80829,7 +80809,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live/manual-edits-buffer.mjs",
       "source_location": "L130",
       "_origin": "ast",
-      "community": 122,
+      "community": 541,
       "norm_label": "countbypage()",
       "id": "gemini_skills_impeccable_scripts_live_manual_edits_buffer_countbypage"
     },
@@ -80839,7 +80819,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live/manual-edits-buffer.mjs",
       "source_location": "L146",
       "_origin": "ast",
-      "community": 123,
+      "community": 541,
       "norm_label": "truncatebuffer()",
       "id": "gemini_skills_impeccable_scripts_live_manual_edits_buffer_truncatebuffer"
     },
@@ -81129,7 +81109,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live/svelte-component.mjs",
       "source_location": "L186",
       "_origin": "ast",
-      "community": 149,
+      "community": 142,
       "norm_label": "scaffoldsveltecomponentinsertsession()",
       "id": "gemini_skills_impeccable_scripts_live_svelte_component_scaffoldsveltecomponentinsertsession"
     },
@@ -81449,7 +81429,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 560,
+      "community": 160,
       "norm_label": "sveltekit-adapter.mjs",
       "id": "gemini_skills_impeccable_scripts_live_sveltekit_adapter"
     },
@@ -81459,7 +81439,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L18",
       "_origin": "ast",
-      "community": 560,
+      "community": 160,
       "norm_label": "detectsveltekitproject()",
       "id": "gemini_skills_impeccable_scripts_live_sveltekit_adapter_detectsveltekitproject"
     },
@@ -81469,7 +81449,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L39",
       "_origin": "ast",
-      "community": 560,
+      "community": 160,
       "norm_label": "applysveltekitliveadapter()",
       "id": "gemini_skills_impeccable_scripts_live_sveltekit_adapter_applysveltekitliveadapter"
     },
@@ -81479,7 +81459,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L65",
       "_origin": "ast",
-      "community": 560,
+      "community": 160,
       "norm_label": "removesveltekitliveadapter()",
       "id": "gemini_skills_impeccable_scripts_live_sveltekit_adapter_removesveltekitliveadapter"
     },
@@ -81489,7 +81469,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L97",
       "_origin": "ast",
-      "community": 560,
+      "community": 160,
       "norm_label": "patchsveltelayout()",
       "id": "gemini_skills_impeccable_scripts_live_sveltekit_adapter_patchsveltelayout"
     },
@@ -81499,7 +81479,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L124",
       "_origin": "ast",
-      "community": 560,
+      "community": 160,
       "norm_label": "unpatchsveltelayout()",
       "id": "gemini_skills_impeccable_scripts_live_sveltekit_adapter_unpatchsveltelayout"
     },
@@ -81509,7 +81489,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L139",
       "_origin": "ast",
-      "community": 560,
+      "community": 160,
       "norm_label": "ensuresvelteliverootcomponent()",
       "id": "gemini_skills_impeccable_scripts_live_sveltekit_adapter_ensuresvelteliverootcomponent"
     },
@@ -81519,7 +81499,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L146",
       "_origin": "ast",
-      "community": 560,
+      "community": 160,
       "norm_label": "buildsvelteliverootcomponent()",
       "id": "gemini_skills_impeccable_scripts_live_sveltekit_adapter_buildsvelteliverootcomponent"
     },
@@ -81529,7 +81509,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L207",
       "_origin": "ast",
-      "community": 560,
+      "community": 160,
       "norm_label": "findsveltekitapphtml()",
       "id": "gemini_skills_impeccable_scripts_live_sveltekit_adapter_findsveltekitapphtml"
     },
@@ -81539,7 +81519,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L220",
       "_origin": "ast",
-      "community": 560,
+      "community": 160,
       "norm_label": "findsveltekitlayout()",
       "id": "gemini_skills_impeccable_scripts_live_sveltekit_adapter_findsveltekitlayout"
     },
@@ -81549,7 +81529,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L231",
       "_origin": "ast",
-      "community": 560,
+      "community": 160,
       "norm_label": "defaultsveltelayout()",
       "id": "gemini_skills_impeccable_scripts_live_sveltekit_adapter_defaultsveltelayout"
     },
@@ -81559,7 +81539,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L235",
       "_origin": "ast",
-      "community": 560,
+      "community": 160,
       "norm_label": "packagehassveltekit()",
       "id": "gemini_skills_impeccable_scripts_live_sveltekit_adapter_packagehassveltekit"
     },
@@ -81569,7 +81549,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L251",
       "_origin": "ast",
-      "community": 560,
+      "community": 160,
       "norm_label": "fileincludes()",
       "id": "gemini_skills_impeccable_scripts_live_sveltekit_adapter_fileincludes"
     },
@@ -81579,7 +81559,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L259",
       "_origin": "ast",
-      "community": 560,
+      "community": 160,
       "norm_label": "pruneemptydir()",
       "id": "gemini_skills_impeccable_scripts_live_sveltekit_adapter_pruneemptydir"
     },
@@ -81589,7 +81569,7 @@
       "source_file": ".gemini/skills/impeccable/scripts/live/sveltekit-adapter.mjs",
       "source_location": "L272",
       "_origin": "ast",
-      "community": 560,
+      "community": 160,
       "norm_label": "escaperegexp()",
       "id": "gemini_skills_impeccable_scripts_live_sveltekit_adapter_escaperegexp"
     },
@@ -82499,7 +82479,7 @@
       "source_file": ".github/skills/impeccable/scripts/context-signals.mjs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 215,
+      "community": 591,
       "norm_label": "context-signals.mjs",
       "id": "github_skills_impeccable_scripts_context_signals"
     },
@@ -82509,7 +82489,7 @@
       "source_file": ".github/skills/impeccable/scripts/context-signals.mjs",
       "source_location": "L28",
       "_origin": "ast",
-      "community": 215,
+      "community": 591,
       "norm_label": "hascode()",
       "id": "github_skills_impeccable_scripts_context_signals_hascode"
     },
@@ -82519,7 +82499,7 @@
       "source_file": ".github/skills/impeccable/scripts/context-signals.mjs",
       "source_location": "L41",
       "_origin": "ast",
-      "community": 102,
+      "community": 591,
       "norm_label": "latestcritique()",
       "id": "github_skills_impeccable_scripts_context_signals_latestcritique"
     },
@@ -82529,7 +82509,7 @@
       "source_file": ".github/skills/impeccable/scripts/context-signals.mjs",
       "source_location": "L72",
       "_origin": "ast",
-      "community": 215,
+      "community": 591,
       "norm_label": "gitsignals()",
       "id": "github_skills_impeccable_scripts_context_signals_gitsignals"
     },
@@ -82539,7 +82519,7 @@
       "source_file": ".github/skills/impeccable/scripts/context-signals.mjs",
       "source_location": "L122",
       "_origin": "ast",
-      "community": 215,
+      "community": 591,
       "norm_label": "common_dev_ports",
       "id": "github_skills_impeccable_scripts_context_signals_common_dev_ports"
     },
@@ -82549,7 +82529,7 @@
       "source_file": ".github/skills/impeccable/scripts/context-signals.mjs",
       "source_location": "L124",
       "_origin": "ast",
-      "community": 215,
+      "community": 591,
       "norm_label": "probeport()",
       "id": "github_skills_impeccable_scripts_context_signals_probeport"
     },
@@ -82559,7 +82539,7 @@
       "source_file": ".github/skills/impeccable/scripts/context-signals.mjs",
       "source_location": "L142",
       "_origin": "ast",
-      "community": 215,
+      "community": 591,
       "norm_label": "devserversignals()",
       "id": "github_skills_impeccable_scripts_context_signals_devserversignals"
     },
@@ -82569,7 +82549,7 @@
       "source_file": ".github/skills/impeccable/scripts/context-signals.mjs",
       "source_location": "L154",
       "_origin": "ast",
-      "community": 215,
+      "community": 591,
       "norm_label": "scannable_ext",
       "id": "github_skills_impeccable_scripts_context_signals_scannable_ext"
     },
@@ -82579,7 +82559,7 @@
       "source_file": ".github/skills/impeccable/scripts/context-signals.mjs",
       "source_location": "L160",
       "_origin": "ast",
-      "community": 215,
+      "community": 591,
       "norm_label": "source_dirs",
       "id": "github_skills_impeccable_scripts_context_signals_source_dirs"
     },
@@ -82589,7 +82569,7 @@
       "source_file": ".github/skills/impeccable/scripts/context-signals.mjs",
       "source_location": "L170",
       "_origin": "ast",
-      "community": 215,
+      "community": 591,
       "norm_label": "scantargets()",
       "id": "github_skills_impeccable_scripts_context_signals_scantargets"
     },
@@ -82599,7 +82579,7 @@
       "source_file": ".github/skills/impeccable/scripts/context-signals.mjs",
       "source_location": "L189",
       "_origin": "ast",
-      "community": 215,
+      "community": 591,
       "norm_label": "gathersignals()",
       "id": "github_skills_impeccable_scripts_context_signals_gathersignals"
     },
@@ -82609,7 +82589,7 @@
       "source_file": ".github/skills/impeccable/scripts/context-signals.mjs",
       "source_location": "L208",
       "_origin": "ast",
-      "community": 215,
+      "community": 591,
       "norm_label": "cli()",
       "id": "github_skills_impeccable_scripts_context_signals_cli"
     },
@@ -82619,7 +82599,7 @@
       "source_file": ".github/skills/impeccable/scripts/context-signals.mjs",
       "source_location": "L213",
       "_origin": "ast",
-      "community": 215,
+      "community": 591,
       "norm_label": "invokedasscript()",
       "id": "github_skills_impeccable_scripts_context_signals_invokedasscript"
     },
@@ -82749,7 +82729,7 @@
       "source_file": ".github/skills/impeccable/scripts/context.mjs",
       "source_location": "L127",
       "_origin": "ast",
-      "community": 80,
+      "community": 215,
       "norm_label": "resolvetargetselection()",
       "id": "github_skills_impeccable_scripts_context_resolvetargetselection"
     },
@@ -83169,7 +83149,7 @@
       "source_file": ".github/skills/impeccable/scripts/context.mjs",
       "source_location": "L699",
       "_origin": "ast",
-      "community": 215,
+      "community": 591,
       "norm_label": "extractregister()",
       "id": "github_skills_impeccable_scripts_context_extractregister"
     },
@@ -83269,7 +83249,7 @@
       "source_file": ".github/skills/impeccable/scripts/context.mjs",
       "source_location": "L891",
       "_origin": "ast",
-      "community": 215,
+      "community": 80,
       "norm_label": "parseclioptions()",
       "id": "github_skills_impeccable_scripts_context_parseclioptions"
     },
@@ -83809,7 +83789,7 @@
       "source_file": ".github/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L719",
       "_origin": "ast",
-      "community": 68,
+      "community": 559,
       "norm_label": "clampbyte()",
       "id": "github_skills_impeccable_scripts_detector_browser_injected_index_clampbyte"
     },
@@ -83819,7 +83799,7 @@
       "source_file": ".github/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L723",
       "_origin": "ast",
-      "community": 68,
+      "community": 559,
       "norm_label": "blendrgba()",
       "id": "github_skills_impeccable_scripts_detector_browser_injected_index_blendrgba"
     },
@@ -83829,7 +83809,7 @@
       "source_file": ".github/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L737",
       "_origin": "ast",
-      "community": 68,
+      "community": 559,
       "norm_label": "pickworstcontrastcolor()",
       "id": "github_skills_impeccable_scripts_detector_browser_injected_index_pickworstcontrastcolor"
     },
@@ -83839,7 +83819,7 @@
       "source_file": ".github/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L752",
       "_origin": "ast",
-      "community": 68,
+      "community": 559,
       "norm_label": "firstcssurl()",
       "id": "github_skills_impeccable_scripts_detector_browser_injected_index_firstcssurl"
     },
@@ -83849,7 +83829,7 @@
       "source_file": ".github/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L758",
       "_origin": "ast",
-      "community": 68,
+      "community": 559,
       "norm_label": "getlayervalue()",
       "id": "github_skills_impeccable_scripts_detector_browser_injected_index_getlayervalue"
     },
@@ -83859,7 +83839,7 @@
       "source_file": ".github/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L762",
       "_origin": "ast",
-      "community": 68,
+      "community": 559,
       "norm_label": "parsepositiontoken()",
       "id": "github_skills_impeccable_scripts_detector_browser_injected_index_parsepositiontoken"
     },
@@ -83869,7 +83849,7 @@
       "source_file": ".github/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L774",
       "_origin": "ast",
-      "community": 68,
+      "community": 559,
       "norm_label": "parsepositionpair()",
       "id": "github_skills_impeccable_scripts_detector_browser_injected_index_parsepositionpair"
     },
@@ -83879,7 +83859,7 @@
       "source_file": ".github/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L784",
       "_origin": "ast",
-      "community": 68,
+      "community": 559,
       "norm_label": "resolvepaintedimagerect()",
       "id": "github_skills_impeccable_scripts_detector_browser_injected_index_resolvepaintedimagerect"
     },
@@ -83889,7 +83869,7 @@
       "source_file": ".github/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L821",
       "_origin": "ast",
-      "community": 68,
+      "community": 559,
       "norm_label": "parseobjectposition()",
       "id": "github_skills_impeccable_scripts_detector_browser_injected_index_parseobjectposition"
     },
@@ -83899,7 +83879,7 @@
       "source_file": ".github/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L825",
       "_origin": "ast",
-      "community": 68,
+      "community": 559,
       "norm_label": "resolveobjectimagerect()",
       "id": "github_skills_impeccable_scripts_detector_browser_injected_index_resolveobjectimagerect"
     },
@@ -83909,7 +83889,7 @@
       "source_file": ".github/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L856",
       "_origin": "ast",
-      "community": 68,
+      "community": 559,
       "norm_label": "pointtoimagesource()",
       "id": "github_skills_impeccable_scripts_detector_browser_injected_index_pointtoimagesource"
     },
@@ -83919,7 +83899,7 @@
       "source_file": ".github/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L871",
       "_origin": "ast",
-      "community": 68,
+      "community": 559,
       "norm_label": "loadvisualcontrastimage()",
       "id": "github_skills_impeccable_scripts_detector_browser_injected_index_loadvisualcontrastimage"
     },
@@ -83929,7 +83909,7 @@
       "source_file": ".github/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L900",
       "_origin": "ast",
-      "community": 68,
+      "community": 559,
       "norm_label": "sampledrawablepixel()",
       "id": "github_skills_impeccable_scripts_detector_browser_injected_index_sampledrawablepixel"
     },
@@ -83939,7 +83919,7 @@
       "source_file": ".github/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L956",
       "_origin": "ast",
-      "community": 68,
+      "community": 559,
       "norm_label": "samplecssbackground()",
       "id": "github_skills_impeccable_scripts_detector_browser_injected_index_samplecssbackground"
     },
@@ -83949,7 +83929,7 @@
       "source_file": ".github/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L985",
       "_origin": "ast",
-      "community": 68,
+      "community": 559,
       "norm_label": "sampleimageelement()",
       "id": "github_skills_impeccable_scripts_detector_browser_injected_index_sampleimageelement"
     },
@@ -83959,7 +83939,7 @@
       "source_file": ".github/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L1008",
       "_origin": "ast",
-      "community": 68,
+      "community": 559,
       "norm_label": "textsamplepoints()",
       "id": "github_skills_impeccable_scripts_detector_browser_injected_index_textsamplepoints"
     },
@@ -83969,7 +83949,7 @@
       "source_file": ".github/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L1026",
       "_origin": "ast",
-      "community": 68,
+      "community": 559,
       "norm_label": "samplevisualbackgroundatpoint()",
       "id": "github_skills_impeccable_scripts_detector_browser_injected_index_samplevisualbackgroundatpoint"
     },
@@ -83979,7 +83959,7 @@
       "source_file": ".github/skills/impeccable/scripts/detector/browser/injected/index.mjs",
       "source_location": "L1087",
       "_origin": "ast",
-      "community": 68,
+      "community": 559,
       "norm_label": "analyzevisualcontrastcandidate()",
       "id": "github_skills_impeccable_scripts_detector_browser_injected_index_analyzevisualcontrastcandidate"
     },
@@ -97889,7 +97869,7 @@
       "source_file": ".github/skills/impeccable/scripts/live-copy-edit-agent.mjs",
       "source_location": "L137",
       "_origin": "ast",
-      "community": 111,
+      "community": 214,
       "norm_label": "runcopyeditpostapplychecks()",
       "id": "github_skills_impeccable_scripts_live_copy_edit_agent_runcopyeditpostapplychecks"
     },
@@ -98159,7 +98139,7 @@
       "source_file": ".github/skills/impeccable/scripts/live-discard-manual-edits.mjs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 112,
+      "community": 497,
       "norm_label": "live-discard-manual-edits.mjs",
       "id": "github_skills_impeccable_scripts_live_discard_manual_edits"
     },
@@ -98169,7 +98149,7 @@
       "source_file": ".github/skills/impeccable/scripts/live-discard-manual-edits.mjs",
       "source_location": "L21",
       "_origin": "ast",
-      "community": 112,
+      "community": 497,
       "norm_label": "argval()",
       "id": "github_skills_impeccable_scripts_live_discard_manual_edits_argval"
     },
@@ -98179,7 +98159,7 @@
       "source_file": ".github/skills/impeccable/scripts/live-discard-manual-edits.mjs",
       "source_location": "L30",
       "_origin": "ast",
-      "community": 112,
+      "community": 497,
       "norm_label": "args",
       "id": "github_skills_impeccable_scripts_live_discard_manual_edits_args"
     },
@@ -98189,7 +98169,7 @@
       "source_file": ".github/skills/impeccable/scripts/live-discard-manual-edits.mjs",
       "source_location": "L36",
       "_origin": "ast",
-      "community": 112,
+      "community": 497,
       "norm_label": "pageurlfilter",
       "id": "github_skills_impeccable_scripts_live_discard_manual_edits_pageurlfilter"
     },
@@ -98199,7 +98179,7 @@
       "source_file": ".github/skills/impeccable/scripts/live-discard-manual-edits.mjs",
       "source_location": "L37",
       "_origin": "ast",
-      "community": 112,
+      "community": 497,
       "norm_label": "cwd",
       "id": "github_skills_impeccable_scripts_live_discard_manual_edits_cwd"
     },
@@ -98209,7 +98189,7 @@
       "source_file": ".github/skills/impeccable/scripts/live-discard-manual-edits.mjs",
       "source_location": "L41",
       "_origin": "ast",
-      "community": 112,
+      "community": 497,
       "norm_label": "buffer",
       "id": "github_skills_impeccable_scripts_live_discard_manual_edits_buffer"
     },
@@ -98219,7 +98199,7 @@
       "source_file": ".github/skills/impeccable/scripts/live-discard-manual-edits.mjs",
       "source_location": "L50",
       "_origin": "ast",
-      "community": 112,
+      "community": 497,
       "norm_label": "remaining",
       "id": "github_skills_impeccable_scripts_live_discard_manual_edits_remaining"
     },
@@ -98609,7 +98589,7 @@
       "source_file": ".github/skills/impeccable/scripts/live-manual-edit-evidence.mjs",
       "source_location": "L39",
       "_origin": "ast",
-      "community": 112,
+      "community": 497,
       "norm_label": "buildmanualeditevidence()",
       "id": "github_skills_impeccable_scripts_live_manual_edit_evidence_buildmanualeditevidence"
     },
@@ -99219,7 +99199,7 @@
       "source_file": ".github/skills/impeccable/scripts/live-server.mjs",
       "source_location": "L135",
       "_origin": "ast",
-      "community": 112,
+      "community": 497,
       "norm_label": "chatagentlikelyactive()",
       "id": "github_skills_impeccable_scripts_live_server_chatagentlikelyactive"
     },
@@ -100839,7 +100819,7 @@
       "source_file": ".github/skills/impeccable/scripts/live/manual-apply.mjs",
       "source_location": "L900",
       "_origin": "ast",
-      "community": 112,
+      "community": 163,
       "norm_label": "summarizemanualapplyfailures()",
       "id": "github_skills_impeccable_scripts_live_manual_apply_summarizemanualapplyfailures"
     },
@@ -100849,7 +100829,7 @@
       "source_file": ".github/skills/impeccable/scripts/live/manual-apply.mjs",
       "source_location": "L913",
       "_origin": "ast",
-      "community": 112,
+      "community": 163,
       "norm_label": "summarizemanualdiagnostics()",
       "id": "github_skills_impeccable_scripts_live_manual_apply_summarizemanualdiagnostics"
     },
@@ -100859,7 +100839,7 @@
       "source_file": ".github/skills/impeccable/scripts/live/manual-apply.mjs",
       "source_location": "L927",
       "_origin": "ast",
-      "community": 112,
+      "community": 163,
       "norm_label": "summarizemanuallogfile()",
       "id": "github_skills_impeccable_scripts_live_manual_apply_summarizemanuallogfile"
     },
@@ -100869,7 +100849,7 @@
       "source_file": ".github/skills/impeccable/scripts/live/manual-apply.mjs",
       "source_location": "L934",
       "_origin": "ast",
-      "community": 112,
+      "community": 163,
       "norm_label": "compactmanuallogtext()",
       "id": "github_skills_impeccable_scripts_live_manual_apply_compactmanuallogtext"
     },
@@ -100879,7 +100859,7 @@
       "source_file": ".github/skills/impeccable/scripts/live/manual-edit-routes.mjs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 112,
+      "community": 497,
       "norm_label": "manual-edit-routes.mjs",
       "id": "github_skills_impeccable_scripts_live_manual_edit_routes"
     },
@@ -100889,7 +100869,7 @@
       "source_file": ".github/skills/impeccable/scripts/live/manual-edit-routes.mjs",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 112,
+      "community": 497,
       "norm_label": "createmanualeditroutes()",
       "id": "github_skills_impeccable_scripts_live_manual_edit_routes_createmanualeditroutes"
     },
@@ -100899,7 +100879,7 @@
       "source_file": ".github/skills/impeccable/scripts/live/manual-edit-routes.mjs",
       "source_location": "L340",
       "_origin": "ast",
-      "community": 112,
+      "community": 497,
       "norm_label": "sendjson()",
       "id": "github_skills_impeccable_scripts_live_manual_edit_routes_sendjson"
     },
@@ -100909,7 +100889,7 @@
       "source_file": ".github/skills/impeccable/scripts/live/manual-edit-routes.mjs",
       "source_location": "L345",
       "_origin": "ast",
-      "community": 112,
+      "community": 497,
       "norm_label": "summarizependingmanualeditbatch()",
       "id": "github_skills_impeccable_scripts_live_manual_edit_routes_summarizependingmanualeditbatch"
     },
@@ -100919,7 +100899,7 @@
       "source_file": ".github/skills/impeccable/scripts/live/manual-edits-buffer.mjs",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 112,
+      "community": 497,
       "norm_label": "manual-edits-buffer.mjs",
       "id": "github_skills_impeccable_scripts_live_manual_edits_buffer"
     },
@@ -100929,7 +100909,7 @@
       "source_file": ".github/skills/impeccable/scripts/live/manual-edits-buffer.mjs",
       "source_location": "L20",
       "_origin": "ast",
-      "community": 112,
+      "community": 497,
       "norm_label": "getbufferpath()",
       "id": "github_skills_impeccable_scripts_live_manual_edits_buffer_getbufferpath"
     },
@@ -100939,7 +100919,7 @@
       "source_file": ".github/skills/impeccable/scripts/live/manual-edits-buffer.mjs",
       "source_location": "L24",
       "_origin": "ast",
-      "community": 112,
+      "community": 497,
       "norm_label": "readbuffer()",
       "id": "github_skills_impeccable_scripts_live_manual_edits_buffer_readbuffer"
     },
@@ -100949,7 +100929,7 @@
       "source_file": ".github/skills/impeccable/scripts/live/manual-edits-buffer.mjs",
       "source_location": "L28",
       "_origin": "ast",
-      "community": 112,
+      "community": 497,
       "norm_label": "readbufferstrict()",
       "id": "github_skills_impeccable_scripts_live_manual_edits_buffer_readbufferstrict"
     },
@@ -100959,7 +100939,7 @@
       "source_file": ".github/skills/impeccable/scripts/live/manual-edits-buffer.mjs",
       "source_location": "L32",
       "_origin": "ast",
-      "community": 112,
+      "community": 497,
       "norm_label": "readbufferinternal()",
       "id": "github_skills_impeccable_scripts_live_manual_edits_buffer_readbufferinternal"
     },
@@ -100969,7 +100949,7 @@
       "source_file": ".github/skills/impeccable/scripts/live/manual-edits-buffer.mjs",
       "source_location": "L50",
       "_origin": "ast",
-      "community": 112,
+      "community": 497,
       "norm_label": "writebuffer()",
       "id": "github_skills_impeccable_scripts_live_manual_edits_buffer_writebuffer"
     },
@@ -100979,7 +100959,7 @@
       "source_file": ".github/skills/impeccable/scripts/live/manual-edits-buffer.mjs",
       "source_location": "L64",
       "_origin": "ast",
-      "community": 112,
+      "community": 497,
       "norm_label": "stageentry()",
       "id": "github_skills_impeccable_scripts_live_manual_edits_buffer_stageentry"
     },
@@ -100989,7 +100969,7 @@
       "source_file": ".github/skills/impeccable/scripts/live/manual-edits-buffer.mjs",
       "source_location": "L111",
       "_origin": "ast",
-      "community": 112,
+      "community": 497,
       "norm_label": "removeentries()",
       "id": "github_skills_impeccable_scripts_live_manual_edits_buffer_removeentries"
     },
@@ -100999,7 +100979,7 @@
       "source_file": ".github/skills/impeccable/scripts/live/manual-edits-buffer.mjs",
       "source_location": "L130",
       "_origin": "ast",
-      "community": 111,
+      "community": 497,
       "norm_label": "countbypage()",
       "id": "github_skills_impeccable_scripts_live_manual_edits_buffer_countbypage"
     },
@@ -101009,7 +100989,7 @@
       "source_file": ".github/skills/impeccable/scripts/live/manual-edits-buffer.mjs",
       "source_location": "L146",
       "_origin": "ast",
-      "community": 112,
+      "community": 497,
       "norm_label": "truncatebuffer()",
       "id": "github_skills_impeccable_scripts_live_manual_edits_buffer_truncatebuffer"
     },
@@ -101299,7 +101279,7 @@
       "source_file": ".github/skills/impeccable/scripts/live/svelte-component.mjs",
       "source_location": "L186",
       "_origin": "ast",
-      "community": 145,
+      "community": 150,
       "norm_label": "scaffoldsveltecomponentinsertsession()",
       "id": "github_skills_impeccable_scripts_live_svelte_component_scaffoldsveltecomponentinsertsession"
     },
@@ -109521,7 +109501,7 @@
       "source_file": "src/app.js",
       "source_location": "L1082",
       "_origin": "ast",
-      "community": 12,
+      "community": 0,
       "norm_label": "audittocsv()",
       "id": "src_app_audittocsv"
     },
@@ -109721,7 +109701,7 @@
       "source_file": "src/domain.js",
       "source_location": "L35",
       "_origin": "ast",
-      "community": 19,
+      "community": 15,
       "norm_label": "request_definitions",
       "id": "src_domain_request_definitions"
     },
@@ -109741,7 +109721,7 @@
       "source_file": "src/domain.js",
       "source_location": "L80",
       "_origin": "ast",
-      "community": 18,
+      "community": 19,
       "norm_label": "dispatch_statuses",
       "id": "src_domain_dispatch_statuses"
     },
@@ -109781,7 +109761,7 @@
       "source_file": "src/domain.js",
       "source_location": "L121",
       "_origin": "ast",
-      "community": 19,
+      "community": 15,
       "norm_label": "operatorformsisdn()",
       "id": "src_domain_operatorformsisdn"
     },
@@ -109791,7 +109771,7 @@
       "source_file": "src/domain.js",
       "source_location": "L128",
       "_origin": "ast",
-      "community": 19,
+      "community": 15,
       "norm_label": "targetoperatorsforrequest()",
       "id": "src_domain_targetoperatorsforrequest"
     },
@@ -109841,7 +109821,7 @@
       "source_file": "src/domain.js",
       "source_location": "L164",
       "_origin": "ast",
-      "community": 2,
+      "community": 19,
       "norm_label": "normalizephonenumber()",
       "id": "src_domain_normalizephonenumber"
     },
@@ -109851,7 +109831,7 @@
       "source_file": "src/domain.js",
       "source_location": "L173",
       "_origin": "ast",
-      "community": 2,
+      "community": 19,
       "norm_label": "normalizesenderid()",
       "id": "src_domain_normalizesenderid"
     },
@@ -109861,7 +109841,7 @@
       "source_file": "src/domain.js",
       "source_location": "L179",
       "_origin": "ast",
-      "community": 2,
+      "community": 19,
       "norm_label": "createrequestid()",
       "id": "src_domain_createrequestid"
     },
@@ -110291,7 +110271,7 @@
       "source_file": "src/persistence.js",
       "source_location": "L121",
       "_origin": "ast",
-      "community": 199,
+      "community": 188,
       "norm_label": "p()",
       "id": "src_persistence_p"
     },
@@ -110851,7 +110831,7 @@
       "source_file": "src/service.js",
       "source_location": "L41",
       "_origin": "ast",
-      "community": 18,
+      "community": 15,
       "norm_label": ".submitrequest()",
       "id": "src_service_automationservice_submitrequest"
     },
@@ -111301,7 +111281,7 @@
       "source_file": "src/store.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 2,
+      "community": 19,
       "norm_label": "store.js",
       "id": "src_store"
     },
@@ -111311,7 +111291,7 @@
       "source_file": "src/store.js",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 2,
+      "community": 19,
       "norm_label": "{\r\n  operators,\r\n  statuses,\r\n  dispatch_statuses,\r\n  terminal_dispatch_statuses,\r\n  asserttransition,\r\n  createrequestid,\r\n  normalizephonenumber,\r\n  normalizesenderid\r\n}",
       "id": "src_store_operators_statuses_dispatch_statuses_terminal_dispatch_statuses_asserttransition_createrequestid_normalizephonenumber_normalizesenderid"
     },
@@ -111321,7 +111301,7 @@
       "source_file": "src/store.js",
       "source_location": "L13",
       "_origin": "ast",
-      "community": 2,
+      "community": 19,
       "norm_label": "{ createhash }",
       "id": "src_store_createhash"
     },
@@ -111331,7 +111311,7 @@
       "source_file": "src/store.js",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 2,
+      "community": 19,
       "norm_label": "{ persistence }",
       "id": "src_store_persistence"
     },
@@ -111451,7 +111431,7 @@
       "source_file": "src/store.js",
       "source_location": "L154",
       "_origin": "ast",
-      "community": 2,
+      "community": 19,
       "norm_label": ".nextrequestid()",
       "id": "src_store_automationstore_nextrequestid"
     },
@@ -111751,7 +111731,7 @@
       "source_file": "src/store.js",
       "source_location": "L487",
       "_origin": "ast",
-      "community": 2,
+      "community": 19,
       "norm_label": ".istrustedsenderforgateway()",
       "id": "src_store_automationstore_istrustedsenderforgateway"
     },
@@ -111761,7 +111741,7 @@
       "source_file": "src/store.js",
       "source_location": "L496",
       "_origin": "ast",
-      "community": 2,
+      "community": 19,
       "norm_label": ".getoutboxforgateway()",
       "id": "src_store_automationstore_getoutboxforgateway"
     },
@@ -111801,7 +111781,7 @@
       "source_file": "src/store.js",
       "source_location": "L537",
       "_origin": "ast",
-      "community": 2,
+      "community": 19,
       "norm_label": ".findactiverequestforgateway()",
       "id": "src_store_automationstore_findactiverequestforgateway"
     },
@@ -111871,7 +111851,7 @@
       "source_file": "src/store.js",
       "source_location": "L669",
       "_origin": "ast",
-      "community": 2,
+      "community": 19,
       "norm_label": ".verifyauditchain()",
       "id": "src_store_automationstore_verifyauditchain"
     },
@@ -111901,7 +111881,7 @@
       "source_file": "src/store.js",
       "source_location": "L702",
       "_origin": "ast",
-      "community": 2,
+      "community": 19,
       "norm_label": "canonicalize()",
       "id": "src_store_canonicalize"
     },
@@ -111911,7 +111891,7 @@
       "source_file": "src/store.js",
       "source_location": "L709",
       "_origin": "ast",
-      "community": 2,
+      "community": 19,
       "norm_label": "hashauditrow()",
       "id": "src_store_hashauditrow"
     },
@@ -111921,7 +111901,7 @@
       "source_file": "src/store.js",
       "source_location": "L721",
       "_origin": "ast",
-      "community": 2,
+      "community": 19,
       "norm_label": "extractsilentreference()",
       "id": "src_store_extractsilentreference"
     },
@@ -112501,7 +112481,7 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 5,
+      "community": 593,
       "norm_label": "backendclient.js",
       "id": "telegram_bridge_backendclient"
     },
@@ -112511,7 +112491,7 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 5,
+      "community": 593,
       "norm_label": "backendclient",
       "id": "telegram_bridge_backendclient_backendclient"
     },
@@ -112521,7 +112501,7 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 5,
+      "community": 593,
       "norm_label": ".constructor()",
       "id": "telegram_bridge_backendclient_backendclient_constructor"
     },
@@ -112531,7 +112511,7 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 5,
+      "community": 593,
       "norm_label": ".headers()",
       "id": "telegram_bridge_backendclient_backendclient_headers"
     },
@@ -112541,7 +112521,7 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L22",
       "_origin": "ast",
-      "community": 5,
+      "community": 593,
       "norm_label": ".submitrequest()",
       "id": "telegram_bridge_backendclient_backendclient_submitrequest"
     },
@@ -112551,7 +112531,7 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L31",
       "_origin": "ast",
-      "community": 5,
+      "community": 593,
       "norm_label": ".listapprovedreplies()",
       "id": "telegram_bridge_backendclient_backendclient_listapprovedreplies"
     },
@@ -112561,7 +112541,7 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L39",
       "_origin": "ast",
-      "community": 5,
+      "community": 593,
       "norm_label": ".listrecentrequests()",
       "id": "telegram_bridge_backendclient_backendclient_listrecentrequests"
     },
@@ -112571,7 +112551,7 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L47",
       "_origin": "ast",
-      "community": 5,
+      "community": 593,
       "norm_label": ".markreplyposted()",
       "id": "telegram_bridge_backendclient_backendclient_markreplyposted"
     },
@@ -112581,7 +112561,7 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L59",
       "_origin": "ast",
-      "community": 5,
+      "community": 593,
       "norm_label": ".listpendingedits()",
       "id": "telegram_bridge_backendclient_backendclient_listpendingedits"
     },
@@ -112591,7 +112571,7 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L67",
       "_origin": "ast",
-      "community": 5,
+      "community": 593,
       "norm_label": ".markreplyedited()",
       "id": "telegram_bridge_backendclient_backendclient_markreplyedited"
     },
@@ -112601,7 +112581,7 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L78",
       "_origin": "ast",
-      "community": 5,
+      "community": 593,
       "norm_label": ".reportchatmismatch()",
       "id": "telegram_bridge_backendclient_backendclient_reportchatmismatch"
     },
@@ -112611,7 +112591,7 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L92",
       "_origin": "ast",
-      "community": 5,
+      "community": 593,
       "norm_label": ".reportunauthorizedattempt()",
       "id": "telegram_bridge_backendclient_backendclient_reportunauthorizedattempt"
     },
@@ -112861,7 +112841,7 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 5,
+      "community": 560,
       "norm_label": "telegramclient.js",
       "id": "telegram_bridge_telegramclient"
     },
@@ -112871,7 +112851,7 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 5,
+      "community": 560,
       "norm_label": "defaultsleep()",
       "id": "telegram_bridge_telegramclient_defaultsleep"
     },
@@ -112881,7 +112861,7 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 5,
+      "community": 560,
       "norm_label": "telegramclient",
       "id": "telegram_bridge_telegramclient_telegramclient"
     },
@@ -112891,7 +112871,7 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 5,
+      "community": 560,
       "norm_label": ".constructor()",
       "id": "telegram_bridge_telegramclient_telegramclient_constructor"
     },
@@ -112901,7 +112881,7 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L24",
       "_origin": "ast",
-      "community": 5,
+      "community": 560,
       "norm_label": ".call()",
       "id": "telegram_bridge_telegramclient_telegramclient_call"
     },
@@ -112911,7 +112891,7 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L46",
       "_origin": "ast",
-      "community": 5,
+      "community": 560,
       "norm_label": "._throttledsend()",
       "id": "telegram_bridge_telegramclient_telegramclient_throttledsend"
     },
@@ -112921,7 +112901,7 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L73",
       "_origin": "ast",
-      "community": 5,
+      "community": 560,
       "norm_label": ".getupdates()",
       "id": "telegram_bridge_telegramclient_telegramclient_getupdates"
     },
@@ -112931,7 +112911,7 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L83",
       "_origin": "ast",
-      "community": 5,
+      "community": 560,
       "norm_label": ".sendthreadedreply()",
       "id": "telegram_bridge_telegramclient_telegramclient_sendthreadedreply"
     },
@@ -112941,7 +112921,7 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L103",
       "_origin": "ast",
-      "community": 5,
+      "community": 560,
       "norm_label": ".sendmessage()",
       "id": "telegram_bridge_telegramclient_telegramclient_sendmessage"
     },
@@ -112951,7 +112931,7 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L114",
       "_origin": "ast",
-      "community": 5,
+      "community": 560,
       "norm_label": ".editmessage()",
       "id": "telegram_bridge_telegramclient_telegramclient_editmessage"
     },
@@ -113501,7 +113481,7 @@
       "source_file": "test/telegramClient.test.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 5,
+      "community": 560,
       "norm_label": "telegramclient.test.js",
       "id": "test_telegramclient_test"
     },
@@ -113511,7 +113491,7 @@
       "source_file": "test/telegramClient.test.js",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 5,
+      "community": 560,
       "norm_label": "test",
       "id": "test_telegramclient_test_test"
     },
@@ -113521,7 +113501,7 @@
       "source_file": "test/telegramClient.test.js",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 5,
+      "community": 560,
       "norm_label": "assert",
       "id": "test_telegramclient_test_assert"
     },
@@ -113531,7 +113511,7 @@
       "source_file": "test/telegramClient.test.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 5,
+      "community": 560,
       "norm_label": "{ telegramclient }",
       "id": "test_telegramclient_test_telegramclient"
     },
@@ -113541,7 +113521,7 @@
       "source_file": "test/telegramClient.test.js",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 5,
+      "community": 560,
       "norm_label": "fakeclock()",
       "id": "test_telegramclient_test_fakeclock"
     },
@@ -113551,7 +113531,7 @@
       "source_file": "test/telegramClient.test.js",
       "source_location": "L20",
       "_origin": "ast",
-      "community": 5,
+      "community": 560,
       "norm_label": "fakefetchsequence()",
       "id": "test_telegramclient_test_fakefetchsequence"
     },
@@ -113751,7 +113731,7 @@
       "source_file": "test/userAuth.test.js",
       "source_location": "L104",
       "_origin": "ast",
-      "community": 12,
+      "community": 9,
       "norm_label": "appwith()",
       "id": "test_userauth_test_appwith"
     },
@@ -113861,7 +113841,7 @@
       "source_file": "test/workflow.test.js",
       "source_location": "L20",
       "_origin": "ast",
-      "community": 19,
+      "community": 15,
       "norm_label": "assertinvalidparse()",
       "id": "test_workflow_test_assertinvalidparse"
     },
@@ -143891,7 +143871,7 @@
       "source_file": "docs/claude-design-brief.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 595,
+      "community": 508,
       "norm_label": "claude-design-brief.md",
       "id": "docs_claude_design_brief"
     },
@@ -143991,7 +143971,7 @@
       "source_file": "docs/design-system.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 595,
+      "community": 508,
       "norm_label": "design-system.md",
       "id": "docs_design_system"
     },
@@ -144471,7 +144451,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 595,
+      "community": 508,
       "norm_label": "system-design-v2.md",
       "id": "docs_system_design_v2"
     },
@@ -144801,7 +144781,7 @@
       "source_file": "docs/telegram-bridge.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 510,
+      "community": 508,
       "norm_label": "telegram-bridge.md",
       "id": "docs_telegram_bridge"
     },
@@ -144901,7 +144881,7 @@
       "source_file": "docs/ui-design-guide-v2.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 595,
+      "community": 508,
       "norm_label": "ui-design-guide-v2.md",
       "id": "docs_ui_design_guide_v2"
     },
@@ -145270,148 +145250,8 @@
     {
       "relation": "references",
       "confidence": "EXTRACTED",
-      "source_file": "docs/design-system.md",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_design_system",
-      "target": "session_memory"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
       "source_file": "docs/gd-lost-phone-watch-design.md",
-      "source_location": "L6",
-      "weight": 1.0,
-      "source": "docs_gd_lost_phone_watch_design",
-      "target": "session_memory",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/ui-design-guide-v2.md",
-      "source_location": "L13",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "docs_ui_design_guide_v2",
-      "target": "session_memory"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "source_file": "SESSION_MEMORY.md",
-      "source_location": "L105",
-      "weight": 1.0,
-      "source": "session_memory",
-      "target": "docs_gd_lost_phone_watch_status",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "SESSION_MEMORY.md",
-      "source_location": "L1",
-      "weight": 1.0,
-      "source": "session_memory",
-      "target": "session_memory_session_memory_sms_automation",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "SESSION_MEMORY.md",
-      "source_location": "L19",
-      "weight": 1.0,
-      "source": "session_memory_session_memory_sms_automation",
-      "target": "session_memory_architecture_four_surfaces_one_backend",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "SESSION_MEMORY.md",
-      "source_location": "L36",
-      "weight": 1.0,
-      "source": "session_memory_session_memory_sms_automation",
-      "target": "session_memory_auth_model",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "SESSION_MEMORY.md",
-      "source_location": "L108",
-      "weight": 1.0,
-      "source": "session_memory_session_memory_sms_automation",
-      "target": "session_memory_conventions_gotchas",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "SESSION_MEMORY.md",
-      "source_location": "L46",
-      "weight": 1.0,
-      "source": "session_memory_session_memory_sms_automation",
-      "target": "session_memory_deploy_production_vps",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "SESSION_MEMORY.md",
-      "source_location": "L59",
-      "weight": 1.0,
-      "source": "session_memory_session_memory_sms_automation",
-      "target": "session_memory_design_system_current",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "SESSION_MEMORY.md",
-      "source_location": "L77",
-      "weight": 1.0,
-      "source": "session_memory_session_memory_sms_automation",
-      "target": "session_memory_frontend_stack_planned_direction",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "SESSION_MEMORY.md",
-      "source_location": "L92",
-      "weight": 1.0,
-      "source": "session_memory_session_memory_sms_automation",
-      "target": "session_memory_planned_feature_lost_stolen_phone_recovery_watch_gd_linked",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "SESSION_MEMORY.md",
-      "source_location": "L7",
-      "weight": 1.0,
-      "source": "session_memory_session_memory_sms_automation",
-      "target": "session_memory_what_this_project_is",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "SESSION_MEMORY.md",
-      "source_location": "L119",
-      "weight": 1.0,
-      "source": "session_memory_session_memory_sms_automation",
-      "target": "session_memory_where_to_look_next",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/gd-lost-phone-watch-design.md",
-      "source_location": "L12",
+      "source_location": "L14",
       "weight": 1.0,
       "source": "docs_gd_lost_phone_watch_design",
       "target": "docs_gd_lost_phone_watch_status",
@@ -145428,10 +145268,20 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "SESSION_MEMORY.md",
+      "source_location": "L105",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "session_memory",
+      "target": "docs_gd_lost_phone_watch_status"
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/gd-lost-phone-watch-STATUS.md",
-      "source_location": "L31",
+      "source_location": "L35",
       "weight": 1.0,
       "source": "docs_gd_lost_phone_watch_status_gd_lost_phone_watch_implementation_status_branch_local",
       "target": "docs_gd_lost_phone_watch_status_latest_update",
@@ -145441,7 +145291,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/gd-lost-phone-watch-STATUS.md",
-      "source_location": "L37",
+      "source_location": "L45",
       "weight": 1.0,
       "source": "docs_gd_lost_phone_watch_status_gd_lost_phone_watch_implementation_status_branch_local",
       "target": "docs_gd_lost_phone_watch_status_open_questions_to_resolve_during_implementation",
@@ -145451,10 +145301,10 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/gd-lost-phone-watch-STATUS.md",
-      "source_location": "L19",
+      "source_location": "L23",
       "weight": 1.0,
       "source": "docs_gd_lost_phone_watch_status_gd_lost_phone_watch_implementation_status_branch_local",
-      "target": "docs_gd_lost_phone_watch_status_status_by_component",
+      "target": "docs_gd_lost_phone_watch_status_status_by_component_rollout_order_per_design_doc_s_testing_rollout_section",
       "confidence_score": 1.0
     },
     {
@@ -145474,57 +145324,47 @@
       "source_location": "L1",
       "weight": 1.0,
       "source": "docs_gd_lost_phone_watch_design",
-      "target": "docs_gd_lost_phone_watch_design_lost_stolen_phone_recovery_watch_system_design_planned_p2",
+      "target": "docs_gd_lost_phone_watch_design_system_design_gd_lost_phone_watch_phase_1_locked_scope",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/gd-lost-phone-watch-design.md",
-      "source_location": "L213",
+      "source_location": "L126",
       "weight": 1.0,
-      "source": "docs_gd_lost_phone_watch_design_lost_stolen_phone_recovery_watch_system_design_planned_p2",
-      "target": "docs_gd_lost_phone_watch_design_10_key_decisions_already_made_2026_07_06_design_interview",
+      "source": "docs_gd_lost_phone_watch_design_system_design_gd_lost_phone_watch_phase_1_locked_scope",
+      "target": "docs_gd_lost_phone_watch_design_api_surface_admin_auth_gated_never_reachable_from_the_telegram_group",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/gd-lost-phone-watch-design.md",
-      "source_location": "L15",
+      "source_location": "L40",
       "weight": 1.0,
-      "source": "docs_gd_lost_phone_watch_design_lost_stolen_phone_recovery_watch_system_design_planned_p2",
-      "target": "docs_gd_lost_phone_watch_design_1_goals_non_goals",
+      "source": "docs_gd_lost_phone_watch_design_system_design_gd_lost_phone_watch_phase_1_locked_scope",
+      "target": "docs_gd_lost_phone_watch_design_data_model_new_tables_additive_only_do_not_touch_requests_request_dispatches",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/gd-lost-phone-watch-design.md",
-      "source_location": "L38",
+      "source_location": "L26",
       "weight": 1.0,
-      "source": "docs_gd_lost_phone_watch_design_lost_stolen_phone_recovery_watch_system_design_planned_p2",
-      "target": "docs_gd_lost_phone_watch_design_2_where_this_sits_in_the_existing_architecture",
+      "source": "docs_gd_lost_phone_watch_design_system_design_gd_lost_phone_watch_phase_1_locked_scope",
+      "target": "docs_gd_lost_phone_watch_design_explicitly_out_of_scope_for_this_phase_do_not_build_suggest_or_stub_any_of",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/gd-lost-phone-watch-design.md",
-      "source_location": "L96",
+      "source_location": "L99",
       "weight": 1.0,
-      "source": "docs_gd_lost_phone_watch_design_lost_stolen_phone_recovery_watch_system_design_planned_p2",
-      "target": "docs_gd_lost_phone_watch_design_3_data_model",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "docs/gd-lost-phone-watch-design.md",
-      "source_location": "L114",
-      "weight": 1.0,
-      "source": "docs_gd_lost_phone_watch_design_lost_stolen_phone_recovery_watch_system_design_planned_p2",
-      "target": "docs_gd_lost_phone_watch_design_4_detection_algorithm_step_by_step",
+      "source": "docs_gd_lost_phone_watch_design_system_design_gd_lost_phone_watch_phase_1_locked_scope",
+      "target": "docs_gd_lost_phone_watch_design_required_fixes_to_existing_code_not_new_subsystems_targeted_edits",
       "confidence_score": 1.0
     },
     {
@@ -145533,49 +145373,159 @@
       "source_file": "docs/gd-lost-phone-watch-design.md",
       "source_location": "L137",
       "weight": 1.0,
-      "source": "docs_gd_lost_phone_watch_design_lost_stolen_phone_recovery_watch_system_design_planned_p2",
-      "target": "docs_gd_lost_phone_watch_design_5_api_surface_conceptual_no_implementation_yet",
+      "source": "docs_gd_lost_phone_watch_design_system_design_gd_lost_phone_watch_phase_1_locked_scope",
+      "target": "docs_gd_lost_phone_watch_design_security_same_posture_as_the_rest_of_the_system_nothing_new_invented",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/gd-lost-phone-watch-design.md",
-      "source_location": "L152",
+      "source_location": "L145",
       "weight": 1.0,
-      "source": "docs_gd_lost_phone_watch_design_lost_stolen_phone_recovery_watch_system_design_planned_p2",
-      "target": "docs_gd_lost_phone_watch_design_6_scheduler_design",
+      "source": "docs_gd_lost_phone_watch_design_system_design_gd_lost_phone_watch_phase_1_locked_scope",
+      "target": "docs_gd_lost_phone_watch_design_testing_rollout_order",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/gd-lost-phone-watch-design.md",
-      "source_location": "L171",
+      "source_location": "L17",
       "weight": 1.0,
-      "source": "docs_gd_lost_phone_watch_design_lost_stolen_phone_recovery_watch_system_design_planned_p2",
-      "target": "docs_gd_lost_phone_watch_design_7_security_architecture",
+      "source": "docs_gd_lost_phone_watch_design_system_design_gd_lost_phone_watch_phase_1_locked_scope",
+      "target": "docs_gd_lost_phone_watch_design_what_this_is",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/gd-lost-phone-watch-design.md",
-      "source_location": "L187",
+      "source_location": "L64",
       "weight": 1.0,
-      "source": "docs_gd_lost_phone_watch_design_lost_stolen_phone_recovery_watch_system_design_planned_p2",
-      "target": "docs_gd_lost_phone_watch_design_8_edge_cases_to_design_against",
+      "source": "docs_gd_lost_phone_watch_design_system_design_gd_lost_phone_watch_phase_1_locked_scope",
+      "target": "docs_gd_lost_phone_watch_design_workflow",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/design-system.md",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "docs_design_system",
+      "target": "session_memory"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/ui-design-guide-v2.md",
+      "source_location": "L13",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "docs_ui_design_guide_v2",
+      "target": "session_memory"
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
-      "source_file": "docs/gd-lost-phone-watch-design.md",
-      "source_location": "L202",
+      "source_file": "SESSION_MEMORY.md",
+      "source_location": "L1",
       "weight": 1.0,
-      "source": "docs_gd_lost_phone_watch_design_lost_stolen_phone_recovery_watch_system_design_planned_p2",
-      "target": "docs_gd_lost_phone_watch_design_9_testing_rollout_plan",
-      "confidence_score": 1.0
+      "confidence_score": 1.0,
+      "source": "session_memory",
+      "target": "session_memory_session_memory_sms_automation"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "SESSION_MEMORY.md",
+      "source_location": "L19",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "session_memory_session_memory_sms_automation",
+      "target": "session_memory_architecture_four_surfaces_one_backend"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "SESSION_MEMORY.md",
+      "source_location": "L36",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "session_memory_session_memory_sms_automation",
+      "target": "session_memory_auth_model"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "SESSION_MEMORY.md",
+      "source_location": "L108",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "session_memory_session_memory_sms_automation",
+      "target": "session_memory_conventions_gotchas"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "SESSION_MEMORY.md",
+      "source_location": "L46",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "session_memory_session_memory_sms_automation",
+      "target": "session_memory_deploy_production_vps"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "SESSION_MEMORY.md",
+      "source_location": "L59",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "session_memory_session_memory_sms_automation",
+      "target": "session_memory_design_system_current"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "SESSION_MEMORY.md",
+      "source_location": "L77",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "session_memory_session_memory_sms_automation",
+      "target": "session_memory_frontend_stack_planned_direction"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "SESSION_MEMORY.md",
+      "source_location": "L92",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "session_memory_session_memory_sms_automation",
+      "target": "session_memory_planned_feature_lost_stolen_phone_recovery_watch_gd_linked"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "SESSION_MEMORY.md",
+      "source_location": "L7",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "session_memory_session_memory_sms_automation",
+      "target": "session_memory_what_this_project_is"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "SESSION_MEMORY.md",
+      "source_location": "L119",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "session_memory_session_memory_sms_automation",
+      "target": "session_memory_where_to_look_next"
     },
     {
       "relation": "contains",
@@ -492509,5 +492459,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "26f1472199dd386e0d32102db500def9a1bdf0cd"
+  "built_at_commit": "4957bbfbcb0f8fad1f2eb695d7cd8029c9858461"
 }

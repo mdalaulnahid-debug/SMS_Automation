@@ -160,3 +160,69 @@ gd_recheck_log:
 Everything built and run on **localhost only**. Do not run
 `scripts/deploy.sh` or discuss VPS deployment until this is reviewed and
 explicitly approved.
+
+---
+
+## Implementation Review Findings (2026-07-06)
+
+Before any code was written, this spec was checked line-by-line against the
+real codebase (`domain.js`, `store.js`, `queue.js`, `smsGateway.js`,
+`service.js`, `persistence.js`, `replyAnalyzer.js`, `app.js`, `userAuth.js`,
+and real training-data reply samples). Summary below; full open questions
+tracked in `gd-lost-phone-watch-STATUS.md` (branch-local).
+
+**Confirmed sound, safe to build on as described:**
+- `normalizePhoneNumber` (`domain.js:164`) — `normalizeImei` is a direct parallel.
+- `findRecentDuplicateRequest` (`store.js:506`, called from `service.js:109`) — guard clauses slot in cleanly.
+- `_finalizeIfTerminal` (`service.js:504`) — real, exactly where expected.
+- `channel` is a free-text column, no enum/CHECK constraint — `'gd-watch'` is safe to add.
+- `audit_logs` hash-chain — reusable as-is via `store.audit(actor, action, requestId, details)`.
+- SQLite schema is plain additive `CREATE TABLE IF NOT EXISTS` strings — no migration framework to fight.
+- The 5-identifier batching in `parser.js` (`MAX_IDENTIFIERS = 5`) is real, for constructing outgoing SMS text.
+
+**One naming correction:** `dispatchNext` (`smsGateway.js:11`) just drains
+the operator queue FIFO in a loop — it does not itself choose what to send.
+The actual place to add the "prefer non-gd-watch requests" rule is
+`OperatorQueue.nextSendable()` in `queue.js` (currently strict
+`queue[0]` FIFO), not `dispatchNext`.
+
+**Five real gaps found, needing a decision before implementation:**
+
+1. **Second-reviewer approval is currently unenforceable.** `requireAdmin`
+   (`app.js:372`) treats `admin` and `super_admin` identically, and also
+   accepts the legacy shared admin API key — which carries no individual
+   identity. If case create + approve both go through that shared key, the
+   "different approver" rule can't actually be checked. Recommendation:
+   gd-watch create/approve endpoints require individual session-token auth
+   only (reject the shared key), plus a new, currently-nonexistent
+   `requireSuperAdmin` check.
+2. **No existing mapping from an admin account to a Telegram chat to DM.**
+   `authorizedUsers` in `config/telegram.json` has no admin/IO role flag,
+   and there's no link between a web login account and a Telegram user ID.
+   Needs a new config list or a `telegramId` field on admin accounts.
+3. **Multi-IMEI batching has an unverified data-attribution risk — the
+   highest-risk finding.** Real training-data replies show: Robi prints the
+   IMEI header once, then multiple MSISDN/date rows with no per-row IMEI at
+   all; one GP sample echoed a row-level IMEI that didn't match the
+   requested one (more than just a check-digit difference). No training
+   data exists for an actual batched multi-IMEI reply from any operator.
+   Recommendation: **Phase 1 dispatches one IMEI per SMS per watched
+   device, no batching**, despite this spec's "reuse existing batching"
+   instruction, until real batched-reply behavior is confirmed
+   operator-by-operator with test traffic. Misattributing a history row to
+   the wrong watched IMEI would be a serious correctness bug, the same
+   class as the 2026-07-05 cross-matching incident.
+4. **GD image upload has zero precedent in this codebase.** No
+   multipart/file-upload handling exists anywhere (raw `node:http`, no
+   framework) — this is new engineering surface, not an adaptation of
+   something existing.
+5. **Dashboard pollution.** `buildAdminData()`'s stats and lists (Approvals
+   Queue, today's-request counters, failed/timeout counts) will include
+   gd-watch background dispatches unless explicitly filtered by
+   `channel !== 'gd-watch'`. Not addressed in the original spec; must be
+   added to whatever computes those views.
+
+**Net assessment:** the core architectural idea — layering this on the
+existing request/dispatch/reply pipeline via a new channel — is sound and
+well-matched to the real codebase. The five items above need a decision
+(defaults recommended above) before implementation starts.
