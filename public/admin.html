@@ -301,6 +301,7 @@
           <button class="sidebar-item" data-section="unmatched"><span class="sidebar-label"><span class="material-symbols-outlined">crisis_alert</span>Unmatched SMS</span><span class="sidebar-count" id="countUnmatched">0</span></button>
           <button class="sidebar-item" data-section="rejected"><span class="sidebar-label"><span class="material-symbols-outlined">report</span>Rejected Messages</span><span class="sidebar-count" id="countRejected">0</span></button>
           <button class="sidebar-item" data-section="audit"><span class="sidebar-label"><span class="material-symbols-outlined">policy</span>Audit</span><span class="sidebar-count" id="countAudit">0</span></button>
+          <button class="sidebar-item" data-section="phoneinbox"><span class="sidebar-label"><span class="material-symbols-outlined">smartphone</span>Phone Inbox</span></button>
           <button class="sidebar-item" data-section="tools"><span class="sidebar-label"><span class="material-symbols-outlined">construction</span>Tools</span></button>
         </aside>
 
@@ -508,6 +509,24 @@
                 </div>
               </div>
               <div class="list-shell" id="auditList"></div>
+            </section>
+          </section>
+
+          <section id="section-phoneinbox" class="admin-section">
+            <div class="section-heading">
+              <div>
+                <div class="section-title">Phone Inbox</div>
+                <div class="section-subtitle">Read a gateway phone's live SMS inbox on demand — check errors without the physical phone. The phone returns its inbox on its next poll (a few seconds).</div>
+              </div>
+            </div>
+            <section class="data-surface" style="padding:16px;display:grid;gap:14px">
+              <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+                <select id="phoneInboxGateway" class="select-field" style="max-width:280px"></select>
+                <button class="btn-primary" onclick="requestPhoneInbox()">Request live inbox</button>
+                <button class="btn-secondary" onclick="refreshPhoneInbox()">Refresh</button>
+                <span id="phoneInboxStatus" style="font-size:12px;color:var(--text-muted)"></span>
+              </div>
+              <div id="phoneInboxList" class="list-shell"></div>
             </section>
           </section>
 

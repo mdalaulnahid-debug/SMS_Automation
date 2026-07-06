@@ -406,8 +406,8 @@ class GatewayForegroundService : Service() {
                     if (backendUrl.isNotBlank()) {
                         val configuredGateways = Prefs.configuredGateways(this)
                         for ((gwId, subId) in configuredGateways) {
-                            val jobs = BackendClient.fetchAndClaimJobs(backendUrl, gwId, secret)
-                            for (job in jobs) {
+                            val poll = BackendClient.fetchAndClaimJobs(backendUrl, gwId, secret)
+                            for (job in poll.jobs) {
                                 try {
                                     SmsSender.send(this, job.to, job.message, job.requestId, job.operator, subId)
                                     BackendClient.ackJob(backendUrl, gwId, job.outboxId, ok = true, gatewaySecret = secret)
@@ -415,6 +415,18 @@ class GatewayForegroundService : Service() {
                                 } catch (e: Exception) {
                                     Log.e(TAG, "Poll[$gwId]: send failed for ${job.outboxId}: ${e.message}")
                                     BackendClient.ackJob(backendUrl, gwId, job.outboxId, ok = false, error = e.message, gatewaySecret = secret)
+                                }
+                            }
+                            // Handle admin commands (e.g. live phone-inbox dump).
+                            for (cmd in poll.commands) {
+                                if (cmd.type == "DUMP_INBOX") {
+                                    try {
+                                        val messages = readSmsInbox(cmd.limit)
+                                        BackendClient.postInboxDump(backendUrl, gwId, cmd.id, messages, secret)
+                                        Log.d(TAG, "Poll[$gwId]: posted inbox dump (${messages.length()} msgs)")
+                                    } catch (e: Exception) {
+                                        Log.e(TAG, "Poll[$gwId]: inbox dump failed: ${e.message}")
+                                    }
                                 }
                             }
                         }
@@ -461,6 +473,42 @@ class GatewayForegroundService : Service() {
         pollThread = null
         lastPollAtMs = System.currentTimeMillis()
         startPollLoop()
+    }
+
+    // Read the phone's SMS inbox on demand (answers an admin DUMP_INBOX command).
+    // READ_SMS is already granted (see AndroidManifest); returns newest-first.
+    private fun readSmsInbox(limit: Int): org.json.JSONArray {
+        val arr = org.json.JSONArray()
+        val cols = arrayOf(
+            android.provider.Telephony.Sms.ADDRESS,
+            android.provider.Telephony.Sms.BODY,
+            android.provider.Telephony.Sms.DATE
+        )
+        try {
+            contentResolver.query(
+                android.provider.Telephony.Sms.Inbox.CONTENT_URI,
+                cols, null, null,
+                android.provider.Telephony.Sms.DATE + " DESC"
+            )?.use { c ->
+                val aIdx = c.getColumnIndex(android.provider.Telephony.Sms.ADDRESS)
+                val bIdx = c.getColumnIndex(android.provider.Telephony.Sms.BODY)
+                val dIdx = c.getColumnIndex(android.provider.Telephony.Sms.DATE)
+                val fmt = java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss", java.util.Locale.US)
+                var count = 0
+                while (c.moveToNext() && count < limit) {
+                    val dateMs = if (dIdx >= 0) c.getLong(dIdx) else 0L
+                    arr.put(org.json.JSONObject().apply {
+                        put("address", if (aIdx >= 0) c.getString(aIdx) ?: "" else "")
+                        put("body", if (bIdx >= 0) c.getString(bIdx) ?: "" else "")
+                        put("date", fmt.format(java.util.Date(dateMs)))
+                    })
+                    count += 1
+                }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, "readSmsInbox failed: ${e.message}")
+        }
+        return arr
     }
 
     private fun registerNetworkMonitor() {

@@ -55,6 +55,27 @@ Apply via the admin **Exception desk / correct-match** flow (audited), reviewing
 - [ ] **`P1` ROBI gateway** last checked in 2026-07-05 22:13 (GP/BL current). Verify the
   Robi gateway phone is back online.
 
+### Feature — live phone-inbox viewer (web console) — built, needs gateway APK
+
+Read a gateway phone's live SMS inbox on demand from the admin console, to check
+errors without the physical phone. Pull-model (phones are LAN-only): admin request
+→ `DUMP_INBOX` command piggybacked on the phone's `/api/gateway/jobs` poll → phone
+reads `content://sms/inbox` and POSTs it to `/api/gateway/inbox-dump` → admin fetches
+`GET /api/admin/gateways/:id/inbox`.
+
+- [x] Backend command channel + endpoints (`store.js` in-memory commands/dumps;
+  `app.js` jobs-poll piggyback + inbox-dump receiver + admin request/fetch). Test
+  in `workflow.test.js`; end-to-end verified locally (152/152 suite).
+- [x] Web admin console **Phone Inbox** section (`admin.html`/`admin.js`): gateway
+  picker, "Request live inbox", poll-for-result, message list.
+- [x] Gateway app Kotlin (`BackendClient.kt` PollResult+postInboxDump;
+  `GatewayForegroundService.kt` DUMP_INBOX handler + `readSmsInbox`). READ_SMS
+  already granted. **Not compiled/tested here (no device).**
+- [ ] **`P1` REBUILD + REINSTALL the gateway APK on each operator phone** — the
+  live inbox only returns data once phones run this updated app.
+- [ ] **`P2` DEPLOY** backend + web changes to the VPS (gated).
+- [ ] **`P2` Admin app** (Android supervisor) phone-inbox viewer — later, per plan.
+
 ### Feature (from this incident)
 
 - [ ] **`P2` Split review streams** — route group-origin vs DM-origin requests to two

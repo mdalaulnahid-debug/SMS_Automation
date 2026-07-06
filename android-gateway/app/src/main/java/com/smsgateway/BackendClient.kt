@@ -225,24 +225,29 @@ object BackendClient {
         val operator: String
     )
 
+    // Admin command piggybacked on the jobs poll (e.g. a live phone-inbox dump request).
+    data class GatewayCommand(val id: String, val type: String, val limit: Int)
+
+    data class PollResult(val jobs: List<PendingJob>, val commands: List<GatewayCommand>)
+
     fun fetchAndClaimJobs(
         backendUrl: String,
         gatewayId: String,
         gatewaySecret: String = ""
-    ): List<PendingJob> {
+    ): PollResult {
         val base = backendUrl.trim().trimEnd('/')
-        if (base.isBlank()) return emptyList()
+        if (base.isBlank()) return PollResult(emptyList(), emptyList())
         return try {
             val builder = Request.Builder()
                 .url("$base/api/gateway/jobs?gatewayId=${gatewayId}")
                 .get()
             if (gatewaySecret.isNotBlank()) builder.header("x-gateway-secret", gatewaySecret)
             client.newCall(builder.build()).execute().use { r ->
-                if (!r.isSuccessful) return emptyList()
+                if (!r.isSuccessful) return PollResult(emptyList(), emptyList())
                 val json = JSONObject(r.body?.string().orEmpty())
-                val arr = json.optJSONArray("jobs") ?: return emptyList()
-                (0 until arr.length()).map { i ->
-                    val j = arr.getJSONObject(i)
+                val jobsArr = json.optJSONArray("jobs")
+                val jobs = if (jobsArr == null) emptyList() else (0 until jobsArr.length()).map { i ->
+                    val j = jobsArr.getJSONObject(i)
                     PendingJob(
                         outboxId = j.getString("outboxId"),
                         to = j.getString("to"),
@@ -251,10 +256,46 @@ object BackendClient {
                         operator = j.optString("operator")
                     )
                 }
+                val cmdArr = json.optJSONArray("commands")
+                val commands = if (cmdArr == null) emptyList() else (0 until cmdArr.length()).map { i ->
+                    val c = cmdArr.getJSONObject(i)
+                    GatewayCommand(c.optString("id"), c.optString("type"), c.optInt("limit", 50))
+                }
+                PollResult(jobs, commands)
             }
         } catch (e: Exception) {
             Log.w(TAG, "fetchAndClaimJobs failed: ${e.message}")
-            emptyList()
+            PollResult(emptyList(), emptyList())
+        }
+    }
+
+    // POST the phone's SMS inbox snapshot back to the backend (answering a DUMP_INBOX command).
+    fun postInboxDump(
+        backendUrl: String,
+        gatewayId: String,
+        commandId: String,
+        messages: org.json.JSONArray,
+        gatewaySecret: String = ""
+    ): Boolean {
+        val base = backendUrl.trim().trimEnd('/')
+        if (base.isBlank()) return false
+        val payload = JSONObject().apply {
+            put("gatewayId", gatewayId)
+            put("commandId", commandId)
+            put("messages", messages)
+        }.toString()
+        return try {
+            val builder = Request.Builder()
+                .url("$base/api/gateway/inbox-dump")
+                .post(payload.toRequestBody(JSON))
+            if (gatewaySecret.isNotBlank()) builder.header("x-gateway-secret", gatewaySecret)
+            client.newCall(builder.build()).execute().use { r ->
+                Log.d(TAG, "postInboxDump ($gatewayId) -> HTTP ${r.code}")
+                r.isSuccessful
+            }
+        } catch (e: Exception) {
+            Log.w(TAG, "postInboxDump failed: ${e.message}")
+            false
         }
     }
 

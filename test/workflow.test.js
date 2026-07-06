@@ -1164,6 +1164,24 @@ test('re-querying a timed-out number is blocked as a duplicate, not allowed to c
   assert.equal(store.listRequests().length, 1);
 });
 
+test('live phone-inbox command channel: request → poll delivers command once → dump → fetch', () => {
+  const { store } = createHarness();
+  const cmd = store.requestInboxDump('GP_PHONE_01', 25);
+  assert.equal(cmd.type, 'DUMP_INBOX');
+  assert.equal(cmd.limit, 25);
+  // The gateway's next jobs-poll consumes the command exactly once.
+  const delivered = store.takePendingCommands('GP_PHONE_01');
+  assert.equal(delivered.length, 1);
+  assert.equal(delivered[0].id, cmd.id);
+  assert.equal(store.takePendingCommands('GP_PHONE_01').length, 0);
+  // Gateway posts its inbox snapshot back; admin can fetch it.
+  store.saveInboxDump('GP_PHONE_01', [{ from: '12345', body: 'reply', date: '2026-07-06T00:00:00Z' }], { commandId: cmd.id });
+  const dump = store.getInboxDump('GP_PHONE_01');
+  assert.equal(dump.messages.length, 1);
+  assert.equal(dump.commandId, cmd.id);
+  assert.equal(store.getInboxDump('ROBI_PHONE_01'), null);
+});
+
 test('manual match links an unmatched inbox to a waiting request', async () => {
   const { store, service } = createHarness();
   const submitted = await service.submitRequest({

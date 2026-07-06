@@ -609,6 +609,41 @@ class AutomationStore {
     return request;
   }
 
+  // ── Live phone-inbox commands (in-memory, ephemeral) ──────────────────────
+  // The phones are on a LAN and can only be reached via their own polling, so a
+  // "show me the phone's SMS inbox" request is delivered as a command on the next
+  // /api/gateway/jobs poll; the phone reads content://sms/inbox and POSTs it back.
+  // State is intentionally in-memory (a live-debug convenience, not audited data).
+  requestInboxDump(gatewayId, limit = 50) {
+    this._inboxCommands = this._inboxCommands || new Map();
+    const cmd = { type: 'DUMP_INBOX', id: randomId('cmd'), limit, requestedAt: nowIso() };
+    const queue = this._inboxCommands.get(gatewayId) || [];
+    queue.push(cmd);
+    this._inboxCommands.set(gatewayId, queue);
+    this.audit('admin', 'GATEWAY_INBOX_DUMP_REQUESTED', null, { gatewayId, limit });
+    return cmd;
+  }
+
+  takePendingCommands(gatewayId) {
+    this._inboxCommands = this._inboxCommands || new Map();
+    const queue = this._inboxCommands.get(gatewayId) || [];
+    this._inboxCommands.set(gatewayId, []);
+    return queue;
+  }
+
+  saveInboxDump(gatewayId, messages, meta = {}) {
+    this._inboxDumps = this._inboxDumps || new Map();
+    const dump = { gatewayId, messages: Array.isArray(messages) ? messages : [], receivedAt: nowIso(), ...meta };
+    this._inboxDumps.set(gatewayId, dump);
+    this.audit('system', 'GATEWAY_INBOX_DUMP_RECEIVED', null, { gatewayId, count: dump.messages.length });
+    return dump;
+  }
+
+  getInboxDump(gatewayId) {
+    this._inboxDumps = this._inboxDumps || new Map();
+    return this._inboxDumps.get(gatewayId) || null;
+  }
+
   // Append-only, tamper-evident audit log. Each row stores hash = sha256(prevHash + canonical(row)),
   // forming a chain: editing or deleting any past row breaks every subsequent hash, which
   // verifyAuditChain() detects. Important for a system whose output may support investigations.

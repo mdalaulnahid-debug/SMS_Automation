@@ -800,7 +800,35 @@ function createApp(options = {}) {
           requestId: row.requestId,
           operator: row.operator
         }));
-        return json(res, 200, { jobs });
+        // Piggyback any pending admin commands (e.g. live phone-inbox dump requests).
+        const commands = store.takePendingCommands(gatewayId);
+        return json(res, 200, { jobs, commands });
+      }
+      // Gateway posts back its phone SMS inbox snapshot in response to a DUMP_INBOX command.
+      if (req.method === 'POST' && req.url === '/api/gateway/inbox-dump') {
+        const body = await readJson(req);
+        if (!isAdmin(req, authConfig) && !isValidGateway(req, body.gatewayId, store, authConfig)) {
+          return json(res, 401, { error: 'Invalid or missing gateway secret.' });
+        }
+        if (!body.gatewayId) return json(res, 400, { error: 'gatewayId required' });
+        store.registerGatewayHeartbeat(body.gatewayId);
+        const dump = store.saveInboxDump(body.gatewayId, body.messages || [], { commandId: body.commandId || null });
+        return json(res, 200, { ok: true, receivedAt: dump.receivedAt, count: dump.messages.length });
+      }
+      // Admin: request a live inbox dump from a gateway phone.
+      if (req.method === 'POST' && req.url.startsWith('/api/admin/gateways/') && req.url.endsWith('/request-inbox')) {
+        if (!isAdmin(req, authConfig)) return json(res, 401, { error: 'Admin auth required.' });
+        const gatewayId = decodeURIComponent(req.url.split('/')[4]);
+        const body = await readJson(req).catch(() => ({}));
+        const limit = Math.min(Math.max(Number(body.limit) || 50, 1), 200);
+        const command = store.requestInboxDump(gatewayId, limit);
+        return json(res, 200, { ok: true, command });
+      }
+      // Admin: fetch the latest inbox dump a gateway phone posted back.
+      if (req.method === 'GET' && req.url.startsWith('/api/admin/gateways/') && req.url.endsWith('/inbox')) {
+        if (!isAdmin(req, authConfig)) return json(res, 401, { error: 'Admin auth required.' });
+        const gatewayId = decodeURIComponent(req.url.split('/')[4]);
+        return json(res, 200, { dump: store.getInboxDump(gatewayId) });
       }
       if (req.method === 'POST' && req.url === '/api/gateway/heartbeat') {
         const body = await readJson(req);

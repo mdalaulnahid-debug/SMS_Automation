@@ -868,6 +868,7 @@ async function refreshAdmin() {
   auditLogs = auditPayload.auditLogs || [];
 
   renderOverview();
+  populatePhoneInboxGateways();
   renderRequestList();
   renderUnmatchedList();
   renderRejectedList();
@@ -878,6 +879,84 @@ async function refreshAdmin() {
     : `Audit chain issue at ${auditPayload.integrity?.brokenAt || 'unknown row'}`;
   document.getElementById('chainIntegrity').className = auditPayload.integrity?.ok ? 'banner banner-ok' : 'banner banner-danger';
   document.getElementById('chainIntegrity').innerHTML = `<span class="material-symbols-outlined">${auditPayload.integrity?.ok ? 'verified' : 'warning'}</span>${esc(integrity)}`;
+}
+
+// ── Live phone inbox ────────────────────────────────────────────────────────
+let phoneInboxPollTimer = null;
+
+function populatePhoneInboxGateways() {
+  const sel = document.getElementById('phoneInboxGateway');
+  if (!sel || !overviewData) return;
+  const current = sel.value;
+  const gateways = overviewData.gatewayHealth || [];
+  sel.innerHTML = gateways.map((g) => `<option value="${esc(g.id)}">${esc(g.operatorName || g.operator)} · ${esc(g.id)}</option>`).join('');
+  if (current && gateways.some((g) => g.id === current)) sel.value = current;
+}
+
+async function fetchPhoneDump(gatewayId) {
+  try {
+    const res = await apiFetch(`/api/admin/gateways/${encodeURIComponent(gatewayId)}/inbox`);
+    return (await res.json()).dump;
+  } catch {
+    return null;
+  }
+}
+
+function renderPhoneInbox(dump) {
+  const list = document.getElementById('phoneInboxList');
+  const messages = (dump && dump.messages) || [];
+  list.innerHTML = messages.length
+    ? messages.map((m) => `
+      <div class="list-item">
+        <div class="item-head">
+          <div class="item-title">${esc(m.address || m.from || 'unknown sender')}</div>
+          <span class="item-meta">${esc(m.date || m.receivedAt || '')}</span>
+        </div>
+        <div class="item-meta" style="white-space:pre-wrap;margin-top:4px">${esc(m.body || '')}</div>
+      </div>`).join('')
+    : '<div class="empty">Phone inbox is empty.</div>';
+}
+
+async function requestPhoneInbox() {
+  const gatewayId = document.getElementById('phoneInboxGateway').value;
+  const status = document.getElementById('phoneInboxStatus');
+  if (!gatewayId) { status.textContent = 'No gateway selected.'; return; }
+  status.textContent = `Requesting inbox from ${gatewayId}… waiting for the phone to poll (a few seconds).`;
+  const before = (await fetchPhoneDump(gatewayId))?.receivedAt || null;
+  try {
+    await postJson(`/api/admin/gateways/${encodeURIComponent(gatewayId)}/request-inbox`, { limit: 50 });
+  } catch (error) {
+    status.textContent = `Request failed: ${error.message || error}`;
+    return;
+  }
+  let tries = 0;
+  clearInterval(phoneInboxPollTimer);
+  phoneInboxPollTimer = setInterval(async () => {
+    tries += 1;
+    const dump = await fetchPhoneDump(gatewayId);
+    if (dump && dump.receivedAt !== before) {
+      clearInterval(phoneInboxPollTimer);
+      renderPhoneInbox(dump);
+      status.textContent = `Received ${dump.messages.length} message(s) ${relativeTime(dump.receivedAt)}.`;
+    } else if (tries > 20) {
+      clearInterval(phoneInboxPollTimer);
+      status.textContent = 'No response yet — the phone may be offline, slow to poll, or on an app version without inbox support. Try Refresh shortly.';
+    }
+  }, 2000);
+}
+
+async function refreshPhoneInbox() {
+  const gatewayId = document.getElementById('phoneInboxGateway').value;
+  const status = document.getElementById('phoneInboxStatus');
+  if (!gatewayId) { status.textContent = 'No gateway selected.'; return; }
+  const dump = await fetchPhoneDump(gatewayId);
+  if (!dump) {
+    status.textContent = 'No inbox captured yet — click "Request live inbox".';
+    document.getElementById('phoneInboxList').innerHTML = '';
+    return;
+  }
+  renderPhoneInbox(dump);
+  status.textContent = `Last captured ${relativeTime(dump.receivedAt)} · ${dump.messages.length} message(s).`;
 }
 
 function boot() {
