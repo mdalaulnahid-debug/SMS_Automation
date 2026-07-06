@@ -1,7 +1,9 @@
-# Lost/Stolen Phone Recovery Watch — System Design (Planned, `P2`)
+# System Design: GD Lost-Phone Watch — Phase 1 (locked scope)
 
 **Status:** design only, no code written. Not started. To be built and fully
 tested on **localhost only** before any VPS deployment is even discussed.
+This is the authoritative Phase 1 spec, superseding the earlier draft — locked
+scope, not open to expansion without an explicit new decision.
 
 Cross-links: [`SESSION_MEMORY.md`](../SESSION_MEMORY.md) (project orientation) ·
 [`architecture.md`](../architecture.md) (current implemented system) ·
@@ -12,216 +14,149 @@ Cross-links: [`SESSION_MEMORY.md`](../SESSION_MEMORY.md) (project orientation) �
 [`docs/gd-lost-phone-watch-STATUS.md`](gd-lost-phone-watch-STATUS.md)
 (branch-local implementation progress — `feature/gd-lost-phone-watch` only).
 
-## 1. Goals & non-goals
+## What this is
 
-**Goals**
+A case-scoped lost/stolen phone recovery watch, layered on top of the
+existing SMS Automation request/dispatch/reply pipeline (see
+`architecture.md`). It lets an authorized admin register a police GD
+(General Diary) -linked watch on one or more IMEIs, rechecks all three
+operators daily, and privately alerts admins/IO when a watched IMEI shows up
+on a new SIM after the GD date.
 
-- Let an authorized admin register a GD ([General Diary](https://en.wikipedia.org/wiki/General_diary),
-  the Bangladesh Police incident-record entry) -linked "watch" on one or more
-  stolen/lost phone IMEIs.
-- Automatically re-query all three operators for each watched IMEI once daily.
-- Detect when a *new* (number, date) pairing appears for a watched IMEI, dated
-  after the GD date, that isn't the victim's own known number.
-- Privately notify admins/the Investigating Officer of a hit, with enough
-  context to act.
-- Keep a durable, auditable trail: who opened the case, what evidence (GD
-  image) backs it, every check performed, every hit found.
+## Explicitly OUT OF SCOPE for this phase — do not build, suggest, or stub any of
 
-**Non-goals (this phase)**
+- BTS/LAC/CELL/tower-database joins, location output, or hotspot maps
+  (tower data lives in a separate project; not available here).
+- Any cross-case correlation, repeat-offender linking, or district-level
+  intelligence (this stays a single-case-scoped tool per the original
+  design's own non-goal: "not a general surveillance tool").
+- Any numeric "lead score" or point-weighted scoring model — use the two
+  named tiers below instead, nothing else.
+- Anything that touches `scripts/deploy.sh` or the production VPS.
 
-- Not a general surveillance tool — it only watches IMEIs explicitly
-  registered against a real GD case by an authorized user.
-- Not real-time (24h cadence, not instant-on-power-up detection).
-- Not geolocation/triangulation — it only reads what `IMEI-MS` already
-  returns (number + date), the same data the existing system already parses.
+**If asked to "improve" this into any of the above, decline and point back
+to this scope lock.**
 
-## 2. Where this sits in the existing architecture
-
-The critical design decision: **this feature is a thin layer on top of the
-existing request/dispatch/reply engine** (see `architecture.md` §3–§10), **not
-a parallel system.** The backend already has a mature, tested pipeline —
-validate → dispatch to gateway phones → phone sends SMS → operator SMS reply
-comes back → reply gets matched to the pending dispatch → analyzed. Reusing it
-means the new code is almost entirely about *what happens with a reply*, not
-*how a reply gets there*.
-
-Concretely: a scheduled recheck creates a request internally tagged with a new
-`channel: 'gd-watch'` (alongside the existing `telegram` / `manual` channels),
-targeting `ALL_OPERATORS` exactly like a normal `IMEI-MS` request. It flows
-through the same gateway job queue, the same phone polling/delivery, the same
-`sms_inbox` capture and reply-matching logic already hardened by recent
-session work (duplicate-blocking fix, content-gate cross-match fix). What's
-new is bolted on at the two ends: how the request gets *created* (a scheduler,
-not a human typing a command) and what happens when a reply gets *matched*
-(diff-and-detect, not draft-a-reply-and-post-to-Telegram).
+## Data model (new tables, additive only — do not touch `requests`/`request_dispatches`)
 
 ```
-┌─────────────┐   daily tick    ┌───────────────────┐
-│ GD watch    │ ───────────────▶│ create IMEI-MS     │
-│ scheduler   │                 │ request (gd-watch  │──┐
-└─────────────┘                 │ channel, fan-out)   │  │
-                                 └───────────────────┘  │
-                                                          ▼
-                                          existing dispatch/queue/gateway
-                                          job delivery pipeline (unchanged)
-                                                          │
-                                                          ▼
-                                          operator SMS reply → sms_inbox →
-                                          existing reply-matching (unchanged)
-                                                          │
-                          channel === 'gd-watch'?         │
-                                    yes ─────────────────┘
-                                    │
-                                    ▼
-                       ┌─────────────────────────┐
-                       │ diff against gd_imei_    │
-                       │ history → new hit?       │
-                       └─────────────────────────┘
-                                    │ yes
-                                    ▼
-                       ┌─────────────────────────┐
-                       │ record gd_hit, DM admins │
-                       │ via existing Telegram    │
-                       │ bridge send path         │
-                       └─────────────────────────┘
+gd_case:
+  caseId, gdNumber, gdDate, investigatingOfficer, victimKnownNumber,
+  gdImagePath, createdBy, createdAt,
+  status: PENDING_APPROVAL | WATCHING | CLOSED,
+  approvedBy, approvedAt, closedAt, closedBy
+
+gd_watched_imei:
+  imeiId, caseId, imei, simSlotLabel (nullable, e.g. "Slot 1"), addedAt
+
+gd_imei_history:
+  historyId, imeiId, operator, msisdn, usageDate, firstSeenAt,
+  isPreTheftBaseline (bool)
+
+gd_hit:
+  hitId, imeiId, msisdn, usageDate, operator, detectedAt, notifiedAt,
+  acknowledgedBy, tier: POSSIBLE | STRONG
+
+gd_recheck_log:
+  logId, imeiId, operator, attemptedAt, outcome
 ```
 
-**Important divergence from normal request handling:** a normal
-`ALL_OPERATORS` fan-out waits until every operator's dispatch is terminal
-before finalizing (so a combined reply can be posted). A `gd-watch` request
-should **not** wait — each operator's reply gets diffed and processed the
-moment it arrives, since a hit from one operator shouldn't sit unnotified for
-hours while waiting on a slower operator's reply.
+## Workflow
 
-## 3. Data model
+1. Admin submits case (GD number/date, IO, victim number, image, 1+ IMEIs) →
+   status `PENDING_APPROVAL`. Not watched yet.
+2. A *different* super-admin approves → status `WATCHING`. This is a real
+   second-reviewer gate, not a formality — reject if the same user approves
+   their own case.
+3. On approval: dispatch `IMEI-MS` (`channel: 'gd-watch'`) to all three
+   operators for every watched IMEI, batched up to 5 identifiers per SMS
+   using the existing multi-identifier batching (already implemented in
+   `parser.js` — do not build new batching logic, reuse it).
+4. Every reply from this first pass → insert into `gd_imei_history` with
+   `isPreTheftBaseline = true`. No hits ever come from this pass, **per
+   IMEI, per operator** — baseline status is tracked per (imei, operator),
+   not per "first tick," so a slow operator's late-arriving first reply is
+   still baseline even if other operators already got their baseline
+   earlier.
+5. Every 24h thereafter (staggered — see scheduler below), per still-
+   `WATCHING` IMEI: dispatch again.
+6. On each new reply (processed independently per operator, **not** waiting
+   for the other operators to finish — a deliberate divergence from the
+   normal `ALL_OPERATORS` finalize-when-terminal path):
+   - normalize the IMEI (new `normalizeImei()` — see below) before comparing
+   - if `(operator, msisdn, usageDate)` already in `gd_imei_history`: skip
+   - else insert into `gd_imei_history` (`isPreTheftBaseline = false`)
+   - if `usageDate > gdDate` AND `msisdn !== victimKnownNumber`: this is a hit
+7. Hit tiering (no invented numeric weights):
+   - **POSSIBLE**: first time this condition fires for this (imei, msisdn) pair
+   - **STRONG**: the same new msisdn is confirmed again on a later scheduled
+     recheck (i.e. still active days later, not a one-off)
+8. Every hit → insert `gd_hit`, DM admins/IO immediately via the existing
+   `telegramClient.sendMessage({chatId})` path. Never post to the open group.
+9. Case stays `WATCHING` until a super-admin manually closes it (status
+   `CLOSED`). Closed cases stop being checked entirely.
 
-New tables/entities, deliberately separate from `requests`/`request_dispatches`
-(architecture.md §5), which stay untouched:
+## Required fixes to existing code (not new subsystems — targeted edits)
 
-| Table | Purpose | Key fields |
-|---|---|---|
-| `gd_case` | One row per GD entry | `caseId`, `gdNumber`, `gdDate`, `investigatingOfficer`, `gdImagePath`, `createdBy`, `createdAt`, `status` (`WATCHING`/`CLOSED`), `closedAt`, `closedBy` |
-| `gd_watched_imei` | Devices under a case (many per case) | `imeiId`, `caseId`, `imei`, `victimKnownNumber`, `addedAt` |
-| `gd_imei_history` | Every distinct (operator, number, date) ever observed for a watched IMEI | `historyId`, `imeiId`, `operator`, `msisdn`, `usageDate`, `firstSeenAt`, `isPreTheftBaseline` |
-| `gd_hit` | A confirmed detection event | `hitId`, `imeiId`, `msisdn`, `usageDate`, `operator`, `detectedAt`, `notifiedAt`, `acknowledgedBy` |
-| `gd_recheck_log` | Audit trail of every scheduled recheck attempt (success/failure per operator) | `logId`, `imeiId`, `operator`, `attemptedAt`, `outcome` |
+- **`normalizeImei(value)`** in `domain.js`, parallel to `normalizePhoneNumber`:
+  strip non-digits; if 15 digits, drop the trailing check digit before
+  comparing. Needs its own unit tests (14 vs 15 digit forms of the same
+  device must compare equal).
+- **`findRecentDuplicateRequest` in `store.js`**: add two guard clauses —
+  (a) skip the duplicate check entirely when `input.channel === 'gd-watch'`
+      (a recheck must never be blocked by its own predecessor)
+  (b) skip matching against an in-flight gd-watch request when the
+      incoming request is officer-submitted (a real officer's IMEI-MS must
+      never be silently dropped as a "duplicate" of a background watch)
+- **`dispatchNext(operator)` in the queue logic**: when choosing the next
+  queued request for an operator, prefer any `channel !== 'gd-watch'`
+  request over a `channel === 'gd-watch'` one, even if the watch request
+  was queued first. Do not build a general priority queue — this one
+  preference rule only.
+- **Scheduler**: stagger each IMEI's daily recheck across a fixed
+  time-of-day offset derived from `imeiId` (e.g. hash into a slot), so a
+  batch of cases created together doesn't all come due on the same tick and
+  flood the per-operator queues.
+- **Per-dispatch reply handling for `channel === 'gd-watch'`**: branch
+  BEFORE `_finalizeIfTerminal` is reached — run the diff/detect logic per
+  operator reply as it arrives, independent of whether other operators have
+  replied. Do not route gd-watch requests through the normal combined-draft
+  / `NEEDS_MANUAL_REVIEW` path.
 
-`isPreTheftBaseline` is the single most important flag in the whole design:
-the very first check after a case is opened must seed history *without*
-generating hits — otherwise the victim's own last-known number would
-immediately fire as a false "hit" the moment the case is created.
+## API surface (admin-auth gated, never reachable from the Telegram group)
 
-## 4. Detection algorithm (step by step)
+- `POST /api/admin/gd-cases` (create, `PENDING_APPROVAL`)
+- `POST /api/admin/gd-cases/:id/approve` (super-admin only, not the creator)
+- `GET /api/admin/gd-cases` (list: status, GD number, IO, days watching, hit count)
+- `GET /api/admin/gd-cases/:id` (detail: IMEIs, history timeline, hits)
+- `POST /api/admin/gd-cases/:id/close`
+- `GET /api/admin/gd-cases/:id/image` (authenticated retrieval, never a
+  static URL — store outside `public/`, validate file type + size cap on
+  upload)
 
-1. Case created → immediately dispatch an `IMEI-MS` (`gd-watch` channel) to
-   all three operators for each listed IMEI.
-2. Every row returned gets inserted into `gd_imei_history` with
-   `isPreTheftBaseline = true`. No hits are ever raised from this first pass.
-3. Every 24h thereafter, per watched IMEI still under a `WATCHING` case:
-   dispatch again.
-4. For each row in a new reply:
-   - Normalize the IMEI (the last digit is a check digit only — 14 vs
-     15-digit forms of the same device are the same device; see
-     `docs/training-and-matching-rules.md` § IMEI-MS).
-   - If `(operator, msisdn, usageDate)` already exists in `gd_imei_history` →
-     skip, nothing new.
-   - Else insert into `gd_imei_history` with `isPreTheftBaseline = false`.
-   - If additionally `usageDate > gdDate` AND `msisdn !== victimKnownNumber` →
-     this is a `gd_hit`.
-5. Every `gd_hit` triggers a DM to authorized admins immediately (not batched,
-   not waiting for other operators).
-6. Case stays `WATCHING` indefinitely until an admin manually closes it (does
-   not auto-pause after a hit — the phone isn't physically recovered just
-   because a number was found).
+## Security (same posture as the rest of the system, nothing new invented)
 
-## 5. API surface (conceptual — no implementation yet)
+- Every case create/approve/close/hit/scheduler-tick action goes through the
+  existing `audit_logs` hash-chain pattern.
+- GD images: outside `public/`, authenticated endpoint only.
+- Cap on cases-created-per-day per admin account as a tripwire (log if
+  exceeded).
 
-All under existing admin auth (`isAdmin`), never exposed to the open Telegram
-group flow:
+## Testing & rollout order
 
-- `POST /api/admin/gd-cases` — create a case (GD number, date, IO, victim
-  number, IMEI list) + image upload (web console form only)
-- `GET /api/admin/gd-cases` — list cases (status, GD number, IO, days
-  watching, hit count)
-- `GET /api/admin/gd-cases/:id` — case detail (IMEIs, full history timeline,
-  hits)
-- `POST /api/admin/gd-cases/:id/close` — mark closed
-- `GET /api/admin/gd-cases/:id/image` — authenticated image retrieval (never
-  a raw static URL)
+1. Unit tests first, in isolation, no DB: `normalizeImei`, baseline-seeding
+   logic, date-after-GD + victim-number-exclusion filtering, tier
+   classification.
+2. Then data model + migration.
+3. Then the two guard-clause fixes above, with regression tests.
+4. Then scheduler with staggering.
+5. Then admin console (case list/detail, new-case form with image upload,
+   approval screen).
+6. Then Telegram DM wiring.
+7. Then a local end-to-end simulation: fake case, fake multi-day operator
+   replies across all three operators, assert hits fire exactly when
+   expected and never on the baseline pass.
 
-## 6. Scheduler design
-
-A background interval, structurally similar to the existing timeout-sweep
-already in `store.js`: on each tick (e.g. every hour), scan
-`gd_watched_imei` joined to `gd_case` where `status = 'WATCHING'` and
-`lastCheckedAt` is more than 24h old (or null), and dispatch a recheck for
-each. This piggybacks on the backend process already running — no separate
-service needed. Every attempt (including failures — operator gateway offline,
-no reply within the window, etc.) gets written to `gd_recheck_log` so a
-silently-stalled watch is visible and auditable, not a silent gap.
-
-**Interaction with existing duplicate-blocking safety net:** the current
-system has `findRecentDuplicateRequest` / `DUPLICATE_BLOCKING_STATUSES`
-specifically to *stop* accidental repeat requests (this exact mechanism was
-hardened this session — see the 2026-07-05 blackout incident in `todo.md`).
-This feature deliberately *wants* repeats every 24h, so `gd-watch` dispatches
-must be excluded from — and excluded from triggering — that guard, which
-exists for human-submitted requests, not scheduled watch rechecks.
-
-## 7. Security architecture
-
-- Case creation/viewing/closing: admin-auth gated, full stop — never
-  reachable via the group or an unauthenticated DM.
-- GD images: stored outside `public/`, served only through the authenticated
-  image endpoint; validated for file type (image/PDF allowlist) and size cap
-  on upload.
-- Every scheduler dispatch, every hit, every case lifecycle change:
-  audit-logged in the existing `audit_logs` pattern.
-- `gd-watch` channel requests are explicitly excluded from — and excluded
-  from triggering — the existing human-request duplicate-blocking logic.
-- Sensible cap on cases-per-day per admin account, logged if exceeded, as a
-  tripwire against a compromised admin account spinning up mass watches.
-- Framed honestly as "rigorously tested and hardened," not "100% secure" —
-  no real system can make that claim truthfully.
-
-## 8. Edge cases to design against
-
-- **Same IMEI watched by two separate GD cases** (rare but possible —
-  duplicate reports): warn on case creation if the IMEI is already under an
-  active watch elsewhere, rather than silently double-tracking it.
-- **Legitimate resale after case closure**: once a case is `CLOSED`, its
-  history stops being checked — a phone resold after legitimate recovery
-  shouldn't keep generating hits.
-- **Operator returns "No data found" forever**: not an error, just means the
-  phone hasn't been used on that network — `gd_recheck_log` should
-  distinguish this from an actual failed/undelivered check.
-- **Check-digit 14-vs-15 digit IMEI variants**: must normalize before
-  comparing across operators/replies, or the same physical device could be
-  misread as two different IMEIs.
-
-## 9. Testing & rollout plan
-
-- Unit tests for the diff/detection algorithm in isolation (baseline
-  seeding, check-digit normalization, date-after-GD filtering,
-  victim-number exclusion) — highest-risk-of-subtle-bugs part, easiest to
-  test without infrastructure.
-- Local end-to-end simulation: fake case, fake multi-day operator replies,
-  assert hits fire exactly when expected and never on the baseline pass.
-- Entirely built and exercised on **localhost first**. Nothing touches the
-  VPS until reviewed and explicitly approved for deployment.
-
-## 10. Key decisions already made (2026-07-06 design interview)
-
-| Decision | Choice |
-|---|---|
-| Detection trigger | New (number, date) after the GD date, excluding the victim's known number |
-| Notification target | DM to admins/IO only (not the open group) |
-| Recheck interval | Once every 24h per watched IMEI |
-| Case scope | One GD case can list several IMEIs |
-| Who can create a case | Admins/authorized users only |
-| GD image upload | Web admin console upload form only |
-| Post-hit behavior | Case stays `WATCHING` until an admin manually closes it |
-
-**Not yet started.** Next step, when ready to build: confirm this design
-still holds, then implement and test entirely on localhost per the plan
-above before any deployment conversation.
+Everything built and run on **localhost only**. Do not run
+`scripts/deploy.sh` or discuss VPS deployment until this is reviewed and
+explicitly approved.
