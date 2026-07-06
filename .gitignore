@@ -28,3 +28,13 @@ graphify-out/cache/
 graphify-out/*.html
 graphify-out/.graphify_*
 graphify-out/20[0-9][0-9]-[0-9][0-9]-[0-9][0-9]/
+
+# Local configs/caches for other AI coding tools used on this machine — not
+# part of this project, never meant to be tracked.
+.agents/
+.codex/
+.cursor/
+.gemini/
+.github/hooks/
+.github/skills/
+.claude/skills/impeccable/

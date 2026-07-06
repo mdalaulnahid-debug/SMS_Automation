@@ -6,6 +6,19 @@ Start with `progress_tracker.md` for the latest session handoff, test results, a
 
 ---
 
+## ✅ DONE — 2026-07-06: Repo cleanup, untracked AI-tool config dirs
+
+`.agents/`, `.codex/`, `.cursor/`, `.gemini/`, `.github/hooks/`,
+`.github/skills/`, `.claude/skills/impeccable/` were sitting untracked in the
+repo (~486 files total — local configs/caches for other AI coding tools used
+on this machine, unrelated to the project). They showed as a wall of
+uncommitted files in GitHub Desktop even though `git status --short`
+collapsed them into a handful of directory lines. Added to `.gitignore` so
+they stop appearing as noise; files themselves were left untouched (not
+deleted).
+
+---
+
 ## 🐞 INCIDENT — 2026-07-05 operator blackout: reply cross-matching + lost DM replies
 
 Root-caused via read-only VPS DB queries (see this session's `/debug`). A multi-hour
