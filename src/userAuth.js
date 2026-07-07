@@ -35,6 +35,16 @@ CREATE TABLE IF NOT EXISTS auth_sessions (
   ip TEXT,
   user_agent TEXT
 );
+CREATE TABLE IF NOT EXISTS personnel_registry (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  designation TEXT,
+  unit TEXT,
+  phone TEXT NOT NULL,
+  email TEXT NOT NULL,
+  imported_at TEXT NOT NULL,
+  imported_by TEXT
+);
 `;
 
 const SESSION_TTL_MS = 8 * 60 * 60 * 1000; // 8 hours
@@ -276,6 +286,59 @@ class UserAuthStore {
   setStatus(userId, status) {
     if (!['active', 'disabled', 'pending_verification'].includes(status)) throw new Error('Invalid status.');
     this.db.prepare('UPDATE auth_users SET status = ? WHERE id = ?').run(status, userId);
+  }
+
+  // --- Personnel Registry (design doc §6) ---
+  // A registration attempt is validated against this — self-declared identity
+  // (whatever someone types in) is never trusted. See personnelRegistry.js
+  // for the pure phone+email matching logic this data feeds.
+
+  // Wholesale replace: an admin re-import is expected to supersede the
+  // previous roster entirely (the source spreadsheet IS the roster, not a
+  // diff against it), not merge with it. Runs in a transaction so a failed
+  // import can never leave the registry half-updated.
+  replaceRegistry(records, importedBy) {
+    const now = new Date().toISOString();
+    this.db.exec('BEGIN');
+    try {
+      this.db.exec('DELETE FROM personnel_registry');
+      const insert = this.db.prepare(
+        `INSERT INTO personnel_registry (id, name, designation, unit, phone, email, imported_at, imported_by)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+      );
+      for (const record of records) {
+        insert.run(
+          randomBytes(12).toString('hex'),
+          String(record.name || '').trim(),
+          record.designation ? String(record.designation).trim() : null,
+          record.unit ? String(record.unit).trim() : null,
+          String(record.phone || '').trim(),
+          String(record.email || '').trim().toLowerCase(),
+          now,
+          importedBy || null
+        );
+      }
+      this.db.exec('COMMIT');
+    } catch (error) {
+      this.db.exec('ROLLBACK');
+      throw error;
+    }
+    return { count: records.length, importedAt: now };
+  }
+
+  listRegistry() {
+    return this.db.prepare('SELECT * FROM personnel_registry ORDER BY name').all();
+  }
+
+  registrySize() {
+    return this.db.prepare('SELECT COUNT(*) AS c FROM personnel_registry').get().c;
+  }
+
+  // Builds a ready-to-use PersonnelRegistry (the pure matcher in
+  // personnelRegistry.js) from the currently-persisted roster.
+  buildPersonnelRegistry() {
+    const { PersonnelRegistry } = require('./personnelRegistry');
+    return new PersonnelRegistry(this.listRegistry());
   }
 }
 

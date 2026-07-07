@@ -20,6 +20,7 @@ const { isAdmin, isValidGateway } = require('./auth');
 const { getBackendUrls, getLanAddresses, getPreferredLanIp } = require('./network');
 const { UserAuthStore, SESSION_TTL_MS } = require('./userAuth');
 const { serializeSessionCookie, clearSessionCookie, sessionTokenFromRequest } = require('./cookies');
+const { parseRegistryWorkbook } = require('./personnelRegistry');
 const mailer = require('./mailer');
 
 // Sliding-window per-requester rate limiter.
@@ -681,6 +682,36 @@ function createApp(options = {}) {
           return json(res, 400, { error: error.message });
         }
       }
+      if (req.method === 'GET' && req.url === '/api/admin/personnel-registry') {
+        if (!requireAdmin(req, res)) return undefined;
+        return json(res, 200, { records: userAuth.listRegistry(), count: userAuth.registrySize() });
+      }
+      if (req.method === 'POST' && req.url === '/api/admin/personnel-registry/import') {
+        if (!requireAdmin(req, res)) return undefined;
+        let buffer;
+        try {
+          buffer = await readBuffer(req);
+        } catch (error) {
+          return json(res, 400, { error: error.message });
+        }
+        let records;
+        try {
+          records = parseRegistryWorkbook(buffer);
+        } catch (error) {
+          return json(res, 400, { error: error.message });
+        }
+        if (records.length === 0) {
+          return json(res, 400, { error: 'No valid records found in the uploaded sheet.' });
+        }
+        const actor = require('./auth').presentedToken(req);
+        const session = actor && userAuth.validateSession(actor);
+        const result = userAuth.replaceRegistry(records, session ? session.user.email : 'admin');
+        store.audit(session ? session.user.email : 'admin', 'PERSONNEL_REGISTRY_IMPORTED', null, {
+          count: result.count,
+          importedAt: result.importedAt
+        });
+        return json(res, 200, { ok: true, ...result });
+      }
       if (req.method === 'POST' && req.url === '/api/telegram/chat-mismatch') {
         // Reported by the Telegram bridge process when it sees a message from a chat that
         // doesn't match its configured groupChatId — the exact failure mode that silently
@@ -1161,6 +1192,28 @@ function readJson(req) {
         reject(new Error(`Invalid JSON: ${error.message}`));
       }
     });
+    req.on('error', reject);
+  });
+}
+
+// Collects the raw request body as a Buffer, for binary uploads (the
+// Personnel Registry .xlsx import) where JSON parsing doesn't apply. The
+// client sends the file's raw bytes directly as the body (fetch() can POST
+// a File/Blob that way) — no multipart parsing needed on the server, which
+// this codebase has no existing precedent for.
+function readBuffer(req, maxBytes = 5_000_000) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    let total = 0;
+    req.on('data', (chunk) => {
+      total += chunk.length;
+      if (total > maxBytes) {
+        reject(new Error('Request body too large'));
+        return;
+      }
+      chunks.push(chunk);
+    });
+    req.on('end', () => resolve(Buffer.concat(chunks)));
     req.on('error', reject);
   });
 }

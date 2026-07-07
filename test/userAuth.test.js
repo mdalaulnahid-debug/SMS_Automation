@@ -198,6 +198,70 @@ test('migration adds telegram_id to a pre-existing auth_users table without it, 
   }
 });
 
+// --- Personnel Registry persistence ---
+
+test('replaceRegistry stores records and listRegistry returns them sorted by name', () => {
+  const store = new UserAuthStore(':memory:');
+  const result = store.replaceRegistry([
+    { name: 'Zulfiqar', phone: '01700000001', email: 'z@example.com' },
+    { name: 'Amina', phone: '01700000002', email: 'a@example.com' }
+  ], 'admin-1');
+
+  assert.equal(result.count, 2);
+  assert.equal(store.registrySize(), 2);
+  const rows = store.listRegistry();
+  assert.deepEqual(rows.map((r) => r.name), ['Amina', 'Zulfiqar'], 'must be sorted by name');
+  assert.equal(rows[0].imported_by, 'admin-1');
+});
+
+test('replaceRegistry wholesale-replaces — a second import wipes the first', () => {
+  const store = new UserAuthStore(':memory:');
+  store.replaceRegistry([{ name: 'Old', phone: '01700000001', email: 'old@example.com' }], 'admin-1');
+  assert.equal(store.registrySize(), 1);
+
+  store.replaceRegistry([{ name: 'New', phone: '01700000002', email: 'new@example.com' }], 'admin-1');
+  const rows = store.listRegistry();
+  assert.equal(rows.length, 1);
+  assert.equal(rows[0].name, 'New', 'the old roster must be gone, not merged with the new one');
+});
+
+test('a failed import rolls back — the previous registry survives intact', () => {
+  const store = new UserAuthStore(':memory:');
+  store.replaceRegistry([{ name: 'Survivor', phone: '01700000001', email: 'survivor@example.com' }], 'admin-1');
+
+  const poisonedRecord = {
+    // String(poisonedRecord.name || '') will call toString(), which throws —
+    // simulates a bad record blowing up partway through the insert loop.
+    name: { toString() { throw new Error('boom'); } },
+    phone: '01700000002',
+    email: 'bad@example.com'
+  };
+  assert.throws(() => store.replaceRegistry([poisonedRecord], 'admin-1'), /boom/);
+
+  // The DELETE FROM personnel_registry at the start of the failed attempt
+  // must have been rolled back along with the failed insert.
+  const rows = store.listRegistry();
+  assert.equal(rows.length, 1);
+  assert.equal(rows[0].name, 'Survivor');
+});
+
+test('buildPersonnelRegistry returns a working matcher built from the persisted roster', () => {
+  const store = new UserAuthStore(':memory:');
+  store.replaceRegistry([{ name: 'SI Nazmul', phone: '01712345678', email: 'nazmul@police.gov.bd' }], 'admin-1');
+
+  const registry = store.buildPersonnelRegistry();
+  const match = registry.matchByPhoneAndEmail('01712345678', 'nazmul@police.gov.bd');
+  assert.equal(match.name, 'SI Nazmul');
+  assert.equal(registry.matchByPhoneAndEmail('01712345678', 'wrong@example.com'), null);
+});
+
+test('an empty registry is valid (no records imported yet)', () => {
+  const store = new UserAuthStore(':memory:');
+  assert.equal(store.registrySize(), 0);
+  assert.deepEqual(store.listRegistry(), []);
+  assert.equal(store.buildPersonnelRegistry().matchByPhoneAndEmail('01700000000', 'a@example.com'), null);
+});
+
 test('super-admin bootstrap creates a verified account directly', () => {
   const store = new UserAuthStore(':memory:');
   const sa = store.createVerifiedUser({ email: 'super@example.com', password: 'topsecretpass', name: 'Super Admin', role: 'super_admin' });

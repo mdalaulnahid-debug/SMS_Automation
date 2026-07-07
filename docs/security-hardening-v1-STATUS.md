@@ -18,7 +18,7 @@ never run `scripts/deploy.sh` on this branch.
 | 1 | Unit tests in isolation: registry-match, quota logic, OTP generation/expiry/attempts | **Done** (24 tests, `src/personnelRegistry.js`, `src/quota.js`, `src/otp.js`) |
 | 2 | Server-side page gating (4-tier) | **Done** for `/` and `/admin` (see scoping note below) |
 | 3 | `telegramId` + identity unification | **Done** (schema migration + link/lookup methods; bridge cutover deferred, see note below) |
-| 4 | Personnel Registry data model + admin-upload loading | Not started |
+| 4 | Personnel Registry data model + admin-upload loading | **Done** |
 | 5 | Registration flow end-to-end | Not started |
 | 6 | Quota + email-OTP re-verification middleware | Not started |
 | 7 | Admin group actions (post-bypass + moderation) | Not started |
@@ -111,6 +111,39 @@ flat `authorizedUsers` map — it does **not** yet check `auth_users` by
 exists to populate the column, would lock out every current Telegram user
 at once. That cutover belongs with Step 5 (registration flow), once
 accounts can actually acquire a `telegram_id`.
+
+**Step 4 complete.** Personnel Registry now has real persistence and an
+admin-upload path:
+- `personnel_registry` table added to `auth.db` (fresh table, no migration
+  needed — `CREATE TABLE IF NOT EXISTS` is sufficient unlike step 3's
+  `telegram_id`).
+- `src/personnelRegistry.js` gained `parseRegistryWorkbook(buffer)`,
+  reusing the same `xlsx` package `trainingData.js` already uses for the
+  same admin-provided-workbook pattern — no new import format invented.
+  Case-insensitive column aliasing (e.g. "Full Name"/"Mobile" both work),
+  Name/Phone/Email required, Designation/Unit optional, blank/incomplete
+  rows skipped.
+- `UserAuthStore` gained `replaceRegistry()` (wholesale replace in a
+  transaction — a re-import supersedes the roster, doesn't merge with it;
+  rolls back cleanly on a bad record), `listRegistry()`, `registrySize()`,
+  and `buildPersonnelRegistry()` (returns a ready-to-use matcher from
+  step 1's pure `PersonnelRegistry` class).
+- Two admin-auth-gated endpoints: `POST /api/admin/personnel-registry/import`
+  (accepts the raw `.xlsx` bytes directly as the POST body — `fetch()` can
+  send a File/Blob that way, so **no multipart parsing was needed** despite
+  the earlier-flagged "zero file-upload precedent" gap) and
+  `GET /api/admin/personnel-registry` (list + count).
+- 17 new tests (7 workbook parsing, 5 store persistence, 5 HTTP
+  integration) — full suite 229/229. Also verified live: real HTTP import
+  + list against the running local server, confirmed 401 without auth,
+  confirmed a bad workbook 400s without touching a previously-imported
+  registry. Test data cleaned from the local dev DB afterward.
+
+**Note for step 5:** the registry data itself (real personnel) hasn't been
+provided yet — the user said they'll supply it later. The loader/endpoints
+are ready and tested with synthetic data; nothing here depends on having
+the real roster to proceed with step 5's registration flow, but the real
+import should happen before step 5 goes live end-to-end.
 
 ## Open questions / notes found while implementing
 
