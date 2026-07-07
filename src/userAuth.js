@@ -72,6 +72,17 @@ function hashToken(token) {
   return scryptSync(token, 'mfa-static-salt', 32).toString('hex');
 }
 
+// Registration activation policy (design doc §3, decided 2026-07-07): while a
+// migration window is set and still in the future, a registry-matched
+// registration auto-activates; otherwise it needs super-admin approval. No
+// window configured at all (the default) means "always auto-activate" — this
+// must never change behavior for a deployment that hasn't opted into the
+// registration-gating rollout yet.
+function isWithinRegistrationWindow(registrationWindowEndsAt, now = Date.now()) {
+  if (!registrationWindowEndsAt) return true;
+  return new Date(registrationWindowEndsAt).getTime() > now;
+}
+
 function generateToken() {
   return randomBytes(32).toString('hex');
 }
@@ -199,18 +210,43 @@ class UserAuthStore {
     return this._row(email);
   }
 
-  verifyEmail(token) {
+  // registrationWindowEndsAt (optional) decides what verifying lands the account
+  // in: 'active' immediately (default, and always during a migration window) or
+  // 'pending_approval' (post-window steady state — see isWithinRegistrationWindow).
+  verifyEmail(token, { registrationWindowEndsAt } = {}) {
     const user = this.db.prepare('SELECT * FROM auth_users WHERE verify_token = ?').get(token);
     if (!user) throw new Error('Invalid or already-used verification link.');
     if (new Date(user.verify_token_expires_at).getTime() < Date.now()) {
       throw new Error('Verification link expired. Please register again or request a new link.');
     }
+    const status = isWithinRegistrationWindow(registrationWindowEndsAt) ? 'active' : 'pending_approval';
     this.db
       .prepare(
-        `UPDATE auth_users SET email_verified = 1, status = 'active', verify_token = NULL, verify_token_expires_at = NULL WHERE id = ?`
+        `UPDATE auth_users SET email_verified = 1, status = ?, verify_token = NULL, verify_token_expires_at = NULL WHERE id = ?`
       )
-      .run(user.id);
+      .run(status, user.id);
     return this.getUserById(user.id);
+  }
+
+  listPendingApprovals() {
+    return this.db
+      .prepare(
+        'SELECT id, email, name, phone, telegram_id, role, created_at FROM auth_users WHERE status = ? ORDER BY created_at'
+      )
+      .all('pending_approval');
+  }
+
+  // Super-admin activates a pending_approval account. Only meaningful from
+  // that specific status — approving an already-active or disabled account
+  // would silently paper over a status this action was never meant to touch.
+  approveRegistration(userId) {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('User not found.');
+    if (user.status !== 'pending_approval') {
+      throw new Error(`Cannot approve a user with status "${user.status}" (expected pending_approval).`);
+    }
+    this.db.prepare(`UPDATE auth_users SET status = 'active' WHERE id = ?`).run(userId);
+    return this.getUserById(userId);
   }
 
   // Step 1 of login: verify password, issue a short-lived MFA code + pending token.
@@ -220,6 +256,7 @@ class UserAuthStore {
     if (!user) throw new Error('Invalid email or password.');
     if (!verifyPassword(password, user.password_hash)) throw new Error('Invalid email or password.');
     if (user.status === 'disabled') throw new Error('This account has been disabled. Contact an administrator.');
+    if (user.status === 'pending_approval') throw new Error('Your registration is pending administrator approval.');
     if (!user.email_verified) throw new Error('Please verify your email before logging in.');
 
     const mfaCode = generateMfaCode();
@@ -270,7 +307,10 @@ class UserAuthStore {
       return null;
     }
     const user = this.getUserById(session.user_id);
-    if (!user || user.status === 'disabled') return null;
+    // Defense in depth: startLogin() already blocks pending_approval from ever
+    // reaching a session, but a session shouldn't stay valid if status changes
+    // out from under it later either (matches the existing disabled check).
+    if (!user || user.status === 'disabled' || user.status === 'pending_approval') return null;
     return { session, user };
   }
 
@@ -284,7 +324,9 @@ class UserAuthStore {
   }
 
   setStatus(userId, status) {
-    if (!['active', 'disabled', 'pending_verification'].includes(status)) throw new Error('Invalid status.');
+    if (!['active', 'disabled', 'pending_verification', 'pending_approval'].includes(status)) {
+      throw new Error('Invalid status.');
+    }
     this.db.prepare('UPDATE auth_users SET status = ? WHERE id = ?').run(status, userId);
   }
 
@@ -342,4 +384,4 @@ class UserAuthStore {
   }
 }
 
-module.exports = { UserAuthStore, isValidEmail, ROLES, SESSION_TTL_MS };
+module.exports = { UserAuthStore, isValidEmail, ROLES, SESSION_TTL_MS, isWithinRegistrationWindow };

@@ -4,7 +4,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const { Readable } = require('node:stream');
 const { createApp } = require('../src/app');
-const { UserAuthStore } = require('../src/userAuth');
+const { UserAuthStore, isWithinRegistrationWindow } = require('../src/userAuth');
 
 function mockReq({ method = 'GET', url = '/', headers = {}, body } = {}) {
   const payload = body === undefined ? '' : typeof body === 'string' ? body : JSON.stringify(body);
@@ -260,6 +260,85 @@ test('an empty registry is valid (no records imported yet)', () => {
   assert.equal(store.registrySize(), 0);
   assert.deepEqual(store.listRegistry(), []);
   assert.equal(store.buildPersonnelRegistry().matchByPhoneAndEmail('01700000000', 'a@example.com'), null);
+});
+
+// --- Registration activation policy (design doc §3) ---
+
+test('isWithinRegistrationWindow: no window configured means always auto-activate (default, backward compatible)', () => {
+  assert.equal(isWithinRegistrationWindow(null), true);
+  assert.equal(isWithinRegistrationWindow(undefined), true);
+  assert.equal(isWithinRegistrationWindow(''), true);
+});
+
+test('isWithinRegistrationWindow: true while the end date is in the future, false once past', () => {
+  const now = new Date('2026-07-07T12:00:00.000Z').getTime();
+  assert.equal(isWithinRegistrationWindow('2026-07-14T00:00:00.000Z', now), true);
+  assert.equal(isWithinRegistrationWindow('2026-07-01T00:00:00.000Z', now), false);
+});
+
+test('verifyEmail activates immediately when no window is configured (default)', () => {
+  const store = new UserAuthStore(':memory:');
+  const reg = store.register({ email: 'nowindow@example.com', password: 'longenough1', name: 'No Window' });
+  const user = store.verifyEmail(reg.verifyToken);
+  assert.equal(user.status, 'active');
+});
+
+test('verifyEmail activates immediately while inside an active migration window', () => {
+  const store = new UserAuthStore(':memory:');
+  const reg = store.register({ email: 'inwindow@example.com', password: 'longenough1', name: 'In Window' });
+  const future = new Date(Date.now() + 60_000).toISOString();
+  const user = store.verifyEmail(reg.verifyToken, { registrationWindowEndsAt: future });
+  assert.equal(user.status, 'active');
+});
+
+test('verifyEmail lands on pending_approval once the migration window has closed', () => {
+  const store = new UserAuthStore(':memory:');
+  const reg = store.register({ email: 'postwindow@example.com', password: 'longenough1', name: 'Post Window' });
+  const past = new Date(Date.now() - 60_000).toISOString();
+  const user = store.verifyEmail(reg.verifyToken, { registrationWindowEndsAt: past });
+  assert.equal(user.status, 'pending_approval');
+});
+
+test('a pending_approval account cannot log in until approved', () => {
+  const store = new UserAuthStore(':memory:');
+  const reg = store.register({ email: 'waiting@example.com', password: 'longenough1', name: 'Waiting' });
+  const past = new Date(Date.now() - 60_000).toISOString();
+  store.verifyEmail(reg.verifyToken, { registrationWindowEndsAt: past });
+
+  assert.throws(
+    () => store.startLogin({ email: 'waiting@example.com', password: 'longenough1' }),
+    /pending administrator approval/
+  );
+
+  store.approveRegistration(reg.id);
+  assert.doesNotThrow(() => store.startLogin({ email: 'waiting@example.com', password: 'longenough1' }));
+});
+
+test('listPendingApprovals returns only pending_approval accounts', () => {
+  const store = new UserAuthStore(':memory:');
+  const past = new Date(Date.now() - 60_000).toISOString();
+
+  const pending = store.register({ email: 'pending@example.com', password: 'longenough1', name: 'Pending' });
+  store.verifyEmail(pending.verifyToken, { registrationWindowEndsAt: past });
+
+  const active = store.register({ email: 'active@example.com', password: 'longenough1', name: 'Active' });
+  store.verifyEmail(active.verifyToken); // no window -> active immediately
+
+  const list = store.listPendingApprovals();
+  assert.equal(list.length, 1);
+  assert.equal(list[0].email, 'pending@example.com');
+});
+
+test('approveRegistration rejects a user not currently in pending_approval', () => {
+  const store = new UserAuthStore(':memory:');
+  const reg = store.register({ email: 'alreadyactive@example.com', password: 'longenough1', name: 'Already Active' });
+  store.verifyEmail(reg.verifyToken); // -> active, no window
+  assert.throws(() => store.approveRegistration(reg.id), /expected pending_approval/);
+});
+
+test('approveRegistration rejects an unknown user id', () => {
+  const store = new UserAuthStore(':memory:');
+  assert.throws(() => store.approveRegistration('nonexistent-id'), /User not found/);
 });
 
 test('super-admin bootstrap creates a verified account directly', () => {

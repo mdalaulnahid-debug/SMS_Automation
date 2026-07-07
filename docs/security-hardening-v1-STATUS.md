@@ -19,7 +19,7 @@ never run `scripts/deploy.sh` on this branch.
 | 2 | Server-side page gating (4-tier) | **Done** for `/` and `/admin` (see scoping note below) |
 | 3 | `telegramId` + identity unification | **Done** (schema migration + link/lookup methods; bridge cutover deferred, see note below) |
 | 4 | Personnel Registry data model + admin-upload loading | **Done** |
-| 5 | Registration flow end-to-end | Not started |
+| 5 | Registration flow end-to-end | **In progress** — activation policy + super-admin approval done; registration-link token + registry-validated registration endpoint + bridge cutover remain |
 | 6 | Quota + email-OTP re-verification middleware | Not started |
 | 7 | Admin group actions (post-bypass + moderation) | Not started |
 | 8 | Shared admin key scoping/retirement | Not started |
@@ -144,6 +144,43 @@ provided yet — the user said they'll supply it later. The loader/endpoints
 are ready and tested with synthetic data; nothing here depends on having
 the real roster to proceed with step 5's registration flow, but the real
 import should happen before step 5 goes live end-to-end.
+
+**Step 5, part 1 — activation policy + super-admin approval — done.**
+- `config/auth.json` gained `registrationWindowEndsAt` (ISO timestamp).
+  Default (unset) means "always auto-activate" — deliberately backward
+  compatible, never changes behavior for a deployment that hasn't opted
+  into the rollout yet.
+- `isWithinRegistrationWindow()` (pure, testable) is the single policy
+  decision point: `verifyEmail()` now lands an account on `active`
+  (window open / not configured) or the new `pending_approval` status
+  (window closed). `pending_approval` accounts are blocked from logging
+  in with a clear message, and `validateSession` blocks them too as
+  defense in depth.
+- New `requireSuperAdmin` (stricter than `requireAdmin` — role must
+  specifically be `super_admin`) gates 4 new endpoints:
+  `GET/POST /api/admin/settings/registration-window` (view/set the
+  window, applies immediately without restart, same pattern as the
+  existing `/setup` admin-key write) and
+  `GET /api/admin/registrations/pending` +
+  `POST /api/admin/registrations/approve` (the approval queue).
+- 26 new tests (9 pure policy logic, 3 settingsStore persistence, 5+ HTTP
+  integration covering the super_admin-vs-admin distinction specifically)
+  — full suite 246/246. Verified live against the running local server
+  too (401 unauthenticated, 200 with the legacy key, clean startup).
+
+**Still remaining for step 5:**
+- A registration-link token (Telegram sender ID → a link the bot replies
+  with), consumed by the registration form to link `telegramId`.
+- Extending `register()`'s call site / the web form to actually validate
+  against the Personnel Registry (phone+email match) before creating an
+  account — today's registration still bypasses registry validation
+  entirely; `register()` only *accepts* an optional `telegramId`, nothing
+  requires or checks it yet.
+- The Telegram bridge cutover deferred from step 3: `planIntake()` still
+  reads the flat `authorizedUsers` config, not `auth_users` by
+  `telegram_id` — and the "open group" policy hasn't been closed yet.
+- `public/register.html` needs Designation/Unit fields and to read/submit
+  the registration token from the URL.
 
 ## Open questions / notes found while implementing
 

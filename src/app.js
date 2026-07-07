@@ -18,7 +18,7 @@ const {
 const { loadGatewayConfig, loadAuthConfig, loadTelegramConfig, loadMailConfig } = require('./config');
 const { isAdmin, isValidGateway } = require('./auth');
 const { getBackendUrls, getLanAddresses, getPreferredLanIp } = require('./network');
-const { UserAuthStore, SESSION_TTL_MS } = require('./userAuth');
+const { UserAuthStore, SESSION_TTL_MS, isWithinRegistrationWindow } = require('./userAuth');
 const { serializeSessionCookie, clearSessionCookie, sessionTokenFromRequest } = require('./cookies');
 const { parseRegistryWorkbook } = require('./personnelRegistry');
 const mailer = require('./mailer');
@@ -381,6 +381,20 @@ function createApp(options = {}) {
     return false;
   };
 
+  // Stricter than requireAdmin — role must specifically be super_admin, for
+  // actions the design doc reserves to that tier (registration approval,
+  // registry/window management). The legacy shared key still satisfies this
+  // for now, consistent with how it satisfies requireAdmin elsewhere; full
+  // retirement of that key for human paths is a later, separate step.
+  const requireSuperAdmin = (req, res) => {
+    if (isAdmin(req, authConfig)) return true;
+    const sessionToken = require('./auth').presentedToken(req);
+    const session = sessionToken && userAuth.validateSession(sessionToken);
+    if (session && session.user.role === 'super_admin') return true;
+    json(res, 401, { error: 'Super-admin authentication required.' });
+    return false;
+  };
+
   // Accepts any authenticated session (any role) OR the legacy admin API key.
   // Used for the ops dashboard endpoints that officers can also access.
   const requireAnySession = (req, res) => {
@@ -711,6 +725,41 @@ function createApp(options = {}) {
           importedAt: result.importedAt
         });
         return json(res, 200, { ok: true, ...result });
+      }
+      if (req.method === 'GET' && req.url === '/api/admin/registrations/pending') {
+        if (!requireSuperAdmin(req, res)) return undefined;
+        return json(res, 200, { registrations: userAuth.listPendingApprovals() });
+      }
+      if (req.method === 'POST' && req.url === '/api/admin/registrations/approve') {
+        if (!requireSuperAdmin(req, res)) return undefined;
+        const body = await readJson(req);
+        if (!body.userId) return json(res, 400, { error: 'userId is required' });
+        try {
+          const user = userAuth.approveRegistration(body.userId);
+          store.audit('super-admin', 'REGISTRATION_APPROVED', null, { userId: user.id, email: user.email });
+          return json(res, 200, { ok: true, user: { id: user.id, email: user.email, status: user.status } });
+        } catch (error) {
+          return json(res, 400, { error: error.message });
+        }
+      }
+      if (req.method === 'GET' && req.url === '/api/admin/settings/registration-window') {
+        if (!requireSuperAdmin(req, res)) return undefined;
+        return json(res, 200, {
+          registrationWindowEndsAt: authConfig.registrationWindowEndsAt,
+          isOpen: isWithinRegistrationWindow(authConfig.registrationWindowEndsAt)
+        });
+      }
+      if (req.method === 'POST' && req.url === '/api/admin/settings/registration-window') {
+        if (!requireSuperAdmin(req, res)) return undefined;
+        const body = await readJson(req);
+        try {
+          const endsAt = settingsStore.writeRegistrationWindowEndsAt(body.endsAt);
+          authConfig.registrationWindowEndsAt = endsAt; // apply immediately, no restart — same pattern as /setup
+          store.audit('super-admin', 'REGISTRATION_WINDOW_UPDATED', null, { endsAt });
+          return json(res, 200, { ok: true, registrationWindowEndsAt: endsAt });
+        } catch (error) {
+          return json(res, 400, { error: error.message });
+        }
       }
       if (req.method === 'POST' && req.url === '/api/telegram/chat-mismatch') {
         // Reported by the Telegram bridge process when it sees a message from a chat that
@@ -1070,7 +1119,7 @@ function createApp(options = {}) {
       if (req.method === 'GET' && req.url.startsWith('/verify-email')) {
         const token = new URL(req.url, 'http://x').searchParams.get('token') || '';
         try {
-          userAuth.verifyEmail(token);
+          userAuth.verifyEmail(token, { registrationWindowEndsAt: authConfig.registrationWindowEndsAt });
           res.writeHead(302, { location: '/login.html?verified=1' });
           return res.end();
         } catch (error) {
