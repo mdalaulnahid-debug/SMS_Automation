@@ -18,9 +18,14 @@ function mockReq({ method = 'GET', url = '/', headers = {}, body } = {}) {
 function mockRes() {
   return {
     statusCode: null,
+    headers: {},
     body: '',
-    writeHead(code) {
+    writeHead(code, headers) {
       this.statusCode = code;
+      if (headers) Object.assign(this.headers, headers);
+    },
+    setHeader(name, value) {
+      this.headers[name] = value;
     },
     end(b) {
       this.body = b || '';

@@ -231,4 +231,4 @@ class UserAuthStore {
   }
 }
 
-module.exports = { UserAuthStore, isValidEmail, ROLES };
+module.exports = { UserAuthStore, isValidEmail, ROLES, SESSION_TTL_MS };

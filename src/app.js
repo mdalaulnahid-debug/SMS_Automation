@@ -18,7 +18,8 @@ const {
 const { loadGatewayConfig, loadAuthConfig, loadTelegramConfig, loadMailConfig } = require('./config');
 const { isAdmin, isValidGateway } = require('./auth');
 const { getBackendUrls, getLanAddresses, getPreferredLanIp } = require('./network');
-const { UserAuthStore } = require('./userAuth');
+const { UserAuthStore, SESSION_TTL_MS } = require('./userAuth');
+const { serializeSessionCookie, clearSessionCookie, sessionTokenFromRequest } = require('./cookies');
 const mailer = require('./mailer');
 
 // Sliding-window per-requester rate limiter.
@@ -390,6 +391,43 @@ function createApp(options = {}) {
     return false;
   };
 
+  // Page-level gate for browser navigation (GET /, GET /admin) — distinct from
+  // requireAdmin/requireAnySession above, which respond with a JSON 401 and are
+  // meant for fetch()/XHR API calls. A plain page navigation never carries an
+  // Authorization/x-api-key header (browsers don't attach those to page loads,
+  // only to explicit fetch/XHR calls) or the legacy admin key, so this checks the
+  // session cookie set at login instead, and redirects rather than returning
+  // JSON. This is the fix for the previous gap where / and /admin served their
+  // HTML/JS unconditionally, before any auth check ran at all.
+  function pageSession(req) {
+    const token = sessionTokenFromRequest(req);
+    if (!token) return null;
+    return userAuth.validateSession(token);
+  }
+
+  function redirectTo(res, location) {
+    res.writeHead(302, { location });
+    res.end();
+  }
+
+  // Serves the page only if the session's role is in allowedRoles. Redirects to
+  // /login.html if there's no valid session, or to / if there is one but the
+  // role isn't allowed (e.g. an officer hitting /admin lands somewhere real,
+  // not stuck in a login loop). Returns the session on success so callers that
+  // need it (none yet) can reuse it without re-validating.
+  function guardPage(req, res, allowedRoles) {
+    const result = pageSession(req);
+    if (!result) {
+      redirectTo(res, '/login.html');
+      return null;
+    }
+    if (!allowedRoles.includes(result.user.role)) {
+      redirectTo(res, '/');
+      return null;
+    }
+    return result;
+  }
+
   // User accounts / login (officers + admins) — separate from the legacy single admin API key.
   const authDbPath = options.authDbPath !== undefined
     ? options.authDbPath
@@ -444,6 +482,7 @@ function createApp(options = {}) {
         return json(res, 200, { ok: true });
       }
       if (req.method === 'GET' && req.url === '/') {
+        if (!guardPage(req, res, ['officer', 'admin', 'super_admin'])) return undefined;
         return serveFile(res, 'index.html', 'text/html; charset=utf-8');
       }
       if (req.method === 'GET' && req.url === '/app.js') {
@@ -456,6 +495,7 @@ function createApp(options = {}) {
         return serveFile(res, 'theme.css', 'text/css; charset=utf-8');
       }
       if (req.method === 'GET' && req.url === '/admin') {
+        if (!guardPage(req, res, ['admin', 'super_admin'])) return undefined;
         return serveFile(res, 'admin.html', 'text/html; charset=utf-8');
       }
       if (req.method === 'GET' && req.url === '/login.html') {
@@ -1028,6 +1068,10 @@ function createApp(options = {}) {
             ip: req.socket?.remoteAddress,
             userAgent: req.headers['user-agent']
           });
+          // Also set the session as a cookie — page navigations (GET /, GET /admin)
+          // never carry the Authorization header the JSON `token` is used with, so
+          // guardPage() needs this to enforce access on the initial HTML request.
+          res.setHeader('Set-Cookie', serializeSessionCookie(result.token, { maxAgeSeconds: SESSION_TTL_MS / 1000 }));
           return json(res, 200, result);
         } catch (error) {
           return json(res, 401, { error: error.message });
@@ -1036,6 +1080,7 @@ function createApp(options = {}) {
       if (req.method === 'POST' && req.url === '/api/auth/logout') {
         const token = require('./auth').presentedToken(req);
         userAuth.logout(token);
+        res.setHeader('Set-Cookie', clearSessionCookie());
         return json(res, 200, { ok: true });
       }
       if (req.method === 'GET' && req.url === '/api/auth/me') {
