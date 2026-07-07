@@ -94,6 +94,110 @@ test('disabled account cannot log in', () => {
   assert.throws(() => store.startLogin({ email: 'c@example.com', password: 'longenough1' }), /disabled/);
 });
 
+// --- Identity unification (telegram_id) ---
+
+test('register() accepts an optional telegramId and getUserByTelegramId finds it', () => {
+  const store = new UserAuthStore(':memory:');
+  const reg = store.register({ email: 'linked@example.com', password: 'longenough1', name: 'Linked', telegramId: '777888999' });
+  const found = store.getUserByTelegramId('777888999');
+  assert.equal(found.id, reg.id);
+});
+
+test('register() rejects a telegramId already linked to a different account', () => {
+  const store = new UserAuthStore(':memory:');
+  store.register({ email: 'first@example.com', password: 'longenough1', name: 'First', telegramId: '111' });
+  assert.throws(
+    () => store.register({ email: 'second@example.com', password: 'longenough1', name: 'Second', telegramId: '111' }),
+    /already linked to another user/
+  );
+});
+
+test('multiple accounts with no telegramId at all do not conflict with each other', () => {
+  const store = new UserAuthStore(':memory:');
+  // No telegramId passed for either — the partial unique index must allow any
+  // number of NULLs, only non-null values need to be distinct.
+  assert.doesNotThrow(() => {
+    store.register({ email: 'nolink1@example.com', password: 'longenough1', name: 'NoLink1' });
+    store.register({ email: 'nolink2@example.com', password: 'longenough1', name: 'NoLink2' });
+  });
+});
+
+test('linkTelegramId attaches a Telegram identity to an existing account', () => {
+  const store = new UserAuthStore(':memory:');
+  const reg = store.register({ email: 'toLink@example.com', password: 'longenough1', name: 'To Link' });
+  assert.equal(store.getUserByTelegramId('555'), null);
+
+  store.linkTelegramId(reg.id, '555');
+  const found = store.getUserByTelegramId('555');
+  assert.equal(found.id, reg.id);
+});
+
+test('linkTelegramId rejects linking a Telegram ID already claimed by a different account', () => {
+  const store = new UserAuthStore(':memory:');
+  const first = store.register({ email: 'owner@example.com', password: 'longenough1', name: 'Owner' });
+  store.linkTelegramId(first.id, '999');
+  const second = store.register({ email: 'other@example.com', password: 'longenough1', name: 'Other' });
+
+  assert.throws(() => store.linkTelegramId(second.id, '999'), /already linked to another user/);
+});
+
+test('linkTelegramId re-linking the SAME telegramId to the SAME user is a harmless no-op', () => {
+  const store = new UserAuthStore(':memory:');
+  const reg = store.register({ email: 'idempotent@example.com', password: 'longenough1', name: 'Idempotent' });
+  store.linkTelegramId(reg.id, '333');
+  assert.doesNotThrow(() => store.linkTelegramId(reg.id, '333'));
+});
+
+test('getUserByTelegramId returns null for an unlinked or unknown Telegram ID', () => {
+  const store = new UserAuthStore(':memory:');
+  assert.equal(store.getUserByTelegramId('nonexistent'), null);
+  assert.equal(store.getUserByTelegramId(''), null);
+  assert.equal(store.getUserByTelegramId(null), null);
+});
+
+test('migration adds telegram_id to a pre-existing auth_users table without it, preserving existing rows', () => {
+  const { DatabaseSync } = require('node:sqlite');
+  const path = require('node:path').join(require('node:os').tmpdir(), `auth-migration-test-${Date.now()}.db`);
+  try {
+    // Build the table in the OLD shape (no telegram_id) to simulate a real
+    // deployment's DB file from before this column existed, then insert a row.
+    const oldDb = new DatabaseSync(path);
+    oldDb.exec(`
+      CREATE TABLE auth_users (
+        id TEXT PRIMARY KEY, email TEXT NOT NULL UNIQUE, password_hash TEXT NOT NULL,
+        name TEXT NOT NULL, phone TEXT, role TEXT NOT NULL DEFAULT 'officer',
+        status TEXT NOT NULL DEFAULT 'pending_verification', email_verified INTEGER NOT NULL DEFAULT 0,
+        verify_token TEXT, verify_token_expires_at TEXT, mfa_code_hash TEXT, mfa_code_expires_at TEXT,
+        pending_session_token TEXT, created_at TEXT NOT NULL, last_login_at TEXT
+      );
+      CREATE TABLE auth_sessions (
+        token TEXT PRIMARY KEY, user_id TEXT NOT NULL, created_at TEXT NOT NULL,
+        expires_at TEXT NOT NULL, ip TEXT, user_agent TEXT
+      );
+    `);
+    oldDb.prepare(
+      `INSERT INTO auth_users (id, email, password_hash, name, role, status, email_verified, created_at)
+       VALUES ('pre-existing-id', 'preexisting@example.com', 'hash', 'Pre Existing', 'officer', 'active', 1, '2026-01-01T00:00:00.000Z')`
+    ).run();
+    oldDb.close();
+
+    // Opening it through UserAuthStore must migrate in place, not fail or drop data.
+    const store = new UserAuthStore(path);
+    const migrated = store.getUserByEmail('preexisting@example.com');
+    assert.equal(migrated.name, 'Pre Existing', 'the pre-existing row must survive the migration');
+    assert.equal(migrated.telegram_id, null, 'the new column should default to null on old rows');
+
+    // And the new functionality works immediately after migrating.
+    store.linkTelegramId(migrated.id, '42');
+    assert.equal(store.getUserByTelegramId('42').id, migrated.id);
+    store.close();
+  } finally {
+    require('node:fs').rmSync(path, { force: true });
+    require('node:fs').rmSync(`${path}-wal`, { force: true });
+    require('node:fs').rmSync(`${path}-shm`, { force: true });
+  }
+});
+
 test('super-admin bootstrap creates a verified account directly', () => {
   const store = new UserAuthStore(':memory:');
   const sa = store.createVerifiedUser({ email: 'super@example.com', password: 'topsecretpass', name: 'Super Admin', role: 'super_admin' });

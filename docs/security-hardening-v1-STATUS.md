@@ -17,7 +17,7 @@ never run `scripts/deploy.sh` on this branch.
 |---|---|---|
 | 1 | Unit tests in isolation: registry-match, quota logic, OTP generation/expiry/attempts | **Done** (24 tests, `src/personnelRegistry.js`, `src/quota.js`, `src/otp.js`) |
 | 2 | Server-side page gating (4-tier) | **Done** for `/` and `/admin` (see scoping note below) |
-| 3 | `telegramId` + identity unification | Not started |
+| 3 | `telegramId` + identity unification | **Done** (schema migration + link/lookup methods; bridge cutover deferred, see note below) |
 | 4 | Personnel Registry data model + admin-upload loading | Not started |
 | 5 | Registration flow end-to-end | Not started |
 | 6 | Quota + email-OTP re-verification middleware | Not started |
@@ -85,6 +85,32 @@ The legacy shared admin API key does **not** work for page routes at all —
 not by removing it, but because a browser navigation has no way to attach
 a custom header in the first place. Confirmed by test. This is a natural
 nudge toward the step-8 key retirement, not something built specially here.
+
+**Step 3 complete.** `telegram_id` added to `auth_users`:
+- Fresh installs get it directly in `CREATE TABLE`; existing DB files get a
+  runtime migration (`_migrateSchema()` in the `UserAuthStore` constructor —
+  `ALTER TABLE ADD COLUMN` if missing) since `CREATE TABLE IF NOT EXISTS` is
+  a no-op against a table that already exists. Verified against a
+  synthetically-built old-shape DB (unit test) **and** live against the
+  real local `data/auth.db` file — pre-existing row preserved, column now
+  present.
+- A partial `UNIQUE` index (`WHERE telegram_id IS NOT NULL`) enforces one
+  Telegram identity → at most one account, while allowing any number of
+  not-yet-linked (NULL) accounts.
+- New `UserAuthStore` methods: `getUserByTelegramId()`, `linkTelegramId()`
+  (rejects if the ID is already claimed by a different account; re-linking
+  the same ID to the same account is a harmless no-op), and `register()`
+  gained an optional `telegramId` parameter for the future bot-driven
+  registration link flow to plug into.
+- 8 new tests, full suite 212/212 passing.
+
+**Deliberate scoping note:** this step only builds the *linking mechanism*.
+The Telegram bridge's `planIntake()` still reads `config/telegram.json`'s
+flat `authorizedUsers` map — it does **not** yet check `auth_users` by
+`telegram_id`. Flipping that over now, before any real registration flow
+exists to populate the column, would lock out every current Telegram user
+at once. That cutover belongs with Step 5 (registration flow), once
+accounts can actually acquire a `telegram_id`.
 
 ## Open questions / notes found while implementing
 

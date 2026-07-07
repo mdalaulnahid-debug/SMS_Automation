@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS auth_users (
   password_hash TEXT NOT NULL,
   name TEXT NOT NULL,
   phone TEXT,
+  telegram_id TEXT,
   role TEXT NOT NULL DEFAULT 'officer',
   status TEXT NOT NULL DEFAULT 'pending_verification',
   email_verified INTEGER NOT NULL DEFAULT 0,
@@ -78,6 +79,22 @@ class UserAuthStore {
     this.db = new DatabaseSync(dbPath || ':memory:');
     this.db.exec('PRAGMA journal_mode = WAL;');
     this.db.exec(SCHEMA);
+    this._migrateSchema();
+  }
+
+  // CREATE TABLE IF NOT EXISTS above is a no-op against an auth_users table that
+  // already existed before telegram_id was added (any real deployment's DB file).
+  // Add the column if it's missing, then ensure the uniqueness index either way —
+  // one Telegram identity must map to at most one account. A partial index (WHERE
+  // telegram_id IS NOT NULL) allows any number of unlinked (NULL) accounts.
+  _migrateSchema() {
+    const columns = this.db.prepare('PRAGMA table_info(auth_users)').all();
+    if (!columns.some((col) => col.name === 'telegram_id')) {
+      this.db.exec('ALTER TABLE auth_users ADD COLUMN telegram_id TEXT');
+    }
+    this.db.exec(
+      'CREATE UNIQUE INDEX IF NOT EXISTS idx_auth_users_telegram_id ON auth_users(telegram_id) WHERE telegram_id IS NOT NULL'
+    );
   }
 
   close() {
@@ -96,18 +113,49 @@ class UserAuthStore {
     return this._row(email) || null;
   }
 
+  // The join key between the two identity systems that have never been linked
+  // (web login here vs. the Telegram bridge's flat authorizedUsers config) —
+  // see docs/security-hardening-v1-design.md §5. Telegram user IDs are treated
+  // as strings throughout (matching how config/telegram.json already keys
+  // authorizedUsers), since they're large integers with no arithmetic use.
+  getUserByTelegramId(telegramId) {
+    if (!telegramId) return null;
+    return this.db.prepare('SELECT * FROM auth_users WHERE telegram_id = ?').get(String(telegramId)) || null;
+  }
+
+  // Links a Telegram identity to an existing account. Rejects if that Telegram
+  // ID is already linked to a DIFFERENT account (the partial unique index
+  // enforces this at the DB level too; this just turns the raw constraint
+  // error into a clear, catchable application error).
+  linkTelegramId(userId, telegramId) {
+    const normalized = String(telegramId || '').trim();
+    if (!normalized) throw new Error('Telegram ID is required.');
+    const existing = this.getUserByTelegramId(normalized);
+    if (existing && existing.id !== userId) {
+      throw new Error('This Telegram account is already linked to another user.');
+    }
+    this.db.prepare('UPDATE auth_users SET telegram_id = ? WHERE id = ?').run(normalized, userId);
+  }
+
   listUsers() {
-    return this.db.prepare('SELECT id, email, name, phone, role, status, email_verified, created_at, last_login_at FROM auth_users ORDER BY created_at').all();
+    return this.db.prepare('SELECT id, email, name, phone, telegram_id, role, status, email_verified, created_at, last_login_at FROM auth_users ORDER BY created_at').all();
   }
 
   // Registration: creates a pending_verification user and returns the raw verify token (caller emails it).
-  register({ email, password, name, phone, role = 'officer' }) {
+  // telegramId is optional — set when registration originated from the bot's
+  // registration-link flow (not built yet; the field exists so that flow has
+  // somewhere to plug in without another schema change).
+  register({ email, password, name, phone, role = 'officer', telegramId }) {
     email = String(email || '').trim().toLowerCase();
     if (!isValidEmail(email)) throw new Error('Invalid email address.');
     if (!password || String(password).length < 8) throw new Error('Password must be at least 8 characters.');
     if (!name || !String(name).trim()) throw new Error('Name is required.');
     if (!ROLES.includes(role)) throw new Error('Invalid role.');
     if (this._row(email)) throw new Error('An account with this email already exists.');
+    const normalizedTelegramId = telegramId ? String(telegramId).trim() : null;
+    if (normalizedTelegramId && this.getUserByTelegramId(normalizedTelegramId)) {
+      throw new Error('This Telegram account is already linked to another user.');
+    }
 
     const id = randomBytes(16).toString('hex');
     const verifyToken = generateToken();
@@ -117,10 +165,10 @@ class UserAuthStore {
     this.db
       .prepare(
         `INSERT INTO auth_users
-         (id, email, password_hash, name, phone, role, status, email_verified, verify_token, verify_token_expires_at, created_at)
-         VALUES (?, ?, ?, ?, ?, ?, 'pending_verification', 0, ?, ?, ?)`
+         (id, email, password_hash, name, phone, telegram_id, role, status, email_verified, verify_token, verify_token_expires_at, created_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, 'pending_verification', 0, ?, ?, ?)`
       )
-      .run(id, email, hashPassword(password), String(name).trim(), phone ? String(phone).trim() : null, role, verifyToken, expiresAt, now);
+      .run(id, email, hashPassword(password), String(name).trim(), phone ? String(phone).trim() : null, normalizedTelegramId, role, verifyToken, expiresAt, now);
 
     return { id, email, verifyToken };
   }
