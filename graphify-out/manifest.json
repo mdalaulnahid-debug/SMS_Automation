@@ -265,8 +265,8 @@
     "semantic_hash": "691542780e01dd0058fe9c6c54455530"
   },
   "src/app.js": {
-    "mtime": 1783413714.9975245,
-    "ast_hash": "74b9e2c2f6023e8348e83418efe10b6e",
+    "mtime": 1783435144.7272208,
+    "ast_hash": "91226061d20ee960579d6794fcbf2b77",
     "semantic_hash": ""
   },
   "src/auth.js": {
@@ -355,8 +355,8 @@
     "semantic_hash": "11bcb3c17399ffb58f989b28ea1d899e"
   },
   "src/userAuth.js": {
-    "mtime": 1783414429.1836977,
-    "ast_hash": "594abd2598ee3cfc001d539a748ab143",
+    "mtime": 1783435025.8159256,
+    "ast_hash": "7c859473984faf6c7299d90fc4784eb2",
     "semantic_hash": ""
   },
   "telegram-bridge/backendClient.js": {
@@ -415,8 +415,8 @@
     "semantic_hash": "5d6b8ae7b5fb343a7e673dc0c646d4a4"
   },
   "test/userAuth.test.js": {
-    "mtime": 1783414463.0659208,
-    "ast_hash": "3ea67c76b0114d1db3ff5e4cfd5d12af",
+    "mtime": 1783435081.022259,
+    "ast_hash": "a26da0f5d1a3aef9223ea61789ee287b",
     "semantic_hash": ""
   },
   "test/workflow.test.js": {
@@ -2130,8 +2130,8 @@
     "semantic_hash": ""
   },
   ".impeccable/hook.cache.json": {
-    "mtime": 1783434840.3860495,
-    "ast_hash": "0b5e8ace298a921dd23711e292e18d45",
+    "mtime": 1783435276.7914817,
+    "ast_hash": "a3f87e1ba0ed75ddfe44f059ef46a1b8",
     "semantic_hash": ""
   },
   "config/auth.example.json": {
@@ -3285,8 +3285,8 @@
     "semantic_hash": ""
   },
   "src/personnelRegistry.js": {
-    "mtime": 1783412461.7285225,
-    "ast_hash": "fcba4956bcfd637b4c57dc8323d6701e",
+    "mtime": 1783434993.0402932,
+    "ast_hash": "c3ce913f3960dbb2f9a88125bf86f71a",
     "semantic_hash": ""
   },
   "src/quota.js": {
@@ -3310,8 +3310,8 @@
     "semantic_hash": ""
   },
   "docs/security-hardening-v1-STATUS.md": {
-    "mtime": 1783434840.2582262,
-    "ast_hash": "3bf6f1e4d3ff0742ed189be2895d4ee7",
+    "mtime": 1783435276.691426,
+    "ast_hash": "22c16d6e5edacafc1cc9a50d5fa42558",
     "semantic_hash": ""
   },
   "src/cookies.js": {
@@ -3327,6 +3327,16 @@
   "test/pageGating.test.js": {
     "mtime": 1783413798.20263,
     "ast_hash": "a3a19ed2e2920a1a747b885098e2c927",
+    "semantic_hash": ""
+  },
+  "test/personnelRegistryEndpoint.test.js": {
+    "mtime": 1783435178.9850779,
+    "ast_hash": "ff0162c2cdaba26e9298348befb8d9ff",
+    "semantic_hash": ""
+  },
+  "test/personnelRegistryWorkbook.test.js": {
+    "mtime": 1783435052.7378361,
+    "ast_hash": "1b817121172fa5052d2743cbc1489d2f",
     "semantic_hash": ""
   }
 }
