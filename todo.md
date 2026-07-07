@@ -6,6 +6,45 @@ Start with `progress_tracker.md` for the latest session handoff, test results, a
 
 ---
 
+## 🔨 IN PROGRESS — Security hardening V1 (registration gating + layered access) · `P1`
+
+Consolidates and supersedes the 2026-06-24 security roadmaps below (IP/device
+tracking, login/access control, insider-threat prevention) with a plan
+grounded in what's actually technically possible — notably, Telegram exposes
+no IP or device ID to a bot, so the original "track IP/device from Telegram"
+idea is replaced with a quota + out-of-band-email-OTP impersonation defense.
+
+Full design, migration plan, and 10-step build order:
+[`docs/security-hardening-v1-design.md`](docs/security-hardening-v1-design.md).
+Building on `feature/security-hardening-v1`, isolated from `main` —
+localhost-only, deploy only after a full pass and explicit approval.
+
+**Key decisions locked (2026-07-07):**
+- 1-week Telegram-delivered registration window for existing users; open
+  group policy intentionally ends.
+- Auto-activate on Personnel Registry match during the migration window
+  (audit + retroactive revoke); approval-gated for new registrations after
+  the window closes.
+- Server-side page gating (not just client-side hiding) is the foundational
+  fix everything else assumes.
+- Shared admin API key retired as a human credential; kept only for
+  genuine machine-to-machine callers (e.g. the Telegram bridge's own
+  backend calls).
+
+- [ ] **`P1`** Unit tests: registry-match validation, quota logic, OTP generation/expiry/attempts
+- [ ] **`P1`** Server-side page gating (4-tier: Public/Registered Officer/Admin/Super-admin)
+- [ ] **`P1`** `telegramId` column + identity unification (web login ↔ Telegram)
+- [ ] **`P1`** Personnel Registry data model + admin-upload loading
+- [ ] **`P1`** Registration flow end-to-end (Telegram link → form → registry check → activation)
+- [ ] **`P1`** Quota + email-OTP re-verification middleware
+- [ ] **`P2`** Admin group actions (post-bypass + ban/suspend/mute) — needs bot promoted to group admin first
+- [ ] **`P1`** Shared admin key scoping/retirement for human paths
+- [ ] **`P2`** Behavioral anomaly tripwire (off-hours, bulk, language_code/username drift)
+- [ ] **`P1`** Local end-to-end simulation before any deploy conversation
+- [ ] **`P2`** Encryption at rest (Vultr encrypted block storage)
+
+---
+
 ## ✅ DONE — 2026-07-06: Repo cleanup, untracked AI-tool config dirs
 
 `.agents/`, `.codex/`, `.cursor/`, `.gemini/`, `.github/hooks/`,

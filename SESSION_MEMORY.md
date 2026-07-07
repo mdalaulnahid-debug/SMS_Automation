@@ -100,6 +100,26 @@ see full design, data model, and edge cases in
 [`docs/gd-lost-phone-watch-design.md`](docs/gd-lost-phone-watch-design.md).
 To be built and tested entirely on **localhost first**, per standing policy.
 
+## In progress — Security hardening V1 (registration gating + layered access)
+
+**Design locked (2026-07-07), implementation starting, `P1`.** Closes 3 real
+gaps found by code review: page-level access is client-side only (no
+server-side role check before `/`, `/admin` serve their HTML), Telegram
+identity and web-login identity have never been linked, and no registration
+validates against real personnel data. V1 adds: server-enforced 4-tier
+access (Public/Registered Officer/Admin/Super-admin), a Personnel Registry
+that registration must match, `telegramId` unifying the two identity
+systems, a 1-week Telegram-delivered registration window for existing
+users (auto-activate during the window, approval-gated after), quota +
+email-OTP re-verification as impersonation defense (Telegram exposes no
+IP/device — confirmed, not assumed), admin group moderation actions, and
+retirement of the shared admin key as a human credential. Full design,
+migration plan, and build order in
+[`docs/security-hardening-v1-design.md`](docs/security-hardening-v1-design.md).
+**Being built on its own branch, `feature/security-hardening-v1`, isolated
+from `main`/production** — localhost-only until a full pass, deploy only
+after explicit approval, same discipline as the GD lost-phone watch feature.
+
 ## Conventions / gotchas
 
 - Grid tracks that hold long tokens (gateway ids, `REQ-…`) must use
@@ -119,5 +139,6 @@ To be built and tested entirely on **localhost first**, per standing policy.
 - Matching/validation rules → `docs/training-and-matching-rules.md`
 - Design tokens/components → `docs/design-system.md`, `public/theme.css`
 - Planned: lost-phone recovery watch (GD-linked) → `docs/gd-lost-phone-watch-design.md`
+- In progress: security hardening V1 (registration/access tiers) → `docs/security-hardening-v1-design.md`
 - Code knowledge graph (if built) → `graphify-out/GRAPH_REPORT.md` + `graph.json`
   (query with `graphify query "<question>"` instead of re-reading files)
