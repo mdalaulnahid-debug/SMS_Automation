@@ -51,27 +51,26 @@ additive SQLite schema all check out against the real code). Found five
 real gaps that need a decision before implementation starts — see Open
 questions below. **Still nothing implemented.**
 
-## Open questions to resolve before/during implementation
+## Decisions (resolved 2026-07-07)
 
-1. **Second-reviewer approval enforcement** — `requireAdmin` doesn't
-   distinguish `admin` from `super_admin`, and also accepts the legacy
-   shared admin API key (no individual identity at all). Recommendation:
-   gd-watch create/approve endpoints require individual session-token auth
-   only, reject the shared key outright, plus a new `requireSuperAdmin`
-   check. **Needs sign-off.**
-2. **Who gets DM'd on a hit** — no existing mapping from a web admin
-   account (or even a Telegram `authorizedUsers` entry) to "this person
-   should receive gd-watch hit alerts." Needs a new config list or a
-   `telegramId` field on admin accounts. **Needs a decision on which.**
-3. **Multi-IMEI batching data-attribution risk** — real training-data
-   replies show Robi doesn't echo IMEI per history row when multiple rows
-   exist under one IMEI header, and GP's sample echoed a mismatched digit
-   sequence in a row. No training data exists for a genuinely batched
-   multi-IMEI reply from any operator. Recommendation: Phase 1 sends one
-   IMEI per SMS per watched device, no batching, despite the original
-   spec's "reuse existing batching" instruction, until real batched-reply
-   behavior is observed operator-by-operator. **Needs sign-off — this is
-   the highest-risk item.**
+1. **Second-reviewer approval enforcement — CONFIRMED.** gd-watch
+   create/approve endpoints require individual session-token auth (separate
+   ID + password per account) — the legacy shared admin API key is rejected
+   outright for these endpoints. A new `requireSuperAdmin` check (currently
+   nonexistent — `requireAdmin` treats `admin`/`super_admin` identically)
+   must be built to gate the approval step specifically.
+2. **Who gets DM'd on a hit — CONFIRMED.** The super-admin and other
+   explicitly authorized Telegram IDs receive gd-watch hit DMs. This list
+   will be manageable later from a super-admin console UI; for Phase 1 the
+   underlying mechanism (a notify-list, e.g. a `telegramId` field on admin
+   accounts or a small dedicated table) needs to exist so the feature
+   functions, even before a dedicated management screen is built — it can
+   reasonably be built alongside the admin console UI work in step 5 below.
+3. **Multi-IMEI batching — CONFIRMED deferred.** Phase 1 dispatches **one
+   IMEI per SMS per watched device only** — no batching. Multi/batch-IMEI
+   support is explicitly deferred; the user will provide further training
+   on real batched-reply formats before that's revisited. Do not build or
+   stub batching logic for gd-watch in Phase 1.
 4. **GD image upload has zero precedent** — no multipart/file-upload
    handling exists anywhere in this codebase (raw `node:http`, no
    framework). Budget this as new engineering surface, not an adaptation.
@@ -84,3 +83,6 @@ Also one naming correction against the original spec: `dispatchNext` (in
 `smsGateway.js`) just drains the queue FIFO — the actual place to add the
 "prefer non-gd-watch" preference is `OperatorQueue.nextSendable()` in
 `queue.js`, not `dispatchNext` itself.
+
+**All blocking decisions now resolved. Ready to start implementation
+(step 1: unit tests in isolation) once the user gives the go-ahead.**

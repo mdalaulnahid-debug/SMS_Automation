@@ -69,9 +69,12 @@ gd_recheck_log:
    second-reviewer gate, not a formality — reject if the same user approves
    their own case.
 3. On approval: dispatch `IMEI-MS` (`channel: 'gd-watch'`) to all three
-   operators for every watched IMEI, batched up to 5 identifiers per SMS
-   using the existing multi-identifier batching (already implemented in
-   `parser.js` — do not build new batching logic, reuse it).
+   operators, **one IMEI per SMS per watched device** (superseded from the
+   original "batch up to 5 identifiers" plan — see Implementation Review
+   Findings below: no training data confirms operators reliably attribute
+   history rows to the right IMEI in a batched reply, so batching is
+   deferred until that's verified). If a case has several watched IMEIs,
+   dispatch a separate `IMEI-MS` request per IMEI.
 4. Every reply from this first pass → insert into `gd_imei_history` with
    `isPreTheftBaseline = true`. No hits ever come from this pass, **per
    IMEI, per operator** — baseline status is tracked per (imei, operator),
@@ -186,32 +189,34 @@ The actual place to add the "prefer non-gd-watch requests" rule is
 `OperatorQueue.nextSendable()` in `queue.js` (currently strict
 `queue[0]` FIFO), not `dispatchNext`.
 
-**Five real gaps found, needing a decision before implementation:**
+**Five real gaps found — all now resolved (decisions made 2026-07-07):**
 
-1. **Second-reviewer approval is currently unenforceable.** `requireAdmin`
+1. **Second-reviewer approval — RESOLVED, confirmed.** `requireAdmin`
    (`app.js:372`) treats `admin` and `super_admin` identically, and also
    accepts the legacy shared admin API key — which carries no individual
-   identity. If case create + approve both go through that shared key, the
-   "different approver" rule can't actually be checked. Recommendation:
-   gd-watch create/approve endpoints require individual session-token auth
-   only (reject the shared key), plus a new, currently-nonexistent
-   `requireSuperAdmin` check.
-2. **No existing mapping from an admin account to a Telegram chat to DM.**
-   `authorizedUsers` in `config/telegram.json` has no admin/IO role flag,
-   and there's no link between a web login account and a Telegram user ID.
-   Needs a new config list or a `telegramId` field on admin accounts.
-3. **Multi-IMEI batching has an unverified data-attribution risk — the
-   highest-risk finding.** Real training-data replies show: Robi prints the
-   IMEI header once, then multiple MSISDN/date rows with no per-row IMEI at
-   all; one GP sample echoed a row-level IMEI that didn't match the
-   requested one (more than just a check-digit difference). No training
-   data exists for an actual batched multi-IMEI reply from any operator.
-   Recommendation: **Phase 1 dispatches one IMEI per SMS per watched
-   device, no batching**, despite this spec's "reuse existing batching"
-   instruction, until real batched-reply behavior is confirmed
-   operator-by-operator with test traffic. Misattributing a history row to
-   the wrong watched IMEI would be a serious correctness bug, the same
-   class as the 2026-07-05 cross-matching incident.
+   identity. **Decision:** gd-watch create/approve endpoints require
+   individual session-token auth only (separate ID + password per account),
+   reject the shared key outright, plus a new, currently-nonexistent
+   `requireSuperAdmin` check gating the approval step specifically.
+2. **No existing mapping from an admin account to a Telegram chat to DM —
+   RESOLVED, confirmed.** `authorizedUsers` in `config/telegram.json` has no
+   admin/IO role flag, and there's no link between a web login account and a
+   Telegram user ID. **Decision:** the super-admin and other explicitly
+   authorized Telegram IDs receive hit DMs; manageable later via a
+   super-admin console UI, but the underlying notify-list mechanism must
+   exist for Phase 1 to function (can be built alongside the admin console
+   UI work, step 5 of the rollout order).
+3. **Multi-IMEI batching has an unverified data-attribution risk — RESOLVED,
+   deferred.** Real training-data replies show: Robi prints the IMEI header
+   once, then multiple MSISDN/date rows with no per-row IMEI at all; one GP
+   sample echoed a row-level IMEI that didn't match the requested one (more
+   than just a check-digit difference). No training data exists for an
+   actual batched multi-IMEI reply from any operator. **Decision: Phase 1
+   dispatches one IMEI per SMS per watched device only — no batching**,
+   overriding this spec's original "reuse existing batching" instruction.
+   Multi/batch-IMEI support is explicitly deferred until the user provides
+   further training on real batched-reply formats — **do not build or stub
+   batching logic for gd-watch in Phase 1.**
 4. **GD image upload has zero precedent in this codebase.** No
    multipart/file-upload handling exists anywhere (raw `node:http`, no
    framework) — this is new engineering surface, not an adaptation of
@@ -224,5 +229,5 @@ The actual place to add the "prefer non-gd-watch requests" rule is
 
 **Net assessment:** the core architectural idea — layering this on the
 existing request/dispatch/reply pipeline via a new channel — is sound and
-well-matched to the real codebase. The five items above need a decision
-(defaults recommended above) before implementation starts.
+well-matched to the real codebase. All five items above are now resolved;
+implementation is unblocked pending the user's go-ahead to start.
