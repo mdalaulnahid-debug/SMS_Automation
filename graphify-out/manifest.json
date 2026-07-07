@@ -2130,8 +2130,8 @@
     "semantic_hash": ""
   },
   ".impeccable/hook.cache.json": {
-    "mtime": 1783412362.9994233,
-    "ast_hash": "fa6e233ce76d63aec12701c2a5a3da6b",
+    "mtime": 1783412577.018392,
+    "ast_hash": "a2310ece732daebb872e9e31e9e5e267",
     "semantic_hash": ""
   },
   "config/auth.example.json": {
@@ -3277,6 +3277,41 @@
   "docs/security-hardening-v1-design.md": {
     "mtime": 1783412319.5265,
     "ast_hash": "443c67dca85595f6ac1f4c8d7f9b70c8",
+    "semantic_hash": ""
+  },
+  "src/otp.js": {
+    "mtime": 1783412487.7524686,
+    "ast_hash": "8440d8b79c390e1d089381f23b534997",
+    "semantic_hash": ""
+  },
+  "src/personnelRegistry.js": {
+    "mtime": 1783412461.7285225,
+    "ast_hash": "fcba4956bcfd637b4c57dc8323d6701e",
+    "semantic_hash": ""
+  },
+  "src/quota.js": {
+    "mtime": 1783412473.6793115,
+    "ast_hash": "e69ffe29fc4d77a547f4af52aefe1bad",
+    "semantic_hash": ""
+  },
+  "test/otp.test.js": {
+    "mtime": 1783412536.6701863,
+    "ast_hash": "767814deee49c8cd86ccf4501a703558",
+    "semantic_hash": ""
+  },
+  "test/personnelRegistry.test.js": {
+    "mtime": 1783412502.8137038,
+    "ast_hash": "e3232d49d4dee41858638b5b9db3b15a",
+    "semantic_hash": ""
+  },
+  "test/quota.test.js": {
+    "mtime": 1783412518.9125175,
+    "ast_hash": "89dfe947314db31d884d21f6a43ec48b",
+    "semantic_hash": ""
+  },
+  "docs/security-hardening-v1-STATUS.md": {
+    "mtime": 1783412576.9224608,
+    "ast_hash": "b3b898a24d32e2c8a948db2c9a071342",
     "semantic_hash": ""
   }
 }
