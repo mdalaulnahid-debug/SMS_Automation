@@ -355,8 +355,8 @@
     "semantic_hash": "11bcb3c17399ffb58f989b28ea1d899e"
   },
   "src/userAuth.js": {
-    "mtime": 1783413625.1777577,
-    "ast_hash": "c1f50a4e80a624128818fcd329eb704b",
+    "mtime": 1783414429.1836977,
+    "ast_hash": "594abd2598ee3cfc001d539a748ab143",
     "semantic_hash": ""
   },
   "telegram-bridge/backendClient.js": {
@@ -415,8 +415,8 @@
     "semantic_hash": "5d6b8ae7b5fb343a7e673dc0c646d4a4"
   },
   "test/userAuth.test.js": {
-    "mtime": 1783413784.6103146,
-    "ast_hash": "fd6aafacb429d55e8affeef27085ef6d",
+    "mtime": 1783414463.0659208,
+    "ast_hash": "3ea67c76b0114d1db3ff5e4cfd5d12af",
     "semantic_hash": ""
   },
   "test/workflow.test.js": {
@@ -2130,8 +2130,8 @@
     "semantic_hash": ""
   },
   ".impeccable/hook.cache.json": {
-    "mtime": 1783414023.5839999,
-    "ast_hash": "598dcded3067468b95ac34909a591657",
+    "mtime": 1783434840.3860495,
+    "ast_hash": "0b5e8ace298a921dd23711e292e18d45",
     "semantic_hash": ""
   },
   "config/auth.example.json": {
@@ -3310,8 +3310,8 @@
     "semantic_hash": ""
   },
   "docs/security-hardening-v1-STATUS.md": {
-    "mtime": 1783414023.488625,
-    "ast_hash": "42bdd4905b7ff03bb6ece042e199a93e",
+    "mtime": 1783434840.2582262,
+    "ast_hash": "3bf6f1e4d3ff0742ed189be2895d4ee7",
     "semantic_hash": ""
   },
   "src/cookies.js": {
