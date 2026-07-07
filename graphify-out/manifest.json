@@ -265,8 +265,8 @@
     "semantic_hash": "691542780e01dd0058fe9c6c54455530"
   },
   "src/app.js": {
-    "mtime": 1783322670.656638,
-    "ast_hash": "5c5d5a2855ad6be9cdb6a0bb5742d18a",
+    "mtime": 1783413714.9975245,
+    "ast_hash": "74b9e2c2f6023e8348e83418efe10b6e",
     "semantic_hash": ""
   },
   "src/auth.js": {
@@ -355,9 +355,9 @@
     "semantic_hash": "11bcb3c17399ffb58f989b28ea1d899e"
   },
   "src/userAuth.js": {
-    "mtime": 1782824296.4593203,
-    "ast_hash": "556afdccc8eca7c396a1e3ec7c0eb36c",
-    "semantic_hash": "556afdccc8eca7c396a1e3ec7c0eb36c"
+    "mtime": 1783413625.1777577,
+    "ast_hash": "c1f50a4e80a624128818fcd329eb704b",
+    "semantic_hash": ""
   },
   "telegram-bridge/backendClient.js": {
     "mtime": 1781953073.9096093,
@@ -395,9 +395,9 @@
     "semantic_hash": ""
   },
   "test/security.test.js": {
-    "mtime": 1782825278.6775305,
-    "ast_hash": "a3d87c15defb5f5819f9badf3c388ca0",
-    "semantic_hash": "a3d87c15defb5f5819f9badf3c388ca0"
+    "mtime": 1783413790.2344987,
+    "ast_hash": "8c8171353008718770bf441dec0caba1",
+    "semantic_hash": ""
   },
   "test/settingsStore.test.js": {
     "mtime": 1781953803.087737,
@@ -415,9 +415,9 @@
     "semantic_hash": "5d6b8ae7b5fb343a7e673dc0c646d4a4"
   },
   "test/userAuth.test.js": {
-    "mtime": 1782893072.4177456,
-    "ast_hash": "007a0e18dbb34ee3a5121681ab0d5436",
-    "semantic_hash": "007a0e18dbb34ee3a5121681ab0d5436"
+    "mtime": 1783413784.6103146,
+    "ast_hash": "fd6aafacb429d55e8affeef27085ef6d",
+    "semantic_hash": ""
   },
   "test/workflow.test.js": {
     "mtime": 1783322704.9347694,
@@ -2130,8 +2130,8 @@
     "semantic_hash": ""
   },
   ".impeccable/hook.cache.json": {
-    "mtime": 1783412577.018392,
-    "ast_hash": "a2310ece732daebb872e9e31e9e5e267",
+    "mtime": 1783414023.5839999,
+    "ast_hash": "598dcded3067468b95ac34909a591657",
     "semantic_hash": ""
   },
   "config/auth.example.json": {
@@ -3310,8 +3310,23 @@
     "semantic_hash": ""
   },
   "docs/security-hardening-v1-STATUS.md": {
-    "mtime": 1783412576.9224608,
-    "ast_hash": "b3b898a24d32e2c8a948db2c9a071342",
+    "mtime": 1783414023.488625,
+    "ast_hash": "42bdd4905b7ff03bb6ece042e199a93e",
+    "semantic_hash": ""
+  },
+  "src/cookies.js": {
+    "mtime": 1783413599.9457147,
+    "ast_hash": "c88900493899f1d9c6f4334d30e9ad0d",
+    "semantic_hash": ""
+  },
+  "test/cookies.test.js": {
+    "mtime": 1783413615.3330684,
+    "ast_hash": "45c62e358c5f627254e1f4d5beda21b0",
+    "semantic_hash": ""
+  },
+  "test/pageGating.test.js": {
+    "mtime": 1783413798.20263,
+    "ast_hash": "a3a19ed2e2920a1a747b885098e2c927",
     "semantic_hash": ""
   }
 }
