@@ -910,7 +910,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "appcompatactivity",
-      "community": 3,
+      "community": 69,
       "norm_label": "appcompatactivity"
     },
     {
@@ -2420,7 +2420,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "android_gateway_app_src_main_java_com_smsgateway_logactivity",
-      "community": 3,
+      "community": 69,
       "norm_label": "logactivity.kt"
     },
     {
@@ -2430,7 +2430,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "android_gateway_app_src_main_java_com_smsgateway_logactivity_logactivity",
-      "community": 3,
+      "community": 69,
       "norm_label": "logactivity"
     },
     {
@@ -2440,7 +2440,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "activitylogbinding",
-      "community": 3,
+      "community": 69,
       "norm_label": "activitylogbinding"
     },
     {
@@ -2450,7 +2450,7 @@
       "source_location": "L24",
       "_origin": "ast",
       "id": "android_gateway_app_src_main_java_com_smsgateway_logactivity_logactivity_oncreate",
-      "community": 3,
+      "community": 33,
       "norm_label": ".oncreate()"
     },
     {
@@ -2460,7 +2460,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "android_gateway_app_src_main_java_com_smsgateway_logactivity_kt_bundle",
-      "community": 3,
+      "community": 33,
       "norm_label": "bundle"
     },
     {
@@ -2470,7 +2470,7 @@
       "source_location": "L46",
       "_origin": "ast",
       "id": "android_gateway_app_src_main_java_com_smsgateway_logactivity_logactivity_onsupportnavigateup",
-      "community": 3,
+      "community": 69,
       "norm_label": ".onsupportnavigateup()"
     },
     {
@@ -2480,7 +2480,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "android_gateway_app_src_main_java_com_smsgateway_logactivity_kt_boolean",
-      "community": 3,
+      "community": 69,
       "norm_label": "boolean"
     },
     {
@@ -2490,7 +2490,7 @@
       "source_location": "L52",
       "_origin": "ast",
       "id": "android_gateway_app_src_main_java_com_smsgateway_logactivity_logadapter",
-      "community": 3,
+      "community": 33,
       "norm_label": "logadapter"
     },
     {
@@ -2500,7 +2500,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "recyclerview",
-      "community": 3,
+      "community": 33,
       "norm_label": "recyclerview"
     },
     {
@@ -2510,7 +2510,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "android_gateway_app_src_main_java_com_smsgateway_logactivity_kt_list",
-      "community": 3,
+      "community": 33,
       "norm_label": "list"
     },
     {
@@ -2520,7 +2520,7 @@
       "source_location": "L56",
       "_origin": "ast",
       "id": "android_gateway_app_src_main_java_com_smsgateway_logactivity_logadapter_submitlist",
-      "community": 3,
+      "community": 33,
       "norm_label": ".submitlist()"
     },
     {
@@ -2530,7 +2530,7 @@
       "source_location": "L61",
       "_origin": "ast",
       "id": "android_gateway_app_src_main_java_com_smsgateway_logactivity_logadapter_oncreateviewholder",
-      "community": 3,
+      "community": 33,
       "norm_label": ".oncreateviewholder()"
     },
     {
@@ -2540,7 +2540,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "viewgroup",
-      "community": 3,
+      "community": 33,
       "norm_label": "viewgroup"
     },
     {
@@ -2550,7 +2550,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "android_gateway_app_src_main_java_com_smsgateway_logactivity_kt_int",
-      "community": 3,
+      "community": 33,
       "norm_label": "int"
     },
     {
@@ -2560,7 +2560,7 @@
       "source_location": "L64",
       "_origin": "ast",
       "id": "android_gateway_app_src_main_java_com_smsgateway_logactivity_logadapter_onbindviewholder",
-      "community": 3,
+      "community": 33,
       "norm_label": ".onbindviewholder()"
     },
     {
@@ -2570,7 +2570,7 @@
       "source_location": "L67",
       "_origin": "ast",
       "id": "android_gateway_app_src_main_java_com_smsgateway_logactivity_logadapter_getitemcount",
-      "community": 3,
+      "community": 33,
       "norm_label": ".getitemcount()"
     },
     {
@@ -2580,7 +2580,7 @@
       "source_location": "L69",
       "_origin": "ast",
       "id": "android_gateway_app_src_main_java_com_smsgateway_logactivity_vh",
-      "community": 3,
+      "community": 33,
       "norm_label": "vh"
     },
     {
@@ -2590,7 +2590,7 @@
       "source_location": "L70",
       "_origin": "ast",
       "id": "android_gateway_app_src_main_java_com_smsgateway_logactivity_vh_bind",
-      "community": 3,
+      "community": 33,
       "norm_label": ".bind()"
     },
     {
@@ -3640,7 +3640,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "android_gateway_app_src_main_java_com_smsgateway_qrscanactivity",
-      "community": 3,
+      "community": 64,
       "norm_label": "qrscanactivity.kt"
     },
     {
@@ -3650,7 +3650,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "android_gateway_app_src_main_java_com_smsgateway_qrscanactivity_qrscanactivity",
-      "community": 3,
+      "community": 64,
       "norm_label": "qrscanactivity"
     },
     {
@@ -3660,7 +3660,7 @@
       "source_location": "L33",
       "_origin": "ast",
       "id": "android_gateway_app_src_main_java_com_smsgateway_qrscanactivity_qrscanactivity_oncreate",
-      "community": 3,
+      "community": 64,
       "norm_label": ".oncreate()"
     },
     {
@@ -3670,7 +3670,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "android_gateway_app_src_main_java_com_smsgateway_qrscanactivity_kt_bundle",
-      "community": 3,
+      "community": 64,
       "norm_label": "bundle"
     },
     {
@@ -3680,7 +3680,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "android_gateway_app_src_main_java_com_smsgateway_qrscanactivity_qrscanactivity_launchscanner",
-      "community": 3,
+      "community": 64,
       "norm_label": ".launchscanner()"
     },
     {
@@ -3690,7 +3690,7 @@
       "source_location": "L48",
       "_origin": "ast",
       "id": "android_gateway_app_src_main_java_com_smsgateway_qrscanactivity_qrscanactivity_handleqrresult",
-      "community": 3,
+      "community": 64,
       "norm_label": ".handleqrresult()"
     },
     {
@@ -3700,7 +3700,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "android_gateway_app_src_main_java_com_smsgateway_qrscanactivity_kt_string",
-      "community": 3,
+      "community": 64,
       "norm_label": "string"
     },
     {
@@ -4730,7 +4730,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "android_gateway_app_src_main_java_com_smsgateway_db_appdatabase",
-      "community": 3,
+      "community": 48,
       "norm_label": "appdatabase.kt"
     },
     {
@@ -4740,7 +4740,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "android_gateway_app_src_main_java_com_smsgateway_db_appdatabase_appdatabase",
-      "community": 3,
+      "community": 48,
       "norm_label": "appdatabase"
     },
     {
@@ -4750,7 +4750,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "roomdatabase",
-      "community": 3,
+      "community": 48,
       "norm_label": "roomdatabase"
     },
     {
@@ -4760,7 +4760,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "android_gateway_app_src_main_java_com_smsgateway_db_appdatabase_appdatabase_logdao",
-      "community": 3,
+      "community": 48,
       "norm_label": ".logdao()"
     },
     {
@@ -4770,7 +4770,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "android_gateway_app_src_main_java_com_smsgateway_db_appdatabase_migrate",
-      "community": 3,
+      "community": 48,
       "norm_label": "migrate()"
     },
     {
@@ -4780,7 +4780,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "supportsqlitedatabase",
-      "community": 3,
+      "community": 48,
       "norm_label": "supportsqlitedatabase"
     },
     {
@@ -4790,7 +4790,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "android_gateway_app_src_main_java_com_smsgateway_db_appdatabase_get",
-      "community": 3,
+      "community": 48,
       "norm_label": "get()"
     },
     {
@@ -4800,7 +4800,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "android_gateway_app_src_main_java_com_smsgateway_db_appdatabase_kt_context",
-      "community": 3,
+      "community": 48,
       "norm_label": "context"
     },
     {
@@ -7052,7 +7052,7 @@
       "source_location": "L27",
       "_origin": "ast",
       "id": "src_domain_request_types",
-      "community": 13,
+      "community": 18,
       "norm_label": "request_types"
     },
     {
@@ -7082,7 +7082,7 @@
       "source_location": "L80",
       "_origin": "ast",
       "id": "src_domain_dispatch_statuses",
-      "community": 18,
+      "community": 13,
       "norm_label": "dispatch_statuses"
     },
     {
@@ -7092,7 +7092,7 @@
       "source_location": "L88",
       "_origin": "ast",
       "id": "src_domain_terminal_dispatch_statuses",
-      "community": 2,
+      "community": 18,
       "norm_label": "terminal_dispatch_statuses"
     },
     {
@@ -7122,7 +7122,7 @@
       "source_location": "L121",
       "_origin": "ast",
       "id": "src_domain_operatorformsisdn",
-      "community": 13,
+      "community": 15,
       "norm_label": "operatorformsisdn()"
     },
     {
@@ -7132,7 +7132,7 @@
       "source_location": "L128",
       "_origin": "ast",
       "id": "src_domain_targetoperatorsforrequest",
-      "community": 13,
+      "community": 15,
       "norm_label": "targetoperatorsforrequest()"
     },
     {
@@ -7172,7 +7172,7 @@
       "source_location": "L156",
       "_origin": "ast",
       "id": "src_domain_asserttransition",
-      "community": 13,
+      "community": 2,
       "norm_label": "asserttransition()"
     },
     {
@@ -8202,7 +8202,7 @@
       "source_location": "L158",
       "_origin": "ast",
       "id": "src_service_automationservice_receivesmswebhook",
-      "community": 1,
+      "community": 18,
       "norm_label": ".receivesmswebhook()"
     },
     {
@@ -8282,7 +8282,7 @@
       "source_location": "L699",
       "_origin": "ast",
       "id": "src_service_automationservice_retryrequest",
-      "community": 2,
+      "community": 18,
       "norm_label": ".retryrequest()"
     },
     {
@@ -8372,7 +8372,7 @@
       "source_location": "L965",
       "_origin": "ast",
       "id": "src_service_formatcombinedreply",
-      "community": 1,
+      "community": 18,
       "norm_label": "formatcombinedreply()"
     },
     {
@@ -8382,7 +8382,7 @@
       "source_location": "L999",
       "_origin": "ast",
       "id": "src_service_collectdispatchreplymessages",
-      "community": 1,
+      "community": 18,
       "norm_label": "collectdispatchreplymessages()"
     },
     {
@@ -8412,7 +8412,7 @@
       "source_location": "L1020",
       "_origin": "ast",
       "id": "src_service_requeststatusrank",
-      "community": 1,
+      "community": 18,
       "norm_label": "requeststatusrank()"
     },
     {
@@ -8592,7 +8592,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "src_smsgateway_smsgatewayclient",
-      "community": 19,
+      "community": 68,
       "norm_label": "smsgatewayclient"
     },
     {
@@ -8602,7 +8602,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "src_smsgateway_smsgatewayclient_constructor",
-      "community": 19,
+      "community": 68,
       "norm_label": ".constructor()"
     },
     {
@@ -8612,7 +8612,7 @@
       "source_location": "L11",
       "_origin": "ast",
       "id": "src_smsgateway_smsgatewayclient_dispatchnext",
-      "community": 19,
+      "community": 68,
       "norm_label": ".dispatchnext()"
     },
     {
@@ -8622,7 +8622,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "src_smsgateway_smsgatewayclient_sendone",
-      "community": 19,
+      "community": 68,
       "norm_label": "._sendone()"
     },
     {
@@ -8632,7 +8632,7 @@
       "source_location": "L68",
       "_origin": "ast",
       "id": "src_smsgateway_smsgatewayclient_dispatchall",
-      "community": 19,
+      "community": 68,
       "norm_label": ".dispatchall()"
     },
     {
@@ -8862,7 +8862,7 @@
       "source_location": "L245",
       "_origin": "ast",
       "id": "src_store_automationstore_alldispatchesterminal",
-      "community": 2,
+      "community": 18,
       "norm_label": ".alldispatchesterminal()"
     },
     {
@@ -9262,7 +9262,7 @@
       "source_location": "L721",
       "_origin": "ast",
       "id": "src_store_extractsilentreference",
-      "community": 18,
+      "community": 2,
       "norm_label": "extractsilentreference()"
     },
     {
@@ -11002,7 +11002,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "test_userauth_test",
-      "community": 9,
+      "community": 67,
       "norm_label": "userauth.test.js"
     },
     {
@@ -11012,7 +11012,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "test_userauth_test_test",
-      "community": 9,
+      "community": 67,
       "norm_label": "test"
     },
     {
@@ -11022,7 +11022,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "test_userauth_test_assert",
-      "community": 9,
+      "community": 67,
       "norm_label": "assert"
     },
     {
@@ -11032,7 +11032,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "test_userauth_test_readable",
-      "community": 9,
+      "community": 67,
       "norm_label": "{ readable }"
     },
     {
@@ -11042,7 +11042,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "test_userauth_test_createapp",
-      "community": 9,
+      "community": 67,
       "norm_label": "{ createapp }"
     },
     {
@@ -11052,7 +11052,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "test_userauth_test_userauthstore",
-      "community": 9,
+      "community": 67,
       "norm_label": "{ userauthstore }"
     },
     {
@@ -11062,7 +11062,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "test_userauth_test_mockreq",
-      "community": 9,
+      "community": 67,
       "norm_label": "mockreq()"
     },
     {
@@ -11072,7 +11072,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "test_userauth_test_mockres",
-      "community": 9,
+      "community": 67,
       "norm_label": "mockres()"
     },
     {
@@ -11082,7 +11082,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "test_userauth_test_call",
-      "community": 9,
+      "community": 67,
       "norm_label": "call()"
     },
     {
@@ -11092,7 +11092,7 @@
       "source_location": "L104",
       "_origin": "ast",
       "id": "test_userauth_test_appwith",
-      "community": 9,
+      "community": 23,
       "norm_label": "appwith()"
     },
     {
@@ -11102,7 +11102,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "test_workflow_test",
-      "community": 29,
+      "community": 13,
       "norm_label": "workflow.test.js"
     },
     {
@@ -11112,7 +11112,7 @@
       "source_location": "L3",
       "_origin": "ast",
       "id": "test_workflow_test_test",
-      "community": 29,
+      "community": 13,
       "norm_label": "test"
     },
     {
@@ -11122,7 +11122,7 @@
       "source_location": "L4",
       "_origin": "ast",
       "id": "test_workflow_test_assert",
-      "community": 29,
+      "community": 13,
       "norm_label": "assert"
     },
     {
@@ -11132,7 +11132,7 @@
       "source_location": "L5",
       "_origin": "ast",
       "id": "test_workflow_test_automationstore",
-      "community": 29,
+      "community": 13,
       "norm_label": "{ automationstore }"
     },
     {
@@ -11142,7 +11142,7 @@
       "source_location": "L6",
       "_origin": "ast",
       "id": "test_workflow_test_operatorqueue",
-      "community": 29,
+      "community": 13,
       "norm_label": "{ operatorqueue }"
     },
     {
@@ -11152,7 +11152,7 @@
       "source_location": "L7",
       "_origin": "ast",
       "id": "test_workflow_test_smsgatewayclient",
-      "community": 29,
+      "community": 13,
       "norm_label": "{ smsgatewayclient }"
     },
     {
@@ -11162,7 +11162,7 @@
       "source_location": "L8",
       "_origin": "ast",
       "id": "test_workflow_test_automationservice",
-      "community": 29,
+      "community": 13,
       "norm_label": "{ automationservice }"
     },
     {
@@ -11172,7 +11172,7 @@
       "source_location": "L9",
       "_origin": "ast",
       "id": "test_workflow_test_parserequesttext",
-      "community": 29,
+      "community": 13,
       "norm_label": "{ parserequesttext }"
     },
     {
@@ -11182,7 +11182,7 @@
       "source_location": "L10",
       "_origin": "ast",
       "id": "test_workflow_test_statuses",
-      "community": 29,
+      "community": 13,
       "norm_label": "{ statuses }"
     },
     {
@@ -11192,7 +11192,7 @@
       "source_location": "L12",
       "_origin": "ast",
       "id": "test_workflow_test_createharness",
-      "community": 29,
+      "community": 13,
       "norm_label": "createharness()"
     },
     {
@@ -11602,7 +11602,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "session_memory",
-      "community": 595,
+      "community": 39,
       "norm_label": "session_memory.md"
     },
     {
@@ -11686,10 +11686,20 @@
       "norm_label": "planned feature \u2014 lost/stolen phone recovery watch (gd-linked)"
     },
     {
-      "label": "Conventions / gotchas",
+      "label": "In progress \u2014 Security hardening V1 (registration gating + layered access)",
       "file_type": "document",
       "source_file": "SESSION_MEMORY.md",
       "source_location": "L103",
+      "_origin": "ast",
+      "id": "session_memory_in_progress_security_hardening_v1_registration_gating_layered_access",
+      "community": 369,
+      "norm_label": "in progress \u2014 security hardening v1 (registration gating + layered access)"
+    },
+    {
+      "label": "Conventions / gotchas",
+      "file_type": "document",
+      "source_file": "SESSION_MEMORY.md",
+      "source_location": "L123",
       "_origin": "ast",
       "id": "session_memory_conventions_gotchas",
       "community": 369,
@@ -11699,7 +11709,7 @@
       "label": "Where to look next",
       "file_type": "document",
       "source_file": "SESSION_MEMORY.md",
-      "source_location": "L114",
+      "source_location": "L134",
       "_origin": "ast",
       "id": "session_memory_where_to_look_next",
       "community": 369,
@@ -12132,7 +12142,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "architecture_3_components",
-      "community": 48,
+      "community": 271,
       "norm_label": "3. components"
     },
     {
@@ -12142,7 +12152,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "architecture_3_1_backend_src",
-      "community": 48,
+      "community": 271,
       "norm_label": "3.1 backend (`src/`)"
     },
     {
@@ -12152,7 +12162,7 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "architecture_3_2_android_gateway_android_gateway",
-      "community": 48,
+      "community": 271,
       "norm_label": "3.2 android gateway (`android-gateway/`)"
     },
     {
@@ -12162,7 +12172,7 @@
       "source_location": "L69",
       "_origin": "ast",
       "id": "architecture_3_3_dashboard_public",
-      "community": 48,
+      "community": 271,
       "norm_label": "3.3 dashboard (`public/`)"
     },
     {
@@ -12182,7 +12192,7 @@
       "source_location": "L80",
       "_origin": "ast",
       "id": "architecture_5_data_model",
-      "community": 67,
+      "community": 271,
       "norm_label": "5. data model"
     },
     {
@@ -12192,7 +12202,7 @@
       "source_location": "L82",
       "_origin": "ast",
       "id": "architecture_current_implementation",
-      "community": 67,
+      "community": 271,
       "norm_label": "current implementation"
     },
     {
@@ -12202,7 +12212,7 @@
       "source_location": "L95",
       "_origin": "ast",
       "id": "architecture_per_operator_dispatches_implemented_phase_1",
-      "community": 67,
+      "community": 271,
       "norm_label": "per-operator dispatches (implemented, phase 1)"
     },
     {
@@ -12982,7 +12992,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "docs_phone_gateway_contract_discovery_and_registration",
-      "community": 64,
+      "community": 370,
       "norm_label": "discovery and registration"
     },
     {
@@ -12992,7 +13002,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "docs_phone_gateway_contract_backend_health",
-      "community": 64,
+      "community": 370,
       "norm_label": "backend health"
     },
     {
@@ -13002,7 +13012,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "docs_phone_gateway_contract_gateway_registration",
-      "community": 64,
+      "community": 370,
       "norm_label": "gateway registration"
     },
     {
@@ -13012,7 +13022,7 @@
       "source_location": "L55",
       "_origin": "ast",
       "id": "docs_phone_gateway_contract_heartbeat",
-      "community": 64,
+      "community": 370,
       "norm_label": "heartbeat"
     },
     {
@@ -13202,7 +13212,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "docs_claude_design_brief",
-      "community": 595,
+      "community": 39,
       "norm_label": "claude-design-brief.md"
     },
     {
@@ -13302,7 +13312,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "docs_design_system",
-      "community": 595,
+      "community": 39,
       "norm_label": "design-system.md"
     },
     {
@@ -13896,13 +13906,183 @@
       "norm_label": "open follow-ups"
     },
     {
+      "label": "security-hardening-v1-design.md",
+      "file_type": "document",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_security_hardening_v1_design",
+      "community": 39,
+      "norm_label": "security-hardening-v1-design.md"
+    },
+    {
+      "label": "Security Hardening \u2014 Registration Gating, Layered Access & Impersonation Defense (V1, locked scope)",
+      "file_type": "document",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_security_hardening_v1_design_security_hardening_registration_gating_layered_access_impersonation_defense_v1_locked_scope",
+      "community": 29,
+      "norm_label": "security hardening \u2014 registration gating, layered access & impersonation defense (v1, locked scope)"
+    },
+    {
+      "label": "1. What this is",
+      "file_type": "document",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L14",
+      "_origin": "ast",
+      "id": "docs_security_hardening_v1_design_1_what_this_is",
+      "community": 29,
+      "norm_label": "1. what this is"
+    },
+    {
+      "label": "2. Goals & non-goals",
+      "file_type": "document",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L33",
+      "_origin": "ast",
+      "id": "docs_security_hardening_v1_design_2_goals_non_goals",
+      "community": 29,
+      "norm_label": "2. goals & non-goals"
+    },
+    {
+      "label": "3. Migration plan (agreed 2026-07-07)",
+      "file_type": "document",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L60",
+      "_origin": "ast",
+      "id": "docs_security_hardening_v1_design_3_migration_plan_agreed_2026_07_07",
+      "community": 29,
+      "norm_label": "3. migration plan (agreed 2026-07-07)"
+    },
+    {
+      "label": "4. Access-tier model (server-enforced)",
+      "file_type": "document",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L84",
+      "_origin": "ast",
+      "id": "docs_security_hardening_v1_design_4_access_tier_model_server_enforced",
+      "community": 29,
+      "norm_label": "4. access-tier model (server-enforced)"
+    },
+    {
+      "label": "5. Identity unification",
+      "file_type": "document",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L98",
+      "_origin": "ast",
+      "id": "docs_security_hardening_v1_design_5_identity_unification",
+      "community": 29,
+      "norm_label": "5. identity unification"
+    },
+    {
+      "label": "6. Personnel Registry",
+      "file_type": "document",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L118",
+      "_origin": "ast",
+      "id": "docs_security_hardening_v1_design_6_personnel_registry",
+      "community": 29,
+      "norm_label": "6. personnel registry"
+    },
+    {
+      "label": "7. Impersonation defense: quota + out-of-band re-verification",
+      "file_type": "document",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L129",
+      "_origin": "ast",
+      "id": "docs_security_hardening_v1_design_7_impersonation_defense_quota_out_of_band_re_verification",
+      "community": 29,
+      "norm_label": "7. impersonation defense: quota + out-of-band re-verification"
+    },
+    {
+      "label": "8. Channel choice: email now, SMS deferred",
+      "file_type": "document",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L158",
+      "_origin": "ast",
+      "id": "docs_security_hardening_v1_design_8_channel_choice_email_now_sms_deferred",
+      "community": 29,
+      "norm_label": "8. channel choice: email now, sms deferred"
+    },
+    {
+      "label": "9. Admin group actions",
+      "file_type": "document",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L167",
+      "_origin": "ast",
+      "id": "docs_security_hardening_v1_design_9_admin_group_actions",
+      "community": 29,
+      "norm_label": "9. admin group actions"
+    },
+    {
+      "label": "10. Shared admin key retirement/scoping",
+      "file_type": "document",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L181",
+      "_origin": "ast",
+      "id": "docs_security_hardening_v1_design_10_shared_admin_key_retirement_scoping",
+      "community": 29,
+      "norm_label": "10. shared admin key retirement/scoping"
+    },
+    {
+      "label": "11. Behavioral anomaly tripwire",
+      "file_type": "document",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L196",
+      "_origin": "ast",
+      "id": "docs_security_hardening_v1_design_11_behavioral_anomaly_tripwire",
+      "community": 29,
+      "norm_label": "11. behavioral anomaly tripwire"
+    },
+    {
+      "label": "12. Encryption at rest",
+      "file_type": "document",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L204",
+      "_origin": "ast",
+      "id": "docs_security_hardening_v1_design_12_encryption_at_rest",
+      "community": 29,
+      "norm_label": "12. encryption at rest"
+    },
+    {
+      "label": "13. Optimization notes (flagged, not urgent)",
+      "file_type": "document",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L212",
+      "_origin": "ast",
+      "id": "docs_security_hardening_v1_design_13_optimization_notes_flagged_not_urgent",
+      "community": 29,
+      "norm_label": "13. optimization notes (flagged, not urgent)"
+    },
+    {
+      "label": "14. Build order (strict, unit-tests-first \u2014 same discipline as GD)",
+      "file_type": "document",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L222",
+      "_origin": "ast",
+      "id": "docs_security_hardening_v1_design_14_build_order_strict_unit_tests_first_same_discipline_as_gd",
+      "community": 29,
+      "norm_label": "14. build order (strict, unit-tests-first \u2014 same discipline as gd)"
+    },
+    {
+      "label": "15. V2 (later, with the officer app)",
+      "file_type": "document",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L248",
+      "_origin": "ast",
+      "id": "docs_security_hardening_v1_design_15_v2_later_with_the_officer_app",
+      "community": 29,
+      "norm_label": "15. v2 (later, with the officer app)"
+    },
+    {
       "label": "system-design-v2.md",
       "file_type": "document",
       "source_file": "docs/system-design-v2.md",
       "source_location": "L1",
       "_origin": "ast",
       "id": "docs_system_design_v2",
-      "community": 595,
+      "community": 39,
       "norm_label": "system-design-v2.md"
     },
     {
@@ -14232,7 +14412,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "docs_telegram_bridge",
-      "community": 595,
+      "community": 510,
       "norm_label": "telegram-bridge.md"
     },
     {
@@ -14332,7 +14512,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "docs_training_and_matching_rules",
-      "community": 39,
+      "community": 371,
       "norm_label": "training-and-matching-rules.md"
     },
     {
@@ -14392,7 +14572,7 @@
       "source_location": "L71",
       "_origin": "ast",
       "id": "docs_training_and_matching_rules_reply_shape_rules",
-      "community": 33,
+      "community": 371,
       "norm_label": "reply shape rules"
     },
     {
@@ -14402,7 +14582,7 @@
       "source_location": "L73",
       "_origin": "ast",
       "id": "docs_training_and_matching_rules_lrl",
-      "community": 33,
+      "community": 371,
       "norm_label": "lrl"
     },
     {
@@ -14412,7 +14592,7 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "docs_training_and_matching_rules_lcl",
-      "community": 33,
+      "community": 371,
       "norm_label": "lcl"
     },
     {
@@ -14422,7 +14602,7 @@
       "source_location": "L112",
       "_origin": "ast",
       "id": "docs_training_and_matching_rules_ms_nid",
-      "community": 33,
+      "community": 371,
       "norm_label": "ms-nid"
     },
     {
@@ -14432,7 +14612,7 @@
       "source_location": "L129",
       "_origin": "ast",
       "id": "docs_training_and_matching_rules_nid_ms",
-      "community": 33,
+      "community": 371,
       "norm_label": "nid-ms"
     },
     {
@@ -14442,7 +14622,7 @@
       "source_location": "L144",
       "_origin": "ast",
       "id": "docs_training_and_matching_rules_imei_ms",
-      "community": 33,
+      "community": 371,
       "norm_label": "imei-ms"
     },
     {
@@ -14482,7 +14662,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "docs_ui_design_guide_v2",
-      "community": 595,
+      "community": 39,
       "norm_label": "ui-design-guide-v2.md"
     },
     {
@@ -15166,10 +15346,20 @@
       "norm_label": "todo"
     },
     {
-      "label": "\u2705 DONE \u2014 2026-07-06: Repo cleanup, untracked AI-tool config dirs",
+      "label": "\ud83d\udd28 IN PROGRESS \u2014 Security hardening V1 (registration gating + layered access) \u00b7 `P1`",
       "file_type": "document",
       "source_file": "todo.md",
       "source_location": "L9",
+      "_origin": "ast",
+      "id": "todo_in_progress_security_hardening_v1_registration_gating_layered_access_p1",
+      "community": 217,
+      "norm_label": "\ud83d\udd28 in progress \u2014 security hardening v1 (registration gating + layered access) \u00b7 `p1`"
+    },
+    {
+      "label": "\u2705 DONE \u2014 2026-07-06: Repo cleanup, untracked AI-tool config dirs",
+      "file_type": "document",
+      "source_file": "todo.md",
+      "source_location": "L48",
       "_origin": "ast",
       "id": "todo_done_2026_07_06_repo_cleanup_untracked_ai_tool_config_dirs",
       "community": 217,
@@ -15179,7 +15369,7 @@
       "label": "\ud83d\udc1e INCIDENT \u2014 2026-07-05 operator blackout: reply cross-matching + lost DM replies",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L22",
+      "source_location": "L61",
       "_origin": "ast",
       "id": "todo_incident_2026_07_05_operator_blackout_reply_cross_matching_lost_dm_replies",
       "community": 556,
@@ -15189,7 +15379,7 @@
       "label": "Fixes \u2014 implemented locally, tested (150/150), NOT yet deployed",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L27",
+      "source_location": "L66",
       "_origin": "ast",
       "id": "todo_fixes_implemented_locally_tested_150_150_not_yet_deployed",
       "community": 556,
@@ -15199,7 +15389,7 @@
       "label": "Data correction \u2014 prepared, needs supervised apply (production, law-enforcement data)",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L53",
+      "source_location": "L92",
       "_origin": "ast",
       "id": "todo_data_correction_prepared_needs_supervised_apply_production_law_enforcement_data",
       "community": 556,
@@ -15209,7 +15399,7 @@
       "label": "Operational",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L66",
+      "source_location": "L105",
       "_origin": "ast",
       "id": "todo_operational",
       "community": 556,
@@ -15219,7 +15409,7 @@
       "label": "Feature \u2014 live phone-inbox viewer (web console) \u2014 built, needs gateway APK",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L71",
+      "source_location": "L110",
       "_origin": "ast",
       "id": "todo_feature_live_phone_inbox_viewer_web_console_built_needs_gateway_apk",
       "community": 556,
@@ -15229,7 +15419,7 @@
       "label": "Feature (from this incident)",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L92",
+      "source_location": "L131",
       "_origin": "ast",
       "id": "todo_feature_from_this_incident",
       "community": 556,
@@ -15239,7 +15429,7 @@
       "label": "\ud83d\udd1c PLANNED \u2014 Lost/Stolen Phone Recovery Watch (GD-linked) \u00b7 `P2` (design done, not started)",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L101",
+      "source_location": "L140",
       "_origin": "ast",
       "id": "todo_planned_lost_stolen_phone_recovery_watch_gd_linked_p2_design_done_not_started",
       "community": 217,
@@ -15249,7 +15439,7 @@
       "label": "\ud83d\udd1c PLANNED \u2014 React + Vite frontend migration \u00b7 `P1` (large, multi-session)",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L130",
+      "source_location": "L169",
       "_origin": "ast",
       "id": "todo_planned_react_vite_frontend_migration_p1_large_multi_session",
       "community": 217,
@@ -15259,7 +15449,7 @@
       "label": "Open follow-ups (from 2026-07-04 redesign)",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L161",
+      "source_location": "L200",
       "_origin": "ast",
       "id": "todo_open_follow_ups_from_2026_07_04_redesign",
       "community": 217,
@@ -15269,7 +15459,7 @@
       "label": "\u2705 SHIPPED \u2014 2026-07-04: Web UI redesign, Material-3 reskin, Approvals Queue",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L169",
+      "source_location": "L208",
       "_origin": "ast",
       "id": "todo_shipped_2026_07_04_web_ui_redesign_material_3_reskin_approvals_queue",
       "community": 217,
@@ -15279,7 +15469,7 @@
       "label": "\u2705 RESOLVED \u2014 2026-06-29: Retried Request Reply Not Auto-Matched",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L184",
+      "source_location": "L223",
       "_origin": "ast",
       "id": "todo_resolved_2026_06_29_retried_request_reply_not_auto_matched",
       "community": 217,
@@ -15289,7 +15479,7 @@
       "label": "CRITICAL BUG \u2014 2026-06-29: Retried Request Reply Not Auto-Matched",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L196",
+      "source_location": "L235",
       "_origin": "ast",
       "id": "todo_critical_bug_2026_06_29_retried_request_reply_not_auto_matched",
       "community": 217,
@@ -15299,7 +15489,7 @@
       "label": "\ud83d\udfe1 IN PROGRESS \u2014 2026-06-30: Phase 1 Login & MFA System (Officer/Admin Accounts)",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L234",
+      "source_location": "L273",
       "_origin": "ast",
       "id": "todo_in_progress_2026_06_30_phase_1_login_mfa_system_officer_admin_accounts",
       "community": 217,
@@ -15309,7 +15499,7 @@
       "label": "Todo \u2014 2026-06-24: Enhanced Security & Admin Controls (IP/Device Tracking + Admin Messages)",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L287",
+      "source_location": "L326",
       "_origin": "ast",
       "id": "todo_todo_2026_06_24_enhanced_security_admin_controls_ip_device_tracking_admin_messages",
       "community": 558,
@@ -15319,7 +15509,7 @@
       "label": "Phase 1: IP & Device Identity Tracking (foundation)",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L291",
+      "source_location": "L330",
       "_origin": "ast",
       "id": "todo_phase_1_ip_device_identity_tracking_foundation",
       "community": 558,
@@ -15329,7 +15519,7 @@
       "label": "Phase 2: Admin Message Bypass (group hygiene)",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L298",
+      "source_location": "L337",
       "_origin": "ast",
       "id": "todo_phase_2_admin_message_bypass_group_hygiene",
       "community": 558,
@@ -15339,7 +15529,7 @@
       "label": "Phase 3: Anomaly Detection & Alerting",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L306",
+      "source_location": "L345",
       "_origin": "ast",
       "id": "todo_phase_3_anomaly_detection_alerting",
       "community": 558,
@@ -15349,7 +15539,7 @@
       "label": "Phase 4: Geolocation & Device Reputation (high-security)",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L313",
+      "source_location": "L352",
       "_origin": "ast",
       "id": "todo_phase_4_geolocation_device_reputation_high_security",
       "community": 558,
@@ -15359,7 +15549,7 @@
       "label": "Phase 5: Admin Audit Log (compliance)",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L320",
+      "source_location": "L359",
       "_origin": "ast",
       "id": "todo_phase_5_admin_audit_log_compliance",
       "community": 558,
@@ -15369,7 +15559,7 @@
       "label": "Todo \u2014 2026-06-24: Data Encryption at Rest (Optional, Recommended)",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L332",
+      "source_location": "L371",
       "_origin": "ast",
       "id": "todo_todo_2026_06_24_data_encryption_at_rest_optional_recommended",
       "community": 583,
@@ -15379,7 +15569,7 @@
       "label": "Phase 1: Add Encrypted Block Storage (Vultr) \u2014 RECOMMENDED",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L338",
+      "source_location": "L377",
       "_origin": "ast",
       "id": "todo_phase_1_add_encrypted_block_storage_vultr_recommended",
       "community": 583,
@@ -15389,7 +15579,7 @@
       "label": "Phase 2: Application-Level Encryption (Optional, High Security)",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L351",
+      "source_location": "L390",
       "_origin": "ast",
       "id": "todo_phase_2_application_level_encryption_optional_high_security",
       "community": 583,
@@ -15399,7 +15589,7 @@
       "label": "Phase 3: Key Rotation & Backup (If Implementing Phase 2)",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L367",
+      "source_location": "L406",
       "_origin": "ast",
       "id": "todo_phase_3_key_rotation_backup_if_implementing_phase_2",
       "community": 583,
@@ -15409,7 +15599,7 @@
       "label": "Todo \u2014 2026-06-24: Add Login & Access Control (Public Ops Page + Admin Console)",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L377",
+      "source_location": "L416",
       "_origin": "ast",
       "id": "todo_todo_2026_06_24_add_login_access_control_public_ops_page_admin_console",
       "community": 555,
@@ -15419,7 +15609,7 @@
       "label": "Public Ops Page Login (`/`)",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L383",
+      "source_location": "L422",
       "_origin": "ast",
       "id": "todo_public_ops_page_login",
       "community": 555,
@@ -15429,7 +15619,7 @@
       "label": "Admin Console Login (`/admin`)",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L396",
+      "source_location": "L435",
       "_origin": "ast",
       "id": "todo_admin_console_login_admin",
       "community": 555,
@@ -15439,7 +15629,7 @@
       "label": "Optional Enhancements",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L407",
+      "source_location": "L446",
       "_origin": "ast",
       "id": "todo_optional_enhancements",
       "community": 555,
@@ -15449,7 +15639,7 @@
       "label": "Files to Create/Modify",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L417",
+      "source_location": "L456",
       "_origin": "ast",
       "id": "todo_files_to_create_modify",
       "community": 555,
@@ -15459,7 +15649,7 @@
       "label": "Deployment Considerations",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L428",
+      "source_location": "L467",
       "_origin": "ast",
       "id": "todo_deployment_considerations",
       "community": 555,
@@ -15469,7 +15659,7 @@
       "label": "Todo \u2014 2026-06-24: Prevent Insider Threats & Unauthorized Access Delegation",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L437",
+      "source_location": "L476",
       "_origin": "ast",
       "id": "todo_todo_2026_06_24_prevent_insider_threats_unauthorized_access_delegation",
       "community": 434,
@@ -15479,7 +15669,7 @@
       "label": "Layer 1: Technical Barriers",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L447",
+      "source_location": "L486",
       "_origin": "ast",
       "id": "todo_layer_1_technical_barriers",
       "community": 66,
@@ -15489,7 +15679,7 @@
       "label": "1a. Per-Officer Session Binding (Medium Difficulty)",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L449",
+      "source_location": "L488",
       "_origin": "ast",
       "id": "todo_1a_per_officer_session_binding_medium_difficulty",
       "community": 66,
@@ -15499,7 +15689,7 @@
       "label": "1b. Request Signature (High Security, Friction)",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L475",
+      "source_location": "L514",
       "_origin": "ast",
       "id": "todo_1b_request_signature_high_security_friction",
       "community": 66,
@@ -15509,7 +15699,7 @@
       "label": "1c. Rate Limiting by Officer (Medium Difficulty)",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L483",
+      "source_location": "L522",
       "_origin": "ast",
       "id": "todo_1c_rate_limiting_by_officer_medium_difficulty",
       "community": 66,
@@ -15519,7 +15709,7 @@
       "label": "Layer 2: Detection & Alerting (Catches Misuse)",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L499",
+      "source_location": "L538",
       "_origin": "ast",
       "id": "todo_layer_2_detection_alerting_catches_misuse",
       "community": 434,
@@ -15529,7 +15719,7 @@
       "label": "2a. Anomaly Detection Dashboard",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L501",
+      "source_location": "L540",
       "_origin": "ast",
       "id": "todo_2a_anomaly_detection_dashboard",
       "community": 434,
@@ -15539,7 +15729,7 @@
       "label": "2b. Audit Log for Supervisors",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L528",
+      "source_location": "L567",
       "_origin": "ast",
       "id": "todo_2b_audit_log_for_supervisors",
       "community": 434,
@@ -15549,7 +15739,7 @@
       "label": "Layer 3: Operational / Policy (Human Controls)",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L543",
+      "source_location": "L582",
       "_origin": "ast",
       "id": "todo_layer_3_operational_policy_human_controls",
       "community": 434,
@@ -15559,7 +15749,7 @@
       "label": "3a. No Shared Accounts",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L545",
+      "source_location": "L584",
       "_origin": "ast",
       "id": "todo_3a_no_shared_accounts",
       "community": 434,
@@ -15569,7 +15759,7 @@
       "label": "3b. Quarterly Access Review",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L553",
+      "source_location": "L592",
       "_origin": "ast",
       "id": "todo_3b_quarterly_access_review",
       "community": 434,
@@ -15579,7 +15769,7 @@
       "label": "3c. Access Termination on Transfer",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L560",
+      "source_location": "L599",
       "_origin": "ast",
       "id": "todo_3c_access_termination_on_transfer",
       "community": 434,
@@ -15589,7 +15779,7 @@
       "label": "3d. Officer Training (Awareness)",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L567",
+      "source_location": "L606",
       "_origin": "ast",
       "id": "todo_3d_officer_training_awareness",
       "community": 434,
@@ -15599,7 +15789,7 @@
       "label": "Layer 4: Enforcement & Consequences",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L575",
+      "source_location": "L614",
       "_origin": "ast",
       "id": "todo_layer_4_enforcement_consequences",
       "community": 434,
@@ -15609,7 +15799,7 @@
       "label": "4a. Catch & Revoke",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L577",
+      "source_location": "L616",
       "_origin": "ast",
       "id": "todo_4a_catch_revoke",
       "community": 434,
@@ -15619,7 +15809,7 @@
       "label": "4b. Incident Report",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L585",
+      "source_location": "L624",
       "_origin": "ast",
       "id": "todo_4b_incident_report",
       "community": 434,
@@ -15629,7 +15819,7 @@
       "label": "Recommended Rollout (Insider Threat Prevention)",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L598",
+      "source_location": "L637",
       "_origin": "ast",
       "id": "todo_recommended_rollout_insider_threat_prevention",
       "community": 565,
@@ -15639,7 +15829,7 @@
       "label": "Week 1: Detection",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L600",
+      "source_location": "L639",
       "_origin": "ast",
       "id": "todo_week_1_detection",
       "community": 565,
@@ -15649,7 +15839,7 @@
       "label": "Week 2: Policy",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L606",
+      "source_location": "L645",
       "_origin": "ast",
       "id": "todo_week_2_policy",
       "community": 565,
@@ -15659,7 +15849,7 @@
       "label": "Week 3: Enforcement",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L612",
+      "source_location": "L651",
       "_origin": "ast",
       "id": "todo_week_3_enforcement",
       "community": 565,
@@ -15669,7 +15859,7 @@
       "label": "Week 4: Hardening (Optional)",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L618",
+      "source_location": "L657",
       "_origin": "ast",
       "id": "todo_week_4_hardening_optional",
       "community": 565,
@@ -15679,7 +15869,7 @@
       "label": "Summary: Layered Defense Against Insider Threats",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L625",
+      "source_location": "L664",
       "_origin": "ast",
       "id": "todo_summary_layered_defense_against_insider_threats",
       "community": 217,
@@ -15689,7 +15879,7 @@
       "label": "Done \u2014 2026-06-23: Branding, desktop redesign, and light-mode fix",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L644",
+      "source_location": "L683",
       "_origin": "ast",
       "id": "todo_done_2026_06_23_branding_desktop_redesign_and_light_mode_fix",
       "community": 217,
@@ -15699,7 +15889,7 @@
       "label": "Done \u2014 2026-06-23: `www.opsbarishal.com` added \u2014 all three domains live",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L680",
+      "source_location": "L719",
       "_origin": "ast",
       "id": "todo_done_2026_06_23_www_opsbarishal_com_added_all_three_domains_live",
       "community": 217,
@@ -15709,7 +15899,7 @@
       "label": "Done \u2014 2026-06-23: Locked down the entire public ops surface behind login",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L689",
+      "source_location": "L728",
       "_origin": "ast",
       "id": "todo_done_2026_06_23_locked_down_the_entire_public_ops_surface_behind_login",
       "community": 217,
@@ -15719,7 +15909,7 @@
       "label": "Done \u2014 2026-06-23 (CRITICAL): Fixed unauthenticated data exposure on the public ops feed",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L714",
+      "source_location": "L753",
       "_origin": "ast",
       "id": "todo_done_2026_06_23_critical_fixed_unauthenticated_data_exposure_on_the_public_ops_feed",
       "community": 217,
@@ -15729,7 +15919,7 @@
       "label": "Done \u2014 2026-06-23: Domain migration TLS cutover \u2014 opsbarishal.com live, zero downtime",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L753",
+      "source_location": "L792",
       "_origin": "ast",
       "id": "todo_done_2026_06_23_domain_migration_tls_cutover_opsbarishal_com_live_zero_downtime",
       "community": 217,
@@ -15739,7 +15929,7 @@
       "label": "Version History",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L778",
+      "source_location": "L817",
       "_origin": "ast",
       "id": "todo_version_history",
       "community": 217,
@@ -15749,7 +15939,7 @@
       "label": "Done \u2014 2026-06-23: Opened group auth for forwarded messages + forward-aware tagging",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L792",
+      "source_location": "L831",
       "_origin": "ast",
       "id": "todo_done_2026_06_23_opened_group_auth_for_forwarded_messages_forward_aware_tagging",
       "community": 217,
@@ -15759,7 +15949,7 @@
       "label": "Done \u2014 2026-06-22: Fixed deploy.sh clobbering runtime Telegram config + bot scolding forwarded messages",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L813",
+      "source_location": "L852",
       "_origin": "ast",
       "id": "todo_done_2026_06_22_fixed_deploy_sh_clobbering_runtime_telegram_config_bot_scolding_forwarded_messages",
       "community": 217,
@@ -15769,7 +15959,7 @@
       "label": "Done \u2014 2026-06-22: Confirmed group is command-only by policy; added Rejected Messages visibility",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L841",
+      "source_location": "L880",
       "_origin": "ast",
       "id": "todo_done_2026_06_22_confirmed_group_is_command_only_by_policy_added_rejected_messages_visibility",
       "community": 217,
@@ -15779,7 +15969,7 @@
       "label": "Planned \u2014 Domain migration: `licbarishal.duckdns.org` \u2192 `opsbarishal.com`",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L880",
+      "source_location": "L919",
       "_origin": "ast",
       "id": "todo_planned_domain_migration_licbarishal_duckdns_org_opsbarishal_com",
       "community": 217,
@@ -15789,7 +15979,7 @@
       "label": "Done \u2014 2026-06-20 (night): Fixed reply-type misclassification + added correction tooling",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L890",
+      "source_location": "L929",
       "_origin": "ast",
       "id": "todo_done_2026_06_20_night_fixed_reply_type_misclassification_added_correction_tooling",
       "community": 217,
@@ -15799,7 +15989,7 @@
       "label": "Done \u2014 2026-06-20: Telegram private-DM intake",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L923",
+      "source_location": "L962",
       "_origin": "ast",
       "id": "todo_done_2026_06_20_telegram_private_dm_intake",
       "community": 217,
@@ -15809,7 +15999,7 @@
       "label": "Done \u2014 2026-06-20: Manage authorized Telegram users from the UI",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L960",
+      "source_location": "L999",
       "_origin": "ast",
       "id": "todo_done_2026_06_20_manage_authorized_telegram_users_from_the_ui",
       "community": 217,
@@ -15819,7 +16009,7 @@
       "label": "Resolved \u2014 From 2026-06-19/20 Sessions",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L987",
+      "source_location": "L1026",
       "_origin": "ast",
       "id": "todo_resolved_from_2026_06_19_20_sessions",
       "community": 217,
@@ -15829,7 +16019,7 @@
       "label": "Done \u2014 2026-06-20: Telegram chat-mismatch safeguard + authenticated settings",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L1020",
+      "source_location": "L1059",
       "_origin": "ast",
       "id": "todo_done_2026_06_20_telegram_chat_mismatch_safeguard_authenticated_settings",
       "community": 217,
@@ -15839,7 +16029,7 @@
       "label": "Quick Start (VPS is always on \u2014 no local backend needed)",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L1054",
+      "source_location": "L1093",
       "_origin": "ast",
       "id": "todo_quick_start_vps_is_always_on_no_local_backend_needed",
       "community": 217,
@@ -15849,7 +16039,7 @@
       "label": "Setting Up a New Gateway Phone",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L1071",
+      "source_location": "L1110",
       "_origin": "ast",
       "id": "todo_setting_up_a_new_gateway_phone",
       "community": 217,
@@ -15859,7 +16049,7 @@
       "label": "Roadmap (Priority Order)",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L1085",
+      "source_location": "L1124",
       "_origin": "ast",
       "id": "todo_roadmap_priority_order",
       "community": 557,
@@ -15869,7 +16059,7 @@
       "label": "P0 \u2014 Operational (do first)",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L1087",
+      "source_location": "L1126",
       "_origin": "ast",
       "id": "todo_p0_operational_do_first",
       "community": 557,
@@ -15879,7 +16069,7 @@
       "label": "P1 \u2014 Security & Access Control",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L1094",
+      "source_location": "L1133",
       "_origin": "ast",
       "id": "todo_p1_security_access_control",
       "community": 557,
@@ -15889,7 +16079,7 @@
       "label": "P2 \u2014 UI/UX Overhaul",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L1103",
+      "source_location": "L1142",
       "_origin": "ast",
       "id": "todo_p2_ui_ux_overhaul",
       "community": 557,
@@ -15899,7 +16089,7 @@
       "label": "P3 \u2014 Backend Improvements",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L1109",
+      "source_location": "L1148",
       "_origin": "ast",
       "id": "todo_p3_backend_improvements",
       "community": 557,
@@ -15909,7 +16099,7 @@
       "label": "Previously completed",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L1117",
+      "source_location": "L1156",
       "_origin": "ast",
       "id": "todo_previously_completed",
       "community": 557,
@@ -15919,7 +16109,7 @@
       "label": "Multi-Operator Live Posting (NID-MS / IMEI-MS) \u2014 DONE",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L1133",
+      "source_location": "L1172",
       "_origin": "ast",
       "id": "todo_multi_operator_live_posting_nid_ms_imei_ms_done",
       "community": 217,
@@ -15929,7 +16119,7 @@
       "label": "Android Gateway App \u2014 Wave 4",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L1149",
+      "source_location": "L1188",
       "_origin": "ast",
       "id": "todo_android_gateway_app_wave_4",
       "community": 217,
@@ -15939,7 +16129,7 @@
       "label": "Completed (archive)",
       "file_type": "document",
       "source_file": "todo.md",
-      "source_location": "L1160",
+      "source_location": "L1199",
       "_origin": "ast",
       "id": "todo_completed_archive",
       "community": 217,
@@ -39548,6 +39738,16 @@
     {
       "relation": "references",
       "confidence": "EXTRACTED",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "docs_security_hardening_v1_design",
+      "target": "session_memory",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
       "source_file": "docs/ui-design-guide-v2.md",
       "source_location": "L13",
       "weight": 1.0,
@@ -39589,7 +39789,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "SESSION_MEMORY.md",
-      "source_location": "L103",
+      "source_location": "L123",
       "weight": 1.0,
       "source": "session_memory_session_memory_sms_automation",
       "target": "session_memory_conventions_gotchas",
@@ -39629,6 +39829,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "SESSION_MEMORY.md",
+      "source_location": "L103",
+      "weight": 1.0,
+      "source": "session_memory_session_memory_sms_automation",
+      "target": "session_memory_in_progress_security_hardening_v1_registration_gating_layered_access",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "SESSION_MEMORY.md",
       "source_location": "L92",
       "weight": 1.0,
       "source": "session_memory_session_memory_sms_automation",
@@ -39649,7 +39859,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "SESSION_MEMORY.md",
-      "source_location": "L114",
+      "source_location": "L134",
       "weight": 1.0,
       "source": "session_memory_session_memory_sms_automation",
       "target": "session_memory_where_to_look_next",
@@ -40023,6 +40233,16 @@
       "weight": 1.0,
       "source": "architecture",
       "target": "docs_gd_lost_phone_watch_design",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "docs_security_hardening_v1_design",
+      "target": "architecture",
       "confidence_score": 1.0
     },
     {
@@ -41576,6 +41796,16 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "docs_security_hardening_v1_design",
+      "target": "docs_gd_lost_phone_watch_design",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/gd-lost-phone-watch-design.md",
@@ -41763,6 +41993,186 @@
       "weight": 1.0,
       "source": "docs_multi_number_batching_plan_multi_number_batching_official_rules_and_implementation_status",
       "target": "docs_multi_number_batching_plan_why_this_mattered",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "docs_security_hardening_v1_design",
+      "target": "docs_security_hardening_v1_design_security_hardening_registration_gating_layered_access_impersonation_defense_v1_locked_scope",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "docs_security_hardening_v1_design",
+      "target": "progress_tracker",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "docs_security_hardening_v1_design",
+      "target": "todo",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L181",
+      "weight": 1.0,
+      "source": "docs_security_hardening_v1_design_security_hardening_registration_gating_layered_access_impersonation_defense_v1_locked_scope",
+      "target": "docs_security_hardening_v1_design_10_shared_admin_key_retirement_scoping",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L196",
+      "weight": 1.0,
+      "source": "docs_security_hardening_v1_design_security_hardening_registration_gating_layered_access_impersonation_defense_v1_locked_scope",
+      "target": "docs_security_hardening_v1_design_11_behavioral_anomaly_tripwire",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L204",
+      "weight": 1.0,
+      "source": "docs_security_hardening_v1_design_security_hardening_registration_gating_layered_access_impersonation_defense_v1_locked_scope",
+      "target": "docs_security_hardening_v1_design_12_encryption_at_rest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L212",
+      "weight": 1.0,
+      "source": "docs_security_hardening_v1_design_security_hardening_registration_gating_layered_access_impersonation_defense_v1_locked_scope",
+      "target": "docs_security_hardening_v1_design_13_optimization_notes_flagged_not_urgent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L222",
+      "weight": 1.0,
+      "source": "docs_security_hardening_v1_design_security_hardening_registration_gating_layered_access_impersonation_defense_v1_locked_scope",
+      "target": "docs_security_hardening_v1_design_14_build_order_strict_unit_tests_first_same_discipline_as_gd",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L248",
+      "weight": 1.0,
+      "source": "docs_security_hardening_v1_design_security_hardening_registration_gating_layered_access_impersonation_defense_v1_locked_scope",
+      "target": "docs_security_hardening_v1_design_15_v2_later_with_the_officer_app",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "docs_security_hardening_v1_design_security_hardening_registration_gating_layered_access_impersonation_defense_v1_locked_scope",
+      "target": "docs_security_hardening_v1_design_1_what_this_is",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "docs_security_hardening_v1_design_security_hardening_registration_gating_layered_access_impersonation_defense_v1_locked_scope",
+      "target": "docs_security_hardening_v1_design_2_goals_non_goals",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L60",
+      "weight": 1.0,
+      "source": "docs_security_hardening_v1_design_security_hardening_registration_gating_layered_access_impersonation_defense_v1_locked_scope",
+      "target": "docs_security_hardening_v1_design_3_migration_plan_agreed_2026_07_07",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L84",
+      "weight": 1.0,
+      "source": "docs_security_hardening_v1_design_security_hardening_registration_gating_layered_access_impersonation_defense_v1_locked_scope",
+      "target": "docs_security_hardening_v1_design_4_access_tier_model_server_enforced",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L98",
+      "weight": 1.0,
+      "source": "docs_security_hardening_v1_design_security_hardening_registration_gating_layered_access_impersonation_defense_v1_locked_scope",
+      "target": "docs_security_hardening_v1_design_5_identity_unification",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L118",
+      "weight": 1.0,
+      "source": "docs_security_hardening_v1_design_security_hardening_registration_gating_layered_access_impersonation_defense_v1_locked_scope",
+      "target": "docs_security_hardening_v1_design_6_personnel_registry",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L129",
+      "weight": 1.0,
+      "source": "docs_security_hardening_v1_design_security_hardening_registration_gating_layered_access_impersonation_defense_v1_locked_scope",
+      "target": "docs_security_hardening_v1_design_7_impersonation_defense_quota_out_of_band_re_verification",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L158",
+      "weight": 1.0,
+      "source": "docs_security_hardening_v1_design_security_hardening_registration_gating_layered_access_impersonation_defense_v1_locked_scope",
+      "target": "docs_security_hardening_v1_design_8_channel_choice_email_now_sms_deferred",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/security-hardening-v1-design.md",
+      "source_location": "L167",
+      "weight": 1.0,
+      "source": "docs_security_hardening_v1_design_security_hardening_registration_gating_layered_access_impersonation_defense_v1_locked_scope",
+      "target": "docs_security_hardening_v1_design_9_admin_group_actions",
       "confidence_score": 1.0
     },
     {
@@ -42979,7 +43389,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L1149",
+      "source_location": "L1188",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_android_gateway_app_wave_4",
@@ -42989,7 +43399,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L1160",
+      "source_location": "L1199",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_completed_archive",
@@ -42999,7 +43409,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L196",
+      "source_location": "L235",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_critical_bug_2026_06_29_retried_request_reply_not_auto_matched",
@@ -43009,7 +43419,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L960",
+      "source_location": "L999",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_done_2026_06_20_manage_authorized_telegram_users_from_the_ui",
@@ -43019,7 +43429,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L890",
+      "source_location": "L929",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_done_2026_06_20_night_fixed_reply_type_misclassification_added_correction_tooling",
@@ -43029,7 +43439,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L1020",
+      "source_location": "L1059",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_done_2026_06_20_telegram_chat_mismatch_safeguard_authenticated_settings",
@@ -43039,7 +43449,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L923",
+      "source_location": "L962",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_done_2026_06_20_telegram_private_dm_intake",
@@ -43049,7 +43459,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L841",
+      "source_location": "L880",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_done_2026_06_22_confirmed_group_is_command_only_by_policy_added_rejected_messages_visibility",
@@ -43059,7 +43469,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L813",
+      "source_location": "L852",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_done_2026_06_22_fixed_deploy_sh_clobbering_runtime_telegram_config_bot_scolding_forwarded_messages",
@@ -43069,7 +43479,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L644",
+      "source_location": "L683",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_done_2026_06_23_branding_desktop_redesign_and_light_mode_fix",
@@ -43079,7 +43489,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L714",
+      "source_location": "L753",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_done_2026_06_23_critical_fixed_unauthenticated_data_exposure_on_the_public_ops_feed",
@@ -43089,7 +43499,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L753",
+      "source_location": "L792",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_done_2026_06_23_domain_migration_tls_cutover_opsbarishal_com_live_zero_downtime",
@@ -43099,7 +43509,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L689",
+      "source_location": "L728",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_done_2026_06_23_locked_down_the_entire_public_ops_surface_behind_login",
@@ -43109,7 +43519,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L792",
+      "source_location": "L831",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_done_2026_06_23_opened_group_auth_for_forwarded_messages_forward_aware_tagging",
@@ -43119,7 +43529,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L680",
+      "source_location": "L719",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_done_2026_06_23_www_opsbarishal_com_added_all_three_domains_live",
@@ -43129,7 +43539,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L9",
+      "source_location": "L48",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_done_2026_07_06_repo_cleanup_untracked_ai_tool_config_dirs",
@@ -43139,7 +43549,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L234",
+      "source_location": "L273",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_in_progress_2026_06_30_phase_1_login_mfa_system_officer_admin_accounts",
@@ -43149,7 +43559,17 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L22",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "todo_todo",
+      "target": "todo_in_progress_security_hardening_v1_registration_gating_layered_access_p1",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "todo.md",
+      "source_location": "L61",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_incident_2026_07_05_operator_blackout_reply_cross_matching_lost_dm_replies",
@@ -43159,7 +43579,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L1133",
+      "source_location": "L1172",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_multi_operator_live_posting_nid_ms_imei_ms_done",
@@ -43169,7 +43589,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L161",
+      "source_location": "L200",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_open_follow_ups_from_2026_07_04_redesign",
@@ -43179,7 +43599,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L880",
+      "source_location": "L919",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_planned_domain_migration_licbarishal_duckdns_org_opsbarishal_com",
@@ -43189,7 +43609,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L101",
+      "source_location": "L140",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_planned_lost_stolen_phone_recovery_watch_gd_linked_p2_design_done_not_started",
@@ -43199,7 +43619,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L130",
+      "source_location": "L169",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_planned_react_vite_frontend_migration_p1_large_multi_session",
@@ -43209,7 +43629,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L1054",
+      "source_location": "L1093",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_quick_start_vps_is_always_on_no_local_backend_needed",
@@ -43219,7 +43639,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L598",
+      "source_location": "L637",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_recommended_rollout_insider_threat_prevention",
@@ -43229,7 +43649,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L184",
+      "source_location": "L223",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_resolved_2026_06_29_retried_request_reply_not_auto_matched",
@@ -43239,7 +43659,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L987",
+      "source_location": "L1026",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_resolved_from_2026_06_19_20_sessions",
@@ -43249,7 +43669,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L1085",
+      "source_location": "L1124",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_roadmap_priority_order",
@@ -43259,7 +43679,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L1071",
+      "source_location": "L1110",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_setting_up_a_new_gateway_phone",
@@ -43269,7 +43689,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L169",
+      "source_location": "L208",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_shipped_2026_07_04_web_ui_redesign_material_3_reskin_approvals_queue",
@@ -43279,7 +43699,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L625",
+      "source_location": "L664",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_summary_layered_defense_against_insider_threats",
@@ -43289,7 +43709,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L377",
+      "source_location": "L416",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_todo_2026_06_24_add_login_access_control_public_ops_page_admin_console",
@@ -43299,7 +43719,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L332",
+      "source_location": "L371",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_todo_2026_06_24_data_encryption_at_rest_optional_recommended",
@@ -43309,7 +43729,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L287",
+      "source_location": "L326",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_todo_2026_06_24_enhanced_security_admin_controls_ip_device_tracking_admin_messages",
@@ -43319,7 +43739,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L437",
+      "source_location": "L476",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_todo_2026_06_24_prevent_insider_threats_unauthorized_access_delegation",
@@ -43329,7 +43749,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L778",
+      "source_location": "L817",
       "weight": 1.0,
       "source": "todo_todo",
       "target": "todo_version_history",
@@ -43339,7 +43759,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L53",
+      "source_location": "L92",
       "weight": 1.0,
       "source": "todo_incident_2026_07_05_operator_blackout_reply_cross_matching_lost_dm_replies",
       "target": "todo_data_correction_prepared_needs_supervised_apply_production_law_enforcement_data",
@@ -43349,7 +43769,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L92",
+      "source_location": "L131",
       "weight": 1.0,
       "source": "todo_incident_2026_07_05_operator_blackout_reply_cross_matching_lost_dm_replies",
       "target": "todo_feature_from_this_incident",
@@ -43359,7 +43779,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L71",
+      "source_location": "L110",
       "weight": 1.0,
       "source": "todo_incident_2026_07_05_operator_blackout_reply_cross_matching_lost_dm_replies",
       "target": "todo_feature_live_phone_inbox_viewer_web_console_built_needs_gateway_apk",
@@ -43369,7 +43789,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L27",
+      "source_location": "L66",
       "weight": 1.0,
       "source": "todo_incident_2026_07_05_operator_blackout_reply_cross_matching_lost_dm_replies",
       "target": "todo_fixes_implemented_locally_tested_150_150_not_yet_deployed",
@@ -43379,7 +43799,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L66",
+      "source_location": "L105",
       "weight": 1.0,
       "source": "todo_incident_2026_07_05_operator_blackout_reply_cross_matching_lost_dm_replies",
       "target": "todo_operational",
@@ -43389,7 +43809,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L291",
+      "source_location": "L330",
       "weight": 1.0,
       "source": "todo_todo_2026_06_24_enhanced_security_admin_controls_ip_device_tracking_admin_messages",
       "target": "todo_phase_1_ip_device_identity_tracking_foundation",
@@ -43399,7 +43819,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L298",
+      "source_location": "L337",
       "weight": 1.0,
       "source": "todo_todo_2026_06_24_enhanced_security_admin_controls_ip_device_tracking_admin_messages",
       "target": "todo_phase_2_admin_message_bypass_group_hygiene",
@@ -43409,7 +43829,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L306",
+      "source_location": "L345",
       "weight": 1.0,
       "source": "todo_todo_2026_06_24_enhanced_security_admin_controls_ip_device_tracking_admin_messages",
       "target": "todo_phase_3_anomaly_detection_alerting",
@@ -43419,7 +43839,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L313",
+      "source_location": "L352",
       "weight": 1.0,
       "source": "todo_todo_2026_06_24_enhanced_security_admin_controls_ip_device_tracking_admin_messages",
       "target": "todo_phase_4_geolocation_device_reputation_high_security",
@@ -43429,7 +43849,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L320",
+      "source_location": "L359",
       "weight": 1.0,
       "source": "todo_todo_2026_06_24_enhanced_security_admin_controls_ip_device_tracking_admin_messages",
       "target": "todo_phase_5_admin_audit_log_compliance",
@@ -43439,7 +43859,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L338",
+      "source_location": "L377",
       "weight": 1.0,
       "source": "todo_todo_2026_06_24_data_encryption_at_rest_optional_recommended",
       "target": "todo_phase_1_add_encrypted_block_storage_vultr_recommended",
@@ -43449,7 +43869,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L351",
+      "source_location": "L390",
       "weight": 1.0,
       "source": "todo_todo_2026_06_24_data_encryption_at_rest_optional_recommended",
       "target": "todo_phase_2_application_level_encryption_optional_high_security",
@@ -43459,7 +43879,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L367",
+      "source_location": "L406",
       "weight": 1.0,
       "source": "todo_todo_2026_06_24_data_encryption_at_rest_optional_recommended",
       "target": "todo_phase_3_key_rotation_backup_if_implementing_phase_2",
@@ -43469,7 +43889,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L396",
+      "source_location": "L435",
       "weight": 1.0,
       "source": "todo_todo_2026_06_24_add_login_access_control_public_ops_page_admin_console",
       "target": "todo_admin_console_login_admin",
@@ -43479,7 +43899,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L428",
+      "source_location": "L467",
       "weight": 1.0,
       "source": "todo_todo_2026_06_24_add_login_access_control_public_ops_page_admin_console",
       "target": "todo_deployment_considerations",
@@ -43489,7 +43909,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L417",
+      "source_location": "L456",
       "weight": 1.0,
       "source": "todo_todo_2026_06_24_add_login_access_control_public_ops_page_admin_console",
       "target": "todo_files_to_create_modify",
@@ -43499,7 +43919,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L407",
+      "source_location": "L446",
       "weight": 1.0,
       "source": "todo_todo_2026_06_24_add_login_access_control_public_ops_page_admin_console",
       "target": "todo_optional_enhancements",
@@ -43509,7 +43929,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L383",
+      "source_location": "L422",
       "weight": 1.0,
       "source": "todo_todo_2026_06_24_add_login_access_control_public_ops_page_admin_console",
       "target": "todo_public_ops_page_login",
@@ -43519,7 +43939,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L447",
+      "source_location": "L486",
       "weight": 1.0,
       "source": "todo_todo_2026_06_24_prevent_insider_threats_unauthorized_access_delegation",
       "target": "todo_layer_1_technical_barriers",
@@ -43529,7 +43949,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L499",
+      "source_location": "L538",
       "weight": 1.0,
       "source": "todo_todo_2026_06_24_prevent_insider_threats_unauthorized_access_delegation",
       "target": "todo_layer_2_detection_alerting_catches_misuse",
@@ -43539,7 +43959,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L543",
+      "source_location": "L582",
       "weight": 1.0,
       "source": "todo_todo_2026_06_24_prevent_insider_threats_unauthorized_access_delegation",
       "target": "todo_layer_3_operational_policy_human_controls",
@@ -43549,7 +43969,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L575",
+      "source_location": "L614",
       "weight": 1.0,
       "source": "todo_todo_2026_06_24_prevent_insider_threats_unauthorized_access_delegation",
       "target": "todo_layer_4_enforcement_consequences",
@@ -43559,7 +43979,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L449",
+      "source_location": "L488",
       "weight": 1.0,
       "source": "todo_layer_1_technical_barriers",
       "target": "todo_1a_per_officer_session_binding_medium_difficulty",
@@ -43569,7 +43989,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L475",
+      "source_location": "L514",
       "weight": 1.0,
       "source": "todo_layer_1_technical_barriers",
       "target": "todo_1b_request_signature_high_security_friction",
@@ -43579,7 +43999,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L483",
+      "source_location": "L522",
       "weight": 1.0,
       "source": "todo_layer_1_technical_barriers",
       "target": "todo_1c_rate_limiting_by_officer_medium_difficulty",
@@ -43589,7 +44009,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L501",
+      "source_location": "L540",
       "weight": 1.0,
       "source": "todo_layer_2_detection_alerting_catches_misuse",
       "target": "todo_2a_anomaly_detection_dashboard",
@@ -43599,7 +44019,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L528",
+      "source_location": "L567",
       "weight": 1.0,
       "source": "todo_layer_2_detection_alerting_catches_misuse",
       "target": "todo_2b_audit_log_for_supervisors",
@@ -43609,7 +44029,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L545",
+      "source_location": "L584",
       "weight": 1.0,
       "source": "todo_layer_3_operational_policy_human_controls",
       "target": "todo_3a_no_shared_accounts",
@@ -43619,7 +44039,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L553",
+      "source_location": "L592",
       "weight": 1.0,
       "source": "todo_layer_3_operational_policy_human_controls",
       "target": "todo_3b_quarterly_access_review",
@@ -43629,7 +44049,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L560",
+      "source_location": "L599",
       "weight": 1.0,
       "source": "todo_layer_3_operational_policy_human_controls",
       "target": "todo_3c_access_termination_on_transfer",
@@ -43639,7 +44059,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L567",
+      "source_location": "L606",
       "weight": 1.0,
       "source": "todo_layer_3_operational_policy_human_controls",
       "target": "todo_3d_officer_training_awareness",
@@ -43649,7 +44069,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L577",
+      "source_location": "L616",
       "weight": 1.0,
       "source": "todo_layer_4_enforcement_consequences",
       "target": "todo_4a_catch_revoke",
@@ -43659,7 +44079,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L585",
+      "source_location": "L624",
       "weight": 1.0,
       "source": "todo_layer_4_enforcement_consequences",
       "target": "todo_4b_incident_report",
@@ -43669,7 +44089,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L600",
+      "source_location": "L639",
       "weight": 1.0,
       "source": "todo_recommended_rollout_insider_threat_prevention",
       "target": "todo_week_1_detection",
@@ -43679,7 +44099,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L606",
+      "source_location": "L645",
       "weight": 1.0,
       "source": "todo_recommended_rollout_insider_threat_prevention",
       "target": "todo_week_2_policy",
@@ -43689,7 +44109,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L612",
+      "source_location": "L651",
       "weight": 1.0,
       "source": "todo_recommended_rollout_insider_threat_prevention",
       "target": "todo_week_3_enforcement",
@@ -43699,7 +44119,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L618",
+      "source_location": "L657",
       "weight": 1.0,
       "source": "todo_recommended_rollout_insider_threat_prevention",
       "target": "todo_week_4_hardening_optional",
@@ -43709,7 +44129,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L1087",
+      "source_location": "L1126",
       "weight": 1.0,
       "source": "todo_roadmap_priority_order",
       "target": "todo_p0_operational_do_first",
@@ -43719,7 +44139,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L1094",
+      "source_location": "L1133",
       "weight": 1.0,
       "source": "todo_roadmap_priority_order",
       "target": "todo_p1_security_access_control",
@@ -43729,7 +44149,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L1103",
+      "source_location": "L1142",
       "weight": 1.0,
       "source": "todo_roadmap_priority_order",
       "target": "todo_p2_ui_ux_overhaul",
@@ -43739,7 +44159,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L1109",
+      "source_location": "L1148",
       "weight": 1.0,
       "source": "todo_roadmap_priority_order",
       "target": "todo_p3_backend_improvements",
@@ -43749,7 +44169,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "todo.md",
-      "source_location": "L1117",
+      "source_location": "L1156",
       "weight": 1.0,
       "source": "todo_roadmap_priority_order",
       "target": "todo_previously_completed",
@@ -43817,5 +44237,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "c65bc24f78bcf3d729a3d05c69ab8bcb816aae1c"
+  "built_at_commit": "fbf95704ea34c5f7693052191e00f6bf8d48ac11"
 }
