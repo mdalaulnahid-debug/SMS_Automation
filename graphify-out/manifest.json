@@ -190,8 +190,8 @@
     "semantic_hash": ""
   },
   "public/app.js": {
-    "mtime": 1783335435.0282302,
-    "ast_hash": "fd904ff7870762b3a95cdaf4a27c7079",
+    "mtime": 1783498572.0294833,
+    "ast_hash": "e2253661da587eee76a02034e4fdc9c7",
     "semantic_hash": ""
   },
   "public/shared.js": {
@@ -265,8 +265,8 @@
     "semantic_hash": "691542780e01dd0058fe9c6c54455530"
   },
   "src/app.js": {
-    "mtime": 1783496744.8173015,
-    "ast_hash": "0454fe7225be913b09c33c846fb6912d",
+    "mtime": 1783498381.6527433,
+    "ast_hash": "9507e5ffb70aa3665b6e861537f1aeef",
     "semantic_hash": ""
   },
   "src/auth.js": {
@@ -415,8 +415,8 @@
     "semantic_hash": "5d6b8ae7b5fb343a7e673dc0c646d4a4"
   },
   "test/userAuth.test.js": {
-    "mtime": 1783496757.982105,
-    "ast_hash": "68589f46106e9c387ec1a45f552fa506",
+    "mtime": 1783498407.502385,
+    "ast_hash": "5f9327c9453e85fbda58a1933f1babc7",
     "semantic_hash": ""
   },
   "test/workflow.test.js": {
@@ -2130,8 +2130,8 @@
     "semantic_hash": ""
   },
   ".impeccable/hook.cache.json": {
-    "mtime": 1783497121.0607822,
-    "ast_hash": "4b98e9fd1c5df4676140018f6619ffb3",
+    "mtime": 1783498612.457735,
+    "ast_hash": "f305dc06a9e353fb751ed40d727d14c1",
     "semantic_hash": ""
   },
   "config/auth.example.json": {
@@ -3080,8 +3080,8 @@
     "semantic_hash": ""
   },
   "public/index.html": {
-    "mtime": 1783151259.5070553,
-    "ast_hash": "cc38a88a1cf708e52620251ec37061c9",
+    "mtime": 1783498612.347235,
+    "ast_hash": "91e734a927234e61bbd8b07f6a2ba3c7",
     "semantic_hash": ""
   },
   "public/login.html": {
@@ -3340,8 +3340,8 @@
     "semantic_hash": ""
   },
   "test/registrationApproval.test.js": {
-    "mtime": 1783484976.4374857,
-    "ast_hash": "f7e6e4ceb6fded9b507a4e9dc84529d3",
+    "mtime": 1783498443.964286,
+    "ast_hash": "bb3789c62d534cadf4d43122e79ef395",
     "semantic_hash": ""
   },
   "test/registrationFlow.test.js": {
@@ -3352,6 +3352,11 @@
   "data/personnel-registry/README.md": {
     "mtime": 1783497108.4108126,
     "ast_hash": "56ee1a10b224085247b7511141f608ca",
+    "semantic_hash": ""
+  },
+  "PRODUCT.md": {
+    "mtime": 1783497680.6727848,
+    "ast_hash": "5de3cd1a600ad35a49283176767ed47d",
     "semantic_hash": ""
   }
 }
