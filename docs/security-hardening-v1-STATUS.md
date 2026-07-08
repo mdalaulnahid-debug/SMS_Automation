@@ -378,14 +378,15 @@ backend restarts become frequent in production.
   automated tests' fake `telegram` client instead, including the
   `CHAT_ADMIN_REQUIRED` failure path.
 
-**Operational prerequisite still outstanding for step 7 to actually work
-in production:** promote the bot to group admin in the real Telegram
-group, with "Ban users" and "Restrict/mute members" rights enabled — an
-action the user takes in Telegram's own group-settings UI, outside this
-codebase. Until that's done, `/ban`/`/mute`/`/unban` will all fail with
-the "not a group admin" message (a safe, informative failure, not a
-crash) — the post-any-message bypass and moderation-authorization check
-both work today regardless, only the actual Telegram API calls need it.
+**Operational prerequisite — confirmed satisfied (2026-07-08).** The user
+promoted the bot to group admin. Verified with a read-only
+`getChatMember` call against the bot's own membership in the real group
+(no moderation action performed, nothing touched): `status: administrator`,
+`can_restrict_members: true`, `can_delete_messages: true`. `/ban`/`/mute`/
+`/unban` should now work for real, not just against the test suite's fake
+Telegram client — not yet exercised against a real group member, since
+that's a visible, hard-to-reverse action in a live operations channel and
+needs the user's go-ahead on a safe target first.
 
 ## Open questions / notes found while implementing
 
