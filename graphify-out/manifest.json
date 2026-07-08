@@ -2130,8 +2130,8 @@
     "semantic_hash": ""
   },
   ".impeccable/hook.cache.json": {
-    "mtime": 1783485065.6391504,
-    "ast_hash": "930405ecb959dc802ade7d2bebe82003",
+    "mtime": 1783495863.6827633,
+    "ast_hash": "2114bd8c3c52a2bed775cc7856b88a62",
     "semantic_hash": ""
   },
   "config/auth.example.json": {
@@ -3285,8 +3285,8 @@
     "semantic_hash": ""
   },
   "src/personnelRegistry.js": {
-    "mtime": 1783434993.0402932,
-    "ast_hash": "c3ce913f3960dbb2f9a88125bf86f71a",
+    "mtime": 1783495810.3901699,
+    "ast_hash": "ef626c2c3f1996af93297243093d93fd",
     "semantic_hash": ""
   },
   "src/quota.js": {
@@ -3335,8 +3335,8 @@
     "semantic_hash": ""
   },
   "test/personnelRegistryWorkbook.test.js": {
-    "mtime": 1783435052.7378361,
-    "ast_hash": "1b817121172fa5052d2743cbc1489d2f",
+    "mtime": 1783495829.125833,
+    "ast_hash": "c5bcd2b452c476fd15d29d80603953c0",
     "semantic_hash": ""
   },
   "test/registrationApproval.test.js": {
