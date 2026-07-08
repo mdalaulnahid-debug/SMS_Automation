@@ -255,6 +255,28 @@ test('buildPersonnelRegistry returns a working matcher built from the persisted 
   assert.equal(registry.matchByPhoneAndEmail('01712345678', 'wrong@example.com'), null);
 });
 
+test('addRegistryRecord adds one record without touching the rest of the roster', () => {
+  const store = new UserAuthStore(':memory:');
+  store.replaceRegistry([{ name: 'SI Nazmul', phone: '01712345678', email: 'nazmul@police.gov.bd' }], 'admin-1');
+  const added = store.addRegistryRecord({ name: 'SI Karim', designation: 'Sub-Inspector', unit: 'Bakerganj', phone: '01799999999', email: 'karim@police.gov.bd' }, 'super1@example.com');
+  assert.equal(added.name, 'SI Karim');
+  assert.equal(store.registrySize(), 2);
+  assert.ok(store.buildPersonnelRegistry().matchByPhoneAndEmail('01712345678', 'nazmul@police.gov.bd'), 'existing record untouched');
+});
+
+test('addRegistryRecord rejects an exact (phone, email) duplicate', () => {
+  const store = new UserAuthStore(':memory:');
+  store.addRegistryRecord({ name: 'SI Nazmul', phone: '01712345678', email: 'nazmul@police.gov.bd' }, 'admin');
+  assert.throws(() => store.addRegistryRecord({ name: 'Someone Else', phone: '01712345678', email: 'nazmul@police.gov.bd' }, 'admin'), /already exists/);
+});
+
+test('addRegistryRecord requires name, phone, and a valid email', () => {
+  const store = new UserAuthStore(':memory:');
+  assert.throws(() => store.addRegistryRecord({ phone: '01712345678', email: 'a@example.com' }, 'admin'), /Name is required/);
+  assert.throws(() => store.addRegistryRecord({ name: 'X', email: 'a@example.com' }, 'admin'), /Phone is required/);
+  assert.throws(() => store.addRegistryRecord({ name: 'X', phone: '01712345678', email: 'not-an-email' }, 'admin'), /Invalid email/);
+});
+
 test('an empty registry is valid (no records imported yet)', () => {
   const store = new UserAuthStore(':memory:');
   assert.equal(store.registrySize(), 0);

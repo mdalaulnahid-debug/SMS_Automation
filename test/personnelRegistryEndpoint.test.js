@@ -146,3 +146,69 @@ test('an empty/all-invalid workbook is rejected rather than wiping the registry 
   assert.equal(res.status, 400);
   assert.match(res.json.error, /No valid records/);
 });
+
+// --- POST /api/admin/personnel-registry/add (single-record, super_admin-only) ---
+
+async function createSession(app, { email, role }) {
+  app.userAuth.replaceRegistry(
+    [...app.userAuth.listRegistry(), { name: 'Test User', phone: '01700000001', email }],
+    'test-seed'
+  );
+  await call(app, { method: 'POST', url: '/api/auth/register', body: { email, password: 'longenough1', name: 'Test User', phone: '01700000001' } });
+  const user = app.userAuth.getUserByEmail(email);
+  app.userAuth.verifyEmail(user.verify_token, {});
+  if (role) app.userAuth.setRole(user.id, role);
+  const login = app.userAuth.startLogin({ email, password: 'longenough1' });
+  const session = app.userAuth.completeLogin({ pendingToken: login.pendingToken, code: login.mfaCode });
+  return session.token;
+}
+
+test('POST /api/admin/personnel-registry/add requires super_admin specifically, not just admin', async () => {
+  const app = appWith();
+  const adminToken = await createSession(app, { email: 'admin-add@example.com', role: 'admin' });
+  const superToken = await createSession(app, { email: 'super-add@example.com', role: 'super_admin' });
+
+  const asAdmin = await call(app, {
+    method: 'POST',
+    url: '/api/admin/personnel-registry/add',
+    headers: { authorization: `Bearer ${adminToken}` },
+    body: { name: 'SI Karim', phone: '01799999999', email: 'karim@police.gov.bd' }
+  });
+  assert.equal(asAdmin.status, 401);
+
+  const asSuperAdmin = await call(app, {
+    method: 'POST',
+    url: '/api/admin/personnel-registry/add',
+    headers: { authorization: `Bearer ${superToken}` },
+    body: { name: 'SI Karim', phone: '01799999999', email: 'karim@police.gov.bd' }
+  });
+  assert.equal(asSuperAdmin.status, 200);
+  assert.equal(asSuperAdmin.json.record.name, 'SI Karim');
+});
+
+test('POST /api/admin/personnel-registry/add rejects a duplicate (phone, email) and invalid input, without a session', async () => {
+  const app = appWith();
+  const first = await call(app, {
+    method: 'POST',
+    url: '/api/admin/personnel-registry/add',
+    headers: { 'x-api-key': 'topsecret' },
+    body: { name: 'SI Karim', phone: '01799999999', email: 'karim@police.gov.bd' }
+  });
+  assert.equal(first.status, 200);
+
+  const dup = await call(app, {
+    method: 'POST',
+    url: '/api/admin/personnel-registry/add',
+    headers: { 'x-api-key': 'topsecret' },
+    body: { name: 'Someone Else', phone: '01799999999', email: 'karim@police.gov.bd' }
+  });
+  assert.equal(dup.status, 400);
+  assert.match(dup.json.error, /already exists/);
+
+  const noAuth = await call(app, {
+    method: 'POST',
+    url: '/api/admin/personnel-registry/add',
+    body: { name: 'X', phone: '01700000000', email: 'x@example.com' }
+  });
+  assert.equal(noAuth.status, 401);
+});

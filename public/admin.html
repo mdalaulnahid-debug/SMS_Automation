@@ -598,6 +598,28 @@
                 <div id="settingsResult" class="tool-note" style="display:none"></div>
               </section>
               <section class="data-surface tool-panel">
+                <div class="tool-title"><span class="material-symbols-outlined">badge</span>Personnel Registry</div>
+                <div class="tool-note">The roster registration is validated against — phone + email must match a record here. Bulk import wholesale-replaces the roster.</div>
+                <form id="registryImportForm" class="tool-form">
+                  <label>Roster spreadsheet (.xlsx)<input id="registryFileInput" class="input-field" type="file" accept=".xlsx" /></label>
+                  <button type="submit" class="btn-primary">Import spreadsheet</button>
+                  <div class="tool-note">Re-importing replaces the entire roster — the file should contain everyone, not just changes.</div>
+                </form>
+                <div id="registrySuperAdminBlock" style="display:none;margin-top:8px;padding-top:12px;border-top:1px solid var(--divider)">
+                  <div class="tool-note">Add one officer without a full re-import (super-admin only).</div>
+                  <form id="registryAddForm" class="tool-form" style="margin-top:8px">
+                    <label>Name<input id="regAddName" class="input-field" required /></label>
+                    <label>Designation<input id="regAddDesignation" class="input-field" /></label>
+                    <label>Unit<input id="regAddUnit" class="input-field" /></label>
+                    <label>Official phone<input id="regAddPhone" class="input-field" required /></label>
+                    <label>Official email<input id="regAddEmail" class="input-field" type="email" required /></label>
+                    <button type="submit" class="btn-secondary">Add to registry</button>
+                  </form>
+                </div>
+                <div id="registryResult" class="tool-note" style="display:none"></div>
+                <div id="registryList" class="mono-list" style="margin-top:8px"></div>
+              </section>
+              <section class="data-surface tool-panel">
                 <div class="tool-title"><span class="material-symbols-outlined">shield_lock</span>Release / Publish</div>
                 <div class="tool-note">Keep high-risk actions visually isolated from daily review work.</div>
                 <div class="banner banner-warn"><span class="material-symbols-outlined">warning</span>APK publishing remains controlled through the existing admin release flow and backend endpoint.</div>

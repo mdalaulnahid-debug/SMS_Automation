@@ -220,6 +220,40 @@ silently in this pass. The registration-link mechanism above only fires
 for *private* DMs, which is where the design doc's "new user requests" flow
 was scoped from the start.
 
+**Admin-console Personnel Registry UI (2026-07-08) — done.** Requested by
+the user after realizing the console had no upload button, only the step-4
+backend endpoints. Added to `public/admin.html`'s Controlled Tools grid:
+- A file-picker + **Import spreadsheet** button (any admin/super_admin) —
+  reads the chosen `.xlsx` as an `ArrayBuffer` and POSTs it raw to the
+  existing `/api/admin/personnel-registry/import` endpoint, same wholesale-
+  replace semantics as before, now reachable without a script.
+- An **Add to registry** single-record form (super_admin only — the user
+  explicitly asked for this to be a stricter tier than the bulk import),
+  wired to a new endpoint: `POST /api/admin/personnel-registry/add`
+  (`requireSuperAdmin`, new `UserAuthStore.addRegistryRecord()` — adds one
+  row without touching the rest of the roster, rejects an exact
+  (phone, email) duplicate rather than silently double-adding).
+- A live-refreshing list of current registry records beneath both forms.
+- `public/shared.js` gained `isSuperAdminUnlocked()` (mirrors
+  `isAdminUnlocked()` but role must specifically be `super_admin`,
+  legacy key still satisfies it) to gate the add-form's visibility client-side
+  — the real enforcement is server-side via `requireSuperAdmin`, this only
+  hides a control a plain admin couldn't use anyway.
+- 8 new tests (3 store-level, 5 HTTP integration including the
+  super_admin-vs-admin distinction) — full suite **269/269**. Live-verified
+  through the actual running admin console UI (not just API calls): logged
+  in as the real local super_admin account (a temporary session row,
+  cleaned up after), confirmed the registry list renders all 22 real
+  records, filled and submitted the add-officer form end-to-end (record
+  appeared, count went 22→23), confirmed a plain `admin`-role session does
+  NOT see the add-form (`isSuperAdminUnlocked()` false), then removed the
+  test record and session from `data/auth.db`.
+
+**Note:** `/admin` has a client-side "if narrower than 900px, redirect to
+`/`" guard from earlier UI work — irrelevant day-to-day (real browsers are
+wide enough) but easy to trip during automated testing at a mobile-preset
+viewport width.
+
 ## Open questions / notes found while implementing
 
 - **Real personnel data received and imported into local dev (2026-07-08).**

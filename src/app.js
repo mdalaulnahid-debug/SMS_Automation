@@ -726,6 +726,25 @@ function createApp(options = {}) {
         });
         return json(res, 200, { ok: true, ...result });
       }
+      if (req.method === 'POST' && req.url === '/api/admin/personnel-registry/add') {
+        // Stricter than the bulk import above (super_admin, not just admin) —
+        // adding one officer between spreadsheet re-imports is a more
+        // targeted, easier-to-fat-finger action than a full re-upload.
+        if (!requireSuperAdmin(req, res)) return undefined;
+        const body = await readJson(req);
+        const actor = require('./auth').presentedToken(req);
+        const session = actor && userAuth.validateSession(actor);
+        let record;
+        try {
+          record = userAuth.addRegistryRecord(body, session ? session.user.email : 'super_admin');
+        } catch (error) {
+          return json(res, 400, { error: error.message });
+        }
+        store.audit(session ? session.user.email : 'super_admin', 'PERSONNEL_REGISTRY_RECORD_ADDED', null, {
+          name: record.name, phone: record.phone, email: record.email
+        });
+        return json(res, 200, { ok: true, record });
+      }
       if (req.method === 'GET' && req.url === '/api/admin/registrations/pending') {
         if (!requireSuperAdmin(req, res)) return undefined;
         return json(res, 200, { registrations: userAuth.listPendingApprovals() });

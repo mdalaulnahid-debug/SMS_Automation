@@ -388,6 +388,34 @@ class UserAuthStore {
     return { count: records.length, importedAt: now };
   }
 
+  // Adds a single record without touching the rest of the roster — for a
+  // super-admin adding one new officer between spreadsheet re-imports,
+  // rather than needing a full re-upload for one person. Unlike
+  // replaceRegistry, this rejects an exact (phone, email) duplicate instead
+  // of silently creating a second row for the same person.
+  addRegistryRecord({ name, designation, unit, phone, email }, addedBy) {
+    const trimmedName = String(name || '').trim();
+    const trimmedPhone = String(phone || '').trim();
+    const normalizedEmail = String(email || '').trim().toLowerCase();
+    if (!trimmedName) throw new Error('Name is required.');
+    if (!trimmedPhone) throw new Error('Phone is required.');
+    if (!isValidEmail(normalizedEmail)) throw new Error('Invalid email address.');
+    if (this.buildPersonnelRegistry().matchByPhoneAndEmail(trimmedPhone, normalizedEmail)) {
+      throw new Error('A registry record with this phone and email already exists.');
+    }
+
+    const id = randomBytes(12).toString('hex');
+    const now = new Date().toISOString();
+    this.db
+      .prepare(
+        `INSERT INTO personnel_registry (id, name, designation, unit, phone, email, imported_at, imported_by)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+      )
+      .run(id, trimmedName, designation ? String(designation).trim() : null, unit ? String(unit).trim() : null, trimmedPhone, normalizedEmail, now, addedBy || null);
+
+    return this.db.prepare('SELECT * FROM personnel_registry WHERE id = ?').get(id);
+  }
+
   listRegistry() {
     return this.db.prepare('SELECT * FROM personnel_registry ORDER BY name').all();
   }

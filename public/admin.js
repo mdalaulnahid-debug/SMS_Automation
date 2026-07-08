@@ -853,6 +853,70 @@ document.getElementById('operatorContactForm').addEventListener('submit', async 
   }
 });
 
+// --- Personnel Registry (bulk import + super-admin single-add) ---
+
+function showRegistryResult(message, isError) {
+  const el = document.getElementById('registryResult');
+  el.textContent = message;
+  el.style.display = 'block';
+  el.style.color = isError ? 'var(--danger)' : 'var(--success)';
+}
+
+function renderRegistryList(records) {
+  document.getElementById('registryList').innerHTML = records.length
+    ? `<div class="tool-note">${records.length} record(s) in the registry.</div>` + records.map((r) => `
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-top:1px solid var(--divider)">
+        <span class="mono">${esc(r.name)} — ${esc(r.designation || '')} ${esc(r.unit ? `(${r.unit})` : '')}</span>
+      </div>`).join('')
+    : '<div class="empty">No registry records imported yet — registration will reject every attempt until an admin imports the roster.</div>';
+}
+
+async function loadPersonnelRegistry() {
+  const res = await apiFetch('/api/admin/personnel-registry');
+  if (!res.ok) return;
+  const data = await res.json();
+  renderRegistryList(data.records || []);
+}
+
+document.getElementById('registryImportForm').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const input = document.getElementById('registryFileInput');
+  const file = input.files?.[0];
+  if (!file) {
+    showRegistryResult('Choose a .xlsx file first.', true);
+    return;
+  }
+  try {
+    const buffer = await file.arrayBuffer();
+    const res = await apiFetch('/api/admin/personnel-registry/import', { method: 'POST', body: buffer });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Import failed.');
+    showRegistryResult(`Imported ${data.count} record(s) — roster replaced.`, false);
+    input.value = '';
+    await loadPersonnelRegistry();
+  } catch (error) {
+    showRegistryResult(error.message || 'Import failed.', true);
+  }
+});
+
+document.getElementById('registryAddForm').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  try {
+    const record = await postJson('/api/admin/personnel-registry/add', {
+      name: document.getElementById('regAddName').value.trim(),
+      designation: document.getElementById('regAddDesignation').value.trim(),
+      unit: document.getElementById('regAddUnit').value.trim(),
+      phone: document.getElementById('regAddPhone').value.trim(),
+      email: document.getElementById('regAddEmail').value.trim()
+    }).then((body) => body.record);
+    showRegistryResult(`Added ${record.name} to the registry.`, false);
+    document.getElementById('registryAddForm').reset();
+    await loadPersonnelRegistry();
+  } catch (error) {
+    showRegistryResult(error.message || 'Failed to add record.', true);
+  }
+});
+
 async function refreshAdmin() {
   const [overviewRes, requestsRes, repliesRes, unmatchedRes, rejectedRes, auditRes] = await Promise.all([
     apiFetch('/api/admin/overview'),
@@ -971,6 +1035,8 @@ function boot() {
   setInterval(refreshAdmin, 15_000);
   // Load once only — the 15s refresh interval would otherwise clobber an in-progress edit.
   loadSettings();
+  document.getElementById('registrySuperAdminBlock').style.display = isSuperAdminUnlocked() ? 'block' : 'none';
+  loadPersonnelRegistry();
 }
 
 (async function sessionInit() {
