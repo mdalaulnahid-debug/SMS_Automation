@@ -265,8 +265,8 @@
     "semantic_hash": "691542780e01dd0058fe9c6c54455530"
   },
   "src/app.js": {
-    "mtime": 1783498381.6527433,
-    "ast_hash": "9507e5ffb70aa3665b6e861537f1aeef",
+    "mtime": 1783499779.449591,
+    "ast_hash": "4afd83587e407af1002153dfef0c58ca",
     "semantic_hash": ""
   },
   "src/auth.js": {
@@ -285,9 +285,9 @@
     "semantic_hash": "1c3f53096b34a8bcaea31c8d9d5cd7d1"
   },
   "src/mailer.js": {
-    "mtime": 1782824307.043289,
-    "ast_hash": "a7132bd705f5110dcbea3116bcb8a34a",
-    "semantic_hash": "a7132bd705f5110dcbea3116bcb8a34a"
+    "mtime": 1783499662.813617,
+    "ast_hash": "b6b67b47e5c99b2b770958f7b96df322",
+    "semantic_hash": ""
   },
   "src/maintenance.js": {
     "mtime": 1781711604.761545,
@@ -360,13 +360,13 @@
     "semantic_hash": ""
   },
   "telegram-bridge/backendClient.js": {
-    "mtime": 1783484841.8180242,
-    "ast_hash": "0363ad91db88dd8adbf6133a84e505f5",
+    "mtime": 1783499919.829935,
+    "ast_hash": "21eff657208d92f3e2405dfd1728efb9",
     "semantic_hash": ""
   },
   "telegram-bridge/bridge.js": {
-    "mtime": 1783484862.4022071,
-    "ast_hash": "1b052f9e724bf81bce6f62d3a0e6b4f4",
+    "mtime": 1783499946.9972813,
+    "ast_hash": "6c9f0a08e097191235fc786ca9f30c70",
     "semantic_hash": ""
   },
   "telegram-bridge/start.js": {
@@ -405,8 +405,8 @@
     "semantic_hash": ""
   },
   "test/telegramBridge.test.js": {
-    "mtime": 1783484931.3694546,
-    "ast_hash": "f72a44b5daac69aa6e09bd33631ebfb6",
+    "mtime": 1783499966.6673062,
+    "ast_hash": "cd8bf0bad1563081136aafb4ae8a2300",
     "semantic_hash": ""
   },
   "test/trainingData.test.js": {
@@ -2130,8 +2130,8 @@
     "semantic_hash": ""
   },
   ".impeccable/hook.cache.json": {
-    "mtime": 1783498612.457735,
-    "ast_hash": "f305dc06a9e353fb751ed40d727d14c1",
+    "mtime": 1783500088.6666598,
+    "ast_hash": "f420730ee95aa132091fc15235e74312",
     "semantic_hash": ""
   },
   "config/auth.example.json": {
@@ -3280,8 +3280,8 @@
     "semantic_hash": ""
   },
   "src/otp.js": {
-    "mtime": 1783412487.7524686,
-    "ast_hash": "8440d8b79c390e1d089381f23b534997",
+    "mtime": 1783499719.415704,
+    "ast_hash": "ec70b3126a2db9170f5c95558a4759b2",
     "semantic_hash": ""
   },
   "src/personnelRegistry.js": {
@@ -3295,8 +3295,8 @@
     "semantic_hash": ""
   },
   "test/otp.test.js": {
-    "mtime": 1783412536.6701863,
-    "ast_hash": "767814deee49c8cd86ccf4501a703558",
+    "mtime": 1783499807.1476746,
+    "ast_hash": "cb7c69820b91e869fe17ca2ede76ba3d",
     "semantic_hash": ""
   },
   "test/personnelRegistry.test.js": {
@@ -3310,8 +3310,8 @@
     "semantic_hash": ""
   },
   "docs/security-hardening-v1-STATUS.md": {
-    "mtime": 1783497120.960428,
-    "ast_hash": "29d92e88a37d2dfc93943120852faa46",
+    "mtime": 1783500088.543771,
+    "ast_hash": "fc9b2a0bb0b9a7d9ed8512d0b314558e",
     "semantic_hash": ""
   },
   "src/cookies.js": {
@@ -3357,6 +3357,11 @@
   "PRODUCT.md": {
     "mtime": 1783497680.6727848,
     "ast_hash": "5de3cd1a600ad35a49283176767ed47d",
+    "semantic_hash": ""
+  },
+  "test/quotaOtpMiddleware.test.js": {
+    "mtime": 1783499893.8604977,
+    "ast_hash": "6d1640b05472d4e1a7780129d3a3ee20",
     "semantic_hash": ""
   }
 }
