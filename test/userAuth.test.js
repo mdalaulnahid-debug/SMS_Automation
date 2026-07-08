@@ -481,6 +481,12 @@ test('full HTTP register/verify/login/mfa/me/logout flow', async () => {
   });
   assert.equal(me.status, 200);
   assert.equal(me.json.user.email, 'officer@example.com');
+  assert.deepEqual(
+    Object.keys(me.json.user).sort(),
+    ['createdAt', 'designation', 'email', 'id', 'name', 'phone', 'role', 'status', 'telegramLinked', 'unit'].sort(),
+    '/api/auth/me must only ever expose this allowlist — password_hash, verify_token, mfa_code_hash, and pending_session_token must never appear'
+  );
+  assert.equal(me.json.user.password_hash, undefined);
 
   const meNoAuth = await call(app, { method: 'GET', url: '/api/auth/me' });
   assert.equal(meNoAuth.status, 401);

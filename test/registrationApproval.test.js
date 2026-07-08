@@ -221,3 +221,22 @@ test('settings/registration-window endpoints require super_admin', async () => {
   const res = await call(app, { method: 'GET', url: '/api/admin/settings/registration-window' });
   assert.equal(res.status, 401);
 });
+
+// --- Public landing page access-tier boundary (security-hardening v1, §4) ---
+// A Registered Officer must never receive operational/fleet data, even via a
+// direct API call — the page no longer renders it for that tier, and the
+// endpoint itself has to hold the line too.
+
+test('/api/ops/overview, /api/ops/activity, and /api/ops/gateways reject an officer session and accept admin/super_admin', async () => {
+  const app = appWith();
+  const officer = await createSession(app, { email: 'officer-ops@example.com', role: 'officer' });
+  const admin = await createSession(app, { email: 'admin-ops@example.com', role: 'admin' });
+
+  for (const url of ['/api/ops/overview', '/api/ops/activity', '/api/ops/gateways']) {
+    const asOfficer = await call(app, { method: 'GET', url, headers: { authorization: `Bearer ${officer.token}` } });
+    assert.equal(asOfficer.status, 401, `${url} must reject an officer session`);
+
+    const asAdmin = await call(app, { method: 'GET', url, headers: { authorization: `Bearer ${admin.token}` } });
+    assert.equal(asAdmin.status, 200, `${url} must accept an admin session`);
+  }
+});

@@ -823,11 +823,16 @@ function createApp(options = {}) {
         });
       }
       if (req.method === 'GET' && req.url === '/api/ops/overview') {
-        if (!requireAnySession(req, res)) return undefined;
+        // Tightened from requireAnySession to requireAdmin (security-hardening v1,
+        // access-tier model §4): a Registered Officer session must never receive
+        // fleet/queue operational data, even via a direct API call — the public
+        // landing page no longer renders this for that tier, and the boundary
+        // has to hold at the API too, not just in what the page happens to draw.
+        if (!requireAdmin(req, res)) return undefined;
         return json(res, 200, buildOpsData(store, queue));
       }
       if (req.method === 'GET' && req.url === '/api/ops/activity') {
-        if (!requireAnySession(req, res)) return undefined;
+        if (!requireAdmin(req, res)) return undefined;
         const ops = buildOpsData(store, queue);
         return json(res, 200, {
           generatedAt: ops.generatedAt,
@@ -836,7 +841,7 @@ function createApp(options = {}) {
         });
       }
       if (req.method === 'GET' && req.url === '/api/ops/gateways') {
-        if (!requireAnySession(req, res)) return undefined;
+        if (!requireAdmin(req, res)) return undefined;
         const ops = buildOpsData(store, queue);
         return json(res, 200, {
           generatedAt: ops.generatedAt,
@@ -1227,7 +1232,10 @@ function createApp(options = {}) {
       if (req.method === 'GET' && req.url === '/api/auth/me') {
         const session = requireSession(req, res);
         if (!session) return undefined;
-        return json(res, 200, { user: session.user });
+        // requireSession's user is the FULL auth_users row (password_hash,
+        // verify_token, mfa_code_hash, ...) — safeUserFields() is the allowlist
+        // that keeps this endpoint from leaking those to any logged-in client.
+        return json(res, 200, { user: safeUserFields(session.user) });
       }
       return json(res, 404, { error: 'Not found' });
     } catch (error) {
@@ -1249,6 +1257,24 @@ async function serveFile(res, fileName, contentType) {
   const content = await readFileAsync(join(__dirname, '..', 'public', fileName), 'utf8');
   res.writeHead(200, { 'content-type': contentType, 'cache-control': 'no-store' });
   res.end(content);
+}
+
+// Allowlist for exposing an auth_users row to its own owner via /api/auth/me —
+// the row itself carries password_hash, verify_token, mfa_code_hash, and
+// pending_session_token, none of which any client should ever receive.
+function safeUserFields(user) {
+  return {
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    phone: user.phone || null,
+    designation: user.designation || null,
+    unit: user.unit || null,
+    role: user.role,
+    status: user.status,
+    telegramLinked: Boolean(user.telegram_id),
+    createdAt: user.created_at
+  };
 }
 
 function json(res, statusCode, payload) {

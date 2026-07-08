@@ -83,7 +83,7 @@
       .setting-note { margin-top: 6px; font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
       .setting-pill { padding: 6px 10px; border-radius: 999px; background: var(--accent-bg); color: var(--accent); font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
       .setting-panel input { margin-top: 12px; }
-      .admin-access { border-left: 3px solid var(--warning); }
+      .admin-access { background: var(--warning-bg); border-color: rgba(255, 191, 95, 0.3); }
       .details-shell { margin-top: 12px; display: grid; gap: 10px; }
       details.command-fold { border: 1px solid var(--divider); border-radius: 14px; background: var(--bg-panel-2); overflow: hidden; }
       details.command-fold summary {
@@ -224,6 +224,11 @@
         .home-minimal { max-width: 720px; margin: 0 auto; padding-top: 24px; }
         .gateway-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
       }
+      .account-card { padding: 4px; }
+      .account-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; padding: 16px 18px 18px; }
+      .account-field-label { font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+      .account-field-value { margin-top: 4px; font-size: 14px; font-weight: 700; color: var(--text-primary); }
+      .account-field-value.muted { color: var(--text-muted); font-weight: 500; }
       .prose-block { line-height: 1.6; color: var(--text-secondary); }
       .prose-block strong { color: var(--text-primary); }
       .command-table { width: 100%; border-collapse: collapse; font-size: 13px; }
@@ -349,7 +354,7 @@
     <div class="desktop-shell">
     <nav class="ops-sidebar" aria-label="Primary">
       <button class="ops-sidebar-item active" data-tab="home"><span class="material-symbols-outlined">radar</span><span>Home</span></button>
-      <button class="ops-sidebar-item" data-tab="activity"><span class="material-symbols-outlined">timeline</span><span>Activity</span></button>
+      <button class="ops-sidebar-item officer-hide" data-tab="activity" hidden><span class="material-symbols-outlined">timeline</span><span>Activity</span></button>
       <div class="ops-sidebar-divider"></div>
       <button class="ops-sidebar-item" data-tab="about"><span class="material-symbols-outlined">info</span><span>About</span></button>
       <button class="ops-sidebar-item" data-tab="contact"><span class="material-symbols-outlined">call</span><span>Contact</span></button>
@@ -366,7 +371,12 @@
 
     <main id="main-content">
       <section id="panel-home" class="tab-panel active">
-        <div class="home-minimal">
+        <!-- Operational view: admin/super_admin only. Fleet health, KPI counts,
+             and recent-incident ticker are monitoring surfaces the access-tier
+             model (docs/security-hardening-v1-design.md §4) reserves to Admin —
+             a Registered Officer must never see this, and the /api/ops/* calls
+             that feed it are gated server-side too, not just hidden here. -->
+        <div class="home-minimal officer-hide" id="homeOperational" hidden>
           <div class="home-header-line">
             <div class="home-eyebrow">Live Status</div>
             <div class="home-headline" id="homeHeadline">Checking systems…</div>
@@ -386,6 +396,42 @@
 
           <div class="home-footer-link">
             <a href="#" onclick="openActivityTab();return false;">View full activity overview →</a>
+          </div>
+        </div>
+
+        <!-- Informational view: the Public/Registered-Officer tier's entire
+             surface — purpose statement + (when logged in) account status.
+             No operational data, ever. -->
+        <div class="home-minimal" id="homeInfo">
+          <div class="home-header-line">
+            <div class="home-eyebrow">Bangladesh Police · LIC Barishal</div>
+            <div class="home-headline">A lawful, auditable bridge for operator subscriber lookups</div>
+            <div class="home-sub">
+              Authorized officers request subscriber location and identity information from
+              mobile operators through Telegram. Every request is logged, reviewed, and
+              tied to the requesting officer — operational work happens entirely there, not
+              on this page.
+            </div>
+          </div>
+
+          <a class="telegram-cta" href="https://t.me/sms_automation_bd_bot" target="_blank" rel="noopener">
+            <span class="material-symbols-outlined">send</span>
+            Message the bot on Telegram
+          </a>
+
+          <section class="data-surface account-card" id="accountCard" hidden>
+            <div class="surface-header">
+              <div>
+                <div class="surface-title">Your account</div>
+                <div class="surface-subtitle" id="accountSubtitle"></div>
+              </div>
+              <span class="chip" id="accountStatusChip"></span>
+            </div>
+            <div class="account-grid" id="accountGrid"></div>
+          </section>
+
+          <div class="home-footer-link">
+            <a href="#" onclick="document.querySelector('[data-tab=about]').click();return false;">Learn more about this system →</a>
           </div>
         </div>
       </section>
@@ -640,7 +686,7 @@
 
     <nav class="bottom-nav">
       <button class="nav-item active" data-tab="home"><span class="material-symbols-outlined">radar</span><span>Home</span></button>
-      <button class="nav-item" data-tab="activity"><span class="material-symbols-outlined">timeline</span><span>Activity</span></button>
+      <button class="nav-item officer-hide" data-tab="activity" hidden><span class="material-symbols-outlined">timeline</span><span>Activity</span></button>
       <button class="nav-item" data-tab="settings"><span class="material-symbols-outlined">tune</span><span>Access</span></button>
     </nav>
     </div>
