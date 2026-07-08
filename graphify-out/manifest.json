@@ -2130,7 +2130,7 @@
     "semantic_hash": ""
   },
   ".impeccable/hook.cache.json": {
-    "mtime": 1783495863.6827633,
+    "mtime": 1783495930.6226966,
     "ast_hash": "2114bd8c3c52a2bed775cc7856b88a62",
     "semantic_hash": ""
   },
@@ -3310,8 +3310,8 @@
     "semantic_hash": ""
   },
   "docs/security-hardening-v1-STATUS.md": {
-    "mtime": 1783485065.5348647,
-    "ast_hash": "a2de28973bf34b7f44a0805634dd1d1f",
+    "mtime": 1783495930.5195355,
+    "ast_hash": "3880dcb0d146e8f54a62f8c21341af42",
     "semantic_hash": ""
   },
   "src/cookies.js": {
