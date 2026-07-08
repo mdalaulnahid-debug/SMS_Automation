@@ -132,6 +132,38 @@ class BackendClient {
     });
     return res.json();
   }
+
+  // Admin group actions (security-hardening v1 §9). Authorization is checked fresh on
+  // every attempt (no caching/polling in the bridge) — a network failure must fail
+  // closed (unauthorized), never silently let a moderation command through.
+  async checkModerationAuthorized(telegramId) {
+    try {
+      const res = await this.fetch(`${this.base}/api/telegram/moderation-check`, {
+        method: 'POST',
+        headers: this.headers({ 'content-type': 'application/json' }),
+        body: JSON.stringify({ telegramId })
+      });
+      if (!res.ok) return { authorized: false };
+      return res.json();
+    } catch {
+      return { authorized: false };
+    }
+  }
+
+  // Reports a completed (or failed) moderation action for audit — best-effort, since
+  // the actual Telegram-side action has already happened by the time this is called;
+  // a reporting failure shouldn't be treated as the moderation action itself failing.
+  async reportModerationAction(detail) {
+    try {
+      await this.fetch(`${this.base}/api/telegram/moderation-action`, {
+        method: 'POST',
+        headers: this.headers({ 'content-type': 'application/json' }),
+        body: JSON.stringify(detail)
+      });
+    } catch {
+      // Best-effort — never let a reporting failure affect the intake loop itself.
+    }
+  }
 }
 
 module.exports = { BackendClient };

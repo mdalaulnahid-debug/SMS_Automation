@@ -362,7 +362,14 @@ function createApp(options = {}) {
     smsGateway,
     denyUnknownRequesters: authConfig.denyUnknownRequesters,
     autoApproveChannels,
-    manualReviewStore
+    manualReviewStore,
+    // userAuth is constructed further below in this function, but this predicate is
+    // only ever called during request handling (long after createApp() returns), so
+    // the closure sees it fully initialized by then.
+    isAdminTelegramSender: (telegramId) => {
+      const user = telegramId && userAuth.getUserByTelegramId(telegramId);
+      return Boolean(user) && (user.role === 'admin' || user.role === 'super_admin') && user.status === 'active';
+    }
   });
 
   // Per-officer request quota + OTP re-verification challenge (security-hardening
@@ -1259,6 +1266,38 @@ function createApp(options = {}) {
           store.audit('system', 'TELEGRAM_OTP_FAILED', null, { officerId: officer.id, telegramId: body.telegramId, reason: result.reason });
         }
         return json(res, 200, result);
+      }
+      if (req.method === 'POST' && req.url === '/api/telegram/moderation-check') {
+        // Checked fresh on every moderation-command attempt (security-hardening v1
+        // §9) — the bridge never caches admin status, so a role change or account
+        // disablement takes effect on the very next command, not after some
+        // periodic refresh interval.
+        if (!requireAdmin(req, res)) return undefined;
+        const body = await readJson(req);
+        if (!body.telegramId) return json(res, 400, { error: 'telegramId required' });
+        const user = userAuth.getUserByTelegramId(body.telegramId);
+        const authorized = Boolean(user) && (user.role === 'admin' || user.role === 'super_admin') && user.status === 'active';
+        return json(res, 200, { authorized, actorName: authorized ? user.name : null });
+      }
+      if (req.method === 'POST' && req.url === '/api/telegram/moderation-action') {
+        // Reported by the bridge after it has already executed a moderation action
+        // via the Telegram API (this backend holds no bot token and cannot perform
+        // the action itself) — audit-only, per design doc §9's "every admin message
+        // and moderation action is audit-logged" requirement.
+        if (!requireAdmin(req, res)) return undefined;
+        const body = await readJson(req);
+        if (!body.action || !body.actorTelegramId) return json(res, 400, { error: 'action and actorTelegramId required' });
+        store.audit(body.actorName || body.actorTelegramId, 'TELEGRAM_MODERATION_ACTION', null, {
+          action: body.action,
+          actorTelegramId: body.actorTelegramId,
+          targetTelegramId: body.targetTelegramId || null,
+          targetName: body.targetName || null,
+          chatId: body.chatId || null,
+          durationMinutes: body.durationMinutes || null,
+          success: Boolean(body.success),
+          error: body.error || null
+        });
+        return json(res, 200, { ok: true });
       }
       if (req.method === 'GET' && req.url.startsWith('/verify-email')) {
         const token = new URL(req.url, 'http://x').searchParams.get('token') || '';

@@ -21,7 +21,7 @@ never run `scripts/deploy.sh` on this branch.
 | 4 | Personnel Registry data model + admin-upload loading | **Done** |
 | 5 | Registration flow end-to-end | **Done** for the web + bridge-link mechanics (see scoping note below — closing the group-chat "always open" policy itself is deliberately deferred) |
 | 6 | Quota + email-OTP re-verification middleware | **Done** |
-| 7 | Admin group actions (post-bypass + moderation) | Not started |
+| 7 | Admin group actions (post-bypass + moderation) | **Done** (code complete; moderation commands untested against a real Telegram group — bot must be promoted to group admin first, see note below) |
 | 8 | Shared admin key scoping/retirement | Not started |
 | 9 | Behavioral anomaly tripwire | Not started |
 | 10 | Local end-to-end simulation | Not started |
@@ -327,6 +327,65 @@ process restarts mid-challenge, the officer's pending code is silently
 lost (they'd need to trip the quota again to get a new one). Acceptable
 for V1 per the design doc's scoping; worth a persisted-state pass later if
 backend restarts become frequent in production.
+
+**Step 7 — admin group actions — done (design doc §9).**
+- **Post-any-message bypass:** `AutomationService` gained an optional
+  `isAdminTelegramSender(telegramId)` predicate (injected from `app.js`,
+  which owns `userAuth` — kept out of `service.js` to avoid entangling the
+  core automation engine with the auth subsystem). When a Telegram group
+  message fails command parsing AND the sender resolves to a linked,
+  active `admin`/`super_admin` account, `submitRequest()` returns
+  `errorCode: 'ADMIN_POST_BYPASS'` (audited as `TELEGRAM_ADMIN_POST`,
+  distinct from a real `REQUEST_VALIDATION_FAILED`) instead of the normal
+  rejection — the bridge suppresses any reply (added to
+  `shouldSuppressGroupReply`'s set), so an admin's announcement in the
+  group is never flagged as an "unsupported command". A **valid** command
+  from an admin is still processed completely normally — the bypass only
+  fires on parse failure, so admins keep full officer capability too.
+- **Moderation:** `/ban`, `/mute [minutes]`, `/unmute` (as a reply to the
+  target's message — the standard Telegram-mod-bot UX, since usernames
+  aren't reliably resolvable to user IDs via the Bot API without already
+  being cached) and `/unban <numericId>` (explicit ID, since a banned user
+  can't be replied to). `planIntake()` only detects command *shape*;
+  authorization is checked **fresh on every attempt** against a new
+  `POST /api/telegram/moderation-check` (admin-key gated, resolves the
+  actor's Telegram ID via `getUserByTelegramId` and checks
+  role+active-status) — no caching/polling in the bridge, so a role change
+  or account disablement takes effect on the very next command, not after
+  some refresh interval. `TelegramClient` gained
+  `banChatMember`/`unbanChatMember`/`restrictChatMember` (mute reuses
+  `restrictChatMember` with all permissions false, an optional
+  `until_date` for a timed mute). Every attempt — success or failure — is
+  reported to a new `POST /api/telegram/moderation-action` (audit-only;
+  this backend holds no bot token and cannot moderate directly, only the
+  bridge process can) and audited as `TELEGRAM_MODERATION_ACTION`.
+- **Explicit failure surfacing for the stated prerequisite:** the design
+  doc calls out that the bot must be promoted to group admin with
+  ban/restrict rights before this can function at all. Rather than let
+  that fail as a raw Telegram API error, a `CHAT_ADMIN_REQUIRED` catch
+  replies with a plain-language explanation
+  ("the bot is not a group admin with the required rights") both in-chat
+  and in the audit report.
+- 19 new tests (3 service-level for the post-bypass, 5 HTTP integration
+  for the two new endpoints, 11 bridge plan/handle for moderation parsing
+  and execution) — full suite **298/298**. Live-verified the two new
+  backend endpoints against the running local server (401 unauthenticated,
+  `authorized: false` for an unlinked ID, a reported action audits
+  correctly) — the actual Telegram-side moderation calls
+  (`banChatMember` etc.) were **not** exercised against a real group,
+  since that requires the operational prerequisite (bot promoted to group
+  admin) which has not been done yet; that path is covered by the
+  automated tests' fake `telegram` client instead, including the
+  `CHAT_ADMIN_REQUIRED` failure path.
+
+**Operational prerequisite still outstanding for step 7 to actually work
+in production:** promote the bot to group admin in the real Telegram
+group, with "Ban users" and "Restrict/mute members" rights enabled — an
+action the user takes in Telegram's own group-settings UI, outside this
+codebase. Until that's done, `/ban`/`/mute`/`/unban` will all fail with
+the "not a group admin" message (a safe, informative failure, not a
+crash) — the post-any-message bypass and moderation-authorization check
+both work today regardless, only the actual Telegram API calls need it.
 
 ## Open questions / notes found while implementing
 

@@ -23,7 +23,8 @@ class AutomationService {
     duplicateRequestWindowMs = DEFAULT_DUPLICATE_REQUEST_WINDOW_MS,
     denyUnknownRequesters = false,
     autoApproveChannels = [],
-    manualReviewStore = null
+    manualReviewStore = null,
+    isAdminTelegramSender = null
   }) {
     this.store = store;
     this.queue = queue;
@@ -36,11 +37,27 @@ class AutomationService {
     // e.g. ['telegram'] — the reply goes straight to APPROVED_FOR_POST.
     this.autoApproveChannels = autoApproveChannels;
     this.manualReviewStore = manualReviewStore;
+    // Optional predicate (telegramId) => boolean, injected from app.js (which owns
+    // the userAuth identity store — kept out of this module to avoid entangling the
+    // core automation engine with the auth subsystem). See admin-post bypass below.
+    this.isAdminTelegramSender = isAdminTelegramSender;
   }
 
   async submitRequest(input) {
     const parsed = parseRequestText(input.text);
     if (!parsed.ok) {
+      // Admin-post bypass (security-hardening v1 §9): a linked admin/super_admin's
+      // non-command message in the Telegram group is a deliberate announcement, not
+      // a mistake — don't tell them their notice is an "unsupported command". Audited
+      // distinctly from a real validation failure; the bridge suppresses any reply.
+      if (input.channel === 'telegram' && this.isAdminTelegramSender && this.isAdminTelegramSender(input.requesterId)) {
+        this.store.audit(input.requesterName || input.requesterId || 'admin', 'TELEGRAM_ADMIN_POST', null, {
+          requesterId: input.requesterId || null,
+          chatId: input.chatId || null,
+          text: input.text
+        });
+        return { ok: false, errorCode: 'ADMIN_POST_BYPASS', errors: [], replyText: null };
+      }
       this.store.audit('system', 'REQUEST_VALIDATION_FAILED', null, {
         requesterId: input.requesterId || null,
         requesterName: input.requesterName || null,

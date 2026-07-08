@@ -17,7 +17,11 @@ function shouldSuppressGroupReply(result) {
   const suppressed = new Set([
     'REQUEST_DENIED_DISABLED_USER',
     'REQUEST_DENIED_UNKNOWN_USER',
-    'REQUEST_DENIED_UNAUTHORIZED_OPERATOR'
+    'REQUEST_DENIED_UNAUTHORIZED_OPERATOR',
+    // Admin-post bypass (design doc §9) — an admin's non-command group
+    // message is a deliberate announcement, not a mistake to flag back to
+    // them; see checkOfficerQuota's counterpart in src/app.js.
+    'ADMIN_POST_BYPASS'
   ]);
   return suppressed.has(result?.errorCode);
 }
@@ -66,6 +70,60 @@ function planIntake(message, config) {
   // them to, which is always the private chat with the bot.
   if (isPrivateChat && /^\d{6}$/.test(text)) {
     return { action: 'otp_verify', telegramId: fromId, chatId, code: text, replyToMessageId: message.message_id };
+  }
+
+  // Moderation commands (design doc §9) — group chat only. Detection here is
+  // shape-only; authorization is checked fresh against the backend in
+  // handleIntake, never against this bridge's static config, so a role
+  // change takes effect on the very next command. /ban, /mute, /unmute
+  // target whoever the command replies to (the standard Telegram-mod-bot
+  // UX — usernames aren't reliably resolvable to user IDs via the Bot API
+  // without them already being cached). /unban takes an explicit numeric
+  // ID since a banned user can't be replied to.
+  if (isGroupChat) {
+    const isBan = /^\/ban$/i.test(text);
+    const isUnmute = /^\/unmute$/i.test(text);
+    const muteMatch = text.match(/^\/mute(?:\s+(\d+))?$/i);
+    const unbanMatch = text.match(/^\/unban\s+(\d+)$/i);
+
+    if (isBan || isUnmute || muteMatch) {
+      const target = message.reply_to_message;
+      if (!target || !target.from) {
+        return {
+          action: 'moderate_usage_error',
+          chatId,
+          replyToMessageId: message.message_id,
+          replyText: "Reply to the member's message with this command to target them."
+        };
+      }
+      const targetId = String(target.from.id);
+      const targetName = [target.from.first_name, target.from.last_name].filter(Boolean).join(' ') || `user_${targetId}`;
+      return {
+        action: 'moderate',
+        moderationAction: isBan ? 'ban' : isUnmute ? 'unmute' : 'mute',
+        actorId: fromId,
+        actorName: fromName,
+        targetId,
+        targetName,
+        durationMinutes: muteMatch && muteMatch[1] ? Number(muteMatch[1]) : null,
+        chatId,
+        replyToMessageId: message.message_id
+      };
+    }
+
+    if (unbanMatch) {
+      return {
+        action: 'moderate',
+        moderationAction: 'unban',
+        actorId: fromId,
+        actorName: fromName,
+        targetId: unbanMatch[1],
+        targetName: null,
+        durationMinutes: null,
+        chatId,
+        replyToMessageId: message.message_id
+      };
+    }
   }
 
   // For forwarded messages, message.from is the group member who forwarded —
@@ -160,6 +218,71 @@ async function handleIntake(message, {
     await telegram.sendMessage({ chatId: plan.chatId, text: replyText, replyToMessageId: plan.replyToMessageId });
     log(`otp: ${plan.telegramId} — ${result.ok ? 'verified' : `failed (${result.reason})`}`);
     return { action: 'otp_verify_result', result };
+  }
+
+  if (plan.action === 'moderate_usage_error') {
+    await telegram.sendMessage({ chatId: plan.chatId, text: plan.replyText, replyToMessageId: plan.replyToMessageId });
+    return plan;
+  }
+
+  if (plan.action === 'moderate') {
+    const auth = await backend.checkModerationAuthorized(plan.actorId);
+    if (!auth.authorized) {
+      await telegram.sendMessage({
+        chatId: plan.chatId,
+        text: 'You are not authorized to use moderation commands.',
+        replyToMessageId: plan.replyToMessageId
+      });
+      log(`moderate: ${plan.actorId} attempted ${plan.moderationAction} without authorization`);
+      return { action: 'moderate_unauthorized', plan };
+    }
+
+    const targetId = Number(plan.targetId);
+    let success = true;
+    let error = null;
+    try {
+      if (plan.moderationAction === 'ban') {
+        await telegram.banChatMember({ chatId: plan.chatId, userId: targetId });
+      } else if (plan.moderationAction === 'unban') {
+        await telegram.unbanChatMember({ chatId: plan.chatId, userId: targetId });
+      } else if (plan.moderationAction === 'mute') {
+        const untilDate = plan.durationMinutes
+          ? Math.floor(Date.now() / 1000) + plan.durationMinutes * 60
+          : undefined;
+        await telegram.restrictChatMember({ chatId: plan.chatId, userId: targetId, muted: true, untilDate });
+      } else if (plan.moderationAction === 'unmute') {
+        await telegram.restrictChatMember({ chatId: plan.chatId, userId: targetId, muted: false });
+      }
+    } catch (err) {
+      success = false;
+      // The single most likely real-world failure: the bot hasn't been promoted to
+      // group admin with ban/restrict rights yet (design doc §9's stated
+      // prerequisite) — surface that plainly instead of a raw Telegram error.
+      error = err.message && err.message.includes('CHAT_ADMIN_REQUIRED')
+        ? 'the bot is not a group admin with the required rights'
+        : err.message;
+    }
+
+    await backend.reportModerationAction({
+      action: plan.moderationAction,
+      actorTelegramId: plan.actorId,
+      actorName: auth.actorName || plan.actorName,
+      targetTelegramId: plan.targetId,
+      targetName: plan.targetName,
+      chatId: plan.chatId,
+      durationMinutes: plan.durationMinutes,
+      success,
+      error
+    });
+
+    const actionLabels = { ban: 'Banned', unban: 'Unbanned', mute: 'Muted', unmute: 'Unmuted' };
+    const targetLabel = plan.targetName || plan.targetId;
+    const replyText = success
+      ? `✅ ${actionLabels[plan.moderationAction]} ${targetLabel}${plan.moderationAction === 'mute' && plan.durationMinutes ? ` for ${plan.durationMinutes} minute(s)` : ''}.`
+      : `❌ Failed to ${plan.moderationAction} ${targetLabel}: ${error}`;
+    await telegram.sendMessage({ chatId: plan.chatId, text: replyText, replyToMessageId: plan.replyToMessageId });
+    log(`moderate: ${plan.actorId} ${plan.moderationAction} ${plan.targetId} — ${success ? 'ok' : `FAILED (${error})`}`);
+    return { action: 'moderate_result', success, plan };
   }
 
   const result = await backend.submitRequest(plan.request);
