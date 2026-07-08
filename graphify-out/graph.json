@@ -47,7 +47,7 @@
       "label": "Open questions / notes found while implementing",
       "file_type": "document",
       "source_file": "docs/security-hardening-v1-STATUS.md",
-      "source_location": "L390",
+      "source_location": "L391",
       "_origin": "ast",
       "id": "docs_security_hardening_v1_status_open_questions_notes_found_while_implementing",
       "community": 68,
@@ -59,9 +59,9 @@
       "source_file": "src/app.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "src_app",
       "community": 12,
-      "norm_label": "app.js"
+      "norm_label": "app.js",
+      "id": "src_app"
     },
     {
       "label": "{ readFile, stat, createReadStream }",
@@ -69,9 +69,9 @@
       "source_file": "src/app.js",
       "source_location": "L3",
       "_origin": "ast",
-      "id": "src_app_readfile_stat_createreadstream",
       "community": 12,
-      "norm_label": "{ readfile, stat, createreadstream }"
+      "norm_label": "{ readfile, stat, createreadstream }",
+      "id": "src_app_readfile_stat_createreadstream"
     },
     {
       "label": "{ readFile: readFileAsync }",
@@ -79,9 +79,9 @@
       "source_file": "src/app.js",
       "source_location": "L4",
       "_origin": "ast",
-      "id": "src_app_readfile_readfileasync",
       "community": 12,
-      "norm_label": "{ readfile: readfileasync }"
+      "norm_label": "{ readfile: readfileasync }",
+      "id": "src_app_readfile_readfileasync"
     },
     {
       "label": "{ join }",
@@ -89,9 +89,9 @@
       "source_file": "src/app.js",
       "source_location": "L5",
       "_origin": "ast",
-      "id": "src_app_join",
       "community": 12,
-      "norm_label": "{ join }"
+      "norm_label": "{ join }",
+      "id": "src_app_join"
     },
     {
       "label": "https",
@@ -99,9 +99,9 @@
       "source_file": "src/app.js",
       "source_location": "L6",
       "_origin": "ast",
-      "id": "src_app_https",
       "community": 12,
-      "norm_label": "https"
+      "norm_label": "https",
+      "id": "src_app_https"
     },
     {
       "label": "{ AutomationStore }",
@@ -109,9 +109,9 @@
       "source_file": "src/app.js",
       "source_location": "L7",
       "_origin": "ast",
-      "id": "src_app_automationstore",
       "community": 12,
-      "norm_label": "{ automationstore }"
+      "norm_label": "{ automationstore }",
+      "id": "src_app_automationstore"
     },
     {
       "label": "{ OperatorQueue }",
@@ -119,9 +119,9 @@
       "source_file": "src/app.js",
       "source_location": "L8",
       "_origin": "ast",
-      "id": "src_app_operatorqueue",
       "community": 12,
-      "norm_label": "{ operatorqueue }"
+      "norm_label": "{ operatorqueue }",
+      "id": "src_app_operatorqueue"
     },
     {
       "label": "{ SmsGatewayClient }",
@@ -129,9 +129,9 @@
       "source_file": "src/app.js",
       "source_location": "L9",
       "_origin": "ast",
-      "id": "src_app_smsgatewayclient",
       "community": 12,
-      "norm_label": "{ smsgatewayclient }"
+      "norm_label": "{ smsgatewayclient }",
+      "id": "src_app_smsgatewayclient"
     },
     {
       "label": "{ ManualReviewStore }",
@@ -139,9 +139,9 @@
       "source_file": "src/app.js",
       "source_location": "L10",
       "_origin": "ast",
-      "id": "src_app_manualreviewstore",
       "community": 12,
-      "norm_label": "{ manualreviewstore }"
+      "norm_label": "{ manualreviewstore }",
+      "id": "src_app_manualreviewstore"
     },
     {
       "label": "settingsStore",
@@ -149,9 +149,9 @@
       "source_file": "src/app.js",
       "source_location": "L11",
       "_origin": "ast",
-      "id": "src_app_settingsstore",
       "community": 12,
-      "norm_label": "settingsstore"
+      "norm_label": "settingsstore",
+      "id": "src_app_settingsstore"
     },
     {
       "label": "{ OPERATORS }",
@@ -159,9 +159,9 @@
       "source_file": "src/app.js",
       "source_location": "L12",
       "_origin": "ast",
-      "id": "src_app_operators",
       "community": 12,
-      "norm_label": "{ operators }"
+      "norm_label": "{ operators }",
+      "id": "src_app_operators"
     },
     {
       "label": "{\r\n  AutomationService,\r\n  DEFAULT_SEND_CONFIRMATION_GRACE_MS,\r\n  DEFAULT_DUPLICATE_REQUEST_WINDOW_MS\r\n}",
@@ -169,9 +169,9 @@
       "source_file": "src/app.js",
       "source_location": "L13",
       "_origin": "ast",
-      "id": "src_app_automationservice_default_send_confirmation_grace_ms_default_duplicate_request_window_ms",
       "community": 12,
-      "norm_label": "{\r\n  automationservice,\r\n  default_send_confirmation_grace_ms,\r\n  default_duplicate_request_window_ms\r\n}"
+      "norm_label": "{\r\n  automationservice,\r\n  default_send_confirmation_grace_ms,\r\n  default_duplicate_request_window_ms\r\n}",
+      "id": "src_app_automationservice_default_send_confirmation_grace_ms_default_duplicate_request_window_ms"
     },
     {
       "label": "{ loadGatewayConfig, loadAuthConfig, loadTelegramConfig, loadMailConfig }",
@@ -179,9 +179,9 @@
       "source_file": "src/app.js",
       "source_location": "L18",
       "_origin": "ast",
-      "id": "src_app_loadgatewayconfig_loadauthconfig_loadtelegramconfig_loadmailconfig",
       "community": 12,
-      "norm_label": "{ loadgatewayconfig, loadauthconfig, loadtelegramconfig, loadmailconfig }"
+      "norm_label": "{ loadgatewayconfig, loadauthconfig, loadtelegramconfig, loadmailconfig }",
+      "id": "src_app_loadgatewayconfig_loadauthconfig_loadtelegramconfig_loadmailconfig"
     },
     {
       "label": "{ isAdmin, isValidGateway }",
@@ -189,9 +189,9 @@
       "source_file": "src/app.js",
       "source_location": "L19",
       "_origin": "ast",
-      "id": "src_app_isadmin_isvalidgateway",
       "community": 12,
-      "norm_label": "{ isadmin, isvalidgateway }"
+      "norm_label": "{ isadmin, isvalidgateway }",
+      "id": "src_app_isadmin_isvalidgateway"
     },
     {
       "label": "{ getBackendUrls, getLanAddresses, getPreferredLanIp }",
@@ -199,9 +199,9 @@
       "source_file": "src/app.js",
       "source_location": "L20",
       "_origin": "ast",
-      "id": "src_app_getbackendurls_getlanaddresses_getpreferredlanip",
       "community": 12,
-      "norm_label": "{ getbackendurls, getlanaddresses, getpreferredlanip }"
+      "norm_label": "{ getbackendurls, getlanaddresses, getpreferredlanip }",
+      "id": "src_app_getbackendurls_getlanaddresses_getpreferredlanip"
     },
     {
       "label": "{ UserAuthStore, SESSION_TTL_MS, isWithinRegistrationWindow }",
@@ -209,9 +209,9 @@
       "source_file": "src/app.js",
       "source_location": "L21",
       "_origin": "ast",
-      "id": "src_app_userauthstore_session_ttl_ms_iswithinregistrationwindow",
       "community": 12,
-      "norm_label": "{ userauthstore, session_ttl_ms, iswithinregistrationwindow }"
+      "norm_label": "{ userauthstore, session_ttl_ms, iswithinregistrationwindow }",
+      "id": "src_app_userauthstore_session_ttl_ms_iswithinregistrationwindow"
     },
     {
       "label": "{ serializeSessionCookie, clearSessionCookie, sessionTokenFromRequest }",
@@ -219,9 +219,9 @@
       "source_file": "src/app.js",
       "source_location": "L22",
       "_origin": "ast",
-      "id": "src_app_serializesessioncookie_clearsessioncookie_sessiontokenfromrequest",
       "community": 12,
-      "norm_label": "{ serializesessioncookie, clearsessioncookie, sessiontokenfromrequest }"
+      "norm_label": "{ serializesessioncookie, clearsessioncookie, sessiontokenfromrequest }",
+      "id": "src_app_serializesessioncookie_clearsessioncookie_sessiontokenfromrequest"
     },
     {
       "label": "{ parseRegistryWorkbook }",
@@ -229,9 +229,9 @@
       "source_file": "src/app.js",
       "source_location": "L23",
       "_origin": "ast",
-      "id": "src_app_parseregistryworkbook",
       "community": 12,
-      "norm_label": "{ parseregistryworkbook }"
+      "norm_label": "{ parseregistryworkbook }",
+      "id": "src_app_parseregistryworkbook"
     },
     {
       "label": "{ QuotaTracker }",
@@ -239,9 +239,9 @@
       "source_file": "src/app.js",
       "source_location": "L24",
       "_origin": "ast",
-      "id": "src_app_quotatracker",
       "community": 12,
-      "norm_label": "{ quotatracker }"
+      "norm_label": "{ quotatracker }",
+      "id": "src_app_quotatracker"
     },
     {
       "label": "{ OtpStore }",
@@ -249,9 +249,9 @@
       "source_file": "src/app.js",
       "source_location": "L25",
       "_origin": "ast",
-      "id": "src_app_otpstore",
       "community": 12,
-      "norm_label": "{ otpstore }"
+      "norm_label": "{ otpstore }",
+      "id": "src_app_otpstore"
     },
     {
       "label": "mailer",
@@ -259,9 +259,9 @@
       "source_file": "src/app.js",
       "source_location": "L26",
       "_origin": "ast",
-      "id": "src_app_mailer",
       "community": 12,
-      "norm_label": "mailer"
+      "norm_label": "mailer",
+      "id": "src_app_mailer"
     },
     {
       "label": "RateLimiter",
@@ -269,9 +269,9 @@
       "source_file": "src/app.js",
       "source_location": "L30",
       "_origin": "ast",
-      "id": "src_app_ratelimiter",
       "community": 65,
-      "norm_label": "ratelimiter"
+      "norm_label": "ratelimiter",
+      "id": "src_app_ratelimiter"
     },
     {
       "label": ".constructor()",
@@ -279,9 +279,9 @@
       "source_file": "src/app.js",
       "source_location": "L31",
       "_origin": "ast",
-      "id": "src_app_ratelimiter_constructor",
       "community": 65,
-      "norm_label": ".constructor()"
+      "norm_label": ".constructor()",
+      "id": "src_app_ratelimiter_constructor"
     },
     {
       "label": ".check()",
@@ -289,9 +289,9 @@
       "source_file": "src/app.js",
       "source_location": "L38",
       "_origin": "ast",
-      "id": "src_app_ratelimiter_check",
       "community": 65,
-      "norm_label": ".check()"
+      "norm_label": ".check()",
+      "id": "src_app_ratelimiter_check"
     },
     {
       "label": "._prune()",
@@ -299,9 +299,9 @@
       "source_file": "src/app.js",
       "source_location": "L48",
       "_origin": "ast",
-      "id": "src_app_ratelimiter_prune",
       "community": 65,
-      "norm_label": "._prune()"
+      "norm_label": "._prune()",
+      "id": "src_app_ratelimiter_prune"
     },
     {
       "label": "requestRateLimiter",
@@ -309,9 +309,9 @@
       "source_file": "src/app.js",
       "source_location": "L58",
       "_origin": "ast",
-      "id": "src_app_requestratelimiter",
       "community": 12,
-      "norm_label": "requestratelimiter"
+      "norm_label": "requestratelimiter",
+      "id": "src_app_requestratelimiter"
     },
     {
       "label": "decorateGatewayHealth()",
@@ -319,9 +319,9 @@
       "source_file": "src/app.js",
       "source_location": "L61",
       "_origin": "ast",
-      "id": "src_app_decorategatewayhealth",
       "community": 12,
-      "norm_label": "decorategatewayhealth()"
+      "norm_label": "decorategatewayhealth()",
+      "id": "src_app_decorategatewayhealth"
     },
     {
       "label": "summarizeAlerts()",
@@ -329,9 +329,9 @@
       "source_file": "src/app.js",
       "source_location": "L70",
       "_origin": "ast",
-      "id": "src_app_summarizealerts",
       "community": 12,
-      "norm_label": "summarizealerts()"
+      "norm_label": "summarizealerts()",
+      "id": "src_app_summarizealerts"
     },
     {
       "label": "buildActivityFeed()",
@@ -339,9 +339,9 @@
       "source_file": "src/app.js",
       "source_location": "L84",
       "_origin": "ast",
-      "id": "src_app_buildactivityfeed",
       "community": 12,
-      "norm_label": "buildactivityfeed()"
+      "norm_label": "buildactivityfeed()",
+      "id": "src_app_buildactivityfeed"
     },
     {
       "label": "buildAdminData()",
@@ -349,9 +349,9 @@
       "source_file": "src/app.js",
       "source_location": "L170",
       "_origin": "ast",
-      "id": "src_app_buildadmindata",
       "community": 12,
-      "norm_label": "buildadmindata()"
+      "norm_label": "buildadmindata()",
+      "id": "src_app_buildadmindata"
     },
     {
       "label": "sanitizeActivityForPublicOps()",
@@ -359,9 +359,9 @@
       "source_file": "src/app.js",
       "source_location": "L286",
       "_origin": "ast",
-      "id": "src_app_sanitizeactivityforpublicops",
       "community": 12,
-      "norm_label": "sanitizeactivityforpublicops()"
+      "norm_label": "sanitizeactivityforpublicops()",
+      "id": "src_app_sanitizeactivityforpublicops"
     },
     {
       "label": "buildOpsData()",
@@ -369,9 +369,9 @@
       "source_file": "src/app.js",
       "source_location": "L298",
       "_origin": "ast",
-      "id": "src_app_buildopsdata",
       "community": 12,
-      "norm_label": "buildopsdata()"
+      "norm_label": "buildopsdata()",
+      "id": "src_app_buildopsdata"
     },
     {
       "label": "sendTelegramWatchdogAlert()",
@@ -379,9 +379,9 @@
       "source_file": "src/app.js",
       "source_location": "L328",
       "_origin": "ast",
-      "id": "src_app_sendtelegramwatchdogalert",
       "community": 12,
-      "norm_label": "sendtelegramwatchdogalert()"
+      "norm_label": "sendtelegramwatchdogalert()",
+      "id": "src_app_sendtelegramwatchdogalert"
     },
     {
       "label": "createApp()",
@@ -389,9 +389,9 @@
       "source_file": "src/app.js",
       "source_location": "L346",
       "_origin": "ast",
-      "id": "src_app_createapp",
       "community": 79,
-      "norm_label": "createapp()"
+      "norm_label": "createapp()",
+      "id": "src_app_createapp"
     },
     {
       "label": "isValidGatewayHeader()",
@@ -399,9 +399,9 @@
       "source_file": "src/app.js",
       "source_location": "L1367",
       "_origin": "ast",
-      "id": "src_app_isvalidgatewayheader",
       "community": 12,
-      "norm_label": "isvalidgatewayheader()"
+      "norm_label": "isvalidgatewayheader()",
+      "id": "src_app_isvalidgatewayheader"
     },
     {
       "label": "serveFile()",
@@ -409,9 +409,9 @@
       "source_file": "src/app.js",
       "source_location": "L1373",
       "_origin": "ast",
-      "id": "src_app_servefile",
       "community": 12,
-      "norm_label": "servefile()"
+      "norm_label": "servefile()",
+      "id": "src_app_servefile"
     },
     {
       "label": "safeUserFields()",
@@ -419,9 +419,9 @@
       "source_file": "src/app.js",
       "source_location": "L1382",
       "_origin": "ast",
-      "id": "src_app_safeuserfields",
       "community": 12,
-      "norm_label": "safeuserfields()"
+      "norm_label": "safeuserfields()",
+      "id": "src_app_safeuserfields"
     },
     {
       "label": "json()",
@@ -429,9 +429,9 @@
       "source_file": "src/app.js",
       "source_location": "L1397",
       "_origin": "ast",
-      "id": "src_app_json",
       "community": 79,
-      "norm_label": "json()"
+      "norm_label": "json()",
+      "id": "src_app_json"
     },
     {
       "label": "csv()",
@@ -439,9 +439,9 @@
       "source_file": "src/app.js",
       "source_location": "L1402",
       "_origin": "ast",
-      "id": "src_app_csv",
       "community": 12,
-      "norm_label": "csv()"
+      "norm_label": "csv()",
+      "id": "src_app_csv"
     },
     {
       "label": "auditToCsv()",
@@ -449,9 +449,9 @@
       "source_file": "src/app.js",
       "source_location": "L1411",
       "_origin": "ast",
-      "id": "src_app_audittocsv",
       "community": 12,
-      "norm_label": "audittocsv()"
+      "norm_label": "audittocsv()",
+      "id": "src_app_audittocsv"
     },
     {
       "label": "readJson()",
@@ -459,9 +459,9 @@
       "source_file": "src/app.js",
       "source_location": "L1432",
       "_origin": "ast",
-      "id": "src_app_readjson",
       "community": 12,
-      "norm_label": "readjson()"
+      "norm_label": "readjson()",
+      "id": "src_app_readjson"
     },
     {
       "label": "readBuffer()",
@@ -469,9 +469,9 @@
       "source_file": "src/app.js",
       "source_location": "L1457",
       "_origin": "ast",
-      "id": "src_app_readbuffer",
       "community": 12,
-      "norm_label": "readbuffer()"
+      "norm_label": "readbuffer()",
+      "id": "src_app_readbuffer"
     },
     {
       "label": "service.js",
@@ -479,9 +479,9 @@
       "source_file": "src/service.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "src_service",
       "community": 13,
-      "norm_label": "service.js"
+      "norm_label": "service.js",
+      "id": "src_service"
     },
     {
       "label": "{ OPERATORS, STATUSES, DISPATCH_STATUSES, TERMINAL_DISPATCH_STATUSES }",
@@ -489,9 +489,9 @@
       "source_file": "src/service.js",
       "source_location": "L3",
       "_origin": "ast",
-      "id": "src_service_operators_statuses_dispatch_statuses_terminal_dispatch_statuses",
       "community": 13,
-      "norm_label": "{ operators, statuses, dispatch_statuses, terminal_dispatch_statuses }"
+      "norm_label": "{ operators, statuses, dispatch_statuses, terminal_dispatch_statuses }",
+      "id": "src_service_operators_statuses_dispatch_statuses_terminal_dispatch_statuses"
     },
     {
       "label": "{ parseRequestText }",
@@ -499,9 +499,9 @@
       "source_file": "src/service.js",
       "source_location": "L4",
       "_origin": "ast",
-      "id": "src_service_parserequesttext",
       "community": 13,
-      "norm_label": "{ parserequesttext }"
+      "norm_label": "{ parserequesttext }",
+      "id": "src_service_parserequesttext"
     },
     {
       "label": "{ analyzeOperatorReply, inferReplyFamilies, replyContradictsPayload }",
@@ -509,9 +509,9 @@
       "source_file": "src/service.js",
       "source_location": "L5",
       "_origin": "ast",
-      "id": "src_service_analyzeoperatorreply_inferreplyfamilies_replycontradictspayload",
       "community": 13,
-      "norm_label": "{ analyzeoperatorreply, inferreplyfamilies, replycontradictspayload }"
+      "norm_label": "{ analyzeoperatorreply, inferreplyfamilies, replycontradictspayload }",
+      "id": "src_service_analyzeoperatorreply_inferreplyfamilies_replycontradictspayload"
     },
     {
       "label": "AutomationService",
@@ -519,9 +519,9 @@
       "source_file": "src/service.js",
       "source_location": "L16",
       "_origin": "ast",
-      "id": "src_service_automationservice",
       "community": 13,
-      "norm_label": "automationservice"
+      "norm_label": "automationservice",
+      "id": "src_service_automationservice"
     },
     {
       "label": ".constructor()",
@@ -529,9 +529,9 @@
       "source_file": "src/service.js",
       "source_location": "L17",
       "_origin": "ast",
-      "id": "src_service_automationservice_constructor",
       "community": 13,
-      "norm_label": ".constructor()"
+      "norm_label": ".constructor()",
+      "id": "src_service_automationservice_constructor"
     },
     {
       "label": ".submitRequest()",
@@ -539,9 +539,9 @@
       "source_file": "src/service.js",
       "source_location": "L46",
       "_origin": "ast",
-      "id": "src_service_automationservice_submitrequest",
       "community": 13,
-      "norm_label": ".submitrequest()"
+      "norm_label": ".submitrequest()",
+      "id": "src_service_automationservice_submitrequest"
     },
     {
       "label": ".receiveSmsWebhook()",
@@ -549,9 +549,9 @@
       "source_file": "src/service.js",
       "source_location": "L175",
       "_origin": "ast",
-      "id": "src_service_automationservice_receivesmswebhook",
       "community": 13,
-      "norm_label": ".receivesmswebhook()"
+      "norm_label": ".receivesmswebhook()",
+      "id": "src_service_automationservice_receivesmswebhook"
     },
     {
       "label": "._finalizeIfTerminal()",
@@ -559,9 +559,9 @@
       "source_file": "src/service.js",
       "source_location": "L521",
       "_origin": "ast",
-      "id": "src_service_automationservice_finalizeifterminal",
       "community": 13,
-      "norm_label": "._finalizeifterminal()"
+      "norm_label": "._finalizeifterminal()",
+      "id": "src_service_automationservice_finalizeifterminal"
     },
     {
       "label": ".approveReply()",
@@ -569,9 +569,9 @@
       "source_file": "src/service.js",
       "source_location": "L589",
       "_origin": "ast",
-      "id": "src_service_automationservice_approvereply",
       "community": 13,
-      "norm_label": ".approvereply()"
+      "norm_label": ".approvereply()",
+      "id": "src_service_automationservice_approvereply"
     },
     {
       "label": ".markReplyPosted()",
@@ -579,9 +579,9 @@
       "source_file": "src/service.js",
       "source_location": "L626",
       "_origin": "ast",
-      "id": "src_service_automationservice_markreplyposted",
       "community": 13,
-      "norm_label": ".markreplyposted()"
+      "norm_label": ".markreplyposted()",
+      "id": "src_service_automationservice_markreplyposted"
     },
     {
       "label": ".markReplyEdited()",
@@ -589,9 +589,9 @@
       "source_file": "src/service.js",
       "source_location": "L663",
       "_origin": "ast",
-      "id": "src_service_automationservice_markreplyedited",
       "community": 13,
-      "norm_label": ".markreplyedited()"
+      "norm_label": ".markreplyedited()",
+      "id": "src_service_automationservice_markreplyedited"
     },
     {
       "label": "._getActiveDraftForRequest()",
@@ -599,9 +599,9 @@
       "source_file": "src/service.js",
       "source_location": "L690",
       "_origin": "ast",
-      "id": "src_service_automationservice_getactivedraftforrequest",
       "community": 13,
-      "norm_label": "._getactivedraftforrequest()"
+      "norm_label": "._getactivedraftforrequest()",
+      "id": "src_service_automationservice_getactivedraftforrequest"
     },
     {
       "label": "._getLiveReplyForRequest()",
@@ -609,9 +609,9 @@
       "source_file": "src/service.js",
       "source_location": "L697",
       "_origin": "ast",
-      "id": "src_service_automationservice_getlivereplyforrequest",
       "community": 13,
-      "norm_label": "._getlivereplyforrequest()"
+      "norm_label": "._getlivereplyforrequest()",
+      "id": "src_service_automationservice_getlivereplyforrequest"
     },
     {
       "label": ".rejectRequest()",
@@ -619,9 +619,9 @@
       "source_file": "src/service.js",
       "source_location": "L704",
       "_origin": "ast",
-      "id": "src_service_automationservice_rejectrequest",
       "community": 13,
-      "norm_label": ".rejectrequest()"
+      "norm_label": ".rejectrequest()",
+      "id": "src_service_automationservice_rejectrequest"
     },
     {
       "label": ".retryRequest()",
@@ -629,9 +629,9 @@
       "source_file": "src/service.js",
       "source_location": "L716",
       "_origin": "ast",
-      "id": "src_service_automationservice_retryrequest",
       "community": 13,
-      "norm_label": ".retryrequest()"
+      "norm_label": ".retryrequest()",
+      "id": "src_service_automationservice_retryrequest"
     },
     {
       "label": ".rankReplyCandidates()",
@@ -639,9 +639,9 @@
       "source_file": "src/service.js",
       "source_location": "L751",
       "_origin": "ast",
-      "id": "src_service_automationservice_rankreplycandidates",
       "community": 13,
-      "norm_label": ".rankreplycandidates()"
+      "norm_label": ".rankreplycandidates()",
+      "id": "src_service_automationservice_rankreplycandidates"
     },
     {
       "label": ".correctMatch()",
@@ -649,9 +649,9 @@
       "source_file": "src/service.js",
       "source_location": "L795",
       "_origin": "ast",
-      "id": "src_service_automationservice_correctmatch",
       "community": 13,
-      "norm_label": ".correctmatch()"
+      "norm_label": ".correctmatch()",
+      "id": "src_service_automationservice_correctmatch"
     },
     {
       "label": ".manualMatch()",
@@ -659,9 +659,9 @@
       "source_file": "src/service.js",
       "source_location": "L854",
       "_origin": "ast",
-      "id": "src_service_automationservice_manualmatch",
       "community": 13,
-      "norm_label": ".manualmatch()"
+      "norm_label": ".manualmatch()",
+      "id": "src_service_automationservice_manualmatch"
     },
     {
       "label": ".timeoutWaitingRequests()",
@@ -669,9 +669,9 @@
       "source_file": "src/service.js",
       "source_location": "L893",
       "_origin": "ast",
-      "id": "src_service_automationservice_timeoutwaitingrequests",
       "community": 13,
-      "norm_label": ".timeoutwaitingrequests()"
+      "norm_label": ".timeoutwaitingrequests()",
+      "id": "src_service_automationservice_timeoutwaitingrequests"
     },
     {
       "label": ".dispatchSentAt()",
@@ -679,9 +679,9 @@
       "source_file": "src/service.js",
       "source_location": "L929",
       "_origin": "ast",
-      "id": "src_service_automationservice_dispatchsentat",
       "community": 13,
-      "norm_label": ".dispatchsentat()"
+      "norm_label": ".dispatchsentat()",
+      "id": "src_service_automationservice_dispatchsentat"
     },
     {
       "label": ".dispatchTimeoutState()",
@@ -689,9 +689,9 @@
       "source_file": "src/service.js",
       "source_location": "L936",
       "_origin": "ast",
-      "id": "src_service_automationservice_dispatchtimeoutstate",
       "community": 13,
-      "norm_label": ".dispatchtimeoutstate()"
+      "norm_label": ".dispatchtimeoutstate()",
+      "id": "src_service_automationservice_dispatchtimeoutstate"
     },
     {
       "label": ".getDispatchOutbox()",
@@ -699,9 +699,9 @@
       "source_file": "src/service.js",
       "source_location": "L963",
       "_origin": "ast",
-      "id": "src_service_automationservice_getdispatchoutbox",
       "community": 13,
-      "norm_label": ".getdispatchoutbox()"
+      "norm_label": ".getdispatchoutbox()",
+      "id": "src_service_automationservice_getdispatchoutbox"
     },
     {
       "label": "._recordManualReviewCandidate()",
@@ -709,9 +709,9 @@
       "source_file": "src/service.js",
       "source_location": "L967",
       "_origin": "ast",
-      "id": "src_service_automationservice_recordmanualreviewcandidate",
       "community": 13,
-      "norm_label": "._recordmanualreviewcandidate()"
+      "norm_label": "._recordmanualreviewcandidate()",
+      "id": "src_service_automationservice_recordmanualreviewcandidate"
     },
     {
       "label": "formatCombinedReply()",
@@ -719,9 +719,9 @@
       "source_file": "src/service.js",
       "source_location": "L982",
       "_origin": "ast",
-      "id": "src_service_formatcombinedreply",
       "community": 13,
-      "norm_label": "formatcombinedreply()"
+      "norm_label": "formatcombinedreply()",
+      "id": "src_service_formatcombinedreply"
     },
     {
       "label": "collectDispatchReplyMessages()",
@@ -729,9 +729,9 @@
       "source_file": "src/service.js",
       "source_location": "L1016",
       "_origin": "ast",
-      "id": "src_service_collectdispatchreplymessages",
       "community": 13,
-      "norm_label": "collectdispatchreplymessages()"
+      "norm_label": "collectdispatchreplymessages()",
+      "id": "src_service_collectdispatchreplymessages"
     },
     {
       "label": "CONFIDENCE_RANKS",
@@ -739,9 +739,9 @@
       "source_file": "src/service.js",
       "source_location": "L1032",
       "_origin": "ast",
-      "id": "src_service_confidence_ranks",
       "community": 13,
-      "norm_label": "confidence_ranks"
+      "norm_label": "confidence_ranks",
+      "id": "src_service_confidence_ranks"
     },
     {
       "label": "confidenceRank()",
@@ -749,9 +749,9 @@
       "source_file": "src/service.js",
       "source_location": "L1033",
       "_origin": "ast",
-      "id": "src_service_confidencerank",
       "community": 13,
-      "norm_label": "confidencerank()"
+      "norm_label": "confidencerank()",
+      "id": "src_service_confidencerank"
     },
     {
       "label": "requestStatusRank()",
@@ -759,9 +759,9 @@
       "source_file": "src/service.js",
       "source_location": "L1037",
       "_origin": "ast",
-      "id": "src_service_requeststatusrank",
       "community": 13,
-      "norm_label": "requeststatusrank()"
+      "norm_label": "requeststatusrank()",
+      "id": "src_service_requeststatusrank"
     },
     {
       "label": "replyTypeScore()",
@@ -769,9 +769,9 @@
       "source_file": "src/service.js",
       "source_location": "L1044",
       "_origin": "ast",
-      "id": "src_service_replytypescore",
       "community": 13,
-      "norm_label": "replytypescore()"
+      "norm_label": "replytypescore()",
+      "id": "src_service_replytypescore"
     },
     {
       "label": "backendClient.js",
@@ -779,9 +779,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "telegram_bridge_backendclient",
       "community": 5,
-      "norm_label": "backendclient.js"
+      "norm_label": "backendclient.js",
+      "id": "telegram_bridge_backendclient"
     },
     {
       "label": "BackendClient",
@@ -789,9 +789,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L6",
       "_origin": "ast",
-      "id": "telegram_bridge_backendclient_backendclient",
       "community": 5,
-      "norm_label": "backendclient"
+      "norm_label": "backendclient",
+      "id": "telegram_bridge_backendclient_backendclient"
     },
     {
       "label": ".constructor()",
@@ -799,9 +799,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L7",
       "_origin": "ast",
-      "id": "telegram_bridge_backendclient_backendclient_constructor",
       "community": 5,
-      "norm_label": ".constructor()"
+      "norm_label": ".constructor()",
+      "id": "telegram_bridge_backendclient_backendclient_constructor"
     },
     {
       "label": ".headers()",
@@ -809,9 +809,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L14",
       "_origin": "ast",
-      "id": "telegram_bridge_backendclient_backendclient_headers",
       "community": 5,
-      "norm_label": ".headers()"
+      "norm_label": ".headers()",
+      "id": "telegram_bridge_backendclient_backendclient_headers"
     },
     {
       "label": ".submitRequest()",
@@ -819,9 +819,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L22",
       "_origin": "ast",
-      "id": "telegram_bridge_backendclient_backendclient_submitrequest",
       "community": 5,
-      "norm_label": ".submitrequest()"
+      "norm_label": ".submitrequest()",
+      "id": "telegram_bridge_backendclient_backendclient_submitrequest"
     },
     {
       "label": ".listApprovedReplies()",
@@ -829,9 +829,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L31",
       "_origin": "ast",
-      "id": "telegram_bridge_backendclient_backendclient_listapprovedreplies",
       "community": 5,
-      "norm_label": ".listapprovedreplies()"
+      "norm_label": ".listapprovedreplies()",
+      "id": "telegram_bridge_backendclient_backendclient_listapprovedreplies"
     },
     {
       "label": ".listRecentRequests()",
@@ -839,9 +839,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L39",
       "_origin": "ast",
-      "id": "telegram_bridge_backendclient_backendclient_listrecentrequests",
       "community": 5,
-      "norm_label": ".listrecentrequests()"
+      "norm_label": ".listrecentrequests()",
+      "id": "telegram_bridge_backendclient_backendclient_listrecentrequests"
     },
     {
       "label": ".markReplyPosted()",
@@ -849,9 +849,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L47",
       "_origin": "ast",
-      "id": "telegram_bridge_backendclient_backendclient_markreplyposted",
       "community": 5,
-      "norm_label": ".markreplyposted()"
+      "norm_label": ".markreplyposted()",
+      "id": "telegram_bridge_backendclient_backendclient_markreplyposted"
     },
     {
       "label": ".listPendingEdits()",
@@ -859,9 +859,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L59",
       "_origin": "ast",
-      "id": "telegram_bridge_backendclient_backendclient_listpendingedits",
       "community": 5,
-      "norm_label": ".listpendingedits()"
+      "norm_label": ".listpendingedits()",
+      "id": "telegram_bridge_backendclient_backendclient_listpendingedits"
     },
     {
       "label": ".markReplyEdited()",
@@ -869,9 +869,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L67",
       "_origin": "ast",
-      "id": "telegram_bridge_backendclient_backendclient_markreplyedited",
       "community": 5,
-      "norm_label": ".markreplyedited()"
+      "norm_label": ".markreplyedited()",
+      "id": "telegram_bridge_backendclient_backendclient_markreplyedited"
     },
     {
       "label": ".reportChatMismatch()",
@@ -879,9 +879,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L78",
       "_origin": "ast",
-      "id": "telegram_bridge_backendclient_backendclient_reportchatmismatch",
       "community": 5,
-      "norm_label": ".reportchatmismatch()"
+      "norm_label": ".reportchatmismatch()",
+      "id": "telegram_bridge_backendclient_backendclient_reportchatmismatch"
     },
     {
       "label": ".reportUnauthorizedAttempt()",
@@ -889,9 +889,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L92",
       "_origin": "ast",
-      "id": "telegram_bridge_backendclient_backendclient_reportunauthorizedattempt",
       "community": 5,
-      "norm_label": ".reportunauthorizedattempt()"
+      "norm_label": ".reportunauthorizedattempt()",
+      "id": "telegram_bridge_backendclient_backendclient_reportunauthorizedattempt"
     },
     {
       "label": ".requestRegistrationLink()",
@@ -899,9 +899,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L108",
       "_origin": "ast",
-      "id": "telegram_bridge_backendclient_backendclient_requestregistrationlink",
       "community": 5,
-      "norm_label": ".requestregistrationlink()"
+      "norm_label": ".requestregistrationlink()",
+      "id": "telegram_bridge_backendclient_backendclient_requestregistrationlink"
     },
     {
       "label": ".verifyOtpCode()",
@@ -909,9 +909,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L127",
       "_origin": "ast",
-      "id": "telegram_bridge_backendclient_backendclient_verifyotpcode",
       "community": 5,
-      "norm_label": ".verifyotpcode()"
+      "norm_label": ".verifyotpcode()",
+      "id": "telegram_bridge_backendclient_backendclient_verifyotpcode"
     },
     {
       "label": ".checkModerationAuthorized()",
@@ -919,9 +919,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L139",
       "_origin": "ast",
-      "id": "telegram_bridge_backendclient_backendclient_checkmoderationauthorized",
       "community": 5,
-      "norm_label": ".checkmoderationauthorized()"
+      "norm_label": ".checkmoderationauthorized()",
+      "id": "telegram_bridge_backendclient_backendclient_checkmoderationauthorized"
     },
     {
       "label": ".reportModerationAction()",
@@ -929,9 +929,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L156",
       "_origin": "ast",
-      "id": "telegram_bridge_backendclient_backendclient_reportmoderationaction",
       "community": 5,
-      "norm_label": ".reportmoderationaction()"
+      "norm_label": ".reportmoderationaction()",
+      "id": "telegram_bridge_backendclient_backendclient_reportmoderationaction"
     },
     {
       "label": "bridge.js",
@@ -939,9 +939,9 @@
       "source_file": "telegram-bridge/bridge.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "telegram_bridge_bridge",
       "community": 5,
-      "norm_label": "bridge.js"
+      "norm_label": "bridge.js",
+      "id": "telegram_bridge_bridge"
     },
     {
       "label": "buildMention()",
@@ -949,9 +949,9 @@
       "source_file": "telegram-bridge/bridge.js",
       "source_location": "L9",
       "_origin": "ast",
-      "id": "telegram_bridge_bridge_buildmention",
       "community": 5,
-      "norm_label": "buildmention()"
+      "norm_label": "buildmention()",
+      "id": "telegram_bridge_bridge_buildmention"
     },
     {
       "label": "shouldSuppressGroupReply()",
@@ -959,9 +959,9 @@
       "source_file": "telegram-bridge/bridge.js",
       "source_location": "L16",
       "_origin": "ast",
-      "id": "telegram_bridge_bridge_shouldsuppressgroupreply",
       "community": 5,
-      "norm_label": "shouldsuppressgroupreply()"
+      "norm_label": "shouldsuppressgroupreply()",
+      "id": "telegram_bridge_bridge_shouldsuppressgroupreply"
     },
     {
       "label": "planIntake()",
@@ -969,9 +969,9 @@
       "source_file": "telegram-bridge/bridge.js",
       "source_location": "L32",
       "_origin": "ast",
-      "id": "telegram_bridge_bridge_planintake",
       "community": 5,
-      "norm_label": "planintake()"
+      "norm_label": "planintake()",
+      "id": "telegram_bridge_bridge_planintake"
     },
     {
       "label": "handleIntake()",
@@ -979,9 +979,9 @@
       "source_file": "telegram-bridge/bridge.js",
       "source_location": "L153",
       "_origin": "ast",
-      "id": "telegram_bridge_bridge_handleintake",
       "community": 5,
-      "norm_label": "handleintake()"
+      "norm_label": "handleintake()",
+      "id": "telegram_bridge_bridge_handleintake"
     },
     {
       "label": "postApprovedReplies()",
@@ -989,9 +989,9 @@
       "source_file": "telegram-bridge/bridge.js",
       "source_location": "L321",
       "_origin": "ast",
-      "id": "telegram_bridge_bridge_postapprovedreplies",
       "community": 5,
-      "norm_label": "postapprovedreplies()"
+      "norm_label": "postapprovedreplies()",
+      "id": "telegram_bridge_bridge_postapprovedreplies"
     },
     {
       "label": "postLiveEdits()",
@@ -999,9 +999,9 @@
       "source_file": "telegram-bridge/bridge.js",
       "source_location": "L353",
       "_origin": "ast",
-      "id": "telegram_bridge_bridge_postliveedits",
       "community": 5,
-      "norm_label": "postliveedits()"
+      "norm_label": "postliveedits()",
+      "id": "telegram_bridge_bridge_postliveedits"
     },
     {
       "label": "seedNotifiedTimeouts()",
@@ -1009,9 +1009,9 @@
       "source_file": "telegram-bridge/bridge.js",
       "source_location": "L385",
       "_origin": "ast",
-      "id": "telegram_bridge_bridge_seednotifiedtimeouts",
       "community": 5,
-      "norm_label": "seednotifiedtimeouts()"
+      "norm_label": "seednotifiedtimeouts()",
+      "id": "telegram_bridge_bridge_seednotifiedtimeouts"
     },
     {
       "label": "notifyTimeouts()",
@@ -1019,9 +1019,9 @@
       "source_file": "telegram-bridge/bridge.js",
       "source_location": "L402",
       "_origin": "ast",
-      "id": "telegram_bridge_bridge_notifytimeouts",
       "community": 5,
-      "norm_label": "notifytimeouts()"
+      "norm_label": "notifytimeouts()",
+      "id": "telegram_bridge_bridge_notifytimeouts"
     },
     {
       "label": "telegramClient.js",
@@ -1029,9 +1029,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "telegram_bridge_telegramclient",
       "community": 67,
-      "norm_label": "telegramclient.js"
+      "norm_label": "telegramclient.js",
+      "id": "telegram_bridge_telegramclient"
     },
     {
       "label": "defaultSleep()",
@@ -1039,9 +1039,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L6",
       "_origin": "ast",
-      "id": "telegram_bridge_telegramclient_defaultsleep",
       "community": 67,
-      "norm_label": "defaultsleep()"
+      "norm_label": "defaultsleep()",
+      "id": "telegram_bridge_telegramclient_defaultsleep"
     },
     {
       "label": "TelegramClient",
@@ -1049,9 +1049,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L10",
       "_origin": "ast",
-      "id": "telegram_bridge_telegramclient_telegramclient",
       "community": 67,
-      "norm_label": "telegramclient"
+      "norm_label": "telegramclient",
+      "id": "telegram_bridge_telegramclient_telegramclient"
     },
     {
       "label": ".constructor()",
@@ -1059,9 +1059,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L11",
       "_origin": "ast",
-      "id": "telegram_bridge_telegramclient_telegramclient_constructor",
       "community": 67,
-      "norm_label": ".constructor()"
+      "norm_label": ".constructor()",
+      "id": "telegram_bridge_telegramclient_telegramclient_constructor"
     },
     {
       "label": ".call()",
@@ -1069,9 +1069,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L24",
       "_origin": "ast",
-      "id": "telegram_bridge_telegramclient_telegramclient_call",
       "community": 67,
-      "norm_label": ".call()"
+      "norm_label": ".call()",
+      "id": "telegram_bridge_telegramclient_telegramclient_call"
     },
     {
       "label": "._throttledSend()",
@@ -1079,9 +1079,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L46",
       "_origin": "ast",
-      "id": "telegram_bridge_telegramclient_telegramclient_throttledsend",
       "community": 67,
-      "norm_label": "._throttledsend()"
+      "norm_label": "._throttledsend()",
+      "id": "telegram_bridge_telegramclient_telegramclient_throttledsend"
     },
     {
       "label": ".getUpdates()",
@@ -1089,9 +1089,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L73",
       "_origin": "ast",
-      "id": "telegram_bridge_telegramclient_telegramclient_getupdates",
       "community": 67,
-      "norm_label": ".getupdates()"
+      "norm_label": ".getupdates()",
+      "id": "telegram_bridge_telegramclient_telegramclient_getupdates"
     },
     {
       "label": ".sendThreadedReply()",
@@ -1099,9 +1099,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L83",
       "_origin": "ast",
-      "id": "telegram_bridge_telegramclient_telegramclient_sendthreadedreply",
       "community": 67,
-      "norm_label": ".sendthreadedreply()"
+      "norm_label": ".sendthreadedreply()",
+      "id": "telegram_bridge_telegramclient_telegramclient_sendthreadedreply"
     },
     {
       "label": ".sendMessage()",
@@ -1109,9 +1109,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L103",
       "_origin": "ast",
-      "id": "telegram_bridge_telegramclient_telegramclient_sendmessage",
       "community": 67,
-      "norm_label": ".sendmessage()"
+      "norm_label": ".sendmessage()",
+      "id": "telegram_bridge_telegramclient_telegramclient_sendmessage"
     },
     {
       "label": ".banChatMember()",
@@ -1119,9 +1119,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L117",
       "_origin": "ast",
-      "id": "telegram_bridge_telegramclient_telegramclient_banchatmember",
       "community": 67,
-      "norm_label": ".banchatmember()"
+      "norm_label": ".banchatmember()",
+      "id": "telegram_bridge_telegramclient_telegramclient_banchatmember"
     },
     {
       "label": ".unbanChatMember()",
@@ -1129,9 +1129,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L125",
       "_origin": "ast",
-      "id": "telegram_bridge_telegramclient_telegramclient_unbanchatmember",
       "community": 67,
-      "norm_label": ".unbanchatmember()"
+      "norm_label": ".unbanchatmember()",
+      "id": "telegram_bridge_telegramclient_telegramclient_unbanchatmember"
     },
     {
       "label": ".restrictChatMember()",
@@ -1139,9 +1139,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L134",
       "_origin": "ast",
-      "id": "telegram_bridge_telegramclient_telegramclient_restrictchatmember",
       "community": 67,
-      "norm_label": ".restrictchatmember()"
+      "norm_label": ".restrictchatmember()",
+      "id": "telegram_bridge_telegramclient_telegramclient_restrictchatmember"
     },
     {
       "label": ".editMessage()",
@@ -1149,9 +1149,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L157",
       "_origin": "ast",
-      "id": "telegram_bridge_telegramclient_telegramclient_editmessage",
       "community": 67,
-      "norm_label": ".editmessage()"
+      "norm_label": ".editmessage()",
+      "id": "telegram_bridge_telegramclient_telegramclient_editmessage"
     },
     {
       "label": "adminGroupActions.test.js",
@@ -1159,9 +1159,9 @@
       "source_file": "test/adminGroupActions.test.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "test_admingroupactions_test",
       "community": 78,
-      "norm_label": "admingroupactions.test.js"
+      "norm_label": "admingroupactions.test.js",
+      "id": "test_admingroupactions_test"
     },
     {
       "label": "test",
@@ -1169,9 +1169,9 @@
       "source_file": "test/adminGroupActions.test.js",
       "source_location": "L11",
       "_origin": "ast",
-      "id": "test_admingroupactions_test_test",
       "community": 78,
-      "norm_label": "test"
+      "norm_label": "test",
+      "id": "test_admingroupactions_test_test"
     },
     {
       "label": "assert",
@@ -1179,9 +1179,9 @@
       "source_file": "test/adminGroupActions.test.js",
       "source_location": "L12",
       "_origin": "ast",
-      "id": "test_admingroupactions_test_assert",
       "community": 78,
-      "norm_label": "assert"
+      "norm_label": "assert",
+      "id": "test_admingroupactions_test_assert"
     },
     {
       "label": "{ Readable }",
@@ -1189,9 +1189,9 @@
       "source_file": "test/adminGroupActions.test.js",
       "source_location": "L13",
       "_origin": "ast",
-      "id": "test_admingroupactions_test_readable",
       "community": 78,
-      "norm_label": "{ readable }"
+      "norm_label": "{ readable }",
+      "id": "test_admingroupactions_test_readable"
     },
     {
       "label": "{ createApp }",
@@ -1199,9 +1199,9 @@
       "source_file": "test/adminGroupActions.test.js",
       "source_location": "L14",
       "_origin": "ast",
-      "id": "test_admingroupactions_test_createapp",
       "community": 78,
-      "norm_label": "{ createapp }"
+      "norm_label": "{ createapp }",
+      "id": "test_admingroupactions_test_createapp"
     },
     {
       "label": "mockReq()",
@@ -1209,9 +1209,9 @@
       "source_file": "test/adminGroupActions.test.js",
       "source_location": "L16",
       "_origin": "ast",
-      "id": "test_admingroupactions_test_mockreq",
       "community": 78,
-      "norm_label": "mockreq()"
+      "norm_label": "mockreq()",
+      "id": "test_admingroupactions_test_mockreq"
     },
     {
       "label": "mockRes()",
@@ -1219,9 +1219,9 @@
       "source_file": "test/adminGroupActions.test.js",
       "source_location": "L26",
       "_origin": "ast",
-      "id": "test_admingroupactions_test_mockres",
       "community": 78,
-      "norm_label": "mockres()"
+      "norm_label": "mockres()",
+      "id": "test_admingroupactions_test_mockres"
     },
     {
       "label": "call()",
@@ -1229,9 +1229,9 @@
       "source_file": "test/adminGroupActions.test.js",
       "source_location": "L44",
       "_origin": "ast",
-      "id": "test_admingroupactions_test_call",
       "community": 78,
-      "norm_label": "call()"
+      "norm_label": "call()",
+      "id": "test_admingroupactions_test_call"
     },
     {
       "label": "appWith()",
@@ -1239,9 +1239,9 @@
       "source_file": "test/adminGroupActions.test.js",
       "source_location": "L56",
       "_origin": "ast",
-      "id": "test_admingroupactions_test_appwith",
       "community": 78,
-      "norm_label": "appwith()"
+      "norm_label": "appwith()",
+      "id": "test_admingroupactions_test_appwith"
     },
     {
       "label": "createLinkedUser()",
@@ -1249,9 +1249,9 @@
       "source_file": "test/adminGroupActions.test.js",
       "source_location": "L67",
       "_origin": "ast",
-      "id": "test_admingroupactions_test_createlinkeduser",
       "community": 78,
-      "norm_label": "createlinkeduser()"
+      "norm_label": "createlinkeduser()",
+      "id": "test_admingroupactions_test_createlinkeduser"
     },
     {
       "label": "telegramBridge.test.js",
@@ -1259,9 +1259,9 @@
       "source_file": "test/telegramBridge.test.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "test_telegrambridge_test",
       "community": 5,
-      "norm_label": "telegrambridge.test.js"
+      "norm_label": "telegrambridge.test.js",
+      "id": "test_telegrambridge_test"
     },
     {
       "label": "test",
@@ -1269,9 +1269,9 @@
       "source_file": "test/telegramBridge.test.js",
       "source_location": "L3",
       "_origin": "ast",
-      "id": "test_telegrambridge_test_test",
       "community": 5,
-      "norm_label": "test"
+      "norm_label": "test",
+      "id": "test_telegrambridge_test_test"
     },
     {
       "label": "assert",
@@ -1279,9 +1279,9 @@
       "source_file": "test/telegramBridge.test.js",
       "source_location": "L4",
       "_origin": "ast",
-      "id": "test_telegrambridge_test_assert",
       "community": 5,
-      "norm_label": "assert"
+      "norm_label": "assert",
+      "id": "test_telegrambridge_test_assert"
     },
     {
       "label": "{ buildMention, planIntake, handleIntake, postApprovedReplies, notifyTimeouts, seedNotifiedTimeouts, shouldSuppressGroupReply }",
@@ -1289,9 +1289,9 @@
       "source_file": "test/telegramBridge.test.js",
       "source_location": "L5",
       "_origin": "ast",
-      "id": "test_telegrambridge_test_buildmention_planintake_handleintake_postapprovedreplies_notifytimeouts_seednotifiedtimeouts_shouldsuppressgroupreply",
       "community": 5,
-      "norm_label": "{ buildmention, planintake, handleintake, postapprovedreplies, notifytimeouts, seednotifiedtimeouts, shouldsuppressgroupreply }"
+      "norm_label": "{ buildmention, planintake, handleintake, postapprovedreplies, notifytimeouts, seednotifiedtimeouts, shouldsuppressgroupreply }",
+      "id": "test_telegrambridge_test_buildmention_planintake_handleintake_postapprovedreplies_notifytimeouts_seednotifiedtimeouts_shouldsuppressgroupreply"
     },
     {
       "label": "CONFIG",
@@ -1299,9 +1299,9 @@
       "source_file": "test/telegramBridge.test.js",
       "source_location": "L7",
       "_origin": "ast",
-      "id": "test_telegrambridge_test_config",
       "community": 5,
-      "norm_label": "config"
+      "norm_label": "config",
+      "id": "test_telegrambridge_test_config"
     },
     {
       "label": "fakeTelegram()",
@@ -1309,9 +1309,9 @@
       "source_file": "test/telegramBridge.test.js",
       "source_location": "L14",
       "_origin": "ast",
-      "id": "test_telegrambridge_test_faketelegram",
       "community": 5,
-      "norm_label": "faketelegram()"
+      "norm_label": "faketelegram()",
+      "id": "test_telegrambridge_test_faketelegram"
     },
     {
       "label": "workflow.test.js",
@@ -1319,9 +1319,9 @@
       "source_file": "test/workflow.test.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "test_workflow_test",
       "community": 5,
-      "norm_label": "workflow.test.js"
+      "norm_label": "workflow.test.js",
+      "id": "test_workflow_test"
     },
     {
       "label": "test",
@@ -1329,9 +1329,9 @@
       "source_file": "test/workflow.test.js",
       "source_location": "L3",
       "_origin": "ast",
-      "id": "test_workflow_test_test",
       "community": 5,
-      "norm_label": "test"
+      "norm_label": "test",
+      "id": "test_workflow_test_test"
     },
     {
       "label": "assert",
@@ -1339,9 +1339,9 @@
       "source_file": "test/workflow.test.js",
       "source_location": "L4",
       "_origin": "ast",
-      "id": "test_workflow_test_assert",
       "community": 5,
-      "norm_label": "assert"
+      "norm_label": "assert",
+      "id": "test_workflow_test_assert"
     },
     {
       "label": "{ AutomationStore }",
@@ -1349,9 +1349,9 @@
       "source_file": "test/workflow.test.js",
       "source_location": "L5",
       "_origin": "ast",
-      "id": "test_workflow_test_automationstore",
       "community": 5,
-      "norm_label": "{ automationstore }"
+      "norm_label": "{ automationstore }",
+      "id": "test_workflow_test_automationstore"
     },
     {
       "label": "{ OperatorQueue }",
@@ -1359,9 +1359,9 @@
       "source_file": "test/workflow.test.js",
       "source_location": "L6",
       "_origin": "ast",
-      "id": "test_workflow_test_operatorqueue",
       "community": 5,
-      "norm_label": "{ operatorqueue }"
+      "norm_label": "{ operatorqueue }",
+      "id": "test_workflow_test_operatorqueue"
     },
     {
       "label": "{ SmsGatewayClient }",
@@ -1369,9 +1369,9 @@
       "source_file": "test/workflow.test.js",
       "source_location": "L7",
       "_origin": "ast",
-      "id": "test_workflow_test_smsgatewayclient",
       "community": 5,
-      "norm_label": "{ smsgatewayclient }"
+      "norm_label": "{ smsgatewayclient }",
+      "id": "test_workflow_test_smsgatewayclient"
     },
     {
       "label": "{ AutomationService }",
@@ -1379,9 +1379,9 @@
       "source_file": "test/workflow.test.js",
       "source_location": "L8",
       "_origin": "ast",
-      "id": "test_workflow_test_automationservice",
       "community": 5,
-      "norm_label": "{ automationservice }"
+      "norm_label": "{ automationservice }",
+      "id": "test_workflow_test_automationservice"
     },
     {
       "label": "{ parseRequestText }",
@@ -1389,9 +1389,9 @@
       "source_file": "test/workflow.test.js",
       "source_location": "L9",
       "_origin": "ast",
-      "id": "test_workflow_test_parserequesttext",
       "community": 5,
-      "norm_label": "{ parserequesttext }"
+      "norm_label": "{ parserequesttext }",
+      "id": "test_workflow_test_parserequesttext"
     },
     {
       "label": "{ STATUSES }",
@@ -1399,9 +1399,9 @@
       "source_file": "test/workflow.test.js",
       "source_location": "L10",
       "_origin": "ast",
-      "id": "test_workflow_test_statuses",
       "community": 5,
-      "norm_label": "{ statuses }"
+      "norm_label": "{ statuses }",
+      "id": "test_workflow_test_statuses"
     },
     {
       "label": "createHarness()",
@@ -1409,9 +1409,9 @@
       "source_file": "test/workflow.test.js",
       "source_location": "L12",
       "_origin": "ast",
-      "id": "test_workflow_test_createharness",
       "community": 5,
-      "norm_label": "createharness()"
+      "norm_label": "createharness()",
+      "id": "test_workflow_test_createharness"
     },
     {
       "label": "assertInvalidParse()",
@@ -1419,9 +1419,9 @@
       "source_file": "test/workflow.test.js",
       "source_location": "L20",
       "_origin": "ast",
-      "id": "test_workflow_test_assertinvalidparse",
       "community": 5,
-      "norm_label": "assertinvalidparse()"
+      "norm_label": "assertinvalidparse()",
+      "id": "test_workflow_test_assertinvalidparse"
     },
     {
       "label": "mailer.js",
@@ -18041,7 +18041,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/security-hardening-v1-STATUS.md",
-      "source_location": "L390",
+      "source_location": "L391",
       "weight": 1.0,
       "source": "docs_security_hardening_v1_status_security_hardening_v1_implementation_status_branch_local",
       "target": "docs_security_hardening_v1_status_open_questions_notes_found_while_implementing",
@@ -18063,9 +18063,9 @@
       "source_file": "src/app.js",
       "source_location": "L1411",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_audittocsv",
-      "confidence_score": 1.0
+      "target": "src_app_audittocsv"
     },
     {
       "relation": "contains",
@@ -18073,9 +18073,9 @@
       "source_file": "src/app.js",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_automationservice_default_send_confirmation_grace_ms_default_duplicate_request_window_ms",
-      "confidence_score": 1.0
+      "target": "src_app_automationservice_default_send_confirmation_grace_ms_default_duplicate_request_window_ms"
     },
     {
       "relation": "contains",
@@ -18083,9 +18083,9 @@
       "source_file": "src/app.js",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_automationstore",
-      "confidence_score": 1.0
+      "target": "src_app_automationstore"
     },
     {
       "relation": "contains",
@@ -18093,9 +18093,9 @@
       "source_file": "src/app.js",
       "source_location": "L84",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_buildactivityfeed",
-      "confidence_score": 1.0
+      "target": "src_app_buildactivityfeed"
     },
     {
       "relation": "contains",
@@ -18103,9 +18103,9 @@
       "source_file": "src/app.js",
       "source_location": "L170",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_buildadmindata",
-      "confidence_score": 1.0
+      "target": "src_app_buildadmindata"
     },
     {
       "relation": "contains",
@@ -18113,9 +18113,9 @@
       "source_file": "src/app.js",
       "source_location": "L298",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_buildopsdata",
-      "confidence_score": 1.0
+      "target": "src_app_buildopsdata"
     },
     {
       "relation": "indirect_call",
@@ -18124,9 +18124,9 @@
       "source_location": "L1474",
       "weight": 1.0,
       "context": "collection",
+      "confidence_score": 0.5,
       "source": "src_app",
-      "target": "src_app_createapp",
-      "confidence_score": 0.5
+      "target": "src_app_createapp"
     },
     {
       "relation": "contains",
@@ -18134,9 +18134,9 @@
       "source_file": "src/app.js",
       "source_location": "L1402",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_csv",
-      "confidence_score": 1.0
+      "target": "src_app_csv"
     },
     {
       "relation": "contains",
@@ -18144,9 +18144,9 @@
       "source_file": "src/app.js",
       "source_location": "L61",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_decorategatewayhealth",
-      "confidence_score": 1.0
+      "target": "src_app_decorategatewayhealth"
     },
     {
       "relation": "contains",
@@ -18154,9 +18154,9 @@
       "source_file": "src/app.js",
       "source_location": "L20",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_getbackendurls_getlanaddresses_getpreferredlanip",
-      "confidence_score": 1.0
+      "target": "src_app_getbackendurls_getlanaddresses_getpreferredlanip"
     },
     {
       "relation": "contains",
@@ -18164,9 +18164,9 @@
       "source_file": "src/app.js",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_https",
-      "confidence_score": 1.0
+      "target": "src_app_https"
     },
     {
       "relation": "contains",
@@ -18174,9 +18174,9 @@
       "source_file": "src/app.js",
       "source_location": "L19",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_isadmin_isvalidgateway",
-      "confidence_score": 1.0
+      "target": "src_app_isadmin_isvalidgateway"
     },
     {
       "relation": "contains",
@@ -18184,9 +18184,9 @@
       "source_file": "src/app.js",
       "source_location": "L1367",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_isvalidgatewayheader",
-      "confidence_score": 1.0
+      "target": "src_app_isvalidgatewayheader"
     },
     {
       "relation": "contains",
@@ -18194,9 +18194,9 @@
       "source_file": "src/app.js",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_join",
-      "confidence_score": 1.0
+      "target": "src_app_join"
     },
     {
       "relation": "contains",
@@ -18204,9 +18204,9 @@
       "source_file": "src/app.js",
       "source_location": "L1397",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_json",
-      "confidence_score": 1.0
+      "target": "src_app_json"
     },
     {
       "relation": "contains",
@@ -18214,9 +18214,9 @@
       "source_file": "src/app.js",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_loadgatewayconfig_loadauthconfig_loadtelegramconfig_loadmailconfig",
-      "confidence_score": 1.0
+      "target": "src_app_loadgatewayconfig_loadauthconfig_loadtelegramconfig_loadmailconfig"
     },
     {
       "relation": "contains",
@@ -18224,9 +18224,9 @@
       "source_file": "src/app.js",
       "source_location": "L26",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_mailer",
-      "confidence_score": 1.0
+      "target": "src_app_mailer"
     },
     {
       "relation": "contains",
@@ -18234,9 +18234,9 @@
       "source_file": "src/app.js",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_manualreviewstore",
-      "confidence_score": 1.0
+      "target": "src_app_manualreviewstore"
     },
     {
       "relation": "contains",
@@ -18244,9 +18244,9 @@
       "source_file": "src/app.js",
       "source_location": "L8",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_operatorqueue",
-      "confidence_score": 1.0
+      "target": "src_app_operatorqueue"
     },
     {
       "relation": "contains",
@@ -18254,9 +18254,9 @@
       "source_file": "src/app.js",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_operators",
-      "confidence_score": 1.0
+      "target": "src_app_operators"
     },
     {
       "relation": "contains",
@@ -18264,9 +18264,9 @@
       "source_file": "src/app.js",
       "source_location": "L25",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_otpstore",
-      "confidence_score": 1.0
+      "target": "src_app_otpstore"
     },
     {
       "relation": "contains",
@@ -18274,9 +18274,9 @@
       "source_file": "src/app.js",
       "source_location": "L23",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_parseregistryworkbook",
-      "confidence_score": 1.0
+      "target": "src_app_parseregistryworkbook"
     },
     {
       "relation": "contains",
@@ -18284,9 +18284,9 @@
       "source_file": "src/app.js",
       "source_location": "L24",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_quotatracker",
-      "confidence_score": 1.0
+      "target": "src_app_quotatracker"
     },
     {
       "relation": "contains",
@@ -18294,9 +18294,9 @@
       "source_file": "src/app.js",
       "source_location": "L30",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_ratelimiter",
-      "confidence_score": 1.0
+      "target": "src_app_ratelimiter"
     },
     {
       "relation": "contains",
@@ -18304,9 +18304,9 @@
       "source_file": "src/app.js",
       "source_location": "L1457",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_readbuffer",
-      "confidence_score": 1.0
+      "target": "src_app_readbuffer"
     },
     {
       "relation": "contains",
@@ -18314,9 +18314,9 @@
       "source_file": "src/app.js",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_readfile_readfileasync",
-      "confidence_score": 1.0
+      "target": "src_app_readfile_readfileasync"
     },
     {
       "relation": "contains",
@@ -18324,9 +18324,9 @@
       "source_file": "src/app.js",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_readfile_stat_createreadstream",
-      "confidence_score": 1.0
+      "target": "src_app_readfile_stat_createreadstream"
     },
     {
       "relation": "contains",
@@ -18334,9 +18334,9 @@
       "source_file": "src/app.js",
       "source_location": "L1432",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_readjson",
-      "confidence_score": 1.0
+      "target": "src_app_readjson"
     },
     {
       "relation": "contains",
@@ -18344,9 +18344,9 @@
       "source_file": "src/app.js",
       "source_location": "L58",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_requestratelimiter",
-      "confidence_score": 1.0
+      "target": "src_app_requestratelimiter"
     },
     {
       "relation": "contains",
@@ -18354,9 +18354,9 @@
       "source_file": "src/app.js",
       "source_location": "L1382",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_safeuserfields",
-      "confidence_score": 1.0
+      "target": "src_app_safeuserfields"
     },
     {
       "relation": "contains",
@@ -18364,9 +18364,9 @@
       "source_file": "src/app.js",
       "source_location": "L286",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_sanitizeactivityforpublicops",
-      "confidence_score": 1.0
+      "target": "src_app_sanitizeactivityforpublicops"
     },
     {
       "relation": "contains",
@@ -18374,9 +18374,9 @@
       "source_file": "src/app.js",
       "source_location": "L328",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_sendtelegramwatchdogalert",
-      "confidence_score": 1.0
+      "target": "src_app_sendtelegramwatchdogalert"
     },
     {
       "relation": "contains",
@@ -18384,9 +18384,9 @@
       "source_file": "src/app.js",
       "source_location": "L22",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_serializesessioncookie_clearsessioncookie_sessiontokenfromrequest",
-      "confidence_score": 1.0
+      "target": "src_app_serializesessioncookie_clearsessioncookie_sessiontokenfromrequest"
     },
     {
       "relation": "contains",
@@ -18394,9 +18394,9 @@
       "source_file": "src/app.js",
       "source_location": "L1373",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_servefile",
-      "confidence_score": 1.0
+      "target": "src_app_servefile"
     },
     {
       "relation": "contains",
@@ -18404,9 +18404,9 @@
       "source_file": "src/app.js",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_settingsstore",
-      "confidence_score": 1.0
+      "target": "src_app_settingsstore"
     },
     {
       "relation": "contains",
@@ -18414,9 +18414,9 @@
       "source_file": "src/app.js",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_smsgatewayclient",
-      "confidence_score": 1.0
+      "target": "src_app_smsgatewayclient"
     },
     {
       "relation": "contains",
@@ -18424,9 +18424,9 @@
       "source_file": "src/app.js",
       "source_location": "L70",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_summarizealerts",
-      "confidence_score": 1.0
+      "target": "src_app_summarizealerts"
     },
     {
       "relation": "contains",
@@ -18434,9 +18434,9 @@
       "source_file": "src/app.js",
       "source_location": "L21",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_app_userauthstore_session_ttl_ms_iswithinregistrationwindow",
-      "confidence_score": 1.0
+      "target": "src_app_userauthstore_session_ttl_ms_iswithinregistrationwindow"
     },
     {
       "relation": "imports_from",
@@ -18445,9 +18445,9 @@
       "source_file": "src/app.js",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_service",
-      "confidence_score": 1.0
+      "target": "src_service"
     },
     {
       "relation": "imports",
@@ -18456,9 +18456,9 @@
       "source_file": "src/app.js",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app",
-      "target": "src_service_automationservice",
-      "confidence_score": 1.0
+      "target": "src_service_automationservice"
     },
     {
       "relation": "imports_from",
@@ -18478,9 +18478,9 @@
       "source_file": "test/adminGroupActions.test.js",
       "source_location": "L14",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_admingroupactions_test",
-      "target": "src_app",
-      "confidence_score": 1.0
+      "target": "src_app"
     },
     {
       "relation": "imports_from",
@@ -18565,9 +18565,9 @@
       "source_file": "src/app.js",
       "source_location": "L38",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app_ratelimiter",
-      "target": "src_app_ratelimiter_check",
-      "confidence_score": 1.0
+      "target": "src_app_ratelimiter_check"
     },
     {
       "relation": "method",
@@ -18575,9 +18575,9 @@
       "source_file": "src/app.js",
       "source_location": "L31",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app_ratelimiter",
-      "target": "src_app_ratelimiter_constructor",
-      "confidence_score": 1.0
+      "target": "src_app_ratelimiter_constructor"
     },
     {
       "relation": "method",
@@ -18585,9 +18585,9 @@
       "source_file": "src/app.js",
       "source_location": "L48",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app_ratelimiter",
-      "target": "src_app_ratelimiter_prune",
-      "confidence_score": 1.0
+      "target": "src_app_ratelimiter_prune"
     },
     {
       "relation": "calls",
@@ -18596,9 +18596,9 @@
       "source_file": "src/app.js",
       "source_location": "L35",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app_ratelimiter_constructor",
-      "target": "src_app_ratelimiter_prune",
-      "confidence_score": 1.0
+      "target": "src_app_ratelimiter_prune"
     },
     {
       "relation": "calls",
@@ -18607,9 +18607,9 @@
       "source_file": "src/app.js",
       "source_location": "L172",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app_buildadmindata",
-      "target": "src_app_decorategatewayhealth",
-      "confidence_score": 1.0
+      "target": "src_app_decorategatewayhealth"
     },
     {
       "relation": "calls",
@@ -18618,9 +18618,9 @@
       "source_file": "src/app.js",
       "source_location": "L193",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app_buildadmindata",
-      "target": "src_app_summarizealerts",
-      "confidence_score": 1.0
+      "target": "src_app_summarizealerts"
     },
     {
       "relation": "calls",
@@ -18629,9 +18629,9 @@
       "source_file": "src/app.js",
       "source_location": "L194",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app_buildadmindata",
-      "target": "src_app_buildactivityfeed",
-      "confidence_score": 1.0
+      "target": "src_app_buildactivityfeed"
     },
     {
       "relation": "calls",
@@ -18640,9 +18640,9 @@
       "source_file": "src/app.js",
       "source_location": "L299",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app_buildopsdata",
-      "target": "src_app_buildadmindata",
-      "confidence_score": 1.0
+      "target": "src_app_buildadmindata"
     },
     {
       "relation": "calls",
@@ -18651,9 +18651,9 @@
       "source_file": "src/app.js",
       "source_location": "L323",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app_buildopsdata",
-      "target": "src_app_sanitizeactivityforpublicops",
-      "confidence_score": 1.0
+      "target": "src_app_sanitizeactivityforpublicops"
     },
     {
       "relation": "calls",
@@ -18662,9 +18662,9 @@
       "source_file": "src/app.js",
       "source_location": "L397",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_app_createapp",
-      "target": "src_app_json",
-      "confidence_score": 1.0
+      "target": "src_app_json"
     },
     {
       "relation": "imports",
@@ -18684,9 +18684,9 @@
       "source_file": "test/adminGroupActions.test.js",
       "source_location": "L14",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_admingroupactions_test",
-      "target": "src_app_createapp",
-      "confidence_score": 1.0
+      "target": "src_app_createapp"
     },
     {
       "relation": "calls",
@@ -18859,9 +18859,9 @@
       "source_file": "src/service.js",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service",
-      "target": "src_service_analyzeoperatorreply_inferreplyfamilies_replycontradictspayload",
-      "confidence_score": 1.0
+      "target": "src_service_analyzeoperatorreply_inferreplyfamilies_replycontradictspayload"
     },
     {
       "relation": "indirect_call",
@@ -18870,9 +18870,9 @@
       "source_location": "L1051",
       "weight": 1.0,
       "context": "collection",
+      "confidence_score": 0.5,
       "source": "src_service",
-      "target": "src_service_automationservice",
-      "confidence_score": 0.5
+      "target": "src_service_automationservice"
     },
     {
       "relation": "contains",
@@ -18880,9 +18880,9 @@
       "source_file": "src/service.js",
       "source_location": "L1016",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service",
-      "target": "src_service_collectdispatchreplymessages",
-      "confidence_score": 1.0
+      "target": "src_service_collectdispatchreplymessages"
     },
     {
       "relation": "contains",
@@ -18890,9 +18890,9 @@
       "source_file": "src/service.js",
       "source_location": "L1032",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service",
-      "target": "src_service_confidence_ranks",
-      "confidence_score": 1.0
+      "target": "src_service_confidence_ranks"
     },
     {
       "relation": "contains",
@@ -18900,9 +18900,9 @@
       "source_file": "src/service.js",
       "source_location": "L1033",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service",
-      "target": "src_service_confidencerank",
-      "confidence_score": 1.0
+      "target": "src_service_confidencerank"
     },
     {
       "relation": "indirect_call",
@@ -18911,9 +18911,9 @@
       "source_location": "L1055",
       "weight": 1.0,
       "context": "collection",
+      "confidence_score": 0.5,
       "source": "src_service",
-      "target": "src_service_formatcombinedreply",
-      "confidence_score": 0.5
+      "target": "src_service_formatcombinedreply"
     },
     {
       "relation": "contains",
@@ -18921,9 +18921,9 @@
       "source_file": "src/service.js",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service",
-      "target": "src_service_operators_statuses_dispatch_statuses_terminal_dispatch_statuses",
-      "confidence_score": 1.0
+      "target": "src_service_operators_statuses_dispatch_statuses_terminal_dispatch_statuses"
     },
     {
       "relation": "contains",
@@ -18931,9 +18931,9 @@
       "source_file": "src/service.js",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service",
-      "target": "src_service_parserequesttext",
-      "confidence_score": 1.0
+      "target": "src_service_parserequesttext"
     },
     {
       "relation": "contains",
@@ -18941,9 +18941,9 @@
       "source_file": "src/service.js",
       "source_location": "L1044",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service",
-      "target": "src_service_replytypescore",
-      "confidence_score": 1.0
+      "target": "src_service_replytypescore"
     },
     {
       "relation": "contains",
@@ -18951,9 +18951,9 @@
       "source_file": "src/service.js",
       "source_location": "L1037",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service",
-      "target": "src_service_requeststatusrank",
-      "confidence_score": 1.0
+      "target": "src_service_requeststatusrank"
     },
     {
       "relation": "imports_from",
@@ -18984,9 +18984,9 @@
       "source_file": "test/workflow.test.js",
       "source_location": "L8",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_workflow_test",
-      "target": "src_service",
-      "confidence_score": 1.0
+      "target": "src_service"
     },
     {
       "relation": "method",
@@ -18994,9 +18994,9 @@
       "source_file": "src/service.js",
       "source_location": "L589",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice",
-      "target": "src_service_automationservice_approvereply",
-      "confidence_score": 1.0
+      "target": "src_service_automationservice_approvereply"
     },
     {
       "relation": "method",
@@ -19004,9 +19004,9 @@
       "source_file": "src/service.js",
       "source_location": "L17",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice",
-      "target": "src_service_automationservice_constructor",
-      "confidence_score": 1.0
+      "target": "src_service_automationservice_constructor"
     },
     {
       "relation": "method",
@@ -19014,9 +19014,9 @@
       "source_file": "src/service.js",
       "source_location": "L795",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice",
-      "target": "src_service_automationservice_correctmatch",
-      "confidence_score": 1.0
+      "target": "src_service_automationservice_correctmatch"
     },
     {
       "relation": "method",
@@ -19024,9 +19024,9 @@
       "source_file": "src/service.js",
       "source_location": "L929",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice",
-      "target": "src_service_automationservice_dispatchsentat",
-      "confidence_score": 1.0
+      "target": "src_service_automationservice_dispatchsentat"
     },
     {
       "relation": "method",
@@ -19034,9 +19034,9 @@
       "source_file": "src/service.js",
       "source_location": "L936",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice",
-      "target": "src_service_automationservice_dispatchtimeoutstate",
-      "confidence_score": 1.0
+      "target": "src_service_automationservice_dispatchtimeoutstate"
     },
     {
       "relation": "method",
@@ -19044,9 +19044,9 @@
       "source_file": "src/service.js",
       "source_location": "L521",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice",
-      "target": "src_service_automationservice_finalizeifterminal",
-      "confidence_score": 1.0
+      "target": "src_service_automationservice_finalizeifterminal"
     },
     {
       "relation": "method",
@@ -19054,9 +19054,9 @@
       "source_file": "src/service.js",
       "source_location": "L690",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice",
-      "target": "src_service_automationservice_getactivedraftforrequest",
-      "confidence_score": 1.0
+      "target": "src_service_automationservice_getactivedraftforrequest"
     },
     {
       "relation": "method",
@@ -19064,9 +19064,9 @@
       "source_file": "src/service.js",
       "source_location": "L963",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice",
-      "target": "src_service_automationservice_getdispatchoutbox",
-      "confidence_score": 1.0
+      "target": "src_service_automationservice_getdispatchoutbox"
     },
     {
       "relation": "method",
@@ -19074,9 +19074,9 @@
       "source_file": "src/service.js",
       "source_location": "L697",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice",
-      "target": "src_service_automationservice_getlivereplyforrequest",
-      "confidence_score": 1.0
+      "target": "src_service_automationservice_getlivereplyforrequest"
     },
     {
       "relation": "method",
@@ -19084,9 +19084,9 @@
       "source_file": "src/service.js",
       "source_location": "L854",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice",
-      "target": "src_service_automationservice_manualmatch",
-      "confidence_score": 1.0
+      "target": "src_service_automationservice_manualmatch"
     },
     {
       "relation": "method",
@@ -19094,9 +19094,9 @@
       "source_file": "src/service.js",
       "source_location": "L663",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice",
-      "target": "src_service_automationservice_markreplyedited",
-      "confidence_score": 1.0
+      "target": "src_service_automationservice_markreplyedited"
     },
     {
       "relation": "method",
@@ -19104,9 +19104,9 @@
       "source_file": "src/service.js",
       "source_location": "L626",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice",
-      "target": "src_service_automationservice_markreplyposted",
-      "confidence_score": 1.0
+      "target": "src_service_automationservice_markreplyposted"
     },
     {
       "relation": "method",
@@ -19114,9 +19114,9 @@
       "source_file": "src/service.js",
       "source_location": "L751",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice",
-      "target": "src_service_automationservice_rankreplycandidates",
-      "confidence_score": 1.0
+      "target": "src_service_automationservice_rankreplycandidates"
     },
     {
       "relation": "method",
@@ -19124,9 +19124,9 @@
       "source_file": "src/service.js",
       "source_location": "L175",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice",
-      "target": "src_service_automationservice_receivesmswebhook",
-      "confidence_score": 1.0
+      "target": "src_service_automationservice_receivesmswebhook"
     },
     {
       "relation": "method",
@@ -19134,9 +19134,9 @@
       "source_file": "src/service.js",
       "source_location": "L967",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice",
-      "target": "src_service_automationservice_recordmanualreviewcandidate",
-      "confidence_score": 1.0
+      "target": "src_service_automationservice_recordmanualreviewcandidate"
     },
     {
       "relation": "method",
@@ -19144,9 +19144,9 @@
       "source_file": "src/service.js",
       "source_location": "L704",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice",
-      "target": "src_service_automationservice_rejectrequest",
-      "confidence_score": 1.0
+      "target": "src_service_automationservice_rejectrequest"
     },
     {
       "relation": "method",
@@ -19154,9 +19154,9 @@
       "source_file": "src/service.js",
       "source_location": "L716",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice",
-      "target": "src_service_automationservice_retryrequest",
-      "confidence_score": 1.0
+      "target": "src_service_automationservice_retryrequest"
     },
     {
       "relation": "method",
@@ -19164,9 +19164,9 @@
       "source_file": "src/service.js",
       "source_location": "L46",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice",
-      "target": "src_service_automationservice_submitrequest",
-      "confidence_score": 1.0
+      "target": "src_service_automationservice_submitrequest"
     },
     {
       "relation": "method",
@@ -19174,9 +19174,9 @@
       "source_file": "src/service.js",
       "source_location": "L893",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice",
-      "target": "src_service_automationservice_timeoutwaitingrequests",
-      "confidence_score": 1.0
+      "target": "src_service_automationservice_timeoutwaitingrequests"
     },
     {
       "relation": "imports",
@@ -19207,9 +19207,9 @@
       "source_file": "test/workflow.test.js",
       "source_location": "L8",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_workflow_test",
-      "target": "src_service_automationservice",
-      "confidence_score": 1.0
+      "target": "src_service_automationservice"
     },
     {
       "relation": "calls",
@@ -19218,9 +19218,9 @@
       "source_file": "src/service.js",
       "source_location": "L451",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice_receivesmswebhook",
-      "target": "src_service_automationservice_finalizeifterminal",
-      "confidence_score": 1.0
+      "target": "src_service_automationservice_finalizeifterminal"
     },
     {
       "relation": "calls",
@@ -19229,9 +19229,9 @@
       "source_file": "src/service.js",
       "source_location": "L375",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice_receivesmswebhook",
-      "target": "src_service_automationservice_getactivedraftforrequest",
-      "confidence_score": 1.0
+      "target": "src_service_automationservice_getactivedraftforrequest"
     },
     {
       "relation": "calls",
@@ -19240,9 +19240,9 @@
       "source_file": "src/service.js",
       "source_location": "L360",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice_receivesmswebhook",
-      "target": "src_service_automationservice_recordmanualreviewcandidate",
-      "confidence_score": 1.0
+      "target": "src_service_automationservice_recordmanualreviewcandidate"
     },
     {
       "relation": "calls",
@@ -19251,9 +19251,9 @@
       "source_file": "src/service.js",
       "source_location": "L241",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice_receivesmswebhook",
-      "target": "src_service_confidencerank",
-      "confidence_score": 1.0
+      "target": "src_service_confidencerank"
     },
     {
       "relation": "calls",
@@ -19262,9 +19262,9 @@
       "source_file": "src/service.js",
       "source_location": "L373",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice_receivesmswebhook",
-      "target": "src_service_formatcombinedreply",
-      "confidence_score": 1.0
+      "target": "src_service_formatcombinedreply"
     },
     {
       "relation": "calls",
@@ -19273,9 +19273,9 @@
       "source_file": "src/service.js",
       "source_location": "L242",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice_receivesmswebhook",
-      "target": "src_service_replytypescore",
-      "confidence_score": 1.0
+      "target": "src_service_replytypescore"
     },
     {
       "relation": "calls",
@@ -19284,9 +19284,9 @@
       "source_file": "src/service.js",
       "source_location": "L245",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice_receivesmswebhook",
-      "target": "src_service_requeststatusrank",
-      "confidence_score": 1.0
+      "target": "src_service_requeststatusrank"
     },
     {
       "relation": "calls",
@@ -19295,9 +19295,9 @@
       "source_file": "src/service.js",
       "source_location": "L536",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice_finalizeifterminal",
-      "target": "src_service_automationservice_getactivedraftforrequest",
-      "confidence_score": 1.0
+      "target": "src_service_automationservice_getactivedraftforrequest"
     },
     {
       "relation": "calls",
@@ -19306,9 +19306,9 @@
       "source_file": "src/service.js",
       "source_location": "L532",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice_finalizeifterminal",
-      "target": "src_service_formatcombinedreply",
-      "confidence_score": 1.0
+      "target": "src_service_formatcombinedreply"
     },
     {
       "relation": "calls",
@@ -19317,9 +19317,9 @@
       "source_file": "src/service.js",
       "source_location": "L882",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice_manualmatch",
-      "target": "src_service_automationservice_finalizeifterminal",
-      "confidence_score": 1.0
+      "target": "src_service_automationservice_finalizeifterminal"
     },
     {
       "relation": "calls",
@@ -19328,9 +19328,9 @@
       "source_file": "src/service.js",
       "source_location": "L917",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice_timeoutwaitingrequests",
-      "target": "src_service_automationservice_finalizeifterminal",
-      "confidence_score": 1.0
+      "target": "src_service_automationservice_finalizeifterminal"
     },
     {
       "relation": "calls",
@@ -19339,9 +19339,9 @@
       "source_file": "src/service.js",
       "source_location": "L768",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice_rankreplycandidates",
-      "target": "src_service_confidencerank",
-      "confidence_score": 1.0
+      "target": "src_service_confidencerank"
     },
     {
       "relation": "calls",
@@ -19350,9 +19350,9 @@
       "source_file": "src/service.js",
       "source_location": "L766",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice_rankreplycandidates",
-      "target": "src_service_replytypescore",
-      "confidence_score": 1.0
+      "target": "src_service_replytypescore"
     },
     {
       "relation": "calls",
@@ -19361,9 +19361,9 @@
       "source_file": "src/service.js",
       "source_location": "L818",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice_correctmatch",
-      "target": "src_service_automationservice_recordmanualreviewcandidate",
-      "confidence_score": 1.0
+      "target": "src_service_automationservice_recordmanualreviewcandidate"
     },
     {
       "relation": "calls",
@@ -19372,9 +19372,9 @@
       "source_file": "src/service.js",
       "source_location": "L833",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice_correctmatch",
-      "target": "src_service_formatcombinedreply",
-      "confidence_score": 1.0
+      "target": "src_service_formatcombinedreply"
     },
     {
       "relation": "calls",
@@ -19383,9 +19383,9 @@
       "source_file": "src/service.js",
       "source_location": "L872",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice_manualmatch",
-      "target": "src_service_automationservice_recordmanualreviewcandidate",
-      "confidence_score": 1.0
+      "target": "src_service_automationservice_recordmanualreviewcandidate"
     },
     {
       "relation": "calls",
@@ -19394,9 +19394,9 @@
       "source_file": "src/service.js",
       "source_location": "L903",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice_timeoutwaitingrequests",
-      "target": "src_service_automationservice_dispatchtimeoutstate",
-      "confidence_score": 1.0
+      "target": "src_service_automationservice_dispatchtimeoutstate"
     },
     {
       "relation": "calls",
@@ -19405,9 +19405,9 @@
       "source_file": "src/service.js",
       "source_location": "L930",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice_dispatchsentat",
-      "target": "src_service_automationservice_getdispatchoutbox",
-      "confidence_score": 1.0
+      "target": "src_service_automationservice_getdispatchoutbox"
     },
     {
       "relation": "calls",
@@ -19416,9 +19416,9 @@
       "source_file": "src/service.js",
       "source_location": "L937",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_automationservice_dispatchtimeoutstate",
-      "target": "src_service_automationservice_getdispatchoutbox",
-      "confidence_score": 1.0
+      "target": "src_service_automationservice_getdispatchoutbox"
     },
     {
       "relation": "calls",
@@ -19427,9 +19427,9 @@
       "source_file": "src/service.js",
       "source_location": "L992",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_service_formatcombinedreply",
-      "target": "src_service_collectdispatchreplymessages",
-      "confidence_score": 1.0
+      "target": "src_service_collectdispatchreplymessages"
     },
     {
       "relation": "indirect_call",
@@ -19438,9 +19438,9 @@
       "source_location": "L169",
       "weight": 1.0,
       "context": "collection",
+      "confidence_score": 0.5,
       "source": "telegram_bridge_backendclient",
-      "target": "telegram_bridge_backendclient_backendclient",
-      "confidence_score": 0.5
+      "target": "telegram_bridge_backendclient_backendclient"
     },
     {
       "relation": "imports_from",
@@ -19459,9 +19459,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L139",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_backendclient_backendclient",
-      "target": "telegram_bridge_backendclient_backendclient_checkmoderationauthorized",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_backendclient_backendclient_checkmoderationauthorized"
     },
     {
       "relation": "method",
@@ -19469,9 +19469,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_backendclient_backendclient",
-      "target": "telegram_bridge_backendclient_backendclient_constructor",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_backendclient_backendclient_constructor"
     },
     {
       "relation": "method",
@@ -19479,9 +19479,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L14",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_backendclient_backendclient",
-      "target": "telegram_bridge_backendclient_backendclient_headers",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_backendclient_backendclient_headers"
     },
     {
       "relation": "method",
@@ -19489,9 +19489,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L31",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_backendclient_backendclient",
-      "target": "telegram_bridge_backendclient_backendclient_listapprovedreplies",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_backendclient_backendclient_listapprovedreplies"
     },
     {
       "relation": "method",
@@ -19499,9 +19499,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L59",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_backendclient_backendclient",
-      "target": "telegram_bridge_backendclient_backendclient_listpendingedits",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_backendclient_backendclient_listpendingedits"
     },
     {
       "relation": "method",
@@ -19509,9 +19509,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L39",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_backendclient_backendclient",
-      "target": "telegram_bridge_backendclient_backendclient_listrecentrequests",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_backendclient_backendclient_listrecentrequests"
     },
     {
       "relation": "method",
@@ -19519,9 +19519,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L67",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_backendclient_backendclient",
-      "target": "telegram_bridge_backendclient_backendclient_markreplyedited",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_backendclient_backendclient_markreplyedited"
     },
     {
       "relation": "method",
@@ -19529,9 +19529,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L47",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_backendclient_backendclient",
-      "target": "telegram_bridge_backendclient_backendclient_markreplyposted",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_backendclient_backendclient_markreplyposted"
     },
     {
       "relation": "method",
@@ -19539,9 +19539,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L78",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_backendclient_backendclient",
-      "target": "telegram_bridge_backendclient_backendclient_reportchatmismatch",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_backendclient_backendclient_reportchatmismatch"
     },
     {
       "relation": "method",
@@ -19549,9 +19549,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L156",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_backendclient_backendclient",
-      "target": "telegram_bridge_backendclient_backendclient_reportmoderationaction",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_backendclient_backendclient_reportmoderationaction"
     },
     {
       "relation": "method",
@@ -19559,9 +19559,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L92",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_backendclient_backendclient",
-      "target": "telegram_bridge_backendclient_backendclient_reportunauthorizedattempt",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_backendclient_backendclient_reportunauthorizedattempt"
     },
     {
       "relation": "method",
@@ -19569,9 +19569,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L108",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_backendclient_backendclient",
-      "target": "telegram_bridge_backendclient_backendclient_requestregistrationlink",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_backendclient_backendclient_requestregistrationlink"
     },
     {
       "relation": "method",
@@ -19579,9 +19579,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L22",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_backendclient_backendclient",
-      "target": "telegram_bridge_backendclient_backendclient_submitrequest",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_backendclient_backendclient_submitrequest"
     },
     {
       "relation": "method",
@@ -19589,9 +19589,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L127",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_backendclient_backendclient",
-      "target": "telegram_bridge_backendclient_backendclient_verifyotpcode",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_backendclient_backendclient_verifyotpcode"
     },
     {
       "relation": "imports",
@@ -19611,9 +19611,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L143",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_backendclient_backendclient_checkmoderationauthorized",
-      "target": "telegram_bridge_backendclient_backendclient_headers",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_backendclient_backendclient_headers"
     },
     {
       "relation": "calls",
@@ -19622,9 +19622,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L33",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_backendclient_backendclient_listapprovedreplies",
-      "target": "telegram_bridge_backendclient_backendclient_headers",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_backendclient_backendclient_headers"
     },
     {
       "relation": "calls",
@@ -19633,9 +19633,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L61",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_backendclient_backendclient_listpendingedits",
-      "target": "telegram_bridge_backendclient_backendclient_headers",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_backendclient_backendclient_headers"
     },
     {
       "relation": "calls",
@@ -19644,9 +19644,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L41",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_backendclient_backendclient_listrecentrequests",
-      "target": "telegram_bridge_backendclient_backendclient_headers",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_backendclient_backendclient_headers"
     },
     {
       "relation": "calls",
@@ -19655,9 +19655,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L70",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_backendclient_backendclient_markreplyedited",
-      "target": "telegram_bridge_backendclient_backendclient_headers",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_backendclient_backendclient_headers"
     },
     {
       "relation": "calls",
@@ -19666,9 +19666,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L52",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_backendclient_backendclient_markreplyposted",
-      "target": "telegram_bridge_backendclient_backendclient_headers",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_backendclient_backendclient_headers"
     },
     {
       "relation": "calls",
@@ -19677,9 +19677,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L82",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_backendclient_backendclient_reportchatmismatch",
-      "target": "telegram_bridge_backendclient_backendclient_headers",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_backendclient_backendclient_headers"
     },
     {
       "relation": "calls",
@@ -19688,9 +19688,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L160",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_backendclient_backendclient_reportmoderationaction",
-      "target": "telegram_bridge_backendclient_backendclient_headers",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_backendclient_backendclient_headers"
     },
     {
       "relation": "calls",
@@ -19699,9 +19699,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L96",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_backendclient_backendclient_reportunauthorizedattempt",
-      "target": "telegram_bridge_backendclient_backendclient_headers",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_backendclient_backendclient_headers"
     },
     {
       "relation": "calls",
@@ -19710,9 +19710,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L112",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_backendclient_backendclient_requestregistrationlink",
-      "target": "telegram_bridge_backendclient_backendclient_headers",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_backendclient_backendclient_headers"
     },
     {
       "relation": "calls",
@@ -19721,9 +19721,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L25",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_backendclient_backendclient_submitrequest",
-      "target": "telegram_bridge_backendclient_backendclient_headers",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_backendclient_backendclient_headers"
     },
     {
       "relation": "calls",
@@ -19732,9 +19732,9 @@
       "source_file": "telegram-bridge/backendClient.js",
       "source_location": "L130",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_backendclient_backendclient_verifyotpcode",
-      "target": "telegram_bridge_backendclient_backendclient_headers",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_backendclient_backendclient_headers"
     },
     {
       "relation": "indirect_call",
@@ -19743,9 +19743,9 @@
       "source_location": "L436",
       "weight": 1.0,
       "context": "collection",
+      "confidence_score": 0.5,
       "source": "telegram_bridge_bridge",
-      "target": "telegram_bridge_bridge_buildmention",
-      "confidence_score": 0.5
+      "target": "telegram_bridge_bridge_buildmention"
     },
     {
       "relation": "indirect_call",
@@ -19754,9 +19754,9 @@
       "source_location": "L436",
       "weight": 1.0,
       "context": "collection",
+      "confidence_score": 0.5,
       "source": "telegram_bridge_bridge",
-      "target": "telegram_bridge_bridge_handleintake",
-      "confidence_score": 0.5
+      "target": "telegram_bridge_bridge_handleintake"
     },
     {
       "relation": "indirect_call",
@@ -19765,9 +19765,9 @@
       "source_location": "L436",
       "weight": 1.0,
       "context": "collection",
+      "confidence_score": 0.5,
       "source": "telegram_bridge_bridge",
-      "target": "telegram_bridge_bridge_notifytimeouts",
-      "confidence_score": 0.5
+      "target": "telegram_bridge_bridge_notifytimeouts"
     },
     {
       "relation": "indirect_call",
@@ -19776,9 +19776,9 @@
       "source_location": "L436",
       "weight": 1.0,
       "context": "collection",
+      "confidence_score": 0.5,
       "source": "telegram_bridge_bridge",
-      "target": "telegram_bridge_bridge_planintake",
-      "confidence_score": 0.5
+      "target": "telegram_bridge_bridge_planintake"
     },
     {
       "relation": "indirect_call",
@@ -19787,9 +19787,9 @@
       "source_location": "L436",
       "weight": 1.0,
       "context": "collection",
+      "confidence_score": 0.5,
       "source": "telegram_bridge_bridge",
-      "target": "telegram_bridge_bridge_postapprovedreplies",
-      "confidence_score": 0.5
+      "target": "telegram_bridge_bridge_postapprovedreplies"
     },
     {
       "relation": "indirect_call",
@@ -19798,9 +19798,9 @@
       "source_location": "L436",
       "weight": 1.0,
       "context": "collection",
+      "confidence_score": 0.5,
       "source": "telegram_bridge_bridge",
-      "target": "telegram_bridge_bridge_postliveedits",
-      "confidence_score": 0.5
+      "target": "telegram_bridge_bridge_postliveedits"
     },
     {
       "relation": "indirect_call",
@@ -19809,9 +19809,9 @@
       "source_location": "L436",
       "weight": 1.0,
       "context": "collection",
+      "confidence_score": 0.5,
       "source": "telegram_bridge_bridge",
-      "target": "telegram_bridge_bridge_seednotifiedtimeouts",
-      "confidence_score": 0.5
+      "target": "telegram_bridge_bridge_seednotifiedtimeouts"
     },
     {
       "relation": "indirect_call",
@@ -19820,9 +19820,9 @@
       "source_location": "L436",
       "weight": 1.0,
       "context": "collection",
+      "confidence_score": 0.5,
       "source": "telegram_bridge_bridge",
-      "target": "telegram_bridge_bridge_shouldsuppressgroupreply",
-      "confidence_score": 0.5
+      "target": "telegram_bridge_bridge_shouldsuppressgroupreply"
     },
     {
       "relation": "imports_from",
@@ -19842,9 +19842,9 @@
       "source_file": "test/telegramBridge.test.js",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_telegrambridge_test",
-      "target": "telegram_bridge_bridge",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_bridge"
     },
     {
       "relation": "imports_from",
@@ -19853,9 +19853,9 @@
       "source_file": "test/workflow.test.js",
       "source_location": "L1258",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_workflow_test",
-      "target": "telegram_bridge_bridge",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_bridge"
     },
     {
       "relation": "calls",
@@ -19864,9 +19864,9 @@
       "source_file": "telegram-bridge/bridge.js",
       "source_location": "L419",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_bridge_notifytimeouts",
-      "target": "telegram_bridge_bridge_buildmention",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_bridge_buildmention"
     },
     {
       "relation": "calls",
@@ -19875,9 +19875,9 @@
       "source_file": "telegram-bridge/bridge.js",
       "source_location": "L337",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_bridge_postapprovedreplies",
-      "target": "telegram_bridge_bridge_buildmention",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_bridge_buildmention"
     },
     {
       "relation": "calls",
@@ -19886,9 +19886,9 @@
       "source_file": "telegram-bridge/bridge.js",
       "source_location": "L360",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_bridge_postliveedits",
-      "target": "telegram_bridge_bridge_buildmention",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_bridge_buildmention"
     },
     {
       "relation": "imports",
@@ -19897,9 +19897,9 @@
       "source_file": "test/telegramBridge.test.js",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_telegrambridge_test",
-      "target": "telegram_bridge_bridge_buildmention",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_bridge_buildmention"
     },
     {
       "relation": "imports",
@@ -19908,9 +19908,9 @@
       "source_file": "test/workflow.test.js",
       "source_location": "L1258",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_workflow_test",
-      "target": "telegram_bridge_bridge_buildmention",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_bridge_buildmention"
     },
     {
       "relation": "calls",
@@ -19919,9 +19919,9 @@
       "source_file": "telegram-bridge/bridge.js",
       "source_location": "L294",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_bridge_handleintake",
-      "target": "telegram_bridge_bridge_shouldsuppressgroupreply",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_bridge_shouldsuppressgroupreply"
     },
     {
       "relation": "imports",
@@ -19930,9 +19930,9 @@
       "source_file": "test/telegramBridge.test.js",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_telegrambridge_test",
-      "target": "telegram_bridge_bridge_shouldsuppressgroupreply",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_bridge_shouldsuppressgroupreply"
     },
     {
       "relation": "calls",
@@ -19941,9 +19941,9 @@
       "source_file": "telegram-bridge/bridge.js",
       "source_location": "L161",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_bridge_handleintake",
-      "target": "telegram_bridge_bridge_planintake",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_bridge_planintake"
     },
     {
       "relation": "imports",
@@ -19952,9 +19952,9 @@
       "source_file": "test/telegramBridge.test.js",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_telegrambridge_test",
-      "target": "telegram_bridge_bridge_planintake",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_bridge_planintake"
     },
     {
       "relation": "imports",
@@ -19985,9 +19985,9 @@
       "source_file": "test/telegramBridge.test.js",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_telegrambridge_test",
-      "target": "telegram_bridge_bridge_handleintake",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_bridge_handleintake"
     },
     {
       "relation": "imports",
@@ -20018,9 +20018,9 @@
       "source_file": "test/telegramBridge.test.js",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_telegrambridge_test",
-      "target": "telegram_bridge_bridge_postapprovedreplies",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_bridge_postapprovedreplies"
     },
     {
       "relation": "imports",
@@ -20073,9 +20073,9 @@
       "source_file": "test/telegramBridge.test.js",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_telegrambridge_test",
-      "target": "telegram_bridge_bridge_seednotifiedtimeouts",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_bridge_seednotifiedtimeouts"
     },
     {
       "relation": "imports",
@@ -20106,9 +20106,9 @@
       "source_file": "test/telegramBridge.test.js",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_telegrambridge_test",
-      "target": "telegram_bridge_bridge_notifytimeouts",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_bridge_notifytimeouts"
     },
     {
       "relation": "imports",
@@ -20117,9 +20117,9 @@
       "source_file": "test/workflow.test.js",
       "source_location": "L1258",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_workflow_test",
-      "target": "telegram_bridge_bridge_notifytimeouts",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_bridge_notifytimeouts"
     },
     {
       "relation": "imports_from",
@@ -20138,9 +20138,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_telegramclient",
-      "target": "telegram_bridge_telegramclient_defaultsleep",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_telegramclient_defaultsleep"
     },
     {
       "relation": "indirect_call",
@@ -20149,9 +20149,9 @@
       "source_location": "L193",
       "weight": 1.0,
       "context": "collection",
+      "confidence_score": 0.5,
       "source": "telegram_bridge_telegramclient",
-      "target": "telegram_bridge_telegramclient_telegramclient",
-      "confidence_score": 0.5
+      "target": "telegram_bridge_telegramclient_telegramclient"
     },
     {
       "relation": "imports_from",
@@ -20181,9 +20181,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L117",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_telegramclient_telegramclient",
-      "target": "telegram_bridge_telegramclient_telegramclient_banchatmember",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_telegramclient_telegramclient_banchatmember"
     },
     {
       "relation": "method",
@@ -20191,9 +20191,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L24",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_telegramclient_telegramclient",
-      "target": "telegram_bridge_telegramclient_telegramclient_call",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_telegramclient_telegramclient_call"
     },
     {
       "relation": "method",
@@ -20201,9 +20201,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_telegramclient_telegramclient",
-      "target": "telegram_bridge_telegramclient_telegramclient_constructor",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_telegramclient_telegramclient_constructor"
     },
     {
       "relation": "method",
@@ -20211,9 +20211,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L157",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_telegramclient_telegramclient",
-      "target": "telegram_bridge_telegramclient_telegramclient_editmessage",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_telegramclient_telegramclient_editmessage"
     },
     {
       "relation": "method",
@@ -20221,9 +20221,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L73",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_telegramclient_telegramclient",
-      "target": "telegram_bridge_telegramclient_telegramclient_getupdates",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_telegramclient_telegramclient_getupdates"
     },
     {
       "relation": "method",
@@ -20231,9 +20231,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L134",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_telegramclient_telegramclient",
-      "target": "telegram_bridge_telegramclient_telegramclient_restrictchatmember",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_telegramclient_telegramclient_restrictchatmember"
     },
     {
       "relation": "method",
@@ -20241,9 +20241,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L103",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_telegramclient_telegramclient",
-      "target": "telegram_bridge_telegramclient_telegramclient_sendmessage",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_telegramclient_telegramclient_sendmessage"
     },
     {
       "relation": "method",
@@ -20251,9 +20251,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L83",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_telegramclient_telegramclient",
-      "target": "telegram_bridge_telegramclient_telegramclient_sendthreadedreply",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_telegramclient_telegramclient_sendthreadedreply"
     },
     {
       "relation": "method",
@@ -20261,9 +20261,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L46",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_telegramclient_telegramclient",
-      "target": "telegram_bridge_telegramclient_telegramclient_throttledsend",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_telegramclient_telegramclient_throttledsend"
     },
     {
       "relation": "method",
@@ -20271,9 +20271,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L125",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_telegramclient_telegramclient",
-      "target": "telegram_bridge_telegramclient_telegramclient_unbanchatmember",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_telegramclient_telegramclient_unbanchatmember"
     },
     {
       "relation": "imports",
@@ -20293,9 +20293,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L118",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_telegramclient_telegramclient_banchatmember",
-      "target": "telegram_bridge_telegramclient_telegramclient_call",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_telegramclient_telegramclient_call"
     },
     {
       "relation": "calls",
@@ -20304,9 +20304,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L171",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_telegramclient_telegramclient_editmessage",
-      "target": "telegram_bridge_telegramclient_telegramclient_call",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_telegramclient_telegramclient_call"
     },
     {
       "relation": "calls",
@@ -20315,9 +20315,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L74",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_telegramclient_telegramclient_getupdates",
-      "target": "telegram_bridge_telegramclient_telegramclient_call",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_telegramclient_telegramclient_call"
     },
     {
       "relation": "calls",
@@ -20326,9 +20326,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L136",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_telegramclient_telegramclient_restrictchatmember",
-      "target": "telegram_bridge_telegramclient_telegramclient_call",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_telegramclient_telegramclient_call"
     },
     {
       "relation": "calls",
@@ -20337,9 +20337,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L104",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_telegramclient_telegramclient_sendmessage",
-      "target": "telegram_bridge_telegramclient_telegramclient_call",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_telegramclient_telegramclient_call"
     },
     {
       "relation": "calls",
@@ -20348,9 +20348,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L100",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_telegramclient_telegramclient_sendthreadedreply",
-      "target": "telegram_bridge_telegramclient_telegramclient_call",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_telegramclient_telegramclient_call"
     },
     {
       "relation": "calls",
@@ -20359,9 +20359,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L126",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_telegramclient_telegramclient_unbanchatmember",
-      "target": "telegram_bridge_telegramclient_telegramclient_call",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_telegramclient_telegramclient_call"
     },
     {
       "relation": "calls",
@@ -20370,9 +20370,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L118",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_telegramclient_telegramclient_banchatmember",
-      "target": "telegram_bridge_telegramclient_telegramclient_throttledsend",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_telegramclient_telegramclient_throttledsend"
     },
     {
       "relation": "calls",
@@ -20381,9 +20381,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L158",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_telegramclient_telegramclient_editmessage",
-      "target": "telegram_bridge_telegramclient_telegramclient_throttledsend",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_telegramclient_telegramclient_throttledsend"
     },
     {
       "relation": "calls",
@@ -20392,9 +20392,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L136",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_telegramclient_telegramclient_restrictchatmember",
-      "target": "telegram_bridge_telegramclient_telegramclient_throttledsend",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_telegramclient_telegramclient_throttledsend"
     },
     {
       "relation": "calls",
@@ -20403,9 +20403,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L104",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_telegramclient_telegramclient_sendmessage",
-      "target": "telegram_bridge_telegramclient_telegramclient_throttledsend",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_telegramclient_telegramclient_throttledsend"
     },
     {
       "relation": "calls",
@@ -20414,9 +20414,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L100",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_telegramclient_telegramclient_sendthreadedreply",
-      "target": "telegram_bridge_telegramclient_telegramclient_throttledsend",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_telegramclient_telegramclient_throttledsend"
     },
     {
       "relation": "calls",
@@ -20425,9 +20425,9 @@
       "source_file": "telegram-bridge/telegramClient.js",
       "source_location": "L126",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_telegramclient_telegramclient_unbanchatmember",
-      "target": "telegram_bridge_telegramclient_telegramclient_throttledsend",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_telegramclient_telegramclient_throttledsend"
     },
     {
       "relation": "contains",
@@ -20435,9 +20435,9 @@
       "source_file": "test/adminGroupActions.test.js",
       "source_location": "L56",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_admingroupactions_test",
-      "target": "test_admingroupactions_test_appwith",
-      "confidence_score": 1.0
+      "target": "test_admingroupactions_test_appwith"
     },
     {
       "relation": "contains",
@@ -20445,9 +20445,9 @@
       "source_file": "test/adminGroupActions.test.js",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_admingroupactions_test",
-      "target": "test_admingroupactions_test_assert",
-      "confidence_score": 1.0
+      "target": "test_admingroupactions_test_assert"
     },
     {
       "relation": "contains",
@@ -20455,9 +20455,9 @@
       "source_file": "test/adminGroupActions.test.js",
       "source_location": "L44",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_admingroupactions_test",
-      "target": "test_admingroupactions_test_call",
-      "confidence_score": 1.0
+      "target": "test_admingroupactions_test_call"
     },
     {
       "relation": "contains",
@@ -20465,9 +20465,9 @@
       "source_file": "test/adminGroupActions.test.js",
       "source_location": "L14",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_admingroupactions_test",
-      "target": "test_admingroupactions_test_createapp",
-      "confidence_score": 1.0
+      "target": "test_admingroupactions_test_createapp"
     },
     {
       "relation": "contains",
@@ -20475,9 +20475,9 @@
       "source_file": "test/adminGroupActions.test.js",
       "source_location": "L67",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_admingroupactions_test",
-      "target": "test_admingroupactions_test_createlinkeduser",
-      "confidence_score": 1.0
+      "target": "test_admingroupactions_test_createlinkeduser"
     },
     {
       "relation": "contains",
@@ -20485,9 +20485,9 @@
       "source_file": "test/adminGroupActions.test.js",
       "source_location": "L16",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_admingroupactions_test",
-      "target": "test_admingroupactions_test_mockreq",
-      "confidence_score": 1.0
+      "target": "test_admingroupactions_test_mockreq"
     },
     {
       "relation": "contains",
@@ -20495,9 +20495,9 @@
       "source_file": "test/adminGroupActions.test.js",
       "source_location": "L26",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_admingroupactions_test",
-      "target": "test_admingroupactions_test_mockres",
-      "confidence_score": 1.0
+      "target": "test_admingroupactions_test_mockres"
     },
     {
       "relation": "contains",
@@ -20505,9 +20505,9 @@
       "source_file": "test/adminGroupActions.test.js",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_admingroupactions_test",
-      "target": "test_admingroupactions_test_readable",
-      "confidence_score": 1.0
+      "target": "test_admingroupactions_test_readable"
     },
     {
       "relation": "contains",
@@ -20515,9 +20515,9 @@
       "source_file": "test/adminGroupActions.test.js",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_admingroupactions_test",
-      "target": "test_admingroupactions_test_test",
-      "confidence_score": 1.0
+      "target": "test_admingroupactions_test_test"
     },
     {
       "relation": "references",
@@ -20537,9 +20537,9 @@
       "source_file": "test/adminGroupActions.test.js",
       "source_location": "L46",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_admingroupactions_test_call",
-      "target": "test_admingroupactions_test_mockreq",
-      "confidence_score": 1.0
+      "target": "test_admingroupactions_test_mockreq"
     },
     {
       "relation": "calls",
@@ -20548,9 +20548,9 @@
       "source_file": "test/adminGroupActions.test.js",
       "source_location": "L45",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_admingroupactions_test_call",
-      "target": "test_admingroupactions_test_mockres",
-      "confidence_score": 1.0
+      "target": "test_admingroupactions_test_mockres"
     },
     {
       "relation": "contains",
@@ -20558,9 +20558,9 @@
       "source_file": "test/telegramBridge.test.js",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_telegrambridge_test",
-      "target": "test_telegrambridge_test_assert",
-      "confidence_score": 1.0
+      "target": "test_telegrambridge_test_assert"
     },
     {
       "relation": "contains",
@@ -20568,9 +20568,9 @@
       "source_file": "test/telegramBridge.test.js",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_telegrambridge_test",
-      "target": "test_telegrambridge_test_buildmention_planintake_handleintake_postapprovedreplies_notifytimeouts_seednotifiedtimeouts_shouldsuppressgroupreply",
-      "confidence_score": 1.0
+      "target": "test_telegrambridge_test_buildmention_planintake_handleintake_postapprovedreplies_notifytimeouts_seednotifiedtimeouts_shouldsuppressgroupreply"
     },
     {
       "relation": "contains",
@@ -20578,9 +20578,9 @@
       "source_file": "test/telegramBridge.test.js",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_telegrambridge_test",
-      "target": "test_telegrambridge_test_config",
-      "confidence_score": 1.0
+      "target": "test_telegrambridge_test_config"
     },
     {
       "relation": "contains",
@@ -20588,9 +20588,9 @@
       "source_file": "test/telegramBridge.test.js",
       "source_location": "L14",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_telegrambridge_test",
-      "target": "test_telegrambridge_test_faketelegram",
-      "confidence_score": 1.0
+      "target": "test_telegrambridge_test_faketelegram"
     },
     {
       "relation": "contains",
@@ -20598,9 +20598,9 @@
       "source_file": "test/telegramBridge.test.js",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_telegrambridge_test",
-      "target": "test_telegrambridge_test_test",
-      "confidence_score": 1.0
+      "target": "test_telegrambridge_test_test"
     },
     {
       "relation": "contains",
@@ -20608,9 +20608,9 @@
       "source_file": "test/workflow.test.js",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_workflow_test",
-      "target": "test_workflow_test_assert",
-      "confidence_score": 1.0
+      "target": "test_workflow_test_assert"
     },
     {
       "relation": "contains",
@@ -20618,9 +20618,9 @@
       "source_file": "test/workflow.test.js",
       "source_location": "L20",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_workflow_test",
-      "target": "test_workflow_test_assertinvalidparse",
-      "confidence_score": 1.0
+      "target": "test_workflow_test_assertinvalidparse"
     },
     {
       "relation": "contains",
@@ -20628,9 +20628,9 @@
       "source_file": "test/workflow.test.js",
       "source_location": "L8",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_workflow_test",
-      "target": "test_workflow_test_automationservice",
-      "confidence_score": 1.0
+      "target": "test_workflow_test_automationservice"
     },
     {
       "relation": "contains",
@@ -20638,9 +20638,9 @@
       "source_file": "test/workflow.test.js",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_workflow_test",
-      "target": "test_workflow_test_automationstore",
-      "confidence_score": 1.0
+      "target": "test_workflow_test_automationstore"
     },
     {
       "relation": "contains",
@@ -20648,9 +20648,9 @@
       "source_file": "test/workflow.test.js",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_workflow_test",
-      "target": "test_workflow_test_createharness",
-      "confidence_score": 1.0
+      "target": "test_workflow_test_createharness"
     },
     {
       "relation": "contains",
@@ -20658,9 +20658,9 @@
       "source_file": "test/workflow.test.js",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_workflow_test",
-      "target": "test_workflow_test_operatorqueue",
-      "confidence_score": 1.0
+      "target": "test_workflow_test_operatorqueue"
     },
     {
       "relation": "contains",
@@ -20668,9 +20668,9 @@
       "source_file": "test/workflow.test.js",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_workflow_test",
-      "target": "test_workflow_test_parserequesttext",
-      "confidence_score": 1.0
+      "target": "test_workflow_test_parserequesttext"
     },
     {
       "relation": "contains",
@@ -20678,9 +20678,9 @@
       "source_file": "test/workflow.test.js",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_workflow_test",
-      "target": "test_workflow_test_smsgatewayclient",
-      "confidence_score": 1.0
+      "target": "test_workflow_test_smsgatewayclient"
     },
     {
       "relation": "contains",
@@ -20688,9 +20688,9 @@
       "source_file": "test/workflow.test.js",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_workflow_test",
-      "target": "test_workflow_test_statuses",
-      "confidence_score": 1.0
+      "target": "test_workflow_test_statuses"
     },
     {
       "relation": "contains",
@@ -20698,9 +20698,9 @@
       "source_file": "test/workflow.test.js",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_workflow_test",
-      "target": "test_workflow_test_test",
-      "confidence_score": 1.0
+      "target": "test_workflow_test_test"
     },
     {
       "relation": "contains",
@@ -47779,5 +47779,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "fd105c8ec9a34eb1fcea8dcb8748189829ccb1d7"
+  "built_at_commit": "74eb43f679eb30683b97620f26445665d00e95cc"
 }
