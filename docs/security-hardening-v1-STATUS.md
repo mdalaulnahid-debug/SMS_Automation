@@ -20,7 +20,7 @@ never run `scripts/deploy.sh` on this branch.
 | 3 | `telegramId` + identity unification | **Done** (schema migration + link/lookup methods; bridge cutover deferred, see note below) |
 | 4 | Personnel Registry data model + admin-upload loading | **Done** |
 | 5 | Registration flow end-to-end | **Done** for the web + bridge-link mechanics (see scoping note below — closing the group-chat "always open" policy itself is deliberately deferred) |
-| 6 | Quota + email-OTP re-verification middleware | Not started |
+| 6 | Quota + email-OTP re-verification middleware | **Done** |
 | 7 | Admin group actions (post-bypass + moderation) | Not started |
 | 8 | Shared admin key scoping/retirement | Not started |
 | 9 | Behavioral anomaly tripwire | Not started |
@@ -253,6 +253,80 @@ backend endpoints. Added to `public/admin.html`'s Controlled Tools grid:
 `/`" guard from earlier UI work — irrelevant day-to-day (real browsers are
 wide enough) but easy to trip during automated testing at a mobile-preset
 viewport width.
+
+**Public landing page content (2026-07-08) — done.** Completes the content
+half of Step 2's access-tier boundary (the enforcement mechanism landed
+back then; what `/` actually *shows* per tier didn't). `public/index.html`'s
+Home tab now branches on role: `officer` sessions get an informational
+view (purpose statement + a real account status card — name, designation,
+unit, email, phone, registration status, Telegram-link state) with the
+Activity tab and gateway/KPI content hidden entirely; `admin`/`super_admin`
+see the operational dashboard unchanged. Enforced both client- and
+server-side: `/api/ops/overview`, `/api/ops/activity`, `/api/ops/gateways`
+tightened from `requireAnySession` to `requireAdmin`, so the boundary
+holds even against a direct API call, not just what the page renders.
+Also fixed a real pre-existing leak surfaced while wiring the account
+card: `GET /api/auth/me` was returning the *entire* `auth_users` row —
+including `password_hash`, `verify_token`, `mfa_code_hash`,
+`pending_session_token` — to any logged-in client; added `safeUserFields()`
+as an explicit allowlist. Also created `PRODUCT.md` (impeccable init) for
+this project. 2 new tests, full suite 270/270 at the time, live-verified
+with real officer/super-admin sessions (no `/api/ops/*` calls fire for the
+officer tier — important, since a stray call would have 401'd and
+triggered the client's `sessionLogout()` handler, silently signing the
+officer out just for opening the home page).
+
+**Step 6 — quota + email-OTP re-verification middleware — done.** Wires
+the Step-1 pure modules (`src/quota.js`'s `QuotaTracker`, `src/otp.js`'s
+`OtpStore`) into the actual request path, per design doc §7:
+- `POST /api/requests` now resolves `requesterId` (the Telegram sender ID)
+  to a linked officer account via `getUserByTelegramId()`. Unlinked
+  senders (unregistered, or non-Telegram channels) are never quota-gated —
+  this defense only applies once an identity is actually registry-verified
+  and linked. A linked officer's quota trips per `QuotaTracker` (default
+  20 requests / 4h, whichever first); on breach, `OtpStore.issueCode()`
+  mints a 6-digit code, emailed to the officer's **registry-verified**
+  address via a new `mailer.reVerificationCodeEmail()`, and the request is
+  rejected with `errorCode: 'VERIFICATION_REQUIRED'`. A second breach
+  while a challenge is already pending is blocked without re-issuing
+  (checked via `OtpStore.hasActiveChallenge()`, new method).
+- New `POST /api/telegram/verify-code` (admin-key gated, same pattern as
+  the bridge's other reporting endpoints): resolves the officer, calls
+  `otpStore.verifyCode()`, and on success calls
+  `quotaTracker.resetAfterVerification()` — reopening the window. Both
+  outcomes are audit-logged (`TELEGRAM_QUOTA_BREACH`,
+  `TELEGRAM_OTP_VERIFIED`, `TELEGRAM_OTP_FAILED`).
+- Bridge side (`telegram-bridge/bridge.js`): a bare 6-digit **private DM**
+  from an *already-authorized* sender is now parsed as an OTP reply
+  (`planIntake` gains an `otp_verify` action) rather than a malformed
+  request — no real request command is ever shaped like a standalone
+  6-digit number, so this is unambiguous. `handleIntake` calls the new
+  `backendClient.verifyOtpCode()` and relays a specific reply per outcome
+  (verified / no active challenge / expired / incorrect / attempts
+  exceeded). Group messages and unauthorized senders are never treated as
+  OTP replies — authorization still gates first.
+- `QuotaTracker`/`OtpStore` are per-process, in-memory (injectable via
+  `createApp({ quotaTracker, otpStore })` for tests) — a backend restart
+  clears everyone's quota/challenge state, acceptable for a defense whose
+  job is slowing an in-progress impersonation attempt, not maintaining a
+  long-lived ledger.
+- 12 new tests (2 pure-logic, 5 HTTP wiring integration, 5 bridge
+  plan/handle) — full suite **281/281**. Live-verified against the running
+  local server for everything that doesn't risk a real email send (this
+  dev machine's `config/mail.json` has real Gmail credentials): confirmed
+  `POST /api/telegram/verify-code` 401s unauthenticated and returns
+  `NO_ACTIVE_CHALLENGE` for an unlinked ID with the real admin key, and
+  confirmed a normal request from a non-linked `requesterId` still submits
+  successfully (unaffected by the new gate). The actual quota-breach →
+  email → verify → reset cycle is covered by the automated test suite
+  instead (SMTP-not-configured path in tests logs instead of sending), not
+  re-run live, to avoid triggering a real Gmail send during verification.
+
+**Note for step 7+:** quota/OTP state is in-memory only — if the backend
+process restarts mid-challenge, the officer's pending code is silently
+lost (they'd need to trip the quota again to get a new one). Acceptable
+for V1 per the design doc's scoping; worth a persisted-state pass later if
+backend restarts become frequent in production.
 
 ## Open questions / notes found while implementing
 

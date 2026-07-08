@@ -99,6 +99,22 @@ test('issuance throttle window rolls off after an hour', () => {
   assert.equal(store.issueCode('officer-1').throttled, false, 'the hour-old issuance should have rolled off');
 });
 
+test('hasActiveChallenge reflects issue/verify/expiry lifecycle', () => {
+  const clock = fakeClock();
+  const store = new OtpStore({ codeTtlMs: 1000, now: clock.now });
+  assert.equal(store.hasActiveChallenge('officer-1'), false, 'no challenge issued yet');
+
+  const { code } = store.issueCode('officer-1');
+  assert.equal(store.hasActiveChallenge('officer-1'), true);
+
+  store.verifyCode('officer-1', code);
+  assert.equal(store.hasActiveChallenge('officer-1'), false, 'consumed on successful verify');
+
+  store.issueCode('officer-1');
+  clock.advance(1500);
+  assert.equal(store.hasActiveChallenge('officer-1'), false, 'an expired challenge reports false, not stuck true');
+});
+
 test('issuing a new code replaces any prior unexpired challenge for that officer', () => {
   const store = new OtpStore();
   const first = store.issueCode('officer-1');

@@ -63,6 +63,20 @@ class OtpStore {
     return { code, throttled: false };
   }
 
+  // True if the officer currently has an unresolved, unexpired challenge —
+  // lets a caller distinguish "still waiting on a code reply" from "clear to
+  // issue a fresh one" without reaching into internals. An expired challenge
+  // reports false (and is pruned) rather than blocking forever.
+  hasActiveChallenge(officerId) {
+    const challenge = this.challenges.get(officerId);
+    if (!challenge) return false;
+    if (this.now() > challenge.expiresAt) {
+      this.challenges.delete(officerId);
+      return false;
+    }
+    return true;
+  }
+
   // Verifies a submitted code. The challenge is consumed (removed) on
   // success, on expiry, or once attempts are exhausted — a spent challenge
   // can never be retried without a fresh issueCode() call.

@@ -119,6 +119,19 @@ class BackendClient {
       return null;
     }
   }
+
+  // Verifies a quota re-verification code (security-hardening v1 §7). Unlike the
+  // best-effort reporting calls above, a network failure here must be visible to the
+  // caller (not silently swallowed as "no active challenge") — the officer is actively
+  // waiting to be unblocked, and a false "incorrect code" would be actively misleading.
+  async verifyOtpCode(telegramId, code) {
+    const res = await this.fetch(`${this.base}/api/telegram/verify-code`, {
+      method: 'POST',
+      headers: this.headers({ 'content-type': 'application/json' }),
+      body: JSON.stringify({ telegramId, code })
+    });
+    return res.json();
+  }
 }
 
 module.exports = { BackendClient };

@@ -58,6 +58,16 @@ function planIntake(message, config) {
   // Group chat: always open — any group member can submit. The authorizedUsers
   // list only gates private-DM access; it never restricts the group.
 
+  // A bare 6-digit private DM from an authorized sender is treated as a
+  // quota re-verification code reply (design doc §7), not a malformed
+  // request — no real request command is ever shaped like a standalone
+  // 6-digit number, so this is unambiguous. Group messages are never
+  // treated this way; the officer replies where the challenge email told
+  // them to, which is always the private chat with the bot.
+  if (isPrivateChat && /^\d{6}$/.test(text)) {
+    return { action: 'otp_verify', telegramId: fromId, chatId, code: text, replyToMessageId: message.message_id };
+  }
+
   // For forwarded messages, message.from is the group member who forwarded —
   // that's who the reply should tag. The original author (forward_from /
   // forward_sender_name) is stored separately for audit traceability only.
@@ -135,6 +145,21 @@ async function handleIntake(message, {
       }
     }
     return plan;
+  }
+
+  if (plan.action === 'otp_verify') {
+    const result = await backend.verifyOtpCode(plan.telegramId, plan.code);
+    const replyText = result.ok
+      ? '✅ Verified — you can continue submitting requests.'
+      : {
+          NO_ACTIVE_CHALLENGE: "You don't have an active verification code right now.",
+          EXPIRED: 'That code expired. Send a new request to get a fresh one.',
+          INCORRECT: 'Incorrect code. Try again.',
+          ATTEMPTS_EXCEEDED: 'Too many incorrect attempts — that code is no longer valid. Send a new request to get a fresh one.'
+        }[result.reason] || 'Verification failed. Try again or contact an administrator.';
+    await telegram.sendMessage({ chatId: plan.chatId, text: replyText, replyToMessageId: plan.replyToMessageId });
+    log(`otp: ${plan.telegramId} — ${result.ok ? 'verified' : `failed (${result.reason})`}`);
+    return { action: 'otp_verify_result', result };
   }
 
   const result = await backend.submitRequest(plan.request);

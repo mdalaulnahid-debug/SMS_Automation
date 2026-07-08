@@ -256,6 +256,65 @@ test('handleIntake stays silent if requestRegistrationLink returns no url (backe
   assert.equal(telegram.sent.length, 0);
 });
 
+test('planIntake treats a bare 6-digit private DM from an authorized sender as an OTP verify attempt, not a request', () => {
+  const plan = planIntake(
+    { text: '482913', chat: { id: '777888999', type: 'private' }, from: { id: 777888999 }, message_id: 9 },
+    CONFIG
+  );
+  assert.equal(plan.action, 'otp_verify');
+  assert.equal(plan.telegramId, '777888999');
+  assert.equal(plan.code, '482913');
+  assert.equal(plan.chatId, '777888999');
+});
+
+test('planIntake does not treat a 6-digit group message as an OTP verify attempt', () => {
+  const plan = planIntake(
+    { text: '482913', chat: { id: CONFIG.groupChatId }, from: { id: 777888999 }, message_id: 9 },
+    CONFIG
+  );
+  assert.notEqual(plan.action, 'otp_verify');
+});
+
+test('planIntake does not treat an unauthorized private sender\'s 6-digit message as an OTP verify attempt — authorization still gates first', () => {
+  const plan = planIntake(
+    { text: '482913', chat: { id: '555', type: 'private' }, from: { id: 555 }, message_id: 9 },
+    CONFIG
+  );
+  assert.equal(plan.action, 'unauthorized');
+});
+
+test('handleIntake verifies a correct OTP code and replies with success', async () => {
+  const telegram = fakeTelegram();
+  const backend = { verifyOtpCode: async () => ({ ok: true }) };
+  const res = await handleIntake(
+    { text: '482913', chat: { id: '777888999', type: 'private' }, from: { id: 777888999 }, message_id: 9 },
+    { config: CONFIG, backend, telegram }
+  );
+  assert.equal(res.action, 'otp_verify_result');
+  assert.equal(telegram.sent.length, 1);
+  assert.match(telegram.sent[0].text, /Verified/);
+  assert.equal(telegram.sent[0].chatId, '777888999');
+});
+
+test('handleIntake relays a specific message for each OTP failure reason', async () => {
+  const telegram = fakeTelegram();
+  const reasons = {
+    NO_ACTIVE_CHALLENGE: /don't have an active/,
+    EXPIRED: /expired/,
+    INCORRECT: /Incorrect code/,
+    ATTEMPTS_EXCEEDED: /Too many incorrect attempts/
+  };
+  for (const [reason, expected] of Object.entries(reasons)) {
+    telegram.sent.length = 0;
+    const backend = { verifyOtpCode: async () => ({ ok: false, reason }) };
+    await handleIntake(
+      { text: '482913', chat: { id: '777888999', type: 'private' }, from: { id: 777888999 }, message_id: 9 },
+      { config: CONFIG, backend, telegram }
+    );
+    assert.match(telegram.sent[0].text, expected, `reason ${reason}`);
+  }
+});
+
 test('planIntake always requires authorization for private chats, regardless of group allowlist', () => {
   const unauthorizedDm = planIntake(
     { text: 'LRL 01712345678', chat: { id: '555', type: 'private' }, from: { id: 555 }, message_id: 1 },

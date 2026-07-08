@@ -21,6 +21,8 @@ const { getBackendUrls, getLanAddresses, getPreferredLanIp } = require('./networ
 const { UserAuthStore, SESSION_TTL_MS, isWithinRegistrationWindow } = require('./userAuth');
 const { serializeSessionCookie, clearSessionCookie, sessionTokenFromRequest } = require('./cookies');
 const { parseRegistryWorkbook } = require('./personnelRegistry');
+const { QuotaTracker } = require('./quota');
+const { OtpStore } = require('./otp');
 const mailer = require('./mailer');
 
 // Sliding-window per-requester rate limiter.
@@ -363,6 +365,14 @@ function createApp(options = {}) {
     manualReviewStore
   });
 
+  // Per-officer request quota + OTP re-verification challenge (security-hardening
+  // v1 §7) — in-memory, per-process, matching requestRateLimiter's scope; a
+  // restart clears everyone's quota/challenge state, which is acceptable for a
+  // defense whose job is slowing down an in-progress impersonation attempt, not
+  // maintaining a long-lived ledger. Injectable so tests can control the clock.
+  const quotaTracker = options.quotaTracker || new QuotaTracker();
+  const otpStore = options.otpStore || new OtpStore();
+
   // Restore the per-operator waiting lists from any persisted QUEUED requests.
   queue.rebuild();
 
@@ -476,6 +486,52 @@ function createApp(options = {}) {
       return null;
     }
     return result;
+  }
+
+  // Quota + OTP re-verification gate (security-hardening v1 §7) — only
+  // applies to a request whose Telegram sender is a linked, registered
+  // officer; unlinked senders (unregistered, or a channel other than
+  // Telegram) aren't this defense's concern and pass through untouched.
+  // Returns null when the request may proceed, or a service.submitRequest-
+  // shaped rejection ({ ok:false, errorCode, replyText }) when it must not.
+  async function checkOfficerQuota(requesterId) {
+    const officer = requesterId && userAuth.getUserByTelegramId(requesterId);
+    if (!officer) return null;
+
+    if (otpStore.hasActiveChallenge(officer.id)) {
+      return {
+        ok: false,
+        errorCode: 'VERIFICATION_REQUIRED',
+        replyText: 'You already have a pending re-verification code — check your email and reply here with it to continue.'
+      };
+    }
+
+    const quota = quotaTracker.recordRequest(officer.id);
+    if (!quota.requiresVerification) return null;
+
+    const { code, throttled } = otpStore.issueCode(officer.id);
+    if (throttled) {
+      // The per-hour issuance cap tripped instead — never possible to reach
+      // normally (issuing one code per quota breach, and the quota window is
+      // hours long), but if it ever does, fail safe: block with a message
+      // that doesn't imply a code is on its way when none was sent.
+      store.audit('system', 'TELEGRAM_QUOTA_CHALLENGE_THROTTLED', null, { officerId: officer.id, telegramId: requesterId });
+      return {
+        ok: false,
+        errorCode: 'VERIFICATION_REQUIRED',
+        replyText: 'Too many re-verification codes requested recently. Contact an administrator.'
+      };
+    }
+
+    store.audit('system', 'TELEGRAM_QUOTA_BREACH', null, { officerId: officer.id, telegramId: requesterId, email: officer.email });
+    const { subject, html, text } = mailer.reVerificationCodeEmail(code);
+    await mailer.sendMail({ to: officer.email, subject, html, text });
+
+    return {
+      ok: false,
+      errorCode: 'VERIFICATION_REQUIRED',
+      replyText: `You've reached your request limit. A verification code was sent to your registered email — reply here with it to continue.`
+    };
   }
 
   async function handle(req, res) {
@@ -918,6 +974,8 @@ function createApp(options = {}) {
         if (!requestRateLimiter.check(rateLimitId)) {
           return json(res, 429, { error: 'Too many requests. Please wait a moment before submitting again.' });
         }
+        const quotaRejection = await checkOfficerQuota(body.requesterId);
+        if (quotaRejection) return json(res, 400, quotaRejection);
         const result = await service.submitRequest(body);
         return json(res, result.ok ? 201 : 400, result);
       }
@@ -1181,6 +1239,26 @@ function createApp(options = {}) {
         const { token } = userAuth.createRegistrationToken(body.telegramId);
         const baseUrl = process.env.PUBLIC_BASE_URL || `http://${req.headers.host}`;
         return json(res, 200, { url: `${baseUrl}/register.html?token=${encodeURIComponent(token)}` });
+      }
+      if (req.method === 'POST' && req.url === '/api/telegram/verify-code') {
+        // Called by the Telegram bridge when a private-DM sender replies with
+        // what looks like a re-verification code (security-hardening v1 §7) —
+        // same bridge-auth pattern as registration-link. Not tied to a specific
+        // in-flight request; success just reopens the officer's quota window.
+        if (!requireAdmin(req, res)) return undefined;
+        const body = await readJson(req);
+        if (!body.telegramId || !body.code) return json(res, 400, { error: 'telegramId and code required' });
+        const officer = userAuth.getUserByTelegramId(body.telegramId);
+        if (!officer) return json(res, 200, { ok: false, reason: 'NO_ACTIVE_CHALLENGE' });
+
+        const result = otpStore.verifyCode(officer.id, body.code);
+        if (result.ok) {
+          quotaTracker.resetAfterVerification(officer.id);
+          store.audit('system', 'TELEGRAM_OTP_VERIFIED', null, { officerId: officer.id, telegramId: body.telegramId });
+        } else {
+          store.audit('system', 'TELEGRAM_OTP_FAILED', null, { officerId: officer.id, telegramId: body.telegramId, reason: result.reason });
+        }
+        return json(res, 200, result);
       }
       if (req.method === 'GET' && req.url.startsWith('/verify-email')) {
         const token = new URL(req.url, 'http://x').searchParams.get('token') || '';
