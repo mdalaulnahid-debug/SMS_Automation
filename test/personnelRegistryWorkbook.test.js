@@ -43,6 +43,37 @@ test('recognizes aliased column headers (case-insensitive)', () => {
   assert.equal(records[0].phone, '01712345678');
 });
 
+test('recognizes real-world header text seen in the field ("Mobile Number(official)" / "Mail(official)")', () => {
+  const buffer = bufferFromRows([
+    ['SL', 'Designation', 'Name', 'BP ID', 'Unit', 'Mobile Number(official)', 'Mail(official)'],
+    ['1', 'SP', 'SI Nazmul', '8006112374', 'Police Super, Barisal', '01712345678', 'nazmul@police.gov.bd']
+  ]);
+  const records = parseRegistryWorkbook(buffer);
+  assert.equal(records.length, 1);
+  assert.equal(records[0].phone, '01712345678');
+  assert.equal(records[0].email, 'nazmul@police.gov.bd');
+});
+
+test('restores a leading zero Excel dropped from a numeric-formatted phone cell', () => {
+  const buffer = bufferFromRows([
+    ['Name', 'Phone', 'Email'],
+    // Simulates a cell typed as a number, not text — Excel stores/round-trips
+    // 01320151100 as the 10-digit 1320151100, losing the leading zero.
+    ['SI Nazmul', 1320151100, 'nazmul@police.gov.bd']
+  ]);
+  const records = parseRegistryWorkbook(buffer);
+  assert.equal(records[0].phone, '01320151100');
+});
+
+test('does not touch a phone number that already has 11 digits', () => {
+  const buffer = bufferFromRows([
+    ['Name', 'Phone', 'Email'],
+    ['SI Nazmul', '01712345678', 'nazmul@police.gov.bd']
+  ]);
+  const records = parseRegistryWorkbook(buffer);
+  assert.equal(records[0].phone, '01712345678');
+});
+
 test('works with only the required columns (Designation/Unit optional)', () => {
   const buffer = bufferFromRows([
     ['Name', 'Phone', 'Email'],

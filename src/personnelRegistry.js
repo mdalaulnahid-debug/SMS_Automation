@@ -57,9 +57,20 @@ const COLUMN_ALIASES = Object.freeze({
   name: ['name', 'officer name', 'full name'],
   designation: ['designation', 'rank', 'title'],
   unit: ['unit', 'station', 'department'],
-  phone: ['phone', 'official phone', 'mobile', 'msisdn', 'contact number'],
-  email: ['email', 'official email', 'e-mail']
+  phone: ['phone', 'official phone', 'mobile', 'msisdn', 'contact number', 'mobile number(official)'],
+  email: ['email', 'official email', 'e-mail', 'mail(official)']
 });
+
+// Excel silently drops a leading zero from any cell it treats as a number
+// (the common case for a phone column typed/pasted without forcing text
+// format) — an 11-digit BD mobile number (01XXXXXXXXX) round-trips through
+// such a cell as 10 digits. Restore it: a bare 10-digit numeric string is
+// never a valid BD mobile as-is, so this is a safe, general fix rather than
+// one specific to a single source file.
+function restoreDroppedLeadingZero(phone) {
+  const trimmed = String(phone || '').trim();
+  return /^\d{10}$/.test(trimmed) ? `0${trimmed}` : trimmed;
+}
 
 function loadXlsx() {
   try {
@@ -112,7 +123,7 @@ function parseRegistryWorkbook(buffer) {
       name: String(row[columns.name] || '').trim(),
       designation: columns.designation === -1 ? '' : String(row[columns.designation] || '').trim(),
       unit: columns.unit === -1 ? '' : String(row[columns.unit] || '').trim(),
-      phone: String(row[columns.phone] || '').trim(),
+      phone: restoreDroppedLeadingZero(row[columns.phone]),
       email: String(row[columns.email] || '').trim()
     }))
     .filter((record) => record.name && record.phone && record.email);
