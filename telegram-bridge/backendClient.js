@@ -100,6 +100,25 @@ class BackendClient {
       // Best-effort — never let a reporting failure affect the intake loop itself.
     }
   }
+
+  // Mints a registration-link token for an unregistered private-DM sender, so the bot can
+  // reply with a link to the web registration form. Best-effort like the reporting calls
+  // above — if the backend is unreachable, the sender just gets no link this time and can
+  // try again later; the intake loop must never break because of it.
+  async requestRegistrationLink(telegramId) {
+    try {
+      const res = await this.fetch(`${this.base}/api/telegram/registration-link`, {
+        method: 'POST',
+        headers: this.headers({ 'content-type': 'application/json' }),
+        body: JSON.stringify({ telegramId })
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      return data.url || null;
+    } catch {
+      return null;
+    }
+  }
 }
 
 module.exports = { BackendClient };

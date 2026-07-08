@@ -68,10 +68,17 @@ function appWith() {
 // Full register -> verify -> login -> mfa flow, returning the session token
 // and the Set-Cookie header value the mfa/verify step issued.
 async function registerAndLogin(app, { email, password, role }) {
+  // Registration now requires a Personnel Registry match (security-hardening
+  // v1 step 5) — seed one covering this email/phone before registering.
+  const phone = `017${String(Math.floor(Math.random() * 1e8)).padStart(8, '0')}`;
+  app.userAuth.replaceRegistry(
+    [...app.userAuth.listRegistry(), { name: 'Test User', phone, email }],
+    'test-seed'
+  );
   await call(app, {
     method: 'POST',
     url: '/api/auth/register',
-    body: { email, password, name: 'Test User' }
+    body: { email, password, name: 'Test User', phone }
   });
   const user = app.userAuth.getUserByEmail(email);
   await call(app, { method: 'GET', url: `/verify-email?token=${user.verify_token}` });

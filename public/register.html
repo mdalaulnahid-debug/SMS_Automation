@@ -45,14 +45,26 @@
       <!-- Registration form -->
       <div id="stepForm">
         <div class="gate-heading">Create account</div>
-        <div class="gate-sub">Your account will be reviewed by an admin before access is granted.</div>
+        <div class="gate-sub">Your phone and email must match your official record. Your account will be reviewed by an admin before access is granted.</div>
         <form id="regForm" onsubmit="submitRegister(event)">
           <div class="form-group">
             <label class="form-label" for="regName">Full name</label>
             <input id="regName" class="input-field" type="text" autocomplete="name" required placeholder="SI Ahmed" />
           </div>
           <div class="form-group">
-            <label class="form-label" for="regEmail">Email</label>
+            <label class="form-label" for="regDesignation">Designation</label>
+            <input id="regDesignation" class="input-field" type="text" required placeholder="Sub-Inspector" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="regUnit">Unit</label>
+            <input id="regUnit" class="input-field" type="text" required placeholder="LIC Barishal" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="regPhone">Official phone number</label>
+            <input id="regPhone" class="input-field" type="tel" autocomplete="tel" required placeholder="017XXXXXXXX" />
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="regEmail">Official email</label>
             <input id="regEmail" class="input-field" type="email" autocomplete="email" required placeholder="officer@example.com" />
           </div>
           <div class="form-group">
@@ -89,6 +101,8 @@
     <script>
       'use strict';
 
+      const registrationToken = new URLSearchParams(window.location.search).get('token') || '';
+
       async function submitRegister(event) {
         event.preventDefault();
         const btn = document.getElementById('regBtn');
@@ -112,8 +126,12 @@
             headers: { 'content-type': 'application/json' },
             body: JSON.stringify({
               name: document.getElementById('regName').value.trim(),
+              designation: document.getElementById('regDesignation').value.trim(),
+              unit: document.getElementById('regUnit').value.trim(),
+              phone: document.getElementById('regPhone').value.trim(),
               email,
-              password
+              password,
+              ...(registrationToken ? { registrationToken } : {})
             })
           });
           const data = await res.json();

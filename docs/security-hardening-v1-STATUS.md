@@ -19,7 +19,7 @@ never run `scripts/deploy.sh` on this branch.
 | 2 | Server-side page gating (4-tier) | **Done** for `/` and `/admin` (see scoping note below) |
 | 3 | `telegramId` + identity unification | **Done** (schema migration + link/lookup methods; bridge cutover deferred, see note below) |
 | 4 | Personnel Registry data model + admin-upload loading | **Done** |
-| 5 | Registration flow end-to-end | **In progress** — activation policy + super-admin approval done; registration-link token + registry-validated registration endpoint + bridge cutover remain |
+| 5 | Registration flow end-to-end | **Done** for the web + bridge-link mechanics (see scoping note below — closing the group-chat "always open" policy itself is deliberately deferred) |
 | 6 | Quota + email-OTP re-verification middleware | Not started |
 | 7 | Admin group actions (post-bypass + moderation) | Not started |
 | 8 | Shared admin key scoping/retirement | Not started |
@@ -168,20 +168,69 @@ import should happen before step 5 goes live end-to-end.
   — full suite 246/246. Verified live against the running local server
   too (401 unauthenticated, 200 with the legacy key, clean startup).
 
-**Still remaining for step 5:**
-- A registration-link token (Telegram sender ID → a link the bot replies
-  with), consumed by the registration form to link `telegramId`.
-- Extending `register()`'s call site / the web form to actually validate
-  against the Personnel Registry (phone+email match) before creating an
-  account — today's registration still bypasses registry validation
-  entirely; `register()` only *accepts* an optional `telegramId`, nothing
-  requires or checks it yet.
-- The Telegram bridge cutover deferred from step 3: `planIntake()` still
-  reads the flat `authorizedUsers` config, not `auth_users` by
-  `telegram_id` — and the "open group" policy hasn't been closed yet.
-- `public/register.html` needs Designation/Unit fields and to read/submit
-  the registration token from the URL.
+**Step 5, part 2 — registration-link token + registry-validated registration
++ bridge link mechanics — done.**
+- `auth_users` gained `designation`/`unit` columns (same runtime-migration
+  pattern as step 3's `telegram_id`) — captured at registration time and
+  stored as submitted, alongside (not replacing) the phone+email match
+  against the Personnel Registry.
+- New `registration_tokens` table + `UserAuthStore.createRegistrationToken()`
+  / `consumeRegistrationToken()`: one active token per Telegram ID (a repeat
+  request re-issues rather than accumulating rows), 24h expiry, single-use
+  (burned on successful consumption).
+- `POST /api/telegram/registration-link` (admin-gated, same as the bridge's
+  existing reporting endpoints) mints a token for a given `telegramId` and
+  returns a full `register.html?token=...` URL.
+- `POST /api/auth/register` now **requires** the submitted phone+email to
+  match the SAME Personnel Registry record — "no registry match, no
+  account" is enforced from this point on, not just validated in isolation.
+  This is a real behavior change: **an admin must import the registry
+  before anyone can register**, including on this local dev server (its
+  registry is currently empty — confirmed live: a real registration attempt
+  against it now correctly 400s). If a `registrationToken` is also
+  submitted, it's consumed to link `telegramId` on the new account;
+  an invalid/expired/reused token 400s even when phone+email match.
+- `telegram-bridge/bridge.js`'s `handleIntake()`: a first-time unauthorized
+  *private* DM now gets a reply with the registration link (fetched via the
+  new `backendClient.requestRegistrationLink()`, best-effort — no link if
+  the backend call fails), deduped alongside the existing
+  unauthorized-attempt audit report so a retried DM doesn't re-spam the
+  link. Group-chat behavior is untouched.
+- `public/register.html` gained Designation, Unit, and Phone fields, and
+  now reads a `?token=` query param and threads it through as
+  `registrationToken` in the POST body when present.
+- 22 new tests (6 token lifecycle, 5 HTTP registration/link-endpoint
+  integration, 3 bridge-reply behavior, plus fixes to 3 existing test
+  files' registration helpers to seed a matching registry record — full
+  suite **261/261**. Live-verified against the running local server:
+  `register.html` serves the new fields and token-handling script,
+  `/api/telegram/registration-link` 401s unauthenticated, and a
+  registration attempt against the (currently empty) real registry
+  correctly 400s and leaves no row in `data/auth.db`.
+
+**Deliberate scoping note — what step 5 does NOT include:** the Telegram
+bridge's group-chat policy is still fully open (any group member can
+submit, per `planIntake()`'s existing "group allowlist only gates private
+DMs" comment) — closing that to "registered `telegram_id` only" needs real
+registry data loaded first (today's registry is empty on both this dev
+server and, presumably, production) and a rollout plan for existing group
+members who haven't registered yet, which is a policy decision for the
+user to make once real personnel data is available, not something to flip
+silently in this pass. The registration-link mechanism above only fires
+for *private* DMs, which is where the design doc's "new user requests" flow
+was scoped from the start.
 
 ## Open questions / notes found while implementing
+
+- **Registry must be populated before registration works at all**, including
+  in production once this branch deploys — flagging so it isn't missed at
+  rollout time. The user said they'll supply the real personnel spreadsheet
+  later; until it's imported via `POST /api/admin/personnel-registry/import`,
+  every registration attempt (web or bot-initiated) will 400.
+- **Closing the Telegram group's "always open" policy** is the one piece of
+  step 5's original scope intentionally left undone — needs a user decision
+  on rollout (grace period for existing unregistered group members, likely
+  mirroring the 1-week window already used for web accounts) once real
+  registry data exists to make that safe to test.
 
 (add here as they come up, so they don't get lost between sessions)

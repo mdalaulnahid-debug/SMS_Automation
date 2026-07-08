@@ -67,10 +67,17 @@ function appWith(registrationWindowEndsAt) {
 // Registers, verifies (against whatever window policy is active), and logs in,
 // returning a bearer token for the resulting session.
 async function createSession(app, { email, role, pastWindow }) {
+  // Registration now requires a Personnel Registry match (security-hardening
+  // v1 step 5) — seed one covering this email/phone before registering.
+  const phone = `017${String(Math.floor(Math.random() * 1e8)).padStart(8, '0')}`;
+  app.userAuth.replaceRegistry(
+    [...app.userAuth.listRegistry(), { name: 'Test User', phone, email }],
+    'test-seed'
+  );
   await call(app, {
     method: 'POST',
     url: '/api/auth/register',
-    body: { email, password: 'longenough1', name: 'Test User' }
+    body: { email, password: 'longenough1', name: 'Test User', phone }
   });
   const user = app.userAuth.getUserByEmail(email);
   app.userAuth.verifyEmail(user.verify_token, {
@@ -111,10 +118,14 @@ test('a pending_approval registration shows up in the queue and can be approved'
   const superAdmin = await createSession(app, { email: 'super2@example.com', role: 'super_admin' });
 
   // Register someone AFTER the window has closed, so they land on pending_approval.
+  app.userAuth.replaceRegistry(
+    [...app.userAuth.listRegistry(), { name: 'Waiting Officer', phone: '01799999999', email: 'waiting@example.com' }],
+    'test-seed'
+  );
   await call(app, {
     method: 'POST',
     url: '/api/auth/register',
-    body: { email: 'waiting@example.com', password: 'longenough1', name: 'Waiting Officer' }
+    body: { email: 'waiting@example.com', password: 'longenough1', name: 'Waiting Officer', phone: '01799999999' }
   });
   const waitingUser = app.userAuth.getUserByEmail('waiting@example.com');
   app.userAuth.verifyEmail(waitingUser.verify_token, { registrationWindowEndsAt: new Date(Date.now() - 60_000).toISOString() });

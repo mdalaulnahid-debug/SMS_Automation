@@ -45,7 +45,16 @@ CREATE TABLE IF NOT EXISTS personnel_registry (
   imported_at TEXT NOT NULL,
   imported_by TEXT
 );
+CREATE TABLE IF NOT EXISTS registration_tokens (
+  telegram_id TEXT PRIMARY KEY,
+  token TEXT NOT NULL UNIQUE,
+  created_at TEXT NOT NULL,
+  expires_at TEXT NOT NULL,
+  consumed_at TEXT
+);
 `;
+
+const REGISTRATION_TOKEN_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours to complete registration via a bot-issued link
 
 const SESSION_TTL_MS = 8 * 60 * 60 * 1000; // 8 hours
 const MFA_PENDING_TTL_MS = 10 * 60 * 1000; // 10 minutes to enter the MFA code
@@ -113,6 +122,12 @@ class UserAuthStore {
     if (!columns.some((col) => col.name === 'telegram_id')) {
       this.db.exec('ALTER TABLE auth_users ADD COLUMN telegram_id TEXT');
     }
+    if (!columns.some((col) => col.name === 'designation')) {
+      this.db.exec('ALTER TABLE auth_users ADD COLUMN designation TEXT');
+    }
+    if (!columns.some((col) => col.name === 'unit')) {
+      this.db.exec('ALTER TABLE auth_users ADD COLUMN unit TEXT');
+    }
     this.db.exec(
       'CREATE UNIQUE INDEX IF NOT EXISTS idx_auth_users_telegram_id ON auth_users(telegram_id) WHERE telegram_id IS NOT NULL'
     );
@@ -166,7 +181,7 @@ class UserAuthStore {
   // telegramId is optional — set when registration originated from the bot's
   // registration-link flow (not built yet; the field exists so that flow has
   // somewhere to plug in without another schema change).
-  register({ email, password, name, phone, role = 'officer', telegramId }) {
+  register({ email, password, name, phone, role = 'officer', telegramId, designation, unit }) {
     email = String(email || '').trim().toLowerCase();
     if (!isValidEmail(email)) throw new Error('Invalid email address.');
     if (!password || String(password).length < 8) throw new Error('Password must be at least 8 characters.');
@@ -186,10 +201,15 @@ class UserAuthStore {
     this.db
       .prepare(
         `INSERT INTO auth_users
-         (id, email, password_hash, name, phone, telegram_id, role, status, email_verified, verify_token, verify_token_expires_at, created_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, 'pending_verification', 0, ?, ?, ?)`
+         (id, email, password_hash, name, phone, telegram_id, designation, unit, role, status, email_verified, verify_token, verify_token_expires_at, created_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending_verification', 0, ?, ?, ?)`
       )
-      .run(id, email, hashPassword(password), String(name).trim(), phone ? String(phone).trim() : null, normalizedTelegramId, role, verifyToken, expiresAt, now);
+      .run(
+        id, email, hashPassword(password), String(name).trim(),
+        phone ? String(phone).trim() : null, normalizedTelegramId,
+        designation ? String(designation).trim() : null, unit ? String(unit).trim() : null,
+        role, verifyToken, expiresAt, now
+      );
 
     return { id, email, verifyToken };
   }
@@ -381,6 +401,40 @@ class UserAuthStore {
   buildPersonnelRegistry() {
     const { PersonnelRegistry } = require('./personnelRegistry');
     return new PersonnelRegistry(this.listRegistry());
+  }
+
+  // --- Registration-link tokens (design doc §5) ---
+  // Minted when an unregistered Telegram sender DMs the bot, so the bot can
+  // reply with a link to the web registration form that already knows which
+  // Telegram identity to link on success. One active token per Telegram id —
+  // a repeat DM before the first link is used just re-issues (INSERT OR
+  // REPLACE), rather than piling up rows for the same sender.
+  createRegistrationToken(telegramId, { now = Date.now(), ttlMs = REGISTRATION_TOKEN_TTL_MS } = {}) {
+    const normalized = String(telegramId || '').trim();
+    if (!normalized) throw new Error('Telegram ID is required.');
+    const token = generateToken();
+    const createdAt = new Date(now).toISOString();
+    const expiresAt = new Date(now + ttlMs).toISOString();
+    this.db
+      .prepare(
+        `INSERT INTO registration_tokens (telegram_id, token, created_at, expires_at, consumed_at)
+         VALUES (?, ?, ?, ?, NULL)
+         ON CONFLICT(telegram_id) DO UPDATE SET token = excluded.token, created_at = excluded.created_at, expires_at = excluded.expires_at, consumed_at = NULL`
+      )
+      .run(normalized, token, createdAt, expiresAt);
+    return { token, expiresAt };
+  }
+
+  // Validates and burns a registration token, returning the Telegram ID it
+  // was minted for. Single-use (consumed_at set on success) so a link can't
+  // be replayed to link a second account to the same Telegram identity.
+  consumeRegistrationToken(token, { now = Date.now() } = {}) {
+    const row = this.db.prepare('SELECT * FROM registration_tokens WHERE token = ?').get(String(token || ''));
+    if (!row) throw new Error('Invalid or expired registration link.');
+    if (row.consumed_at) throw new Error('This registration link has already been used.');
+    if (new Date(row.expires_at).getTime() < now) throw new Error('This registration link has expired. Ask the bot for a new one.');
+    this.db.prepare('UPDATE registration_tokens SET consumed_at = ? WHERE telegram_id = ?').run(new Date(now).toISOString(), row.telegram_id);
+    return row.telegram_id;
   }
 }
 

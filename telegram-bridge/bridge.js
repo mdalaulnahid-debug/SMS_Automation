@@ -118,11 +118,22 @@ async function handleIntake(message, {
         fromId: plan.fromId,
         fromName: plan.fromName
       });
+      // A first-time unregistered private DM gets a registration link, per
+      // the design doc's "whenever a new user requests, the bot provides a
+      // link" flow — group-chat unauthorized senders (not a concept today,
+      // since the group is still open) stay silent, as does a repeat DM from
+      // this sender in the same run (reuses the audit-report dedupe so the
+      // link isn't re-sent on every retry message).
+      if (plan.chatType === 'private' && backend.requestRegistrationLink) {
+        const url = await backend.requestRegistrationLink(plan.fromId);
+        if (url) {
+          await telegram.sendMessage({
+            chatId: plan.chatId,
+            text: `You're not registered yet. Complete registration here to get access:\n${url}`
+          });
+        }
+      }
     }
-    // Never reply — every authorization failure (group allowlist or private DM) stays
-    // silent in chat by design; visibility comes from the admin/web audit report above,
-    // not a message back to the sender. plan.replyText is computed but intentionally
-    // unused here (see shouldSuppressGroupReply for the equivalent post-submit policy).
     return plan;
   }
 

@@ -1105,9 +1105,39 @@ function createApp(options = {}) {
       }
       if (req.method === 'POST' && req.url === '/api/auth/register') {
         const body = await readJson(req);
+
+        // Self-declared identity is never trusted (design doc §6) — phone and
+        // email must both match the SAME Personnel Registry record. An admin
+        // must have imported the registry before registration can succeed at
+        // all; that's a deliberate consequence of "no registry match, no
+        // account", not an oversight.
+        const registry = userAuth.buildPersonnelRegistry();
+        const match = registry.matchByPhoneAndEmail(body.phone, body.email);
+        if (!match) {
+          return json(res, 400, { error: 'Phone and email must match an official record in the Personnel Registry. Contact an administrator if you believe this is an error.' });
+        }
+
+        let telegramId = null;
+        if (body.registrationToken) {
+          try {
+            telegramId = userAuth.consumeRegistrationToken(body.registrationToken);
+          } catch (error) {
+            return json(res, 400, { error: error.message });
+          }
+        }
+
         let result;
         try {
-          result = userAuth.register({ email: body.email, password: body.password, name: body.name, phone: body.phone, role: 'officer' });
+          result = userAuth.register({
+            email: body.email,
+            password: body.password,
+            name: body.name,
+            phone: body.phone,
+            designation: body.designation,
+            unit: body.unit,
+            role: 'officer',
+            telegramId
+          });
         } catch (error) {
           return json(res, 400, { error: error.message });
         }
@@ -1115,6 +1145,18 @@ function createApp(options = {}) {
         const { subject, html, text } = mailer.verificationEmail(baseUrl, result.verifyToken);
         await mailer.sendMail({ to: result.email, subject, html, text });
         return json(res, 200, { ok: true, message: 'Registered. Check your email to verify your account.' });
+      }
+      if (req.method === 'POST' && req.url === '/api/telegram/registration-link') {
+        // Called by the Telegram bridge (authenticated the same way as its other
+        // reporting endpoints — the shared adminApiKey) when an unregistered
+        // sender DMs the bot, so it can reply with a link to the web
+        // registration form pre-bound to that Telegram identity.
+        if (!requireAdmin(req, res)) return undefined;
+        const body = await readJson(req);
+        if (!body.telegramId) return json(res, 400, { error: 'telegramId required' });
+        const { token } = userAuth.createRegistrationToken(body.telegramId);
+        const baseUrl = process.env.PUBLIC_BASE_URL || `http://${req.headers.host}`;
+        return json(res, 200, { url: `${baseUrl}/register.html?token=${encodeURIComponent(token)}` });
       }
       if (req.method === 'GET' && req.url.startsWith('/verify-email')) {
         const token = new URL(req.url, 'http://x').searchParams.get('token') || '';

@@ -215,6 +215,47 @@ test('bridge-level unauthorized private DM is reported once, group members are n
   assert.equal(reported.length, 1, 'should not report the same chat+sender twice');
 });
 
+test('handleIntake replies with a registration link on a first-time unauthorized private DM', async () => {
+  const telegram = fakeTelegram();
+  const backend = {
+    reportUnauthorizedAttempt: async () => {},
+    requestRegistrationLink: async (telegramId) => `https://example.com/register.html?token=tok-${telegramId}`
+  };
+  const dmMsg = { text: 'hello', chat: { id: '555', type: 'private' }, from: { id: 555, first_name: 'Nazmul' }, message_id: 1 };
+  const res = await handleIntake(dmMsg, { config: CONFIG, backend, telegram });
+  assert.equal(res.action, 'unauthorized');
+  assert.equal(telegram.sent.length, 1);
+  assert.equal(telegram.sent[0].chatId, '555');
+  assert.match(telegram.sent[0].text, /tok-555/);
+});
+
+test('handleIntake does not re-send the registration link on a repeat DM from the same unauthorized sender', async () => {
+  const telegram = fakeTelegram();
+  let calls = 0;
+  const backend = {
+    reportUnauthorizedAttempt: async () => {},
+    requestRegistrationLink: async () => { calls += 1; return 'https://example.com/register.html?token=tok'; }
+  };
+  const reportedUnauthorizedSenders = new Set();
+  const dmMsg = { text: 'hello', chat: { id: '555', type: 'private' }, from: { id: 555 }, message_id: 1 };
+  await handleIntake(dmMsg, { config: CONFIG, backend, telegram, reportedUnauthorizedSenders });
+  await handleIntake(dmMsg, { config: CONFIG, backend, telegram, reportedUnauthorizedSenders });
+  assert.equal(calls, 1);
+  assert.equal(telegram.sent.length, 1);
+});
+
+test('handleIntake stays silent if requestRegistrationLink returns no url (backend unreachable)', async () => {
+  const telegram = fakeTelegram();
+  const backend = {
+    reportUnauthorizedAttempt: async () => {},
+    requestRegistrationLink: async () => null
+  };
+  const dmMsg = { text: 'hello', chat: { id: '555', type: 'private' }, from: { id: 555 }, message_id: 1 };
+  const res = await handleIntake(dmMsg, { config: CONFIG, backend, telegram });
+  assert.equal(res.action, 'unauthorized');
+  assert.equal(telegram.sent.length, 0);
+});
+
 test('planIntake always requires authorization for private chats, regardless of group allowlist', () => {
   const unauthorizedDm = planIntake(
     { text: 'LRL 01712345678', chat: { id: '555', type: 'private' }, from: { id: 555 }, message_id: 1 },

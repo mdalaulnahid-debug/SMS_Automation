@@ -262,6 +262,51 @@ test('an empty registry is valid (no records imported yet)', () => {
   assert.equal(store.buildPersonnelRegistry().matchByPhoneAndEmail('01700000000', 'a@example.com'), null);
 });
 
+test('register persists designation and unit', () => {
+  const store = new UserAuthStore(':memory:');
+  store.register({ email: 'd1@example.com', password: 'longenough1', name: 'SI Ahmed', designation: 'Sub-Inspector', unit: 'LIC Barishal' });
+  const user = store.getUserByEmail('d1@example.com');
+  assert.equal(user.designation, 'Sub-Inspector');
+  assert.equal(user.unit, 'LIC Barishal');
+});
+
+// --- Registration-link tokens (design doc §5) ---
+
+test('createRegistrationToken then consumeRegistrationToken round-trips the telegramId', () => {
+  const store = new UserAuthStore(':memory:');
+  const { token } = store.createRegistrationToken('555111');
+  const telegramId = store.consumeRegistrationToken(token);
+  assert.equal(telegramId, '555111');
+});
+
+test('consumeRegistrationToken rejects an unknown token', () => {
+  const store = new UserAuthStore(':memory:');
+  assert.throws(() => store.consumeRegistrationToken('not-a-real-token'), /Invalid or expired/);
+});
+
+test('consumeRegistrationToken rejects a token that has already been used', () => {
+  const store = new UserAuthStore(':memory:');
+  const { token } = store.createRegistrationToken('555222');
+  store.consumeRegistrationToken(token);
+  assert.throws(() => store.consumeRegistrationToken(token), /already been used/);
+});
+
+test('consumeRegistrationToken rejects an expired token', () => {
+  const store = new UserAuthStore(':memory:');
+  const now = Date.now();
+  const { token } = store.createRegistrationToken('555333', { now, ttlMs: 1000 });
+  assert.throws(() => store.consumeRegistrationToken(token, { now: now + 2000 }), /expired/);
+});
+
+test('createRegistrationToken called twice for the same telegramId re-issues rather than accumulating rows — the old token stops working', () => {
+  const store = new UserAuthStore(':memory:');
+  const first = store.createRegistrationToken('555444');
+  const second = store.createRegistrationToken('555444');
+  assert.notEqual(first.token, second.token);
+  assert.throws(() => store.consumeRegistrationToken(first.token), /Invalid or expired/);
+  assert.equal(store.consumeRegistrationToken(second.token), '555444');
+});
+
 // --- Registration activation policy (design doc §3) ---
 
 test('isWithinRegistrationWindow: no window configured means always auto-activate (default, backward compatible)', () => {
@@ -371,11 +416,13 @@ function appWith(envOverrides = {}) {
 
 test('full HTTP register/verify/login/mfa/me/logout flow', async () => {
   const app = appWith();
+  // Registration now requires a Personnel Registry match (security-hardening v1 step 5).
+  app.userAuth.replaceRegistry([{ name: 'Officer One', phone: '01712340000', email: 'officer@example.com' }], 'test-seed');
 
   const register = await call(app, {
     method: 'POST',
     url: '/api/auth/register',
-    body: { email: 'officer@example.com', password: 'longenough1', name: 'Officer One' }
+    body: { email: 'officer@example.com', password: 'longenough1', name: 'Officer One', phone: '01712340000' }
   });
   assert.equal(register.status, 200);
 
