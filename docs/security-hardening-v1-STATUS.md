@@ -222,11 +222,29 @@ was scoped from the start.
 
 ## Open questions / notes found while implementing
 
-- **Registry must be populated before registration works at all**, including
-  in production once this branch deploys — flagging so it isn't missed at
-  rollout time. The user said they'll supply the real personnel spreadsheet
-  later; until it's imported via `POST /api/admin/personnel-registry/import`,
-  every registration attempt (web or bot-initiated) will 400.
+- **Real personnel data received and imported into local dev (2026-07-08).**
+  The user provided their actual roster ("Address Book.xlsx", 22 LIC
+  Barishal officers) — imported into the local `data/auth.db` via
+  `replaceRegistry()` (the same path the admin-upload endpoint uses) for
+  step 6+ local testing. Two loader gaps surfaced and were fixed generally
+  (not file-specific) in `src/personnelRegistry.js`:
+  - Real-world header text — `Mobile Number(official)` / `Mail(official)`
+    — wasn't in `COLUMN_ALIASES`; added.
+  - Excel drops the leading `0` from any phone number stored in a
+    numeric-formatted cell (`01320151100` round-trips as `1320151100`).
+    `restoreDroppedLeadingZero()` now fixes any bare 10-digit phone value
+    on import. Confirmed with the user this was the cause before writing
+    the fix (their numbers use PABX-style prefixes like `0132...`, not
+    standard `01[3-9]...` mobile prefixes — could easily have been mistaken
+    for a different bug).
+  - No duplicate (phone, email) pairs across the 22 imported records —
+    verified before import (a few officers hold multiple posts/rows, but
+    each with its own phone+email).
+  - **This local import is dev-database-only** — it does not touch
+    `config/telegram.json`, is not part of any commit, and does not exist
+    in production. **Production still needs its own import** via
+    `POST /api/admin/personnel-registry/import` before registration will
+    work there, once this branch deploys.
 - **Closing the Telegram group's "always open" policy** is the one piece of
   step 5's original scope intentionally left undone — needs a user decision
   on rollout (grace period for existing unregistered group members, likely
