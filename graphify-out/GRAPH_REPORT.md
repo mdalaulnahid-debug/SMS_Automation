@@ -1,16 +1,16 @@
-# Graph Report - SMS_Automation  (2026-07-07)
+# Graph Report - SMS_Automation  (2026-07-08)
 
 ## Corpus Check
-- 141 files · ~369,432 words
+- 142 files · ~371,846 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1729 nodes · 2802 edges · 112 communities (103 shown, 9 thin omitted)
-- Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 178 edges (avg confidence: 0.65)
+- 1741 nodes · 2805 edges · 113 communities (104 shown, 9 thin omitted)
+- Extraction: 94% EXTRACTED · 6% INFERRED · 0% AMBIGUOUS · INFERRED: 173 edges (avg confidence: 0.65)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `5276a898`
+- Built from commit: `822e4943`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -75,6 +75,7 @@
 - [[_COMMUNITY_cookies.test.js|cookies.test.js]]
 - [[_COMMUNITY_Reply Shape Rules|Reply Shape Rules]]
 - [[_COMMUNITY_replyMatching.test.js|replyMatching.test.js]]
+- [[_COMMUNITY_registrationFlow.test.js|registrationFlow.test.js]]
 - [[_COMMUNITY_Progress Tracker|Progress Tracker]]
 - [[_COMMUNITY_Cybernetic Command Design System|Cybernetic Command Design System]]
 - [[_COMMUNITY_Todo|Todo]]
@@ -121,7 +122,7 @@
 2. `AdminMainActivity` - 51 edges
 3. `Prefs` - 41 edges
 4. `Todo` - 38 edges
-5. `UserAuthStore` - 27 edges
+5. `UserAuthStore` - 29 edges
 6. `GatewayForegroundService` - 26 edges
 7. `AdminActivity` - 24 edges
 8. `MainActivity` - 24 edges
@@ -132,9 +133,9 @@
 - `appWith()` --calls--> `createApp()`  [EXTRACTED]
   test/pageGating.test.js → src/app.js
 - `appWith()` --calls--> `createApp()`  [EXTRACTED]
-  test/personnelRegistryEndpoint.test.js → src/app.js
-- `appWith()` --calls--> `createApp()`  [EXTRACTED]
   test/registrationApproval.test.js → src/app.js
+- `appWith()` --calls--> `createApp()`  [EXTRACTED]
+  test/registrationFlow.test.js → src/app.js
 - `appWith()` --calls--> `createApp()`  [EXTRACTED]
   test/security.test.js → src/app.js
 - `appWith()` --calls--> `createApp()`  [EXTRACTED]
@@ -143,7 +144,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (112 total, 9 thin omitted)
+## Communities (113 total, 9 thin omitted)
 
 ### Community 0 - "Web Frontend (ops+admin)"
 Cohesion: 0.05
@@ -166,7 +167,7 @@ Cohesion: 0.14
 Nodes (8): Boolean, Context, Int, List, Pair, String, Prefs, SharedPreferences
 
 ### Community 5 - "Telegram Bridge"
-Cohesion: 0.07
+Cohesion: 0.06
 Nodes (31): BackendClient, buildMention(), handleIntake(), notifyTimeouts(), planIntake(), postApprovedReplies(), postLiveEdits(), seedNotifiedTimeouts() (+23 more)
 
 ### Community 6 - "Gateway Foreground Service"
@@ -252,7 +253,7 @@ Nodes (6): ActivityPermissionsBinding, Boolean, Bundle, String, PermissionsActiv
 
 ### Community 23 - "SMS Gateway Dispatch"
 Cohesion: 0.29
-Nodes (9): createApp(), json(), { existsSync, readFileSync }, { join }, loadAuthConfig(), loadGatewayConfig(), loadMailConfig(), loadTelegramConfig() (+1 more)
+Nodes (4): { existsSync, readFileSync }, { join }, loadGatewayConfig(), trimTrailingSlash()
 
 ### Community 24 - "Manual Review Store"
 Cohesion: 0.16
@@ -372,12 +373,16 @@ Nodes (7): clearSessionCookie(), parseCookies(), serializeSessionCookie(), sessi
 }, test
 
 ### Community 70 - "Reply Shape Rules"
-Cohesion: 0.24
-Nodes (8): appWith(), assert, call(), { createApp }, mockReq(), mockRes(), { Readable }, test
+Cohesion: 0.21
+Nodes (10): createApp(), json(), appWith(), assert, call(), { createApp }, mockReq(), mockRes() (+2 more)
 
 ### Community 71 - "replyMatching.test.js"
 Cohesion: 0.19
 Nodes (12): appWith(), assert, call(), { createApp }, createSession(), { join }, { mkdtempSync, writeFileSync, rmSync }, mockReq() (+4 more)
+
+### Community 72 - "registrationFlow.test.js"
+Cohesion: 0.28
+Nodes (8): appWith(), assert, call(), { createApp }, mockReq(), mockRes(), { Readable }, test
 
 ### Community 194 - "Progress Tracker"
 Cohesion: 0.06
@@ -528,21 +533,21 @@ Cohesion: 0.50
 Nodes (4): Phase 1: Add Encrypted Block Storage (Vultr) — RECOMMENDED, Phase 2: Application-Level Encryption (Optional, High Security), Phase 3: Key Rotation & Backup (If Implementing Phase 2), Todo — 2026-06-24: Data Encryption at Rest (Optional, Recommended)
 
 ## Knowledge Gaps
-- **597 isolated node(s):** `Status by component (per design doc §14 build order)`, `Latest update`, `Open questions / notes found while implementing`, `{ readFile, stat, createReadStream }`, `{ readFile: readFileAsync }` (+592 more)
+- **601 isolated node(s):** `Status by component (per design doc §14 build order)`, `Latest update`, `Open questions / notes found while implementing`, `{ readFile, stat, createReadStream }`, `{ readFile: readFileAsync }` (+596 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **9 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `notifyTimeouts()` connect `Telegram Bridge` to `Domain Model & Queue`?**
-  _High betweenness centrality (0.016) - this node is a cross-community bridge._
-- **Why does `log()` connect `Telegram Bridge` to `Web Frontend (ops+admin)`?**
-  _High betweenness centrality (0.016) - this node is a cross-community bridge._
+- **Why does `LogEntry` connect `Android Gateway Log/DB` to `Gateway Foreground Service`, `Android SMS Receivers`?**
+  _High betweenness centrality (0.017) - this node is a cross-community bridge._
 - **Why does `renderAuditList()` connect `Web Frontend (ops+admin)` to `Telegram Bridge`?**
-  _High betweenness centrality (0.015) - this node is a cross-community bridge._
+  _High betweenness centrality (0.014) - this node is a cross-community bridge._
+- **Why does `log()` connect `Telegram Bridge` to `Web Frontend (ops+admin)`?**
+  _High betweenness centrality (0.014) - this node is a cross-community bridge._
 - **What connects `Status by component (per design doc §14 build order)`, `Latest update`, `Open questions / notes found while implementing` to the rest of the system?**
-  _597 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _601 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Web Frontend (ops+admin)` be split into smaller, more focused modules?**
   _Cohesion score 0.052507836990595615 - nodes in this community are weakly interconnected._
 - **Should `Android Admin App UI` be split into smaller, more focused modules?**
