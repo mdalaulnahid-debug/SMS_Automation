@@ -265,8 +265,8 @@
     "semantic_hash": "691542780e01dd0058fe9c6c54455530"
   },
   "src/app.js": {
-    "mtime": 1783499779.449591,
-    "ast_hash": "4afd83587e407af1002153dfef0c58ca",
+    "mtime": 1783500494.6284976,
+    "ast_hash": "af083974c2658b5e9f8b1ff1341c7c82",
     "semantic_hash": ""
   },
   "src/auth.js": {
@@ -330,8 +330,8 @@
     "semantic_hash": "c2ddb13641a9fcb3398445932020564b"
   },
   "src/service.js": {
-    "mtime": 1783320675.9846013,
-    "ast_hash": "b86d0c6c7245e2862e4381c53a93ec28",
+    "mtime": 1783500448.6262121,
+    "ast_hash": "8d46ce7fbe777e1baad2e99c8aa05efc",
     "semantic_hash": ""
   },
   "src/settingsStore.js": {
@@ -360,13 +360,13 @@
     "semantic_hash": ""
   },
   "telegram-bridge/backendClient.js": {
-    "mtime": 1783499919.829935,
-    "ast_hash": "21eff657208d92f3e2405dfd1728efb9",
+    "mtime": 1783500430.8313625,
+    "ast_hash": "196a62590654822eba0ec1594a65291d",
     "semantic_hash": ""
   },
   "telegram-bridge/bridge.js": {
-    "mtime": 1783499946.9972813,
-    "ast_hash": "6c9f0a08e097191235fc786ca9f30c70",
+    "mtime": 1783500621.2856483,
+    "ast_hash": "f5c997677c7c530c7ec5dcdbd6b2be38",
     "semantic_hash": ""
   },
   "telegram-bridge/start.js": {
@@ -375,8 +375,8 @@
     "semantic_hash": ""
   },
   "telegram-bridge/telegramClient.js": {
-    "mtime": 1783341731.3518555,
-    "ast_hash": "39bf9274a0be42a85c285c469faf09a5",
+    "mtime": 1783500419.9254987,
+    "ast_hash": "958a25ab4bf997257213f99941f57604",
     "semantic_hash": ""
   },
   "test/manualReviewStore.test.js": {
@@ -405,8 +405,8 @@
     "semantic_hash": ""
   },
   "test/telegramBridge.test.js": {
-    "mtime": 1783499966.6673062,
-    "ast_hash": "cd8bf0bad1563081136aafb4ae8a2300",
+    "mtime": 1783500648.0514097,
+    "ast_hash": "579d42a17834da1e2f63c18ab9685ed9",
     "semantic_hash": ""
   },
   "test/trainingData.test.js": {
@@ -420,8 +420,8 @@
     "semantic_hash": ""
   },
   "test/workflow.test.js": {
-    "mtime": 1783322704.9347694,
-    "ast_hash": "25c8a0b32005c3ef6bb530a773d0f675",
+    "mtime": 1783500536.2455952,
+    "ast_hash": "f9ea83efe5ed5955aa2f55b9ea65fe3e",
     "semantic_hash": ""
   },
   ".agents/skills/impeccable/scripts/command-metadata.json": {
@@ -2130,8 +2130,8 @@
     "semantic_hash": ""
   },
   ".impeccable/hook.cache.json": {
-    "mtime": 1783500088.6666598,
-    "ast_hash": "f420730ee95aa132091fc15235e74312",
+    "mtime": 1783500738.8435516,
+    "ast_hash": "f006d13919b5c37ec0ab805ffa785950",
     "semantic_hash": ""
   },
   "config/auth.example.json": {
@@ -3310,8 +3310,8 @@
     "semantic_hash": ""
   },
   "docs/security-hardening-v1-STATUS.md": {
-    "mtime": 1783500088.543771,
-    "ast_hash": "fc9b2a0bb0b9a7d9ed8512d0b314558e",
+    "mtime": 1783500738.7368617,
+    "ast_hash": "a52173317ec13f32fa8727bfb530029b",
     "semantic_hash": ""
   },
   "src/cookies.js": {
@@ -3362,6 +3362,11 @@
   "test/quotaOtpMiddleware.test.js": {
     "mtime": 1783499893.8604977,
     "ast_hash": "6d1640b05472d4e1a7780129d3a3ee20",
+    "semantic_hash": ""
+  },
+  "test/adminGroupActions.test.js": {
+    "mtime": 1783500561.0163417,
+    "ast_hash": "8d9c71ea9a6822bbaf017931a5423b98",
     "semantic_hash": ""
   }
 }
