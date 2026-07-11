@@ -23,7 +23,7 @@ never run `scripts/deploy.sh` on this branch.
 | 6 | Quota + email-OTP re-verification middleware | **Done** |
 | 7 | Admin group actions (post-bypass + moderation) | **Done** (code complete; moderation commands untested against a real Telegram group — bot must be promoted to group admin first, see note below) |
 | 8 | Shared admin key scoping/retirement | **Done** (partial by design — see scoping note: Android apps have no session-login flow, so key access was preserved everywhere they call) |
-| 9 | Behavioral anomaly tripwire | Not started |
+| 9 | Behavioral anomaly tripwire | **Done** |
 | 10 | Local end-to-end simulation | Not started |
 
 ## Latest update
@@ -457,6 +457,60 @@ out of scope for a backend security-hardening pass — it's an Android app
 feature (login screen, token storage, refresh handling) — and was
 explicitly declined by the user for this round. Revisit if/when the
 Android apps get their own auth overhaul.
+
+**Step 9 — behavioral anomaly tripwire — done (design doc §11).** A soft
+net underneath the hard quota/OTP wall from step 6 — flags surface to
+admins as review items, never blocks a request.
+- New pure module `src/anomalyDetector.js`'s `AnomalyDetector` (same
+  injectable-clock, per-process, per-officer-profile pattern as
+  `QuotaTracker`/`OtpStore`), tracking four signals per linked officer:
+  - **Off-hours submission** — outside 06:00-22:00 **Bangladesh Standard
+    Time** (fixed UTC+6 offset computed directly, not the server's local
+    timezone — correct here since every real-world officer is in one
+    timezone, not a simplification to revisit).
+  - **Burst volume** — more than 8 requests within 5 minutes, a
+    deliberately *softer, earlier* warning than the hard quota (20/4h) —
+    catches a suspicious pace well before the quota wall would ever
+    trigger.
+  - **Identity drift** — Telegram's `language_code`/`username` changing
+    from what was last seen for that officer (no flag on the very first
+    sighting — needs a baseline to drift *from*).
+  - **Request-type pattern shift** — flagged only once real history exists
+    (≥5 prior typed requests) and one type has clearly dominated (≥70%) —
+    an evenly-mixed history never trips this, and an unparsed/garbled
+    message never counts toward or against it.
+- Wired into `POST /api/requests` (`checkBehavioralAnomaly()` in
+  `src/app.js`): runs for every linked-officer Telegram submission
+  attempt, **including ones the quota wall already blocked** — a
+  quota-blocked burst is itself a meaningful timing/volume signal, worth
+  flagging even though no `requestType` exists for it. Every flag is
+  audit-logged as `BEHAVIORAL_ANOMALY_FLAGGED` (actor = officer's email,
+  details = flag type + human-readable detail) — the request's actual
+  response (`201`/`400`) is completely unaffected either way, honoring
+  "flags, not blocks" from the design doc.
+- `telegram-bridge/bridge.js`'s `planIntake()` now forwards
+  `message.from.language_code`/`.username` in the request payload it
+  submits — metadata Telegram already sends on every message, no new Bot
+  API capability needed, matching the design doc's framing.
+- Surfaced to admins the same way every other Telegram signal already is
+  (`buildAdminData()` in `src/app.js`): `stats.behavioralAnomalies24h`
+  (rolling 24h count) + `diagnostics.recentAnomalyFlags` (detail array) on
+  `GET /api/admin/overview` — deliberately **not** added to
+  `summarizeAlerts()`'s alert count, since these are explicitly
+  non-blocking review items, not "needs action" alerts like pending
+  approvals or offline gateways.
+- 17 new tests (12 pure-detector unit tests, 5 HTTP wiring integration
+  covering off-hours/burst/quota-interaction/admin-overview-surfacing) —
+  full suite **315/315**. Live-verified against the running local server:
+  confirmed `stats.behavioralAnomalies24h` and
+  `diagnostics.recentAnomalyFlags` appear correctly shaped on the real
+  `/api/admin/overview` response, and a real request still submits
+  successfully with the new check wired in.
+
+**Note:** like quota/OTP state, the anomaly detector's per-officer
+profiles are in-memory/per-process — a backend restart resets everyone's
+baseline (identity-drift and pattern-shift comparisons start fresh). Same
+acceptable-for-V1 tradeoff already noted for step 6.
 
 ## Open questions / notes found while implementing
 

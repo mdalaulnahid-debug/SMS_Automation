@@ -142,6 +142,12 @@ function planIntake(message, config) {
       requesterName: fromName,
       requesterId: fromId,
       text,
+      // Metadata for the behavioral anomaly tripwire (design doc §11) — not
+      // used for authorization, only fed to the backend's identity-drift
+      // check. Telegram omits language_code/username when unset, hence the
+      // null fallback rather than assuming they're always present.
+      languageCode: message.from.language_code || null,
+      username: message.from.username || null,
       ...(forwardedFrom ? { forwardedFrom } : {}),
       ...(config.testDestination ? { testDestination: config.testDestination } : {})
     },

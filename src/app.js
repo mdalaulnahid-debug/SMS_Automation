@@ -23,6 +23,7 @@ const { serializeSessionCookie, clearSessionCookie, sessionTokenFromRequest } = 
 const { parseRegistryWorkbook } = require('./personnelRegistry');
 const { QuotaTracker } = require('./quota');
 const { OtpStore } = require('./otp');
+const { AnomalyDetector } = require('./anomalyDetector');
 const mailer = require('./mailer');
 
 // Sliding-window per-requester rate limiter.
@@ -190,6 +191,13 @@ function buildAdminData(store, queue) {
   const recentUnauthorizedAttempts = store.auditLogs.filter((row) => {
     return row.action === 'TELEGRAM_UNAUTHORIZED_ATTEMPT' && now - new Date(row.timestamp).getTime() < 24 * 60 * 60 * 1000;
   });
+  // Behavioral anomaly tripwire (security-hardening v1 §11) — soft review
+  // items, same 24h-rolling-audit-log pattern as the other Telegram signals
+  // above, not a new alert-count contributor (see summarizeAlerts) since
+  // these are explicitly non-blocking and shouldn't read as "needs action".
+  const recentAnomalyFlags = store.auditLogs.filter((row) => {
+    return row.action === 'BEHAVIORAL_ANOMALY_FLAGGED' && now - new Date(row.timestamp).getTime() < 24 * 60 * 60 * 1000;
+  });
   const alerts = summarizeAlerts(store, requests, gateways, unmatched);
   const activity = buildActivityFeed(store, requests, gateways);
   const today = new Date().toDateString();
@@ -216,6 +224,7 @@ function buildAdminData(store, queue) {
       duplicateRiskGroups: duplicateRiskGroups.length,
       telegramChatMismatches24h: recentChatMismatches.length,
       telegramUnauthorizedAttempts24h: recentUnauthorizedAttempts.length,
+      behavioralAnomalies24h: recentAnomalyFlags.length,
       todayRequests: requests.filter((r) => new Date(r.createdAt).toDateString() === today).length,
       completedToday: requests.filter((r) => r.status === 'COMPLETED' && new Date(r.createdAt).toDateString() === today).length
     },
@@ -242,6 +251,15 @@ function buildAdminData(store, queue) {
         chatType: row.details?.chatType,
         fromId: row.details?.fromId,
         fromName: row.details?.fromName,
+        timestamp: row.timestamp
+      })),
+      recentAnomalyFlags: recentAnomalyFlags.map((row) => ({
+        officerId: row.details?.officerId,
+        telegramId: row.details?.telegramId,
+        officerEmail: row.actor,
+        flagType: row.details?.flagType,
+        detail: row.details?.detail,
+        requestId: row.requestId,
         timestamp: row.timestamp
       })),
       duplicateRiskGroups: duplicateRiskGroups.map((group) => ({
@@ -379,6 +397,12 @@ function createApp(options = {}) {
   // maintaining a long-lived ledger. Injectable so tests can control the clock.
   const quotaTracker = options.quotaTracker || new QuotaTracker();
   const otpStore = options.otpStore || new OtpStore();
+  // Behavioral anomaly tripwire (security-hardening v1 §11) — a soft net
+  // underneath the hard quota/OTP wall above; flags surface to admins as
+  // review items (buildAdminData's stats/diagnostics below), never blocks
+  // a request itself. Same in-memory, per-process, injectable-clock scope
+  // as quotaTracker/otpStore.
+  const anomalyDetector = options.anomalyDetector || new AnomalyDetector();
 
   // Restore the per-operator waiting lists from any persisted QUEUED requests.
   queue.rebuild();
@@ -569,6 +593,30 @@ function createApp(options = {}) {
       errorCode: 'VERIFICATION_REQUIRED',
       replyText: `You've reached your request limit. A verification code was sent to your registered email — reply here with it to continue.`
     };
+  }
+
+  // Behavioral anomaly tripwire (security-hardening v1 §11) — same
+  // linked-officer-only scoping as checkOfficerQuota, but never blocks:
+  // every flag is audit-logged for admin review, the response to the
+  // bridge is untouched either way. Runs regardless of whether the request
+  // parsed (an off-hours/burst/identity signal doesn't depend on the text
+  // being well-formed), but only folds in requestType when it did.
+  function checkBehavioralAnomaly(body, result) {
+    const officer = body.requesterId && userAuth.getUserByTelegramId(body.requesterId);
+    if (!officer) return;
+    const flags = anomalyDetector.recordAndCheck(officer.id, {
+      languageCode: body.languageCode || null,
+      username: body.username || null,
+      requestType: result.ok ? result.request.requestType : null
+    });
+    for (const flag of flags) {
+      store.audit(officer.email, 'BEHAVIORAL_ANOMALY_FLAGGED', result.ok ? result.request.requestId : null, {
+        officerId: officer.id,
+        telegramId: body.requesterId,
+        flagType: flag.type,
+        detail: flag.detail
+      });
+    }
   }
 
   async function handle(req, res) {
@@ -1012,8 +1060,14 @@ function createApp(options = {}) {
           return json(res, 429, { error: 'Too many requests. Please wait a moment before submitting again.' });
         }
         const quotaRejection = await checkOfficerQuota(body.requesterId);
-        if (quotaRejection) return json(res, 400, quotaRejection);
+        if (quotaRejection) {
+          // Still fed to the tripwire — a quota-blocked burst is itself a
+          // meaningful timing/volume signal, even with no requestType to report.
+          checkBehavioralAnomaly(body, { ok: false });
+          return json(res, 400, quotaRejection);
+        }
         const result = await service.submitRequest(body);
+        checkBehavioralAnomaly(body, result);
         return json(res, result.ok ? 201 : 400, result);
       }
       if (req.method === 'POST' && req.url === '/api/sms/inbound') {
