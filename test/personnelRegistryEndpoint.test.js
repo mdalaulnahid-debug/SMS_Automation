@@ -83,6 +83,7 @@ test('POST /api/admin/personnel-registry/import requires admin auth', async () =
 
 test('importing a valid workbook populates the registry, visible via GET', async () => {
   const app = appWith();
+  const token = await createSession(app, { email: 'import-admin@example.com', role: 'admin' });
   const buffer = xlsxBufferFromRows([
     ['Name', 'Designation', 'Unit', 'Phone', 'Email'],
     ['SI Nazmul', 'Sub-Inspector', 'Bakerganj', '01712345678', 'nazmul@police.gov.bd']
@@ -91,16 +92,17 @@ test('importing a valid workbook populates the registry, visible via GET', async
   const importRes = await call(app, {
     method: 'POST',
     url: '/api/admin/personnel-registry/import',
-    headers: { 'x-api-key': 'topsecret' },
+    headers: { authorization: `Bearer ${token}` },
     body: buffer
   });
   assert.equal(importRes.status, 200);
+  // The registry now also contains this session's own seed record from createSession().
   assert.equal(importRes.json.count, 1);
 
   const listRes = await call(app, {
     method: 'GET',
     url: '/api/admin/personnel-registry',
-    headers: { 'x-api-key': 'topsecret' }
+    headers: { authorization: `Bearer ${token}` }
   });
   assert.equal(listRes.status, 200);
   assert.equal(listRes.json.count, 1);
@@ -109,18 +111,19 @@ test('importing a valid workbook populates the registry, visible via GET', async
 
 test('importing a workbook missing required columns returns a clear 400, does not touch the registry', async () => {
   const app = appWith();
+  const token = await createSession(app, { email: 'import-admin2@example.com', role: 'admin' });
   // Seed a real registry first, so we can confirm the bad import doesn't wipe it.
   await call(app, {
     method: 'POST',
     url: '/api/admin/personnel-registry/import',
-    headers: { 'x-api-key': 'topsecret' },
+    headers: { authorization: `Bearer ${token}` },
     body: xlsxBufferFromRows([['Name', 'Phone', 'Email'], ['Existing', '01700000009', 'existing@example.com']])
   });
 
   const badRes = await call(app, {
     method: 'POST',
     url: '/api/admin/personnel-registry/import',
-    headers: { 'x-api-key': 'topsecret' },
+    headers: { authorization: `Bearer ${token}` },
     body: xlsxBufferFromRows([['Name', 'Designation'], ['No Contact Info', 'Rank']])
   });
   assert.equal(badRes.status, 400);
@@ -129,7 +132,7 @@ test('importing a workbook missing required columns returns a clear 400, does no
   const listRes = await call(app, {
     method: 'GET',
     url: '/api/admin/personnel-registry',
-    headers: { 'x-api-key': 'topsecret' }
+    headers: { authorization: `Bearer ${token}` }
   });
   assert.equal(listRes.json.count, 1, 'the previously-imported registry must be untouched by the failed import');
   assert.equal(listRes.json.records[0].name, 'Existing');
@@ -137,10 +140,11 @@ test('importing a workbook missing required columns returns a clear 400, does no
 
 test('an empty/all-invalid workbook is rejected rather than wiping the registry with zero records', async () => {
   const app = appWith();
+  const token = await createSession(app, { email: 'import-admin3@example.com', role: 'admin' });
   const res = await call(app, {
     method: 'POST',
     url: '/api/admin/personnel-registry/import',
-    headers: { 'x-api-key': 'topsecret' },
+    headers: { authorization: `Bearer ${token}` },
     body: xlsxBufferFromRows([['Name', 'Phone', 'Email']]) // headers only, no data rows
   });
   assert.equal(res.status, 400);
@@ -188,10 +192,11 @@ test('POST /api/admin/personnel-registry/add requires super_admin specifically, 
 
 test('POST /api/admin/personnel-registry/add rejects a duplicate (phone, email) and invalid input, without a session', async () => {
   const app = appWith();
+  const token = await createSession(app, { email: 'add-dup-super@example.com', role: 'super_admin' });
   const first = await call(app, {
     method: 'POST',
     url: '/api/admin/personnel-registry/add',
-    headers: { 'x-api-key': 'topsecret' },
+    headers: { authorization: `Bearer ${token}` },
     body: { name: 'SI Karim', phone: '01799999999', email: 'karim@police.gov.bd' }
   });
   assert.equal(first.status, 200);
@@ -199,7 +204,7 @@ test('POST /api/admin/personnel-registry/add rejects a duplicate (phone, email) 
   const dup = await call(app, {
     method: 'POST',
     url: '/api/admin/personnel-registry/add',
-    headers: { 'x-api-key': 'topsecret' },
+    headers: { authorization: `Bearer ${token}` },
     body: { name: 'Someone Else', phone: '01799999999', email: 'karim@police.gov.bd' }
   });
   assert.equal(dup.status, 400);

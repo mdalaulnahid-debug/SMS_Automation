@@ -412,14 +412,44 @@ function createApp(options = {}) {
     return false;
   };
 
-  // Accepts any authenticated session (any role) OR the legacy admin API key.
-  // Used for the ops dashboard endpoints that officers can also access.
-  const requireAnySession = (req, res) => {
-    if (isAdmin(req, authConfig)) return true;
+  // --- Shared admin key retirement (security-hardening v1 §10) ---
+  // Verified at implementation time which callers actually present the legacy
+  // key: the Telegram bridge (its own reporting/moderation endpoints) and the
+  // Android Gateway + Android Admin apps (dashboard, overview/requests/replies/
+  // unmatched/audit, settings, reply-drafts, requests reject/retry, gateway/*)
+  // — grepped directly from android-gateway/*/src. The Android Admin App has no
+  // session-login flow of its own, so requireAdmin/requireSuperAdmin above stay
+  // exactly as they are (key-or-session) for every endpoint either Android app
+  // calls — retiring the key there would break a real, currently-working human
+  // tool with no replacement auth path. Session-only requirement below applies
+  // only to endpoints confirmed to have zero Android app dependency: every
+  // security-hardening-v1-introduced endpoint (Personnel Registry, registration
+  // approval/window, ops dashboard) plus the pre-existing admin.html-only tools
+  // (QR provisioning, users, audit export, unmatched-candidates, timeouts) —
+  // admin.html already supports real session login today, so nothing human
+  // actually loses access.
+  const requireAdminSessionOnly = (req, res) => {
     const sessionToken = require('./auth').presentedToken(req);
     const session = sessionToken && userAuth.validateSession(sessionToken);
-    if (session) return true;
-    json(res, 401, { error: 'Login required.' });
+    if (session && (session.user.role === 'admin' || session.user.role === 'super_admin')) return true;
+    json(res, 401, { error: 'Admin session login required.' });
+    return false;
+  };
+
+  const requireSuperAdminSessionOnly = (req, res) => {
+    const sessionToken = require('./auth').presentedToken(req);
+    const session = sessionToken && userAuth.validateSession(sessionToken);
+    if (session && session.user.role === 'super_admin') return true;
+    json(res, 401, { error: 'Super-admin session login required.' });
+    return false;
+  };
+
+  // For the Telegram bridge's own reporting/moderation endpoints — a human
+  // session was never valid here (no human calls these URLs directly), so
+  // this is the legacy key check under an honest name, not a behavior change.
+  const requireMachine = (req, res) => {
+    if (isAdmin(req, authConfig)) return true;
+    json(res, 401, { error: 'Machine authentication required.' });
     return false;
   };
 
@@ -654,7 +684,7 @@ function createApp(options = {}) {
         });
       }
       if (req.method === 'POST' && req.url === '/api/admin/generate-qr') {
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireAdminSessionOnly(req, res)) return undefined;
         const body = await readJson(req);
         const { gwId, url, pin, secret } = body;
         if (!gwId || !url) return json(res, 400, { error: 'gwId and url required' });
@@ -760,11 +790,11 @@ function createApp(options = {}) {
         }
       }
       if (req.method === 'GET' && req.url === '/api/admin/personnel-registry') {
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireAdminSessionOnly(req, res)) return undefined;
         return json(res, 200, { records: userAuth.listRegistry(), count: userAuth.registrySize() });
       }
       if (req.method === 'POST' && req.url === '/api/admin/personnel-registry/import') {
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireAdminSessionOnly(req, res)) return undefined;
         let buffer;
         try {
           buffer = await readBuffer(req);
@@ -793,7 +823,7 @@ function createApp(options = {}) {
         // Stricter than the bulk import above (super_admin, not just admin) —
         // adding one officer between spreadsheet re-imports is a more
         // targeted, easier-to-fat-finger action than a full re-upload.
-        if (!requireSuperAdmin(req, res)) return undefined;
+        if (!requireSuperAdminSessionOnly(req, res)) return undefined;
         const body = await readJson(req);
         const actor = require('./auth').presentedToken(req);
         const session = actor && userAuth.validateSession(actor);
@@ -809,11 +839,11 @@ function createApp(options = {}) {
         return json(res, 200, { ok: true, record });
       }
       if (req.method === 'GET' && req.url === '/api/admin/registrations/pending') {
-        if (!requireSuperAdmin(req, res)) return undefined;
+        if (!requireSuperAdminSessionOnly(req, res)) return undefined;
         return json(res, 200, { registrations: userAuth.listPendingApprovals() });
       }
       if (req.method === 'POST' && req.url === '/api/admin/registrations/approve') {
-        if (!requireSuperAdmin(req, res)) return undefined;
+        if (!requireSuperAdminSessionOnly(req, res)) return undefined;
         const body = await readJson(req);
         if (!body.userId) return json(res, 400, { error: 'userId is required' });
         try {
@@ -825,14 +855,14 @@ function createApp(options = {}) {
         }
       }
       if (req.method === 'GET' && req.url === '/api/admin/settings/registration-window') {
-        if (!requireSuperAdmin(req, res)) return undefined;
+        if (!requireSuperAdminSessionOnly(req, res)) return undefined;
         return json(res, 200, {
           registrationWindowEndsAt: authConfig.registrationWindowEndsAt,
           isOpen: isWithinRegistrationWindow(authConfig.registrationWindowEndsAt)
         });
       }
       if (req.method === 'POST' && req.url === '/api/admin/settings/registration-window') {
-        if (!requireSuperAdmin(req, res)) return undefined;
+        if (!requireSuperAdminSessionOnly(req, res)) return undefined;
         const body = await readJson(req);
         try {
           const endsAt = settingsStore.writeRegistrationWindowEndsAt(body.endsAt);
@@ -848,7 +878,7 @@ function createApp(options = {}) {
         // doesn't match its configured groupChatId — the exact failure mode that silently
         // broke intake on 2026-06-20 (config drift between the bridge's groupChatId and the
         // real group) until someone happened to check pm2 logs. Now audit-visible instead.
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireMachine(req, res)) return undefined;
         const body = await readJson(req);
         if (!body.chatId) return json(res, 400, { error: 'chatId required' });
         store.audit('telegram-bridge', 'TELEGRAM_CHAT_MISMATCH', null, {
@@ -863,7 +893,7 @@ function createApp(options = {}) {
         // group allowlist rejection, or any private DM (private chats are always
         // authorized-only, see telegram-bridge/bridge.js planIntake). Closes the gap where
         // this previously only ever produced a console log line in the bridge process.
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireMachine(req, res)) return undefined;
         const body = await readJson(req);
         if (!body.chatId || !body.fromId) return json(res, 400, { error: 'chatId and fromId required' });
         store.audit('telegram-bridge', 'TELEGRAM_UNAUTHORIZED_ATTEMPT', null, {
@@ -891,11 +921,11 @@ function createApp(options = {}) {
         // fleet/queue operational data, even via a direct API call — the public
         // landing page no longer renders this for that tier, and the boundary
         // has to hold at the API too, not just in what the page happens to draw.
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireAdminSessionOnly(req, res)) return undefined;
         return json(res, 200, buildOpsData(store, queue));
       }
       if (req.method === 'GET' && req.url === '/api/ops/activity') {
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireAdminSessionOnly(req, res)) return undefined;
         const ops = buildOpsData(store, queue);
         return json(res, 200, {
           generatedAt: ops.generatedAt,
@@ -904,7 +934,7 @@ function createApp(options = {}) {
         });
       }
       if (req.method === 'GET' && req.url === '/api/ops/gateways') {
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireAdminSessionOnly(req, res)) return undefined;
         const ops = buildOpsData(store, queue);
         return json(res, 200, {
           generatedAt: ops.generatedAt,
@@ -942,7 +972,7 @@ function createApp(options = {}) {
         return json(res, 200, { unmatched: admin.unmatched, requests: admin.requests });
       }
       if (req.method === 'GET' && req.url === '/api/admin/rejected-messages') {
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireAdminSessionOnly(req, res)) return undefined;
         // Reads the FULL in-memory audit log, not the 250-row slice /api/admin/audit uses —
         // REQUEST_VALIDATION_FAILED is a small fraction of total audit volume (most of it is
         // SMS_INBOUND/SMS_REPLY_UNMATCHED noise), so a rejected message could otherwise be
@@ -1093,11 +1123,11 @@ function createApp(options = {}) {
         return json(res, 200, { ok: true });
       }
       if (req.method === 'GET' && req.url === '/api/users') {
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireAdminSessionOnly(req, res)) return undefined;
         return json(res, 200, { users: store.listUsers() });
       }
       if (req.method === 'POST' && req.url === '/api/users') {
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireAdminSessionOnly(req, res)) return undefined;
         const body = await readJson(req);
         if (!body.telegramId) return json(res, 400, { error: 'telegramId is required.' });
         const user = store.upsertUser({
@@ -1111,7 +1141,7 @@ function createApp(options = {}) {
         return json(res, 200, { user });
       }
       if (req.method === 'POST' && req.url.startsWith('/api/users/') && req.url.endsWith('/status')) {
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireAdminSessionOnly(req, res)) return undefined;
         const telegramId = decodeURIComponent(req.url.split('/').at(-2) || '');
         const body = await readJson(req);
         const user = store.setUserStatus(telegramId, body.status);
@@ -1119,11 +1149,11 @@ function createApp(options = {}) {
         return json(res, 200, { user });
       }
       if (req.method === 'GET' && req.url === '/api/audit/verify') {
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireAdminSessionOnly(req, res)) return undefined;
         return json(res, 200, store.verifyAuditChain());
       }
       if (req.method === 'GET' && req.url === '/api/audit/export') {
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireAdminSessionOnly(req, res)) return undefined;
         return csv(res, 'audit-log.csv', auditToCsv(store.auditLogs));
       }
       if (req.method === 'GET' && req.url.startsWith('/api/reply-drafts')) {
@@ -1164,32 +1194,32 @@ function createApp(options = {}) {
         return json(res, 200, { request });
       }
       if (req.method === 'POST' && req.url === '/api/manual-match') {
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireAdminSessionOnly(req, res)) return undefined;
         const body = await readJson(req);
         if (!body.inboxId || !body.requestId) return json(res, 400, { error: 'inboxId and requestId required.' });
         const result = service.manualMatch(body.inboxId, body.requestId);
         return json(res, 200, result);
       }
       if (req.method === 'GET' && req.url.startsWith('/api/admin/unmatched/') && req.url.endsWith('/candidates')) {
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireAdminSessionOnly(req, res)) return undefined;
         const inboxId = decodeURIComponent(req.url.split('/').at(-2) || '');
         const candidates = service.rankReplyCandidates(inboxId);
         return json(res, 200, { candidates });
       }
       if (req.method === 'POST' && req.url === '/api/admin/correct-match') {
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireAdminSessionOnly(req, res)) return undefined;
         const body = await readJson(req);
         if (!body.inboxId || !body.requestId) return json(res, 400, { error: 'inboxId and requestId required.' });
         const result = service.correctMatch(body.inboxId, body.requestId);
         return json(res, 200, result);
       }
       if (req.method === 'GET' && req.url === '/api/sms/unmatched') {
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireAdminSessionOnly(req, res)) return undefined;
         const unmatched = store.smsInbox.filter((row) => !row.matchedRequestId && !row.analysis?.ignored);
         return json(res, 200, { unmatched });
       }
       if (req.method === 'POST' && req.url === '/api/timeouts/run') {
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireAdminSessionOnly(req, res)) return undefined;
         return json(res, 200, { timedOut: await service.timeoutWaitingRequests() });
       }
       if (req.method === 'POST' && req.url === '/api/auth/register') {
@@ -1240,7 +1270,7 @@ function createApp(options = {}) {
         // reporting endpoints — the shared adminApiKey) when an unregistered
         // sender DMs the bot, so it can reply with a link to the web
         // registration form pre-bound to that Telegram identity.
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireMachine(req, res)) return undefined;
         const body = await readJson(req);
         if (!body.telegramId) return json(res, 400, { error: 'telegramId required' });
         const { token } = userAuth.createRegistrationToken(body.telegramId);
@@ -1252,7 +1282,7 @@ function createApp(options = {}) {
         // what looks like a re-verification code (security-hardening v1 §7) —
         // same bridge-auth pattern as registration-link. Not tied to a specific
         // in-flight request; success just reopens the officer's quota window.
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireMachine(req, res)) return undefined;
         const body = await readJson(req);
         if (!body.telegramId || !body.code) return json(res, 400, { error: 'telegramId and code required' });
         const officer = userAuth.getUserByTelegramId(body.telegramId);
@@ -1272,7 +1302,7 @@ function createApp(options = {}) {
         // §9) — the bridge never caches admin status, so a role change or account
         // disablement takes effect on the very next command, not after some
         // periodic refresh interval.
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireMachine(req, res)) return undefined;
         const body = await readJson(req);
         if (!body.telegramId) return json(res, 400, { error: 'telegramId required' });
         const user = userAuth.getUserByTelegramId(body.telegramId);
@@ -1284,7 +1314,7 @@ function createApp(options = {}) {
         // via the Telegram API (this backend holds no bot token and cannot perform
         // the action itself) — audit-only, per design doc §9's "every admin message
         // and moderation action is audit-logged" requirement.
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireMachine(req, res)) return undefined;
         const body = await readJson(req);
         if (!body.action || !body.actorTelegramId) return json(res, 400, { error: 'action and actorTelegramId required' });
         store.audit(body.actorName || body.actorTelegramId, 'TELEGRAM_MODERATION_ACTION', null, {

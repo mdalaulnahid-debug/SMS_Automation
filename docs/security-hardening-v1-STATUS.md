@@ -22,7 +22,7 @@ never run `scripts/deploy.sh` on this branch.
 | 5 | Registration flow end-to-end | **Done** for the web + bridge-link mechanics (see scoping note below — closing the group-chat "always open" policy itself is deliberately deferred) |
 | 6 | Quota + email-OTP re-verification middleware | **Done** |
 | 7 | Admin group actions (post-bypass + moderation) | **Done** (code complete; moderation commands untested against a real Telegram group — bot must be promoted to group admin first, see note below) |
-| 8 | Shared admin key scoping/retirement | Not started |
+| 8 | Shared admin key scoping/retirement | **Done** (partial by design — see scoping note: Android apps have no session-login flow, so key access was preserved everywhere they call) |
 | 9 | Behavioral anomaly tripwire | Not started |
 | 10 | Local end-to-end simulation | Not started |
 
@@ -386,7 +386,77 @@ promoted the bot to group admin. Verified with a read-only
 `/unban` should now work for real, not just against the test suite's fake
 Telegram client — not yet exercised against a real group member, since
 that's a visible, hard-to-reverse action in a live operations channel and
-needs the user's go-ahead on a safe target first.
+needs the user's go-ahead on a safe target first. User declined live
+testing for now — trusting the automated suite + the read-only rights
+confirmation above.
+
+**Step 8 — shared admin key scoping/retirement — done, deliberately
+partial (design doc §10).**
+- **Real blocker found before writing any code, changed the plan:** grepped
+  every actual caller of the shared `adminApiKey` across the codebase
+  (`android-gateway/*/src`, `telegram-bridge/`, `public/`) rather than
+  assuming. Found the **Android Admin App** (`android-gateway/adminapp` —
+  a native mobile-supervisor console, human-facing) authenticates *purely*
+  via the shared key (`x-api-key` header, see `AdminBackendClient.java`)
+  with **no session-login flow of its own** — same for the Android Gateway
+  App's own machine calls. Retiring the key from every human-reachable
+  endpoint as the design doc's literal text suggests would have broken a
+  real, currently-working tool with no replacement auth path (building one
+  means adding native-app login, far outside this step's scope). Surfaced
+  this to the user before touching any code; user's answer: **don't touch
+  the apps.**
+- **Scoped retirement instead of a blanket one.** Enumerated every endpoint
+  either Android app calls (dashboard, admin overview/requests/replies/
+  unmatched/audit, admin settings + sub-routes, reply-drafts including
+  `.../approve`, requests reject/retry, every `/api/gateway/*` +
+  `/api/admin/gateways/*`) — those keep accepting the shared key exactly as
+  before, `requireAdmin`/`requireSuperAdmin` untouched. Two new, stricter
+  helpers apply only where zero Android dependency was confirmed:
+  - `requireAdminSessionOnly` / `requireSuperAdminSessionOnly` — session
+    required, key rejected outright. Applied to: QR provisioning,
+    Personnel Registry (list/import/add), registration approval queue,
+    registration-window settings, rejected-messages, `/api/users*`,
+    audit verify/export, manual-match + unmatched-candidates +
+    correct-match, `/api/sms/unmatched`, `/api/timeouts/run`, and the
+    `/api/ops/*` trio from step "public landing page" (all either brand
+    new to this security-hardening initiative, or pre-existing
+    admin.html-only tools admin.html already reaches via real session
+    login — nothing human actually loses access).
+  - `requireMachine` — the Telegram bridge's own reporting/moderation
+    endpoints (`chat-mismatch`, `unauthorized-attempt`,
+    `registration-link`, `verify-code`, `moderation-check`,
+    `moderation-action`): key-only, same check as before under an honest
+    name — no human ever called these directly, so this is a real
+    hardening (a compromised session token literally cannot invoke them
+    anymore) with zero behavior change for the bridge.
+  - Also deleted `requireAnySession` (dead code — nothing called it since
+    the `/api/ops/*` tightening in the earlier "public landing page" work).
+- 0 new endpoints, so no new test *file* — but 8 existing tests broke as
+  intended (they relied on the key working where it now doesn't) and were
+  updated to create a real session instead, across
+  `test/personnelRegistryEndpoint.test.js` and `test/security.test.js`
+  (which also gained an `authDbPath: ':memory:'` + `createAdminSession()`
+  helper, previously absent). Full suite **298/298** (net zero new tests —
+  same count as step 7, since this step only reclassified auth on existing
+  endpoints).
+- **Live-verified the exact boundary**, not just the test suite: against
+  the real running server with the real admin key —
+  `/api/admin/overview` and `/api/dashboard` (Android-dependent) still
+  **200**; `/api/audit/export` and `/api/ops/activity` (retired) now
+  **401**; `/api/telegram/moderation-check` (machine-only) still **200**.
+  Then confirmed a real super_admin session (temporary row, cleaned up
+  after) reaches both retired endpoints successfully — the replacement
+  path actually works, not just "the old path is blocked".
+
+**Deliberately NOT done — explicit scope boundary, not an oversight:**
+building a session-login flow for the Android Admin/Gateway apps, which
+would let the key be retired from `/api/admin/overview`, `/api/dashboard`,
+`/api/admin/settings*`, reply-drafts, requests reject/retry, and every
+`/api/gateway/*`/`/api/admin/gateways/*` endpoint too. That's genuinely
+out of scope for a backend security-hardening pass — it's an Android app
+feature (login screen, token storage, refresh handling) — and was
+explicitly declined by the user for this round. Revisit if/when the
+Android apps get their own auth overhaul.
 
 ## Open questions / notes found while implementing
 
