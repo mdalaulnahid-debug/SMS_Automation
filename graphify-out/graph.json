@@ -47,11 +47,81 @@
       "label": "Open questions / notes found while implementing",
       "file_type": "document",
       "source_file": "docs/security-hardening-v1-STATUS.md",
-      "source_location": "L461",
+      "source_location": "L515",
       "_origin": "ast",
       "id": "docs_security_hardening_v1_status_open_questions_notes_found_while_implementing",
       "community": 68,
       "norm_label": "open questions / notes found while implementing"
+    },
+    {
+      "label": "anomalyDetector.js",
+      "file_type": "code",
+      "source_file": "src/anomalyDetector.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_anomalydetector",
+      "community": 1,
+      "norm_label": "anomalydetector.js"
+    },
+    {
+      "label": "AnomalyDetector",
+      "file_type": "code",
+      "source_file": "src/anomalyDetector.js",
+      "source_location": "L26",
+      "_origin": "ast",
+      "id": "src_anomalydetector_anomalydetector",
+      "community": 1,
+      "norm_label": "anomalydetector"
+    },
+    {
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "src/anomalyDetector.js",
+      "source_location": "L27",
+      "_origin": "ast",
+      "id": "src_anomalydetector_anomalydetector_constructor",
+      "community": 1,
+      "norm_label": ".constructor()"
+    },
+    {
+      "label": "._getOrCreateProfile()",
+      "file_type": "code",
+      "source_file": "src/anomalyDetector.js",
+      "source_location": "L48",
+      "_origin": "ast",
+      "id": "src_anomalydetector_anomalydetector_getorcreateprofile",
+      "community": 1,
+      "norm_label": "._getorcreateprofile()"
+    },
+    {
+      "label": "._localHour()",
+      "file_type": "code",
+      "source_file": "src/anomalyDetector.js",
+      "source_location": "L63",
+      "_origin": "ast",
+      "id": "src_anomalydetector_anomalydetector_localhour",
+      "community": 1,
+      "norm_label": "._localhour()"
+    },
+    {
+      "label": "._isOffHours()",
+      "file_type": "code",
+      "source_file": "src/anomalyDetector.js",
+      "source_location": "L67",
+      "_origin": "ast",
+      "id": "src_anomalydetector_anomalydetector_isoffhours",
+      "community": 1,
+      "norm_label": "._isoffhours()"
+    },
+    {
+      "label": ".recordAndCheck()",
+      "file_type": "code",
+      "source_file": "src/anomalyDetector.js",
+      "source_location": "L81",
+      "_origin": "ast",
+      "id": "src_anomalydetector_anomalydetector_recordandcheck",
+      "community": 1,
+      "norm_label": ".recordandcheck()"
     },
     {
       "label": "app.js",
@@ -254,10 +324,20 @@
       "norm_label": "{ otpstore }"
     },
     {
-      "label": "mailer",
+      "label": "{ AnomalyDetector }",
       "file_type": "code",
       "source_file": "src/app.js",
       "source_location": "L26",
+      "_origin": "ast",
+      "id": "src_app_anomalydetector",
+      "community": 12,
+      "norm_label": "{ anomalydetector }"
+    },
+    {
+      "label": "mailer",
+      "file_type": "code",
+      "source_file": "src/app.js",
+      "source_location": "L27",
       "_origin": "ast",
       "id": "src_app_mailer",
       "community": 12,
@@ -267,7 +347,7 @@
       "label": "RateLimiter",
       "file_type": "code",
       "source_file": "src/app.js",
-      "source_location": "L30",
+      "source_location": "L31",
       "_origin": "ast",
       "id": "src_app_ratelimiter",
       "community": 65,
@@ -277,7 +357,7 @@
       "label": ".constructor()",
       "file_type": "code",
       "source_file": "src/app.js",
-      "source_location": "L31",
+      "source_location": "L32",
       "_origin": "ast",
       "id": "src_app_ratelimiter_constructor",
       "community": 65,
@@ -287,7 +367,7 @@
       "label": ".check()",
       "file_type": "code",
       "source_file": "src/app.js",
-      "source_location": "L38",
+      "source_location": "L39",
       "_origin": "ast",
       "id": "src_app_ratelimiter_check",
       "community": 65,
@@ -297,7 +377,7 @@
       "label": "._prune()",
       "file_type": "code",
       "source_file": "src/app.js",
-      "source_location": "L48",
+      "source_location": "L49",
       "_origin": "ast",
       "id": "src_app_ratelimiter_prune",
       "community": 65,
@@ -307,7 +387,7 @@
       "label": "requestRateLimiter",
       "file_type": "code",
       "source_file": "src/app.js",
-      "source_location": "L58",
+      "source_location": "L59",
       "_origin": "ast",
       "id": "src_app_requestratelimiter",
       "community": 12,
@@ -317,7 +397,7 @@
       "label": "decorateGatewayHealth()",
       "file_type": "code",
       "source_file": "src/app.js",
-      "source_location": "L61",
+      "source_location": "L62",
       "_origin": "ast",
       "id": "src_app_decorategatewayhealth",
       "community": 12,
@@ -327,7 +407,7 @@
       "label": "summarizeAlerts()",
       "file_type": "code",
       "source_file": "src/app.js",
-      "source_location": "L70",
+      "source_location": "L71",
       "_origin": "ast",
       "id": "src_app_summarizealerts",
       "community": 12,
@@ -337,7 +417,7 @@
       "label": "buildActivityFeed()",
       "file_type": "code",
       "source_file": "src/app.js",
-      "source_location": "L84",
+      "source_location": "L85",
       "_origin": "ast",
       "id": "src_app_buildactivityfeed",
       "community": 12,
@@ -347,7 +427,7 @@
       "label": "buildAdminData()",
       "file_type": "code",
       "source_file": "src/app.js",
-      "source_location": "L170",
+      "source_location": "L171",
       "_origin": "ast",
       "id": "src_app_buildadmindata",
       "community": 12,
@@ -357,7 +437,7 @@
       "label": "sanitizeActivityForPublicOps()",
       "file_type": "code",
       "source_file": "src/app.js",
-      "source_location": "L286",
+      "source_location": "L304",
       "_origin": "ast",
       "id": "src_app_sanitizeactivityforpublicops",
       "community": 12,
@@ -367,7 +447,7 @@
       "label": "buildOpsData()",
       "file_type": "code",
       "source_file": "src/app.js",
-      "source_location": "L298",
+      "source_location": "L316",
       "_origin": "ast",
       "id": "src_app_buildopsdata",
       "community": 12,
@@ -377,7 +457,7 @@
       "label": "sendTelegramWatchdogAlert()",
       "file_type": "code",
       "source_file": "src/app.js",
-      "source_location": "L328",
+      "source_location": "L346",
       "_origin": "ast",
       "id": "src_app_sendtelegramwatchdogalert",
       "community": 12,
@@ -387,7 +467,7 @@
       "label": "createApp()",
       "file_type": "code",
       "source_file": "src/app.js",
-      "source_location": "L346",
+      "source_location": "L364",
       "_origin": "ast",
       "id": "src_app_createapp",
       "community": 72,
@@ -397,7 +477,7 @@
       "label": "isValidGatewayHeader()",
       "file_type": "code",
       "source_file": "src/app.js",
-      "source_location": "L1397",
+      "source_location": "L1451",
       "_origin": "ast",
       "id": "src_app_isvalidgatewayheader",
       "community": 12,
@@ -407,7 +487,7 @@
       "label": "serveFile()",
       "file_type": "code",
       "source_file": "src/app.js",
-      "source_location": "L1403",
+      "source_location": "L1457",
       "_origin": "ast",
       "id": "src_app_servefile",
       "community": 12,
@@ -417,7 +497,7 @@
       "label": "safeUserFields()",
       "file_type": "code",
       "source_file": "src/app.js",
-      "source_location": "L1412",
+      "source_location": "L1466",
       "_origin": "ast",
       "id": "src_app_safeuserfields",
       "community": 12,
@@ -427,7 +507,7 @@
       "label": "json()",
       "file_type": "code",
       "source_file": "src/app.js",
-      "source_location": "L1427",
+      "source_location": "L1481",
       "_origin": "ast",
       "id": "src_app_json",
       "community": 72,
@@ -437,7 +517,7 @@
       "label": "csv()",
       "file_type": "code",
       "source_file": "src/app.js",
-      "source_location": "L1432",
+      "source_location": "L1486",
       "_origin": "ast",
       "id": "src_app_csv",
       "community": 12,
@@ -447,7 +527,7 @@
       "label": "auditToCsv()",
       "file_type": "code",
       "source_file": "src/app.js",
-      "source_location": "L1441",
+      "source_location": "L1495",
       "_origin": "ast",
       "id": "src_app_audittocsv",
       "community": 12,
@@ -457,7 +537,7 @@
       "label": "readJson()",
       "file_type": "code",
       "source_file": "src/app.js",
-      "source_location": "L1462",
+      "source_location": "L1516",
       "_origin": "ast",
       "id": "src_app_readjson",
       "community": 12,
@@ -467,11 +547,271 @@
       "label": "readBuffer()",
       "file_type": "code",
       "source_file": "src/app.js",
-      "source_location": "L1487",
+      "source_location": "L1541",
       "_origin": "ast",
       "id": "src_app_readbuffer",
       "community": 12,
       "norm_label": "readbuffer()"
+    },
+    {
+      "label": "bridge.js",
+      "file_type": "code",
+      "source_file": "telegram-bridge/bridge.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "telegram_bridge_bridge",
+      "community": 5,
+      "norm_label": "bridge.js"
+    },
+    {
+      "label": "buildMention()",
+      "file_type": "code",
+      "source_file": "telegram-bridge/bridge.js",
+      "source_location": "L9",
+      "_origin": "ast",
+      "id": "telegram_bridge_bridge_buildmention",
+      "community": 5,
+      "norm_label": "buildmention()"
+    },
+    {
+      "label": "shouldSuppressGroupReply()",
+      "file_type": "code",
+      "source_file": "telegram-bridge/bridge.js",
+      "source_location": "L16",
+      "_origin": "ast",
+      "id": "telegram_bridge_bridge_shouldsuppressgroupreply",
+      "community": 5,
+      "norm_label": "shouldsuppressgroupreply()"
+    },
+    {
+      "label": "planIntake()",
+      "file_type": "code",
+      "source_file": "telegram-bridge/bridge.js",
+      "source_location": "L32",
+      "_origin": "ast",
+      "id": "telegram_bridge_bridge_planintake",
+      "community": 5,
+      "norm_label": "planintake()"
+    },
+    {
+      "label": "handleIntake()",
+      "file_type": "code",
+      "source_file": "telegram-bridge/bridge.js",
+      "source_location": "L159",
+      "_origin": "ast",
+      "id": "telegram_bridge_bridge_handleintake",
+      "community": 5,
+      "norm_label": "handleintake()"
+    },
+    {
+      "label": "postApprovedReplies()",
+      "file_type": "code",
+      "source_file": "telegram-bridge/bridge.js",
+      "source_location": "L327",
+      "_origin": "ast",
+      "id": "telegram_bridge_bridge_postapprovedreplies",
+      "community": 5,
+      "norm_label": "postapprovedreplies()"
+    },
+    {
+      "label": "postLiveEdits()",
+      "file_type": "code",
+      "source_file": "telegram-bridge/bridge.js",
+      "source_location": "L359",
+      "_origin": "ast",
+      "id": "telegram_bridge_bridge_postliveedits",
+      "community": 5,
+      "norm_label": "postliveedits()"
+    },
+    {
+      "label": "seedNotifiedTimeouts()",
+      "file_type": "code",
+      "source_file": "telegram-bridge/bridge.js",
+      "source_location": "L391",
+      "_origin": "ast",
+      "id": "telegram_bridge_bridge_seednotifiedtimeouts",
+      "community": 5,
+      "norm_label": "seednotifiedtimeouts()"
+    },
+    {
+      "label": "notifyTimeouts()",
+      "file_type": "code",
+      "source_file": "telegram-bridge/bridge.js",
+      "source_location": "L408",
+      "_origin": "ast",
+      "id": "telegram_bridge_bridge_notifytimeouts",
+      "community": 5,
+      "norm_label": "notifytimeouts()"
+    },
+    {
+      "label": "anomalyDetector.test.js",
+      "file_type": "code",
+      "source_file": "test/anomalyDetector.test.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "test_anomalydetector_test",
+      "community": 1,
+      "norm_label": "anomalydetector.test.js"
+    },
+    {
+      "label": "test",
+      "file_type": "code",
+      "source_file": "test/anomalyDetector.test.js",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "test_anomalydetector_test_test",
+      "community": 1,
+      "norm_label": "test"
+    },
+    {
+      "label": "assert",
+      "file_type": "code",
+      "source_file": "test/anomalyDetector.test.js",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "test_anomalydetector_test_assert",
+      "community": 1,
+      "norm_label": "assert"
+    },
+    {
+      "label": "{ AnomalyDetector }",
+      "file_type": "code",
+      "source_file": "test/anomalyDetector.test.js",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "test_anomalydetector_test_anomalydetector",
+      "community": 1,
+      "norm_label": "{ anomalydetector }"
+    },
+    {
+      "label": "bstNoon()",
+      "file_type": "code",
+      "source_file": "test/anomalyDetector.test.js",
+      "source_location": "L9",
+      "_origin": "ast",
+      "id": "test_anomalydetector_test_bstnoon",
+      "community": 1,
+      "norm_label": "bstnoon()"
+    },
+    {
+      "label": "bstMidnight()",
+      "file_type": "code",
+      "source_file": "test/anomalyDetector.test.js",
+      "source_location": "L12",
+      "_origin": "ast",
+      "id": "test_anomalydetector_test_bstmidnight",
+      "community": 1,
+      "norm_label": "bstmidnight()"
+    },
+    {
+      "label": "behavioralAnomaly.test.js",
+      "file_type": "code",
+      "source_file": "test/behavioralAnomaly.test.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "test_behavioralanomaly_test",
+      "community": 75,
+      "norm_label": "behavioralanomaly.test.js"
+    },
+    {
+      "label": "test",
+      "file_type": "code",
+      "source_file": "test/behavioralAnomaly.test.js",
+      "source_location": "L10",
+      "_origin": "ast",
+      "id": "test_behavioralanomaly_test_test",
+      "community": 75,
+      "norm_label": "test"
+    },
+    {
+      "label": "assert",
+      "file_type": "code",
+      "source_file": "test/behavioralAnomaly.test.js",
+      "source_location": "L11",
+      "_origin": "ast",
+      "id": "test_behavioralanomaly_test_assert",
+      "community": 75,
+      "norm_label": "assert"
+    },
+    {
+      "label": "{ Readable }",
+      "file_type": "code",
+      "source_file": "test/behavioralAnomaly.test.js",
+      "source_location": "L12",
+      "_origin": "ast",
+      "id": "test_behavioralanomaly_test_readable",
+      "community": 75,
+      "norm_label": "{ readable }"
+    },
+    {
+      "label": "{ createApp }",
+      "file_type": "code",
+      "source_file": "test/behavioralAnomaly.test.js",
+      "source_location": "L13",
+      "_origin": "ast",
+      "id": "test_behavioralanomaly_test_createapp",
+      "community": 75,
+      "norm_label": "{ createapp }"
+    },
+    {
+      "label": "{ AnomalyDetector }",
+      "file_type": "code",
+      "source_file": "test/behavioralAnomaly.test.js",
+      "source_location": "L14",
+      "_origin": "ast",
+      "id": "test_behavioralanomaly_test_anomalydetector",
+      "community": 75,
+      "norm_label": "{ anomalydetector }"
+    },
+    {
+      "label": "mockReq()",
+      "file_type": "code",
+      "source_file": "test/behavioralAnomaly.test.js",
+      "source_location": "L16",
+      "_origin": "ast",
+      "id": "test_behavioralanomaly_test_mockreq",
+      "community": 75,
+      "norm_label": "mockreq()"
+    },
+    {
+      "label": "mockRes()",
+      "file_type": "code",
+      "source_file": "test/behavioralAnomaly.test.js",
+      "source_location": "L26",
+      "_origin": "ast",
+      "id": "test_behavioralanomaly_test_mockres",
+      "community": 75,
+      "norm_label": "mockres()"
+    },
+    {
+      "label": "call()",
+      "file_type": "code",
+      "source_file": "test/behavioralAnomaly.test.js",
+      "source_location": "L44",
+      "_origin": "ast",
+      "id": "test_behavioralanomaly_test_call",
+      "community": 75,
+      "norm_label": "call()"
+    },
+    {
+      "label": "appWith()",
+      "file_type": "code",
+      "source_file": "test/behavioralAnomaly.test.js",
+      "source_location": "L56",
+      "_origin": "ast",
+      "id": "test_behavioralanomaly_test_appwith",
+      "community": 75,
+      "norm_label": "appwith()"
+    },
+    {
+      "label": "createLinkedOfficer()",
+      "file_type": "code",
+      "source_file": "test/behavioralAnomaly.test.js",
+      "source_location": "L68",
+      "_origin": "ast",
+      "id": "test_behavioralanomaly_test_createlinkedofficer",
+      "community": 75,
+      "norm_label": "createlinkedofficer()"
     },
     {
       "label": "personnelRegistryEndpoint.test.js",
@@ -479,9 +819,9 @@
       "source_file": "test/personnelRegistryEndpoint.test.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "test_personnelregistryendpoint_test",
       "community": 70,
-      "norm_label": "personnelregistryendpoint.test.js"
+      "norm_label": "personnelregistryendpoint.test.js",
+      "id": "test_personnelregistryendpoint_test"
     },
     {
       "label": "test",
@@ -489,9 +829,9 @@
       "source_file": "test/personnelRegistryEndpoint.test.js",
       "source_location": "L3",
       "_origin": "ast",
-      "id": "test_personnelregistryendpoint_test_test",
       "community": 70,
-      "norm_label": "test"
+      "norm_label": "test",
+      "id": "test_personnelregistryendpoint_test_test"
     },
     {
       "label": "assert",
@@ -499,9 +839,9 @@
       "source_file": "test/personnelRegistryEndpoint.test.js",
       "source_location": "L4",
       "_origin": "ast",
-      "id": "test_personnelregistryendpoint_test_assert",
       "community": 70,
-      "norm_label": "assert"
+      "norm_label": "assert",
+      "id": "test_personnelregistryendpoint_test_assert"
     },
     {
       "label": "{ Readable }",
@@ -509,9 +849,9 @@
       "source_file": "test/personnelRegistryEndpoint.test.js",
       "source_location": "L5",
       "_origin": "ast",
-      "id": "test_personnelregistryendpoint_test_readable",
       "community": 70,
-      "norm_label": "{ readable }"
+      "norm_label": "{ readable }",
+      "id": "test_personnelregistryendpoint_test_readable"
     },
     {
       "label": "{ createApp }",
@@ -519,9 +859,9 @@
       "source_file": "test/personnelRegistryEndpoint.test.js",
       "source_location": "L6",
       "_origin": "ast",
-      "id": "test_personnelregistryendpoint_test_createapp",
       "community": 70,
-      "norm_label": "{ createapp }"
+      "norm_label": "{ createapp }",
+      "id": "test_personnelregistryendpoint_test_createapp"
     },
     {
       "label": "mockReq()",
@@ -529,9 +869,9 @@
       "source_file": "test/personnelRegistryEndpoint.test.js",
       "source_location": "L8",
       "_origin": "ast",
-      "id": "test_personnelregistryendpoint_test_mockreq",
       "community": 70,
-      "norm_label": "mockreq()"
+      "norm_label": "mockreq()",
+      "id": "test_personnelregistryendpoint_test_mockreq"
     },
     {
       "label": "mockRes()",
@@ -539,9 +879,9 @@
       "source_file": "test/personnelRegistryEndpoint.test.js",
       "source_location": "L18",
       "_origin": "ast",
-      "id": "test_personnelregistryendpoint_test_mockres",
       "community": 70,
-      "norm_label": "mockres()"
+      "norm_label": "mockres()",
+      "id": "test_personnelregistryendpoint_test_mockres"
     },
     {
       "label": "call()",
@@ -549,9 +889,9 @@
       "source_file": "test/personnelRegistryEndpoint.test.js",
       "source_location": "L36",
       "_origin": "ast",
-      "id": "test_personnelregistryendpoint_test_call",
       "community": 70,
-      "norm_label": "call()"
+      "norm_label": "call()",
+      "id": "test_personnelregistryendpoint_test_call"
     },
     {
       "label": "appWith()",
@@ -559,9 +899,9 @@
       "source_file": "test/personnelRegistryEndpoint.test.js",
       "source_location": "L48",
       "_origin": "ast",
-      "id": "test_personnelregistryendpoint_test_appwith",
       "community": 70,
-      "norm_label": "appwith()"
+      "norm_label": "appwith()",
+      "id": "test_personnelregistryendpoint_test_appwith"
     },
     {
       "label": "xlsxBufferFromRows()",
@@ -569,9 +909,9 @@
       "source_file": "test/personnelRegistryEndpoint.test.js",
       "source_location": "L59",
       "_origin": "ast",
-      "id": "test_personnelregistryendpoint_test_xlsxbufferfromrows",
       "community": 70,
-      "norm_label": "xlsxbufferfromrows()"
+      "norm_label": "xlsxbufferfromrows()",
+      "id": "test_personnelregistryendpoint_test_xlsxbufferfromrows"
     },
     {
       "label": "createSession()",
@@ -579,9 +919,9 @@
       "source_file": "test/personnelRegistryEndpoint.test.js",
       "source_location": "L156",
       "_origin": "ast",
-      "id": "test_personnelregistryendpoint_test_createsession",
       "community": 70,
-      "norm_label": "createsession()"
+      "norm_label": "createsession()",
+      "id": "test_personnelregistryendpoint_test_createsession"
     },
     {
       "label": "security.test.js",
@@ -589,9 +929,9 @@
       "source_file": "test/security.test.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "test_security_test",
       "community": 32,
-      "norm_label": "security.test.js"
+      "norm_label": "security.test.js",
+      "id": "test_security_test"
     },
     {
       "label": "test",
@@ -599,9 +939,9 @@
       "source_file": "test/security.test.js",
       "source_location": "L3",
       "_origin": "ast",
-      "id": "test_security_test_test",
       "community": 32,
-      "norm_label": "test"
+      "norm_label": "test",
+      "id": "test_security_test_test"
     },
     {
       "label": "assert",
@@ -609,9 +949,9 @@
       "source_file": "test/security.test.js",
       "source_location": "L4",
       "_origin": "ast",
-      "id": "test_security_test_assert",
       "community": 32,
-      "norm_label": "assert"
+      "norm_label": "assert",
+      "id": "test_security_test_assert"
     },
     {
       "label": "{ Readable }",
@@ -619,9 +959,9 @@
       "source_file": "test/security.test.js",
       "source_location": "L5",
       "_origin": "ast",
-      "id": "test_security_test_readable",
       "community": 32,
-      "norm_label": "{ readable }"
+      "norm_label": "{ readable }",
+      "id": "test_security_test_readable"
     },
     {
       "label": "{ createApp }",
@@ -629,9 +969,9 @@
       "source_file": "test/security.test.js",
       "source_location": "L6",
       "_origin": "ast",
-      "id": "test_security_test_createapp",
       "community": 32,
-      "norm_label": "{ createapp }"
+      "norm_label": "{ createapp }",
+      "id": "test_security_test_createapp"
     },
     {
       "label": "{ AutomationStore }",
@@ -639,9 +979,9 @@
       "source_file": "test/security.test.js",
       "source_location": "L7",
       "_origin": "ast",
-      "id": "test_security_test_automationstore",
       "community": 32,
-      "norm_label": "{ automationstore }"
+      "norm_label": "{ automationstore }",
+      "id": "test_security_test_automationstore"
     },
     {
       "label": "mockReq()",
@@ -649,9 +989,9 @@
       "source_file": "test/security.test.js",
       "source_location": "L9",
       "_origin": "ast",
-      "id": "test_security_test_mockreq",
       "community": 32,
-      "norm_label": "mockreq()"
+      "norm_label": "mockreq()",
+      "id": "test_security_test_mockreq"
     },
     {
       "label": "mockRes()",
@@ -659,9 +999,9 @@
       "source_file": "test/security.test.js",
       "source_location": "L18",
       "_origin": "ast",
-      "id": "test_security_test_mockres",
       "community": 32,
-      "norm_label": "mockres()"
+      "norm_label": "mockres()",
+      "id": "test_security_test_mockres"
     },
     {
       "label": "call()",
@@ -669,9 +1009,9 @@
       "source_file": "test/security.test.js",
       "source_location": "L36",
       "_origin": "ast",
-      "id": "test_security_test_call",
       "community": 32,
-      "norm_label": "call()"
+      "norm_label": "call()",
+      "id": "test_security_test_call"
     },
     {
       "label": "appWith()",
@@ -679,9 +1019,9 @@
       "source_file": "test/security.test.js",
       "source_location": "L48",
       "_origin": "ast",
-      "id": "test_security_test_appwith",
       "community": 32,
-      "norm_label": "appwith()"
+      "norm_label": "appwith()",
+      "id": "test_security_test_appwith"
     },
     {
       "label": "createAdminSession()",
@@ -689,9 +1029,9 @@
       "source_file": "test/security.test.js",
       "source_location": "L64",
       "_origin": "ast",
-      "id": "test_security_test_createadminsession",
       "community": 32,
-      "norm_label": "createadminsession()"
+      "norm_label": "createadminsession()",
+      "id": "test_security_test_createadminsession"
     },
     {
       "label": "withTempSettingsConfig()",
@@ -699,9 +1039,9 @@
       "source_file": "test/security.test.js",
       "source_location": "L378",
       "_origin": "ast",
-      "id": "test_security_test_withtempsettingsconfig",
       "community": 32,
-      "norm_label": "withtempsettingsconfig()"
+      "norm_label": "withtempsettingsconfig()",
+      "id": "test_security_test_withtempsettingsconfig"
     },
     {
       "label": "service.js",
@@ -1162,96 +1502,6 @@
       "community": 5,
       "norm_label": ".reportmoderationaction()",
       "id": "telegram_bridge_backendclient_backendclient_reportmoderationaction"
-    },
-    {
-      "label": "bridge.js",
-      "file_type": "code",
-      "source_file": "telegram-bridge/bridge.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 5,
-      "norm_label": "bridge.js",
-      "id": "telegram_bridge_bridge"
-    },
-    {
-      "label": "buildMention()",
-      "file_type": "code",
-      "source_file": "telegram-bridge/bridge.js",
-      "source_location": "L9",
-      "_origin": "ast",
-      "community": 5,
-      "norm_label": "buildmention()",
-      "id": "telegram_bridge_bridge_buildmention"
-    },
-    {
-      "label": "shouldSuppressGroupReply()",
-      "file_type": "code",
-      "source_file": "telegram-bridge/bridge.js",
-      "source_location": "L16",
-      "_origin": "ast",
-      "community": 5,
-      "norm_label": "shouldsuppressgroupreply()",
-      "id": "telegram_bridge_bridge_shouldsuppressgroupreply"
-    },
-    {
-      "label": "planIntake()",
-      "file_type": "code",
-      "source_file": "telegram-bridge/bridge.js",
-      "source_location": "L32",
-      "_origin": "ast",
-      "community": 5,
-      "norm_label": "planintake()",
-      "id": "telegram_bridge_bridge_planintake"
-    },
-    {
-      "label": "handleIntake()",
-      "file_type": "code",
-      "source_file": "telegram-bridge/bridge.js",
-      "source_location": "L153",
-      "_origin": "ast",
-      "community": 5,
-      "norm_label": "handleintake()",
-      "id": "telegram_bridge_bridge_handleintake"
-    },
-    {
-      "label": "postApprovedReplies()",
-      "file_type": "code",
-      "source_file": "telegram-bridge/bridge.js",
-      "source_location": "L321",
-      "_origin": "ast",
-      "community": 5,
-      "norm_label": "postapprovedreplies()",
-      "id": "telegram_bridge_bridge_postapprovedreplies"
-    },
-    {
-      "label": "postLiveEdits()",
-      "file_type": "code",
-      "source_file": "telegram-bridge/bridge.js",
-      "source_location": "L353",
-      "_origin": "ast",
-      "community": 5,
-      "norm_label": "postliveedits()",
-      "id": "telegram_bridge_bridge_postliveedits"
-    },
-    {
-      "label": "seedNotifiedTimeouts()",
-      "file_type": "code",
-      "source_file": "telegram-bridge/bridge.js",
-      "source_location": "L385",
-      "_origin": "ast",
-      "community": 5,
-      "norm_label": "seednotifiedtimeouts()",
-      "id": "telegram_bridge_bridge_seednotifiedtimeouts"
-    },
-    {
-      "label": "notifyTimeouts()",
-      "file_type": "code",
-      "source_file": "telegram-bridge/bridge.js",
-      "source_location": "L402",
-      "_origin": "ast",
-      "community": 5,
-      "norm_label": "notifytimeouts()",
-      "id": "telegram_bridge_bridge_notifytimeouts"
     },
     {
       "label": "telegramClient.js",
@@ -1869,7 +2119,7 @@
       "source_file": "test/quotaOtpMiddleware.test.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 85,
+      "community": 48,
       "norm_label": "quotaotpmiddleware.test.js",
       "id": "test_quotaotpmiddleware_test"
     },
@@ -1879,7 +2129,7 @@
       "source_file": "test/quotaOtpMiddleware.test.js",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 85,
+      "community": 48,
       "norm_label": "test",
       "id": "test_quotaotpmiddleware_test_test"
     },
@@ -1889,7 +2139,7 @@
       "source_file": "test/quotaOtpMiddleware.test.js",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 85,
+      "community": 48,
       "norm_label": "assert",
       "id": "test_quotaotpmiddleware_test_assert"
     },
@@ -1899,7 +2149,7 @@
       "source_file": "test/quotaOtpMiddleware.test.js",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 85,
+      "community": 48,
       "norm_label": "{ readable }",
       "id": "test_quotaotpmiddleware_test_readable"
     },
@@ -1909,7 +2159,7 @@
       "source_file": "test/quotaOtpMiddleware.test.js",
       "source_location": "L13",
       "_origin": "ast",
-      "community": 85,
+      "community": 48,
       "norm_label": "{ createapp }",
       "id": "test_quotaotpmiddleware_test_createapp"
     },
@@ -1919,7 +2169,7 @@
       "source_file": "test/quotaOtpMiddleware.test.js",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 85,
+      "community": 48,
       "norm_label": "{ quotatracker }",
       "id": "test_quotaotpmiddleware_test_quotatracker"
     },
@@ -1929,7 +2179,7 @@
       "source_file": "test/quotaOtpMiddleware.test.js",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 85,
+      "community": 48,
       "norm_label": "{ otpstore }",
       "id": "test_quotaotpmiddleware_test_otpstore"
     },
@@ -1939,7 +2189,7 @@
       "source_file": "test/quotaOtpMiddleware.test.js",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 85,
+      "community": 48,
       "norm_label": "mockreq()",
       "id": "test_quotaotpmiddleware_test_mockreq"
     },
@@ -1949,7 +2199,7 @@
       "source_file": "test/quotaOtpMiddleware.test.js",
       "source_location": "L27",
       "_origin": "ast",
-      "community": 85,
+      "community": 48,
       "norm_label": "mockres()",
       "id": "test_quotaotpmiddleware_test_mockres"
     },
@@ -1959,7 +2209,7 @@
       "source_file": "test/quotaOtpMiddleware.test.js",
       "source_location": "L45",
       "_origin": "ast",
-      "community": 85,
+      "community": 48,
       "norm_label": "call()",
       "id": "test_quotaotpmiddleware_test_call"
     },
@@ -1979,7 +2229,7 @@
       "source_file": "test/quotaOtpMiddleware.test.js",
       "source_location": "L70",
       "_origin": "ast",
-      "community": 85,
+      "community": 48,
       "norm_label": "createlinkedofficer()",
       "id": "test_quotaotpmiddleware_test_createlinkedofficer"
     },
@@ -1989,7 +2239,7 @@
       "source_file": "test/quotaOtpMiddleware.test.js",
       "source_location": "L76",
       "_origin": "ast",
-      "community": 85,
+      "community": 48,
       "norm_label": "submitas()",
       "id": "test_quotaotpmiddleware_test_submitas"
     },
@@ -5569,7 +5819,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 82,
+      "community": 3,
       "norm_label": "appcompatactivity",
       "id": "appcompatactivity"
     },
@@ -8299,7 +8549,7 @@
       "source_file": "android-gateway/app/src/main/java/com/smsgateway/QrScanActivity.kt",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 82,
+      "community": 3,
       "norm_label": "qrscanactivity.kt",
       "id": "android_gateway_app_src_main_java_com_smsgateway_qrscanactivity"
     },
@@ -8309,7 +8559,7 @@
       "source_file": "android-gateway/app/src/main/java/com/smsgateway/QrScanActivity.kt",
       "source_location": "L23",
       "_origin": "ast",
-      "community": 82,
+      "community": 3,
       "norm_label": "qrscanactivity",
       "id": "android_gateway_app_src_main_java_com_smsgateway_qrscanactivity_qrscanactivity"
     },
@@ -8319,7 +8569,7 @@
       "source_file": "android-gateway/app/src/main/java/com/smsgateway/QrScanActivity.kt",
       "source_location": "L33",
       "_origin": "ast",
-      "community": 82,
+      "community": 3,
       "norm_label": ".oncreate()",
       "id": "android_gateway_app_src_main_java_com_smsgateway_qrscanactivity_qrscanactivity_oncreate"
     },
@@ -8329,7 +8579,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 82,
+      "community": 3,
       "norm_label": "bundle",
       "id": "android_gateway_app_src_main_java_com_smsgateway_qrscanactivity_kt_bundle"
     },
@@ -8339,7 +8589,7 @@
       "source_file": "android-gateway/app/src/main/java/com/smsgateway/QrScanActivity.kt",
       "source_location": "L38",
       "_origin": "ast",
-      "community": 82,
+      "community": 3,
       "norm_label": ".launchscanner()",
       "id": "android_gateway_app_src_main_java_com_smsgateway_qrscanactivity_qrscanactivity_launchscanner"
     },
@@ -8349,7 +8599,7 @@
       "source_file": "android-gateway/app/src/main/java/com/smsgateway/QrScanActivity.kt",
       "source_location": "L48",
       "_origin": "ast",
-      "community": 82,
+      "community": 3,
       "norm_label": ".handleqrresult()",
       "id": "android_gateway_app_src_main_java_com_smsgateway_qrscanactivity_qrscanactivity_handleqrresult"
     },
@@ -8359,7 +8609,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 82,
+      "community": 3,
       "norm_label": "string",
       "id": "android_gateway_app_src_main_java_com_smsgateway_qrscanactivity_kt_string"
     },
@@ -9389,7 +9639,7 @@
       "source_file": "android-gateway/app/src/main/java/com/smsgateway/db/AppDatabase.kt",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 81,
+      "community": 3,
       "norm_label": "appdatabase.kt",
       "id": "android_gateway_app_src_main_java_com_smsgateway_db_appdatabase"
     },
@@ -9399,7 +9649,7 @@
       "source_file": "android-gateway/app/src/main/java/com/smsgateway/db/AppDatabase.kt",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 81,
+      "community": 3,
       "norm_label": "appdatabase",
       "id": "android_gateway_app_src_main_java_com_smsgateway_db_appdatabase_appdatabase"
     },
@@ -9409,7 +9659,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 81,
+      "community": 3,
       "norm_label": "roomdatabase",
       "id": "roomdatabase"
     },
@@ -9419,7 +9669,7 @@
       "source_file": "android-gateway/app/src/main/java/com/smsgateway/db/AppDatabase.kt",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 81,
+      "community": 3,
       "norm_label": ".logdao()",
       "id": "android_gateway_app_src_main_java_com_smsgateway_db_appdatabase_appdatabase_logdao"
     },
@@ -9429,7 +9679,7 @@
       "source_file": "android-gateway/app/src/main/java/com/smsgateway/db/AppDatabase.kt",
       "source_location": "L19",
       "_origin": "ast",
-      "community": 81,
+      "community": 3,
       "norm_label": "migrate()",
       "id": "android_gateway_app_src_main_java_com_smsgateway_db_appdatabase_migrate"
     },
@@ -9439,7 +9689,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 81,
+      "community": 3,
       "norm_label": "supportsqlitedatabase",
       "id": "supportsqlitedatabase"
     },
@@ -9449,7 +9699,7 @@
       "source_file": "android-gateway/app/src/main/java/com/smsgateway/db/AppDatabase.kt",
       "source_location": "L32",
       "_origin": "ast",
-      "community": 81,
+      "community": 3,
       "norm_label": "get()",
       "id": "android_gateway_app_src_main_java_com_smsgateway_db_appdatabase_get"
     },
@@ -9459,7 +9709,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 81,
+      "community": 3,
       "norm_label": "context",
       "id": "android_gateway_app_src_main_java_com_smsgateway_db_appdatabase_kt_context"
     },
@@ -9469,7 +9719,7 @@
       "source_file": "android-gateway/app/src/main/java/com/smsgateway/db/LogDao.kt",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 75,
+      "community": 3,
       "norm_label": "logdao.kt",
       "id": "android_gateway_app_src_main_java_com_smsgateway_db_logdao"
     },
@@ -9479,7 +9729,7 @@
       "source_file": "android-gateway/app/src/main/java/com/smsgateway/db/LogDao.kt",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 75,
+      "community": 3,
       "norm_label": "logdao",
       "id": "android_gateway_app_src_main_java_com_smsgateway_db_logdao_logdao"
     },
@@ -9489,7 +9739,7 @@
       "source_file": "android-gateway/app/src/main/java/com/smsgateway/db/LogDao.kt",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 75,
+      "community": 3,
       "norm_label": ".insert()",
       "id": "android_gateway_app_src_main_java_com_smsgateway_db_logdao_logdao_insert"
     },
@@ -9499,7 +9749,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 75,
+      "community": 3,
       "norm_label": "long",
       "id": "android_gateway_app_src_main_java_com_smsgateway_db_logdao_kt_long"
     },
@@ -9509,7 +9759,7 @@
       "source_file": "android-gateway/app/src/main/java/com/smsgateway/db/LogDao.kt",
       "source_location": "L13",
       "_origin": "ast",
-      "community": 75,
+      "community": 3,
       "norm_label": ".getrecent()",
       "id": "android_gateway_app_src_main_java_com_smsgateway_db_logdao_logdao_getrecent"
     },
@@ -9519,7 +9769,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 75,
+      "community": 3,
       "norm_label": "flow",
       "id": "flow"
     },
@@ -9529,7 +9779,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 75,
+      "community": 3,
       "norm_label": "list",
       "id": "android_gateway_app_src_main_java_com_smsgateway_db_logdao_kt_list"
     },
@@ -9539,7 +9789,7 @@
       "source_file": "android-gateway/app/src/main/java/com/smsgateway/db/LogDao.kt",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 75,
+      "community": 3,
       "norm_label": ".getpendingretries()",
       "id": "android_gateway_app_src_main_java_com_smsgateway_db_logdao_logdao_getpendingretries"
     },
@@ -9549,7 +9799,7 @@
       "source_file": "android-gateway/app/src/main/java/com/smsgateway/db/LogDao.kt",
       "source_location": "L19",
       "_origin": "ast",
-      "community": 75,
+      "community": 3,
       "norm_label": ".updatestatus()",
       "id": "android_gateway_app_src_main_java_com_smsgateway_db_logdao_logdao_updatestatus"
     },
@@ -9559,7 +9809,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 75,
+      "community": 3,
       "norm_label": "string",
       "id": "android_gateway_app_src_main_java_com_smsgateway_db_logdao_kt_string"
     },
@@ -9569,7 +9819,7 @@
       "source_file": "android-gateway/app/src/main/java/com/smsgateway/db/LogDao.kt",
       "source_location": "L22",
       "_origin": "ast",
-      "community": 75,
+      "community": 3,
       "norm_label": ".updatestatusbylocalid()",
       "id": "android_gateway_app_src_main_java_com_smsgateway_db_logdao_logdao_updatestatusbylocalid"
     },
@@ -9579,7 +9829,7 @@
       "source_file": "android-gateway/app/src/main/java/com/smsgateway/db/LogDao.kt",
       "source_location": "L25",
       "_origin": "ast",
-      "community": 75,
+      "community": 3,
       "norm_label": ".getlastsent()",
       "id": "android_gateway_app_src_main_java_com_smsgateway_db_logdao_logdao_getlastsent"
     },
@@ -9589,7 +9839,7 @@
       "source_file": "android-gateway/app/src/main/java/com/smsgateway/db/LogDao.kt",
       "source_location": "L28",
       "_origin": "ast",
-      "community": 75,
+      "community": 3,
       "norm_label": ".getlastreceived()",
       "id": "android_gateway_app_src_main_java_com_smsgateway_db_logdao_logdao_getlastreceived"
     },
@@ -9599,7 +9849,7 @@
       "source_file": "android-gateway/app/src/main/java/com/smsgateway/db/LogDao.kt",
       "source_location": "L31",
       "_origin": "ast",
-      "community": 75,
+      "community": 3,
       "norm_label": ".countpendingretries()",
       "id": "android_gateway_app_src_main_java_com_smsgateway_db_logdao_logdao_countpendingretries"
     },
@@ -9609,7 +9859,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 75,
+      "community": 3,
       "norm_label": "int",
       "id": "android_gateway_app_src_main_java_com_smsgateway_db_logdao_kt_int"
     },
@@ -9619,7 +9869,7 @@
       "source_file": "android-gateway/app/src/main/java/com/smsgateway/db/LogDao.kt",
       "source_location": "L34",
       "_origin": "ast",
-      "community": 75,
+      "community": 3,
       "norm_label": ".pruneold()",
       "id": "android_gateway_app_src_main_java_com_smsgateway_db_logdao_logdao_pruneold"
     },
@@ -9629,7 +9879,7 @@
       "source_file": "android-gateway/app/src/main/java/com/smsgateway/db/LogEntry.kt",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 75,
+      "community": 3,
       "norm_label": "logentry.kt",
       "id": "android_gateway_app_src_main_java_com_smsgateway_db_logentry"
     },
@@ -9639,7 +9889,7 @@
       "source_file": "android-gateway/app/src/main/java/com/smsgateway/db/LogEntry.kt",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 75,
+      "community": 3,
       "norm_label": "logentry",
       "id": "android_gateway_app_src_main_java_com_smsgateway_db_logentry_logentry"
     },
@@ -10035,7 +10285,7 @@
       "source_file": "scripts/importTrainingData.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 84,
+      "community": 7,
       "norm_label": "importtrainingdata.js",
       "id": "scripts_importtrainingdata"
     },
@@ -10045,7 +10295,7 @@
       "source_file": "scripts/importTrainingData.js",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 84,
+      "community": 7,
       "norm_label": "{ join }",
       "id": "scripts_importtrainingdata_join"
     },
@@ -10055,7 +10305,7 @@
       "source_file": "scripts/importTrainingData.js",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 84,
+      "community": 7,
       "norm_label": "{ rebuildtrainingcache }",
       "id": "scripts_importtrainingdata_rebuildtrainingcache"
     },
@@ -10065,7 +10315,7 @@
       "source_file": "scripts/importTrainingData.js",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 84,
+      "community": 7,
       "norm_label": "main()",
       "id": "scripts_importtrainingdata_main"
     },
@@ -10391,7 +10641,7 @@
       "source_file": "src/domain.js",
       "source_location": "L27",
       "_origin": "ast",
-      "community": 1,
+      "community": 7,
       "norm_label": "request_types",
       "id": "src_domain_request_types"
     },
@@ -10401,7 +10651,7 @@
       "source_file": "src/domain.js",
       "source_location": "L35",
       "_origin": "ast",
-      "community": 15,
+      "community": 588,
       "norm_label": "request_definitions",
       "id": "src_domain_request_definitions"
     },
@@ -10431,7 +10681,7 @@
       "source_file": "src/domain.js",
       "source_location": "L88",
       "_origin": "ast",
-      "community": 2,
+      "community": 76,
       "norm_label": "terminal_dispatch_statuses",
       "id": "src_domain_terminal_dispatch_statuses"
     },
@@ -10461,7 +10711,7 @@
       "source_file": "src/domain.js",
       "source_location": "L121",
       "_origin": "ast",
-      "community": 15,
+      "community": 588,
       "norm_label": "operatorformsisdn()",
       "id": "src_domain_operatorformsisdn"
     },
@@ -10471,7 +10721,7 @@
       "source_file": "src/domain.js",
       "source_location": "L128",
       "_origin": "ast",
-      "community": 15,
+      "community": 588,
       "norm_label": "targetoperatorsforrequest()",
       "id": "src_domain_targetoperatorsforrequest"
     },
@@ -10511,7 +10761,7 @@
       "source_file": "src/domain.js",
       "source_location": "L156",
       "_origin": "ast",
-      "community": 83,
+      "community": 588,
       "norm_label": "asserttransition()",
       "id": "src_domain_asserttransition"
     },
@@ -11191,7 +11441,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 1,
+      "community": 7,
       "norm_label": "replyanalyzer.js",
       "id": "src_replyanalyzer"
     },
@@ -11201,7 +11451,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 1,
+      "community": 7,
       "norm_label": "{ request_types }",
       "id": "src_replyanalyzer_request_types"
     },
@@ -11211,7 +11461,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 1,
+      "community": 7,
       "norm_label": "{ extractsilentreference }",
       "id": "src_replyanalyzer_extractsilentreference"
     },
@@ -11221,7 +11471,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 1,
+      "community": 7,
       "norm_label": "{ matchreplyagainsttraining, scorereplyfamiliesfromtraining }",
       "id": "src_replyanalyzer_matchreplyagainsttraining_scorereplyfamiliesfromtraining"
     },
@@ -11231,7 +11481,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 1,
+      "community": 7,
       "norm_label": "reply_patterns",
       "id": "src_replyanalyzer_reply_patterns"
     },
@@ -11241,7 +11491,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 1,
+      "community": 7,
       "norm_label": "strong_reply_family_patterns",
       "id": "src_replyanalyzer_strong_reply_family_patterns"
     },
@@ -11251,7 +11501,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L62",
       "_origin": "ast",
-      "community": 1,
+      "community": 7,
       "norm_label": "analyzeoperatorreply()",
       "id": "src_replyanalyzer_analyzeoperatorreply"
     },
@@ -11261,7 +11511,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L92",
       "_origin": "ast",
-      "community": 1,
+      "community": 7,
       "norm_label": "inferreplyfamilies()",
       "id": "src_replyanalyzer_inferreplyfamilies"
     },
@@ -11271,7 +11521,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L115",
       "_origin": "ast",
-      "community": 1,
+      "community": 7,
       "norm_label": "payloadinreply()",
       "id": "src_replyanalyzer_payloadinreply"
     },
@@ -11281,7 +11531,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L142",
       "_origin": "ast",
-      "community": 1,
+      "community": 7,
       "norm_label": "reply_identifier_extractors",
       "id": "src_replyanalyzer_reply_identifier_extractors"
     },
@@ -11291,7 +11541,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L149",
       "_origin": "ast",
-      "community": 1,
+      "community": 7,
       "norm_label": "stripmsisdnprefix()",
       "id": "src_replyanalyzer_stripmsisdnprefix"
     },
@@ -11301,7 +11551,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L158",
       "_origin": "ast",
-      "community": 1,
+      "community": 7,
       "norm_label": "replycontradictspayload()",
       "id": "src_replyanalyzer_replycontradictspayload"
     },
@@ -11311,7 +11561,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L178",
       "_origin": "ast",
-      "community": 1,
+      "community": 7,
       "norm_label": "matchtrainingpattern()",
       "id": "src_replyanalyzer_matchtrainingpattern"
     },
@@ -11321,7 +11571,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L186",
       "_origin": "ast",
-      "community": 1,
+      "community": 7,
       "norm_label": "confidencescore()",
       "id": "src_replyanalyzer_confidencescore"
     },
@@ -11431,7 +11681,7 @@
       "source_file": "src/smsGateway.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 588,
+      "community": 27,
       "norm_label": "smsgatewayclient",
       "id": "src_smsgateway_smsgatewayclient"
     },
@@ -11441,7 +11691,7 @@
       "source_file": "src/smsGateway.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 588,
+      "community": 27,
       "norm_label": ".constructor()",
       "id": "src_smsgateway_smsgatewayclient_constructor"
     },
@@ -11451,7 +11701,7 @@
       "source_file": "src/smsGateway.js",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 588,
+      "community": 27,
       "norm_label": ".dispatchnext()",
       "id": "src_smsgateway_smsgatewayclient_dispatchnext"
     },
@@ -11461,7 +11711,7 @@
       "source_file": "src/smsGateway.js",
       "source_location": "L21",
       "_origin": "ast",
-      "community": 588,
+      "community": 27,
       "norm_label": "._sendone()",
       "id": "src_smsgateway_smsgatewayclient_sendone"
     },
@@ -11471,7 +11721,7 @@
       "source_file": "src/smsGateway.js",
       "source_location": "L68",
       "_origin": "ast",
-      "community": 588,
+      "community": 27,
       "norm_label": ".dispatchall()",
       "id": "src_smsgateway_smsgatewayclient_dispatchall"
     },
@@ -11521,7 +11771,7 @@
       "source_file": "src/store.js",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 83,
+      "community": 2,
       "norm_label": "nowiso()",
       "id": "src_store_nowiso"
     },
@@ -11531,7 +11781,7 @@
       "source_file": "src/store.js",
       "source_location": "L20",
       "_origin": "ast",
-      "community": 2,
+      "community": 77,
       "norm_label": "duplicate_blocking_statuses",
       "id": "src_store_duplicate_blocking_statuses"
     },
@@ -11541,7 +11791,7 @@
       "source_file": "src/store.js",
       "source_location": "L38",
       "_origin": "ast",
-      "community": 83,
+      "community": 2,
       "norm_label": "randomid()",
       "id": "src_store_randomid"
     },
@@ -11591,7 +11841,7 @@
       "source_file": "src/store.js",
       "source_location": "L120",
       "_origin": "ast",
-      "community": 83,
+      "community": 2,
       "norm_label": ".upsertuser()",
       "id": "src_store_automationstore_upsertuser"
     },
@@ -11621,7 +11871,7 @@
       "source_file": "src/store.js",
       "source_location": "L148",
       "_origin": "ast",
-      "community": 83,
+      "community": 2,
       "norm_label": ".setuserstatus()",
       "id": "src_store_automationstore_setuserstatus"
     },
@@ -11641,7 +11891,7 @@
       "source_file": "src/store.js",
       "source_location": "L160",
       "_origin": "ast",
-      "community": 83,
+      "community": 2,
       "norm_label": ".nextsilentreference()",
       "id": "src_store_automationstore_nextsilentreference"
     },
@@ -11651,7 +11901,7 @@
       "source_file": "src/store.js",
       "source_location": "L166",
       "_origin": "ast",
-      "community": 83,
+      "community": 2,
       "norm_label": ".createrequest()",
       "id": "src_store_automationstore_createrequest"
     },
@@ -11701,7 +11951,7 @@
       "source_file": "src/store.js",
       "source_location": "L245",
       "_origin": "ast",
-      "community": 2,
+      "community": 76,
       "norm_label": ".alldispatchesterminal()",
       "id": "src_store_automationstore_alldispatchesterminal"
     },
@@ -11721,7 +11971,7 @@
       "source_file": "src/store.js",
       "source_location": "L256",
       "_origin": "ast",
-      "community": 83,
+      "community": 2,
       "norm_label": ".updaterequeststatus()",
       "id": "src_store_automationstore_updaterequeststatus"
     },
@@ -11741,7 +11991,7 @@
       "source_file": "src/store.js",
       "source_location": "L276",
       "_origin": "ast",
-      "community": 83,
+      "community": 2,
       "norm_label": ".addsmsoutbox()",
       "id": "src_store_automationstore_addsmsoutbox"
     },
@@ -11751,7 +12001,7 @@
       "source_file": "src/store.js",
       "source_location": "L295",
       "_origin": "ast",
-      "community": 83,
+      "community": 2,
       "norm_label": ".addsmsinbox()",
       "id": "src_store_automationstore_addsmsinbox"
     },
@@ -11771,7 +12021,7 @@
       "source_file": "src/store.js",
       "source_location": "L320",
       "_origin": "ast",
-      "community": 83,
+      "community": 2,
       "norm_label": ".addreplydraft()",
       "id": "src_store_automationstore_addreplydraft"
     },
@@ -11821,7 +12071,7 @@
       "source_file": "src/store.js",
       "source_location": "L370",
       "_origin": "ast",
-      "community": 2,
+      "community": 77,
       "norm_label": ".listrequests()",
       "id": "src_store_automationstore_listrequests"
     },
@@ -11831,7 +12081,7 @@
       "source_file": "src/store.js",
       "source_location": "L374",
       "_origin": "ast",
-      "community": 2,
+      "community": 77,
       "norm_label": ".listgateways()",
       "id": "src_store_automationstore_listgateways"
     },
@@ -11841,7 +12091,7 @@
       "source_file": "src/store.js",
       "source_location": "L379",
       "_origin": "ast",
-      "community": 83,
+      "community": 2,
       "norm_label": ".claimpendingjobs()",
       "id": "src_store_automationstore_claimpendingjobs"
     },
@@ -11851,7 +12101,7 @@
       "source_file": "src/store.js",
       "source_location": "L394",
       "_origin": "ast",
-      "community": 83,
+      "community": 2,
       "norm_label": ".reclaimstaleclaimedjobs()",
       "id": "src_store_automationstore_reclaimstaleclaimedjobs"
     },
@@ -11861,7 +12111,7 @@
       "source_file": "src/store.js",
       "source_location": "L411",
       "_origin": "ast",
-      "community": 83,
+      "community": 2,
       "norm_label": ".ackoutboxjob()",
       "id": "src_store_automationstore_ackoutboxjob"
     },
@@ -11871,7 +12121,7 @@
       "source_file": "src/store.js",
       "source_location": "L429",
       "_origin": "ast",
-      "community": 83,
+      "community": 2,
       "norm_label": ".registergatewayheartbeat()",
       "id": "src_store_automationstore_registergatewayheartbeat"
     },
@@ -11881,7 +12131,7 @@
       "source_file": "src/store.js",
       "source_location": "L436",
       "_origin": "ast",
-      "community": 83,
+      "community": 2,
       "norm_label": ".registergateway()",
       "id": "src_store_automationstore_registergateway"
     },
@@ -11961,7 +12211,7 @@
       "source_file": "src/store.js",
       "source_location": "L506",
       "_origin": "ast",
-      "community": 2,
+      "community": 77,
       "norm_label": ".findrecentduplicaterequest()",
       "id": "src_store_automationstore_findrecentduplicaterequest"
     },
@@ -11971,7 +12221,7 @@
       "source_file": "src/store.js",
       "source_location": "L518",
       "_origin": "ast",
-      "community": 2,
+      "community": 77,
       "norm_label": ".listduplicateriskgroups()",
       "id": "src_store_automationstore_listduplicateriskgroups"
     },
@@ -12001,7 +12251,7 @@
       "source_file": "src/store.js",
       "source_location": "L617",
       "_origin": "ast",
-      "community": 83,
+      "community": 2,
       "norm_label": ".requestinboxdump()",
       "id": "src_store_automationstore_requestinboxdump"
     },
@@ -12021,7 +12271,7 @@
       "source_file": "src/store.js",
       "source_location": "L634",
       "_origin": "ast",
-      "community": 83,
+      "community": 2,
       "norm_label": ".saveinboxdump()",
       "id": "src_store_automationstore_saveinboxdump"
     },
@@ -12041,7 +12291,7 @@
       "source_file": "src/store.js",
       "source_location": "L650",
       "_origin": "ast",
-      "community": 83,
+      "community": 2,
       "norm_label": ".audit()",
       "id": "src_store_automationstore_audit"
     },
@@ -12061,7 +12311,7 @@
       "source_file": "src/store.js",
       "source_location": "L685",
       "_origin": "ast",
-      "community": 2,
+      "community": 77,
       "norm_label": ".publicgateways()",
       "id": "src_store_automationstore_publicgateways"
     },
@@ -12071,7 +12321,7 @@
       "source_file": "src/store.js",
       "source_location": "L689",
       "_origin": "ast",
-      "community": 2,
+      "community": 77,
       "norm_label": ".snapshot()",
       "id": "src_store_automationstore_snapshot"
     },
@@ -12151,7 +12401,7 @@
       "source_file": "src/trainingData.js",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 84,
+      "community": 7,
       "norm_label": "training_extensions",
       "id": "src_trainingdata_training_extensions"
     },
@@ -12161,7 +12411,7 @@
       "source_file": "src/trainingData.js",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 84,
+      "community": 7,
       "norm_label": "loadtrainingcatalog()",
       "id": "src_trainingdata_loadtrainingcatalog"
     },
@@ -12171,7 +12421,7 @@
       "source_file": "src/trainingData.js",
       "source_location": "L40",
       "_origin": "ast",
-      "community": 84,
+      "community": 7,
       "norm_label": "rebuildtrainingcache()",
       "id": "src_trainingdata_rebuildtrainingcache"
     },
@@ -12191,7 +12441,7 @@
       "source_file": "src/trainingData.js",
       "source_location": "L105",
       "_origin": "ast",
-      "community": 1,
+      "community": 7,
       "norm_label": "scorereplyfamiliesfromtraining()",
       "id": "src_trainingdata_scorereplyfamiliesfromtraining"
     },
@@ -12251,7 +12501,7 @@
       "source_file": "src/trainingData.js",
       "source_location": "L191",
       "_origin": "ast",
-      "community": 84,
+      "community": 7,
       "norm_label": "buildpatterns()",
       "id": "src_trainingdata_buildpatterns"
     },
@@ -12261,7 +12511,7 @@
       "source_file": "src/trainingData.js",
       "source_location": "L219",
       "_origin": "ast",
-      "community": 84,
+      "community": 7,
       "norm_label": "buildsummary()",
       "id": "src_trainingdata_buildsummary"
     },
@@ -12341,7 +12591,7 @@
       "source_file": "src/trainingData.js",
       "source_location": "L283",
       "_origin": "ast",
-      "community": 84,
+      "community": 7,
       "norm_label": "listworkbookfiles()",
       "id": "src_trainingdata_listworkbookfiles"
     },
@@ -12351,7 +12601,7 @@
       "source_file": "src/trainingData.js",
       "source_location": "L298",
       "_origin": "ast",
-      "community": 84,
+      "community": 7,
       "norm_label": "buildsignature()",
       "id": "src_trainingdata_buildsignature"
     },
@@ -12361,7 +12611,7 @@
       "source_file": "src/trainingData.js",
       "source_location": "L308",
       "_origin": "ast",
-      "community": 84,
+      "community": 7,
       "norm_label": "readtrainingcache()",
       "id": "src_trainingdata_readtrainingcache"
     },
@@ -12371,7 +12621,7 @@
       "source_file": "src/trainingData.js",
       "source_location": "L338",
       "_origin": "ast",
-      "community": 84,
+      "community": 7,
       "norm_label": "writetrainingcache()",
       "id": "src_trainingdata_writetrainingcache"
     },
@@ -12381,7 +12631,7 @@
       "source_file": "src/trainingData.js",
       "source_location": "L371",
       "_origin": "ast",
-      "community": 84,
+      "community": 7,
       "norm_label": "loadxlsx()",
       "id": "src_trainingdata_loadxlsx"
     },
@@ -12391,7 +12641,7 @@
       "source_file": "src/trainingData.js",
       "source_location": "L379",
       "_origin": "ast",
-      "community": 84,
+      "community": 7,
       "norm_label": "emptycatalog()",
       "id": "src_trainingdata_emptycatalog"
     },
@@ -12411,7 +12661,7 @@
       "source_file": "src/trainingData.js",
       "source_location": "L392",
       "_origin": "ast",
-      "community": 84,
+      "community": 7,
       "norm_label": "increment()",
       "id": "src_trainingdata_increment"
     },
@@ -12931,7 +13181,7 @@
       "source_file": "test/trainingData.test.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 77,
+      "community": 7,
       "norm_label": "trainingdata.test.js",
       "id": "test_trainingdata_test"
     },
@@ -12941,7 +13191,7 @@
       "source_file": "test/trainingData.test.js",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 77,
+      "community": 7,
       "norm_label": "test",
       "id": "test_trainingdata_test_test"
     },
@@ -12951,7 +13201,7 @@
       "source_file": "test/trainingData.test.js",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 77,
+      "community": 7,
       "norm_label": "assert",
       "id": "test_trainingdata_test_assert"
     },
@@ -12961,7 +13211,7 @@
       "source_file": "test/trainingData.test.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 77,
+      "community": 7,
       "norm_label": "{ existssync, mkdtempsync, mkdirsync, readfilesync, rmsync }",
       "id": "test_trainingdata_test_existssync_mkdtempsync_mkdirsync_readfilesync_rmsync"
     },
@@ -12971,7 +13221,7 @@
       "source_file": "test/trainingData.test.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 77,
+      "community": 7,
       "norm_label": "{ join }",
       "id": "test_trainingdata_test_join"
     },
@@ -12981,7 +13231,7 @@
       "source_file": "test/trainingData.test.js",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 77,
+      "community": 7,
       "norm_label": "{ tmpdir }",
       "id": "test_trainingdata_test_tmpdir"
     },
@@ -12991,7 +13241,7 @@
       "source_file": "test/trainingData.test.js",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 77,
+      "community": 7,
       "norm_label": "xlsx",
       "id": "test_trainingdata_test_xlsx"
     },
@@ -13001,7 +13251,7 @@
       "source_file": "test/trainingData.test.js",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 77,
+      "community": 7,
       "norm_label": "{\r\n  loadtrainingcatalog,\r\n  rebuildtrainingcache,\r\n  matchreplyagainsttraining,\r\n  scorereplyfamiliesfromtraining\r\n}",
       "id": "test_trainingdata_test_loadtrainingcatalog_rebuildtrainingcache_matchreplyagainsttraining_scorereplyfamiliesfromtraining"
     },
@@ -13011,7 +13261,7 @@
       "source_file": "test/trainingData.test.js",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 77,
+      "community": 7,
       "norm_label": "writeworkbook()",
       "id": "test_trainingdata_test_writeworkbook"
     },
@@ -13021,7 +13271,7 @@
       "source_file": "test/trainingData.test.js",
       "source_location": "L26",
       "_origin": "ast",
-      "community": 77,
+      "community": 7,
       "norm_label": "writeworkbookwithleadingrow()",
       "id": "test_trainingdata_test_writeworkbookwithleadingrow"
     },
@@ -18051,7 +18301,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/security-hardening-v1-STATUS.md",
-      "source_location": "L461",
+      "source_location": "L515",
       "weight": 1.0,
       "source": "docs_security_hardening_v1_status_security_hardening_v1_implementation_status_branch_local",
       "target": "docs_security_hardening_v1_status_open_questions_notes_found_while_implementing",
@@ -18068,10 +18318,180 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "indirect_call",
+      "confidence": "INFERRED",
+      "source_file": "src/anomalyDetector.js",
+      "source_location": "L132",
+      "weight": 1.0,
+      "context": "collection",
+      "source": "src_anomalydetector",
+      "target": "src_anomalydetector_anomalydetector",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app.js",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "src_app",
+      "target": "src_anomalydetector",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test/anomalyDetector.test.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "test_anomalydetector_test",
+      "target": "src_anomalydetector",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test/behavioralAnomaly.test.js",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "test_behavioralanomaly_test",
+      "target": "src_anomalydetector",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/anomalyDetector.js",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "src_anomalydetector_anomalydetector",
+      "target": "src_anomalydetector_anomalydetector_constructor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/anomalyDetector.js",
+      "source_location": "L48",
+      "weight": 1.0,
+      "source": "src_anomalydetector_anomalydetector",
+      "target": "src_anomalydetector_anomalydetector_getorcreateprofile",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/anomalyDetector.js",
+      "source_location": "L67",
+      "weight": 1.0,
+      "source": "src_anomalydetector_anomalydetector",
+      "target": "src_anomalydetector_anomalydetector_isoffhours",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/anomalyDetector.js",
+      "source_location": "L63",
+      "weight": 1.0,
+      "source": "src_anomalydetector_anomalydetector",
+      "target": "src_anomalydetector_anomalydetector_localhour",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/anomalyDetector.js",
+      "source_location": "L81",
+      "weight": 1.0,
+      "source": "src_anomalydetector_anomalydetector",
+      "target": "src_anomalydetector_anomalydetector_recordandcheck",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app.js",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "src_app",
+      "target": "src_anomalydetector_anomalydetector",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test/anomalyDetector.test.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "test_anomalydetector_test",
+      "target": "src_anomalydetector_anomalydetector",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test/behavioralAnomaly.test.js",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "test_behavioralanomaly_test",
+      "target": "src_anomalydetector_anomalydetector",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/anomalyDetector.js",
+      "source_location": "L83",
+      "weight": 1.0,
+      "source": "src_anomalydetector_anomalydetector_recordandcheck",
+      "target": "src_anomalydetector_anomalydetector_getorcreateprofile",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/anomalyDetector.js",
+      "source_location": "L68",
+      "weight": 1.0,
+      "source": "src_anomalydetector_anomalydetector_isoffhours",
+      "target": "src_anomalydetector_anomalydetector_localhour",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/anomalyDetector.js",
+      "source_location": "L86",
+      "weight": 1.0,
+      "source": "src_anomalydetector_anomalydetector_recordandcheck",
+      "target": "src_anomalydetector_anomalydetector_isoffhours",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L1441",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "src_app",
+      "target": "src_app_anomalydetector",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app.js",
+      "source_location": "L1495",
       "weight": 1.0,
       "source": "src_app",
       "target": "src_app_audittocsv",
@@ -18101,7 +18521,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L84",
+      "source_location": "L85",
       "weight": 1.0,
       "source": "src_app",
       "target": "src_app_buildactivityfeed",
@@ -18111,7 +18531,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L170",
+      "source_location": "L171",
       "weight": 1.0,
       "source": "src_app",
       "target": "src_app_buildadmindata",
@@ -18121,7 +18541,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L298",
+      "source_location": "L316",
       "weight": 1.0,
       "source": "src_app",
       "target": "src_app_buildopsdata",
@@ -18131,7 +18551,7 @@
       "relation": "indirect_call",
       "confidence": "INFERRED",
       "source_file": "src/app.js",
-      "source_location": "L1504",
+      "source_location": "L1558",
       "weight": 1.0,
       "context": "collection",
       "source": "src_app",
@@ -18142,7 +18562,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L1432",
+      "source_location": "L1486",
       "weight": 1.0,
       "source": "src_app",
       "target": "src_app_csv",
@@ -18152,7 +18572,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L61",
+      "source_location": "L62",
       "weight": 1.0,
       "source": "src_app",
       "target": "src_app_decorategatewayhealth",
@@ -18192,7 +18612,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L1397",
+      "source_location": "L1451",
       "weight": 1.0,
       "source": "src_app",
       "target": "src_app_isvalidgatewayheader",
@@ -18212,7 +18632,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L1427",
+      "source_location": "L1481",
       "weight": 1.0,
       "source": "src_app",
       "target": "src_app_json",
@@ -18232,7 +18652,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L26",
+      "source_location": "L27",
       "weight": 1.0,
       "source": "src_app",
       "target": "src_app_mailer",
@@ -18302,7 +18722,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L30",
+      "source_location": "L31",
       "weight": 1.0,
       "source": "src_app",
       "target": "src_app_ratelimiter",
@@ -18312,7 +18732,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L1487",
+      "source_location": "L1541",
       "weight": 1.0,
       "source": "src_app",
       "target": "src_app_readbuffer",
@@ -18342,7 +18762,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L1462",
+      "source_location": "L1516",
       "weight": 1.0,
       "source": "src_app",
       "target": "src_app_readjson",
@@ -18352,7 +18772,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L58",
+      "source_location": "L59",
       "weight": 1.0,
       "source": "src_app",
       "target": "src_app_requestratelimiter",
@@ -18362,7 +18782,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L1412",
+      "source_location": "L1466",
       "weight": 1.0,
       "source": "src_app",
       "target": "src_app_safeuserfields",
@@ -18372,7 +18792,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L286",
+      "source_location": "L304",
       "weight": 1.0,
       "source": "src_app",
       "target": "src_app_sanitizeactivityforpublicops",
@@ -18382,7 +18802,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L328",
+      "source_location": "L346",
       "weight": 1.0,
       "source": "src_app",
       "target": "src_app_sendtelegramwatchdogalert",
@@ -18402,7 +18822,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L1403",
+      "source_location": "L1457",
       "weight": 1.0,
       "source": "src_app",
       "target": "src_app_servefile",
@@ -18432,7 +18852,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L70",
+      "source_location": "L71",
       "weight": 1.0,
       "source": "src_app",
       "target": "src_app_summarizealerts",
@@ -18474,6 +18894,17 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "test/behavioralAnomaly.test.js",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "test_behavioralanomaly_test",
+      "target": "src_app",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "test/pageGating.test.js",
       "source_location": "L10",
       "weight": 1.0,
@@ -18488,9 +18919,9 @@
       "source_file": "test/personnelRegistryEndpoint.test.js",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_personnelregistryendpoint_test",
-      "target": "src_app",
-      "confidence_score": 1.0
+      "target": "src_app"
     },
     {
       "relation": "imports_from",
@@ -18532,9 +18963,9 @@
       "source_file": "test/security.test.js",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_security_test",
-      "target": "src_app",
-      "confidence_score": 1.0
+      "target": "src_app"
     },
     {
       "relation": "imports_from",
@@ -18553,7 +18984,51 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app.js",
-      "source_location": "L198",
+      "source_location": "L114",
+      "weight": 1.0,
+      "source": "src_app_buildactivityfeed",
+      "target": "src_app_automationstore"
+    },
+    {
+      "relation": "references",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app.js",
+      "source_location": "L172",
+      "weight": 1.0,
+      "source": "src_app_buildadmindata",
+      "target": "src_app_automationstore"
+    },
+    {
+      "relation": "references",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app.js",
+      "source_location": "L64",
+      "weight": 1.0,
+      "source": "src_app_decorategatewayhealth",
+      "target": "src_app_automationstore"
+    },
+    {
+      "relation": "references",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app.js",
+      "source_location": "L1454",
+      "weight": 1.0,
+      "source": "src_app_isvalidgatewayheader",
+      "target": "src_app_automationstore"
+    },
+    {
+      "relation": "references",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "src/app.js",
+      "source_location": "L206",
       "weight": 1.0,
       "source": "src_app_buildadmindata",
       "target": "src_app_operatorqueue"
@@ -18564,7 +19039,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app.js",
-      "source_location": "L384",
+      "source_location": "L408",
       "weight": 1.0,
       "source": "src_app_createapp",
       "target": "src_app_operatorqueue"
@@ -18573,7 +19048,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L38",
+      "source_location": "L39",
       "weight": 1.0,
       "source": "src_app_ratelimiter",
       "target": "src_app_ratelimiter_check",
@@ -18583,7 +19058,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L31",
+      "source_location": "L32",
       "weight": 1.0,
       "source": "src_app_ratelimiter",
       "target": "src_app_ratelimiter_constructor",
@@ -18593,7 +19068,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L48",
+      "source_location": "L49",
       "weight": 1.0,
       "source": "src_app_ratelimiter",
       "target": "src_app_ratelimiter_prune",
@@ -18604,7 +19079,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L35",
+      "source_location": "L36",
       "weight": 1.0,
       "source": "src_app_ratelimiter_constructor",
       "target": "src_app_ratelimiter_prune",
@@ -18615,7 +19090,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L172",
+      "source_location": "L173",
       "weight": 1.0,
       "source": "src_app_buildadmindata",
       "target": "src_app_decorategatewayhealth",
@@ -18626,7 +19101,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L193",
+      "source_location": "L201",
       "weight": 1.0,
       "source": "src_app_buildadmindata",
       "target": "src_app_summarizealerts",
@@ -18637,7 +19112,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L194",
+      "source_location": "L202",
       "weight": 1.0,
       "source": "src_app_buildadmindata",
       "target": "src_app_buildactivityfeed",
@@ -18648,7 +19123,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L299",
+      "source_location": "L317",
       "weight": 1.0,
       "source": "src_app_buildopsdata",
       "target": "src_app_buildadmindata",
@@ -18659,7 +19134,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L323",
+      "source_location": "L341",
       "weight": 1.0,
       "source": "src_app_buildopsdata",
       "target": "src_app_sanitizeactivityforpublicops",
@@ -18670,7 +19145,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L397",
+      "source_location": "L421",
       "weight": 1.0,
       "source": "src_app_createapp",
       "target": "src_app_json",
@@ -18713,6 +19188,28 @@
       "relation": "imports",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "test/behavioralAnomaly.test.js",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "test_behavioralanomaly_test",
+      "target": "src_app_createapp",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/behavioralAnomaly.test.js",
+      "source_location": "L57",
+      "weight": 1.0,
+      "source": "test_behavioralanomaly_test_appwith",
+      "target": "src_app_createapp"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "test/pageGating.test.js",
       "source_location": "L10",
       "weight": 1.0,
@@ -18738,9 +19235,9 @@
       "source_file": "test/personnelRegistryEndpoint.test.js",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_personnelregistryendpoint_test",
-      "target": "src_app_createapp",
-      "confidence_score": 1.0
+      "target": "src_app_createapp"
     },
     {
       "relation": "calls",
@@ -18826,9 +19323,9 @@
       "source_file": "test/security.test.js",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_security_test",
-      "target": "src_app_createapp",
-      "confidence_score": 1.0
+      "target": "src_app_createapp"
     },
     {
       "relation": "calls",
@@ -18864,14 +19361,582 @@
       "target": "src_app_createapp"
     },
     {
+      "relation": "indirect_call",
+      "confidence": "INFERRED",
+      "source_file": "telegram-bridge/bridge.js",
+      "source_location": "L442",
+      "weight": 1.0,
+      "context": "collection",
+      "source": "telegram_bridge_bridge",
+      "target": "telegram_bridge_bridge_buildmention",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "indirect_call",
+      "confidence": "INFERRED",
+      "source_file": "telegram-bridge/bridge.js",
+      "source_location": "L442",
+      "weight": 1.0,
+      "context": "collection",
+      "source": "telegram_bridge_bridge",
+      "target": "telegram_bridge_bridge_handleintake",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "indirect_call",
+      "confidence": "INFERRED",
+      "source_file": "telegram-bridge/bridge.js",
+      "source_location": "L442",
+      "weight": 1.0,
+      "context": "collection",
+      "source": "telegram_bridge_bridge",
+      "target": "telegram_bridge_bridge_notifytimeouts",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "indirect_call",
+      "confidence": "INFERRED",
+      "source_file": "telegram-bridge/bridge.js",
+      "source_location": "L442",
+      "weight": 1.0,
+      "context": "collection",
+      "source": "telegram_bridge_bridge",
+      "target": "telegram_bridge_bridge_planintake",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "indirect_call",
+      "confidence": "INFERRED",
+      "source_file": "telegram-bridge/bridge.js",
+      "source_location": "L442",
+      "weight": 1.0,
+      "context": "collection",
+      "source": "telegram_bridge_bridge",
+      "target": "telegram_bridge_bridge_postapprovedreplies",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "indirect_call",
+      "confidence": "INFERRED",
+      "source_file": "telegram-bridge/bridge.js",
+      "source_location": "L442",
+      "weight": 1.0,
+      "context": "collection",
+      "source": "telegram_bridge_bridge",
+      "target": "telegram_bridge_bridge_postliveedits",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "indirect_call",
+      "confidence": "INFERRED",
+      "source_file": "telegram-bridge/bridge.js",
+      "source_location": "L442",
+      "weight": 1.0,
+      "context": "collection",
+      "source": "telegram_bridge_bridge",
+      "target": "telegram_bridge_bridge_seednotifiedtimeouts",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "indirect_call",
+      "confidence": "INFERRED",
+      "source_file": "telegram-bridge/bridge.js",
+      "source_location": "L442",
+      "weight": 1.0,
+      "context": "collection",
+      "source": "telegram_bridge_bridge",
+      "target": "telegram_bridge_bridge_shouldsuppressgroupreply",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "telegram-bridge/start.js",
+      "source_location": "L17",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "telegram_bridge_start",
+      "target": "telegram_bridge_bridge"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test/telegramBridge.test.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "test_telegrambridge_test",
+      "target": "telegram_bridge_bridge"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test/workflow.test.js",
+      "source_location": "L1258",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "test_workflow_test",
+      "target": "telegram_bridge_bridge"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "telegram-bridge/bridge.js",
+      "source_location": "L425",
+      "weight": 1.0,
+      "source": "telegram_bridge_bridge_notifytimeouts",
+      "target": "telegram_bridge_bridge_buildmention",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "telegram-bridge/bridge.js",
+      "source_location": "L343",
+      "weight": 1.0,
+      "source": "telegram_bridge_bridge_postapprovedreplies",
+      "target": "telegram_bridge_bridge_buildmention",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "telegram-bridge/bridge.js",
+      "source_location": "L366",
+      "weight": 1.0,
+      "source": "telegram_bridge_bridge_postliveedits",
+      "target": "telegram_bridge_bridge_buildmention",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test/telegramBridge.test.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "test_telegrambridge_test",
+      "target": "telegram_bridge_bridge_buildmention"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test/workflow.test.js",
+      "source_location": "L1258",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "test_workflow_test",
+      "target": "telegram_bridge_bridge_buildmention"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "telegram-bridge/bridge.js",
+      "source_location": "L300",
+      "weight": 1.0,
+      "source": "telegram_bridge_bridge_handleintake",
+      "target": "telegram_bridge_bridge_shouldsuppressgroupreply",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test/telegramBridge.test.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "test_telegrambridge_test",
+      "target": "telegram_bridge_bridge_shouldsuppressgroupreply"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "telegram-bridge/bridge.js",
+      "source_location": "L167",
+      "weight": 1.0,
+      "source": "telegram_bridge_bridge_handleintake",
+      "target": "telegram_bridge_bridge_planintake",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test/telegramBridge.test.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "test_telegrambridge_test",
+      "target": "telegram_bridge_bridge_planintake"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "telegram-bridge/start.js",
+      "source_location": "L17",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "telegram_bridge_start",
+      "target": "telegram_bridge_bridge_handleintake"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "telegram-bridge/start.js",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "telegram_bridge_start_intakeloop",
+      "target": "telegram_bridge_bridge_handleintake"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test/telegramBridge.test.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "test_telegrambridge_test",
+      "target": "telegram_bridge_bridge_handleintake"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "telegram-bridge/start.js",
+      "source_location": "L17",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "telegram_bridge_start",
+      "target": "telegram_bridge_bridge_postapprovedreplies"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "telegram-bridge/start.js",
+      "source_location": "L114",
+      "weight": 1.0,
+      "source": "telegram_bridge_start_postingloop",
+      "target": "telegram_bridge_bridge_postapprovedreplies"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test/telegramBridge.test.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "test_telegrambridge_test",
+      "target": "telegram_bridge_bridge_postapprovedreplies"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "telegram-bridge/start.js",
+      "source_location": "L17",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "telegram_bridge_start",
+      "target": "telegram_bridge_bridge_postliveedits"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "telegram-bridge/start.js",
+      "source_location": "L119",
+      "weight": 1.0,
+      "source": "telegram_bridge_start_postingloop",
+      "target": "telegram_bridge_bridge_postliveedits"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "telegram-bridge/start.js",
+      "source_location": "L17",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "telegram_bridge_start",
+      "target": "telegram_bridge_bridge_seednotifiedtimeouts"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "telegram-bridge/start.js",
+      "source_location": "L125",
+      "weight": 1.0,
+      "source": "telegram_bridge_start_postingloop",
+      "target": "telegram_bridge_bridge_seednotifiedtimeouts"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test/telegramBridge.test.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "test_telegrambridge_test",
+      "target": "telegram_bridge_bridge_seednotifiedtimeouts"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "telegram-bridge/start.js",
+      "source_location": "L17",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "telegram_bridge_start",
+      "target": "telegram_bridge_bridge_notifytimeouts"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "telegram-bridge/start.js",
+      "source_location": "L134",
+      "weight": 1.0,
+      "source": "telegram_bridge_start_postingloop",
+      "target": "telegram_bridge_bridge_notifytimeouts"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test/telegramBridge.test.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "test_telegrambridge_test",
+      "target": "telegram_bridge_bridge_notifytimeouts"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test/workflow.test.js",
+      "source_location": "L1258",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "test_workflow_test",
+      "target": "telegram_bridge_bridge_notifytimeouts"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test/anomalyDetector.test.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "test_anomalydetector_test",
+      "target": "test_anomalydetector_test_anomalydetector",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test/anomalyDetector.test.js",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "test_anomalydetector_test",
+      "target": "test_anomalydetector_test_assert",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test/anomalyDetector.test.js",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "test_anomalydetector_test",
+      "target": "test_anomalydetector_test_bstmidnight",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test/anomalyDetector.test.js",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "test_anomalydetector_test",
+      "target": "test_anomalydetector_test_bstnoon",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test/anomalyDetector.test.js",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "test_anomalydetector_test",
+      "target": "test_anomalydetector_test_test",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test/behavioralAnomaly.test.js",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "test_behavioralanomaly_test",
+      "target": "test_behavioralanomaly_test_anomalydetector",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test/behavioralAnomaly.test.js",
+      "source_location": "L56",
+      "weight": 1.0,
+      "source": "test_behavioralanomaly_test",
+      "target": "test_behavioralanomaly_test_appwith",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test/behavioralAnomaly.test.js",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "test_behavioralanomaly_test",
+      "target": "test_behavioralanomaly_test_assert",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test/behavioralAnomaly.test.js",
+      "source_location": "L44",
+      "weight": 1.0,
+      "source": "test_behavioralanomaly_test",
+      "target": "test_behavioralanomaly_test_call",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test/behavioralAnomaly.test.js",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "test_behavioralanomaly_test",
+      "target": "test_behavioralanomaly_test_createapp",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test/behavioralAnomaly.test.js",
+      "source_location": "L68",
+      "weight": 1.0,
+      "source": "test_behavioralanomaly_test",
+      "target": "test_behavioralanomaly_test_createlinkedofficer",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test/behavioralAnomaly.test.js",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "test_behavioralanomaly_test",
+      "target": "test_behavioralanomaly_test_mockreq",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test/behavioralAnomaly.test.js",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "test_behavioralanomaly_test",
+      "target": "test_behavioralanomaly_test_mockres",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test/behavioralAnomaly.test.js",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "test_behavioralanomaly_test",
+      "target": "test_behavioralanomaly_test_readable",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test/behavioralAnomaly.test.js",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "test_behavioralanomaly_test",
+      "target": "test_behavioralanomaly_test_test",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/behavioralAnomaly.test.js",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "test_behavioralanomaly_test_mockreq",
+      "target": "test_behavioralanomaly_test_readable"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "test/behavioralAnomaly.test.js",
+      "source_location": "L46",
+      "weight": 1.0,
+      "source": "test_behavioralanomaly_test_call",
+      "target": "test_behavioralanomaly_test_mockreq",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "test/behavioralAnomaly.test.js",
+      "source_location": "L45",
+      "weight": 1.0,
+      "source": "test_behavioralanomaly_test_call",
+      "target": "test_behavioralanomaly_test_mockres",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "test/personnelRegistryEndpoint.test.js",
       "source_location": "L48",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_personnelregistryendpoint_test",
-      "target": "test_personnelregistryendpoint_test_appwith",
-      "confidence_score": 1.0
+      "target": "test_personnelregistryendpoint_test_appwith"
     },
     {
       "relation": "contains",
@@ -18879,9 +19944,9 @@
       "source_file": "test/personnelRegistryEndpoint.test.js",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_personnelregistryendpoint_test",
-      "target": "test_personnelregistryendpoint_test_assert",
-      "confidence_score": 1.0
+      "target": "test_personnelregistryendpoint_test_assert"
     },
     {
       "relation": "contains",
@@ -18889,9 +19954,9 @@
       "source_file": "test/personnelRegistryEndpoint.test.js",
       "source_location": "L36",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_personnelregistryendpoint_test",
-      "target": "test_personnelregistryendpoint_test_call",
-      "confidence_score": 1.0
+      "target": "test_personnelregistryendpoint_test_call"
     },
     {
       "relation": "contains",
@@ -18899,9 +19964,9 @@
       "source_file": "test/personnelRegistryEndpoint.test.js",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_personnelregistryendpoint_test",
-      "target": "test_personnelregistryendpoint_test_createapp",
-      "confidence_score": 1.0
+      "target": "test_personnelregistryendpoint_test_createapp"
     },
     {
       "relation": "contains",
@@ -18909,9 +19974,9 @@
       "source_file": "test/personnelRegistryEndpoint.test.js",
       "source_location": "L156",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_personnelregistryendpoint_test",
-      "target": "test_personnelregistryendpoint_test_createsession",
-      "confidence_score": 1.0
+      "target": "test_personnelregistryendpoint_test_createsession"
     },
     {
       "relation": "contains",
@@ -18919,9 +19984,9 @@
       "source_file": "test/personnelRegistryEndpoint.test.js",
       "source_location": "L8",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_personnelregistryendpoint_test",
-      "target": "test_personnelregistryendpoint_test_mockreq",
-      "confidence_score": 1.0
+      "target": "test_personnelregistryendpoint_test_mockreq"
     },
     {
       "relation": "contains",
@@ -18929,9 +19994,9 @@
       "source_file": "test/personnelRegistryEndpoint.test.js",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_personnelregistryendpoint_test",
-      "target": "test_personnelregistryendpoint_test_mockres",
-      "confidence_score": 1.0
+      "target": "test_personnelregistryendpoint_test_mockres"
     },
     {
       "relation": "contains",
@@ -18939,9 +20004,9 @@
       "source_file": "test/personnelRegistryEndpoint.test.js",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_personnelregistryendpoint_test",
-      "target": "test_personnelregistryendpoint_test_readable",
-      "confidence_score": 1.0
+      "target": "test_personnelregistryendpoint_test_readable"
     },
     {
       "relation": "contains",
@@ -18949,9 +20014,9 @@
       "source_file": "test/personnelRegistryEndpoint.test.js",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_personnelregistryendpoint_test",
-      "target": "test_personnelregistryendpoint_test_test",
-      "confidence_score": 1.0
+      "target": "test_personnelregistryendpoint_test_test"
     },
     {
       "relation": "contains",
@@ -18959,9 +20024,9 @@
       "source_file": "test/personnelRegistryEndpoint.test.js",
       "source_location": "L59",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_personnelregistryendpoint_test",
-      "target": "test_personnelregistryendpoint_test_xlsxbufferfromrows",
-      "confidence_score": 1.0
+      "target": "test_personnelregistryendpoint_test_xlsxbufferfromrows"
     },
     {
       "relation": "calls",
@@ -18970,9 +20035,9 @@
       "source_file": "test/personnelRegistryEndpoint.test.js",
       "source_location": "L38",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_personnelregistryendpoint_test_call",
-      "target": "test_personnelregistryendpoint_test_mockreq",
-      "confidence_score": 1.0
+      "target": "test_personnelregistryendpoint_test_mockreq"
     },
     {
       "relation": "calls",
@@ -18981,9 +20046,9 @@
       "source_file": "test/personnelRegistryEndpoint.test.js",
       "source_location": "L37",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_personnelregistryendpoint_test_call",
-      "target": "test_personnelregistryendpoint_test_mockres",
-      "confidence_score": 1.0
+      "target": "test_personnelregistryendpoint_test_mockres"
     },
     {
       "relation": "calls",
@@ -18992,9 +20057,9 @@
       "source_file": "test/personnelRegistryEndpoint.test.js",
       "source_location": "L161",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_personnelregistryendpoint_test_createsession",
-      "target": "test_personnelregistryendpoint_test_call",
-      "confidence_score": 1.0
+      "target": "test_personnelregistryendpoint_test_call"
     },
     {
       "relation": "contains",
@@ -19002,9 +20067,9 @@
       "source_file": "test/security.test.js",
       "source_location": "L48",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_security_test",
-      "target": "test_security_test_appwith",
-      "confidence_score": 1.0
+      "target": "test_security_test_appwith"
     },
     {
       "relation": "contains",
@@ -19012,9 +20077,9 @@
       "source_file": "test/security.test.js",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_security_test",
-      "target": "test_security_test_assert",
-      "confidence_score": 1.0
+      "target": "test_security_test_assert"
     },
     {
       "relation": "contains",
@@ -19022,9 +20087,9 @@
       "source_file": "test/security.test.js",
       "source_location": "L7",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_security_test",
-      "target": "test_security_test_automationstore",
-      "confidence_score": 1.0
+      "target": "test_security_test_automationstore"
     },
     {
       "relation": "contains",
@@ -19032,9 +20097,9 @@
       "source_file": "test/security.test.js",
       "source_location": "L36",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_security_test",
-      "target": "test_security_test_call",
-      "confidence_score": 1.0
+      "target": "test_security_test_call"
     },
     {
       "relation": "contains",
@@ -19042,9 +20107,9 @@
       "source_file": "test/security.test.js",
       "source_location": "L64",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_security_test",
-      "target": "test_security_test_createadminsession",
-      "confidence_score": 1.0
+      "target": "test_security_test_createadminsession"
     },
     {
       "relation": "contains",
@@ -19052,9 +20117,9 @@
       "source_file": "test/security.test.js",
       "source_location": "L6",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_security_test",
-      "target": "test_security_test_createapp",
-      "confidence_score": 1.0
+      "target": "test_security_test_createapp"
     },
     {
       "relation": "contains",
@@ -19062,9 +20127,9 @@
       "source_file": "test/security.test.js",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_security_test",
-      "target": "test_security_test_mockreq",
-      "confidence_score": 1.0
+      "target": "test_security_test_mockreq"
     },
     {
       "relation": "contains",
@@ -19072,9 +20137,9 @@
       "source_file": "test/security.test.js",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_security_test",
-      "target": "test_security_test_mockres",
-      "confidence_score": 1.0
+      "target": "test_security_test_mockres"
     },
     {
       "relation": "contains",
@@ -19082,9 +20147,9 @@
       "source_file": "test/security.test.js",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_security_test",
-      "target": "test_security_test_readable",
-      "confidence_score": 1.0
+      "target": "test_security_test_readable"
     },
     {
       "relation": "contains",
@@ -19092,9 +20157,9 @@
       "source_file": "test/security.test.js",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_security_test",
-      "target": "test_security_test_test",
-      "confidence_score": 1.0
+      "target": "test_security_test_test"
     },
     {
       "relation": "contains",
@@ -19102,9 +20167,9 @@
       "source_file": "test/security.test.js",
       "source_location": "L378",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_security_test",
-      "target": "test_security_test_withtempsettingsconfig",
-      "confidence_score": 1.0
+      "target": "test_security_test_withtempsettingsconfig"
     },
     {
       "relation": "calls",
@@ -19113,9 +20178,9 @@
       "source_file": "test/security.test.js",
       "source_location": "L38",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_security_test_call",
-      "target": "test_security_test_mockreq",
-      "confidence_score": 1.0
+      "target": "test_security_test_mockreq"
     },
     {
       "relation": "calls",
@@ -19124,9 +20189,9 @@
       "source_file": "test/security.test.js",
       "source_location": "L37",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_security_test_call",
-      "target": "test_security_test_mockres",
-      "confidence_score": 1.0
+      "target": "test_security_test_mockres"
     },
     {
       "relation": "calls",
@@ -19135,9 +20200,9 @@
       "source_file": "test/security.test.js",
       "source_location": "L70",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_security_test_createadminsession",
-      "target": "test_security_test_call",
-      "confidence_score": 1.0
+      "target": "test_security_test_call"
     },
     {
       "relation": "contains",
@@ -20021,391 +21086,6 @@
       "confidence_score": 1.0,
       "source": "telegram_bridge_backendclient_backendclient_verifyotpcode",
       "target": "telegram_bridge_backendclient_backendclient_headers"
-    },
-    {
-      "relation": "indirect_call",
-      "confidence": "INFERRED",
-      "source_file": "telegram-bridge/bridge.js",
-      "source_location": "L436",
-      "weight": 1.0,
-      "context": "collection",
-      "confidence_score": 0.5,
-      "source": "telegram_bridge_bridge",
-      "target": "telegram_bridge_bridge_buildmention"
-    },
-    {
-      "relation": "indirect_call",
-      "confidence": "INFERRED",
-      "source_file": "telegram-bridge/bridge.js",
-      "source_location": "L436",
-      "weight": 1.0,
-      "context": "collection",
-      "confidence_score": 0.5,
-      "source": "telegram_bridge_bridge",
-      "target": "telegram_bridge_bridge_handleintake"
-    },
-    {
-      "relation": "indirect_call",
-      "confidence": "INFERRED",
-      "source_file": "telegram-bridge/bridge.js",
-      "source_location": "L436",
-      "weight": 1.0,
-      "context": "collection",
-      "confidence_score": 0.5,
-      "source": "telegram_bridge_bridge",
-      "target": "telegram_bridge_bridge_notifytimeouts"
-    },
-    {
-      "relation": "indirect_call",
-      "confidence": "INFERRED",
-      "source_file": "telegram-bridge/bridge.js",
-      "source_location": "L436",
-      "weight": 1.0,
-      "context": "collection",
-      "confidence_score": 0.5,
-      "source": "telegram_bridge_bridge",
-      "target": "telegram_bridge_bridge_planintake"
-    },
-    {
-      "relation": "indirect_call",
-      "confidence": "INFERRED",
-      "source_file": "telegram-bridge/bridge.js",
-      "source_location": "L436",
-      "weight": 1.0,
-      "context": "collection",
-      "confidence_score": 0.5,
-      "source": "telegram_bridge_bridge",
-      "target": "telegram_bridge_bridge_postapprovedreplies"
-    },
-    {
-      "relation": "indirect_call",
-      "confidence": "INFERRED",
-      "source_file": "telegram-bridge/bridge.js",
-      "source_location": "L436",
-      "weight": 1.0,
-      "context": "collection",
-      "confidence_score": 0.5,
-      "source": "telegram_bridge_bridge",
-      "target": "telegram_bridge_bridge_postliveedits"
-    },
-    {
-      "relation": "indirect_call",
-      "confidence": "INFERRED",
-      "source_file": "telegram-bridge/bridge.js",
-      "source_location": "L436",
-      "weight": 1.0,
-      "context": "collection",
-      "confidence_score": 0.5,
-      "source": "telegram_bridge_bridge",
-      "target": "telegram_bridge_bridge_seednotifiedtimeouts"
-    },
-    {
-      "relation": "indirect_call",
-      "confidence": "INFERRED",
-      "source_file": "telegram-bridge/bridge.js",
-      "source_location": "L436",
-      "weight": 1.0,
-      "context": "collection",
-      "confidence_score": 0.5,
-      "source": "telegram_bridge_bridge",
-      "target": "telegram_bridge_bridge_shouldsuppressgroupreply"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "telegram-bridge/start.js",
-      "source_location": "L17",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "telegram_bridge_start",
-      "target": "telegram_bridge_bridge"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "test/telegramBridge.test.js",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "test_telegrambridge_test",
-      "target": "telegram_bridge_bridge"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "test/workflow.test.js",
-      "source_location": "L1258",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "test_workflow_test",
-      "target": "telegram_bridge_bridge"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "telegram-bridge/bridge.js",
-      "source_location": "L419",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "telegram_bridge_bridge_notifytimeouts",
-      "target": "telegram_bridge_bridge_buildmention"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "telegram-bridge/bridge.js",
-      "source_location": "L337",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "telegram_bridge_bridge_postapprovedreplies",
-      "target": "telegram_bridge_bridge_buildmention"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "telegram-bridge/bridge.js",
-      "source_location": "L360",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "telegram_bridge_bridge_postliveedits",
-      "target": "telegram_bridge_bridge_buildmention"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "test/telegramBridge.test.js",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "test_telegrambridge_test",
-      "target": "telegram_bridge_bridge_buildmention"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "test/workflow.test.js",
-      "source_location": "L1258",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "test_workflow_test",
-      "target": "telegram_bridge_bridge_buildmention"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "telegram-bridge/bridge.js",
-      "source_location": "L294",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "telegram_bridge_bridge_handleintake",
-      "target": "telegram_bridge_bridge_shouldsuppressgroupreply"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "test/telegramBridge.test.js",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "test_telegrambridge_test",
-      "target": "telegram_bridge_bridge_shouldsuppressgroupreply"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "telegram-bridge/bridge.js",
-      "source_location": "L161",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "telegram_bridge_bridge_handleintake",
-      "target": "telegram_bridge_bridge_planintake"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "test/telegramBridge.test.js",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "test_telegrambridge_test",
-      "target": "telegram_bridge_bridge_planintake"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "telegram-bridge/start.js",
-      "source_location": "L17",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "telegram_bridge_start",
-      "target": "telegram_bridge_bridge_handleintake"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "telegram-bridge/start.js",
-      "source_location": "L88",
-      "weight": 1.0,
-      "source": "telegram_bridge_start_intakeloop",
-      "target": "telegram_bridge_bridge_handleintake"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "test/telegramBridge.test.js",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "test_telegrambridge_test",
-      "target": "telegram_bridge_bridge_handleintake"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "telegram-bridge/start.js",
-      "source_location": "L17",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "telegram_bridge_start",
-      "target": "telegram_bridge_bridge_postapprovedreplies"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "telegram-bridge/start.js",
-      "source_location": "L114",
-      "weight": 1.0,
-      "source": "telegram_bridge_start_postingloop",
-      "target": "telegram_bridge_bridge_postapprovedreplies"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "test/telegramBridge.test.js",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "test_telegrambridge_test",
-      "target": "telegram_bridge_bridge_postapprovedreplies"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "telegram-bridge/start.js",
-      "source_location": "L17",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "telegram_bridge_start",
-      "target": "telegram_bridge_bridge_postliveedits"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "telegram-bridge/start.js",
-      "source_location": "L119",
-      "weight": 1.0,
-      "source": "telegram_bridge_start_postingloop",
-      "target": "telegram_bridge_bridge_postliveedits"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "telegram-bridge/start.js",
-      "source_location": "L17",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "telegram_bridge_start",
-      "target": "telegram_bridge_bridge_seednotifiedtimeouts"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "telegram-bridge/start.js",
-      "source_location": "L125",
-      "weight": 1.0,
-      "source": "telegram_bridge_start_postingloop",
-      "target": "telegram_bridge_bridge_seednotifiedtimeouts"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "test/telegramBridge.test.js",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "test_telegrambridge_test",
-      "target": "telegram_bridge_bridge_seednotifiedtimeouts"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "telegram-bridge/start.js",
-      "source_location": "L17",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "telegram_bridge_start",
-      "target": "telegram_bridge_bridge_notifytimeouts"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "telegram-bridge/start.js",
-      "source_location": "L134",
-      "weight": 1.0,
-      "source": "telegram_bridge_start_postingloop",
-      "target": "telegram_bridge_bridge_notifytimeouts"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "test/telegramBridge.test.js",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "test_telegrambridge_test",
-      "target": "telegram_bridge_bridge_notifytimeouts"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "test/workflow.test.js",
-      "source_location": "L1258",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "test_workflow_test",
-      "target": "telegram_bridge_bridge_notifytimeouts"
     },
     {
       "relation": "imports_from",
@@ -47810,5 +48490,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "d812e270dd6adac56adcdddf3fcb1c9079c6b430"
+  "built_at_commit": "3c33ba12d4b818a663c73b9177dfaba0abaecd6a"
 }

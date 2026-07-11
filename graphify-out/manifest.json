@@ -265,8 +265,8 @@
     "semantic_hash": "691542780e01dd0058fe9c6c54455530"
   },
   "src/app.js": {
-    "mtime": 1783777181.7364936,
-    "ast_hash": "5e1486f260266c52e5dee89d67e5a3b5",
+    "mtime": 1783778114.9660227,
+    "ast_hash": "682bc598226f075b6f94c3742dd1fcd7",
     "semantic_hash": ""
   },
   "src/auth.js": {
@@ -365,8 +365,8 @@
     "semantic_hash": ""
   },
   "telegram-bridge/bridge.js": {
-    "mtime": 1783500621.2856483,
-    "ast_hash": "f5c997677c7c530c7ec5dcdbd6b2be38",
+    "mtime": 1783778076.815214,
+    "ast_hash": "e48e0513371e62ca7a696a91c918fd80",
     "semantic_hash": ""
   },
   "telegram-bridge/start.js": {
@@ -2130,8 +2130,8 @@
     "semantic_hash": ""
   },
   ".impeccable/hook.cache.json": {
-    "mtime": 1783777511.2889943,
-    "ast_hash": "e6bc1a87d2e3e1c6a10eca6cdc177771",
+    "mtime": 1783778325.085519,
+    "ast_hash": "d0981682fe77a0c74396599d19e9eb18",
     "semantic_hash": ""
   },
   "config/auth.example.json": {
@@ -3310,8 +3310,8 @@
     "semantic_hash": ""
   },
   "docs/security-hardening-v1-STATUS.md": {
-    "mtime": 1783777511.1501484,
-    "ast_hash": "6436e8b11ab13b06602965cbe32cd1ff",
+    "mtime": 1783778324.9713402,
+    "ast_hash": "b9c1d30b2fb6447727c96d0b650a76e7",
     "semantic_hash": ""
   },
   "src/cookies.js": {
@@ -3367,6 +3367,21 @@
   "test/adminGroupActions.test.js": {
     "mtime": 1783500561.0163417,
     "ast_hash": "8d9c71ea9a6822bbaf017931a5423b98",
+    "semantic_hash": ""
+  },
+  "src/anomalyDetector.js": {
+    "mtime": 1783777953.5038674,
+    "ast_hash": "68cd0a9efece80634a4c8e6871190b5c",
+    "semantic_hash": ""
+  },
+  "test/anomalyDetector.test.js": {
+    "mtime": 1783777976.7243586,
+    "ast_hash": "51ff9c65d2438224bfa507a6e7213636",
+    "semantic_hash": ""
+  },
+  "test/behavioralAnomaly.test.js": {
+    "mtime": 1783778214.5177734,
+    "ast_hash": "da6a2f705e86f7e0dc48e02c926aa33c",
     "semantic_hash": ""
   }
 }
