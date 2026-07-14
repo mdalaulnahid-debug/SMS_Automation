@@ -358,6 +358,47 @@ test('audit chain detects a deleted row', () => {
   assert.equal(store.verifyAuditChain().ok, false);
 });
 
+test('a REQUEST_RECEIVED audit row survives a persist-and-reload round trip with a matching hash, even when channel/chatId/sourceMessageId are omitted', async () => {
+  // Regression test for a bug found via the security-hardening-v1 Step 10
+  // local end-to-end simulation: submitRequest() used to pass channel/chatId/
+  // sourceMessageId straight through as `undefined` when a caller omitted
+  // them (any non-Telegram submission path). That survives in-memory (so the
+  // write-time hash included them), but JSON.stringify() silently drops
+  // undefined-valued keys on persist — so reloading from disk (a real server
+  // restart, or just re-running verifyAuditChain against freshly-loaded
+  // data) recomputed a different hash and falsely reported "tampering" on
+  // every such row. Fixed by normalizing to null instead of leaving undefined.
+  const { mkdtempSync, rmSync } = require('node:fs');
+  const { join } = require('node:path');
+  const { tmpdir } = require('node:os');
+  const { AutomationService } = require('../src/service');
+  const { OperatorQueue } = require('../src/queue');
+  const { SmsGatewayClient } = require('../src/smsGateway');
+
+  const dir = mkdtempSync(join(tmpdir(), 'audit-roundtrip-'));
+  const dbPath = join(dir, 'test.db');
+  try {
+    const gatewayConfig = { GP: { secret: 'gp-secret', trustedSenders: ['12345'] } };
+    let store = new AutomationStore(gatewayConfig, { dbPath });
+    let queue = new OperatorQueue(store);
+    let smsGateway = new SmsGatewayClient(store, queue);
+    let service = new AutomationService({ store, queue, smsGateway });
+
+    // Deliberately omit channel/chatId/sourceMessageId, same as a plain
+    // admin-console test request or a gateway-originated submission.
+    await service.submitRequest({ requesterId: '999', requesterName: 'Officer QA', text: 'LRL 01712345678' });
+    store.close?.();
+
+    // Simulate a server restart: a fresh store instance reloading the same file.
+    const reloaded = new AutomationStore(gatewayConfig, { dbPath });
+    const result = reloaded.verifyAuditChain();
+    reloaded.close?.();
+    assert.equal(result.ok, true, `chain should verify clean after reload, got: ${JSON.stringify(result)}`);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test('audit export returns CSV with the hash columns', async () => {
   const app = appWith({ adminApiKey: 'topsecret' });
   await call(app, {

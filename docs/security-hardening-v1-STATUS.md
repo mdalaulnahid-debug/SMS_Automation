@@ -24,7 +24,7 @@ never run `scripts/deploy.sh` on this branch.
 | 7 | Admin group actions (post-bypass + moderation) | **Done** (code complete; moderation commands untested against a real Telegram group — bot must be promoted to group admin first, see note below) |
 | 8 | Shared admin key scoping/retirement | **Done** (partial by design — see scoping note: Android apps have no session-login flow, so key access was preserved everywhere they call) |
 | 9 | Behavioral anomaly tripwire | **Done** |
-| 10 | Local end-to-end simulation | Not started |
+| 10 | Local end-to-end simulation | **Done** |
 
 ## Latest update
 
@@ -511,6 +511,106 @@ admins as review items, never blocks a request.
 profiles are in-memory/per-process — a backend restart resets everyone's
 baseline (identity-drift and pattern-shift comparisons start fresh). Same
 acceptable-for-V1 tradeoff already noted for step 6.
+
+**Step 10 — local end-to-end simulation — done (design doc §14.10). All 9
+build-order steps proven working together, live, on localhost, using the
+real backend process, real database, real Gmail SMTP, and real role-based
+authorization — not just the (already-passing) automated suite.**
+
+- **Real production discovered live during setup — plan changed
+  immediately.** Starting the Telegram bridge locally to include it in the
+  simulation immediately hit `409 Conflict: terminated by other getUpdates
+  request` — confirming a **production bridge instance is live on the VPS
+  right now**, serving real officers. The local bridge was killed within
+  seconds. Telegram-message-dependent legs (registration DM, OTP reply,
+  moderation commands, admin-post bypass) were re-scoped to HTTP-only
+  simulation instead — calling the exact same backend endpoints the bridge
+  would call, proving the backend logic for real without ever touching the
+  live bot. No real moderation action (ban/mute) was attempted against the
+  real group at any point.
+- **Quota temporarily lowered for this run only**, via a new
+  `QUOTA_MAX_REQUESTS`/`QUOTA_WINDOW_MS` env-var override added to
+  `src/app.js` (defaults completely unchanged when unset — a small,
+  permanent, low-risk addition, not a revert-after hack).
+- **The user's real super_admin web account was linked to their real
+  Telegram ID** (`linkTelegramId`, previously unlinked) so moderation-check
+  and admin-post-bypass could be tested as a genuine authorized actor.
+- **Full journey run against the real local server**, in order:
+  1. Seeded a synthetic E2E test officer in the Personnel Registry via the
+     real `/api/admin/personnel-registry/add` endpoint with a real
+     super-admin session.
+  2. Minted a real registration-link token
+     (`/api/telegram/registration-link`).
+  3. **Registered for real** (`/api/auth/register`) using an email the
+     user controls (`opsbarishal@gmail.com`) — triggering a **real Gmail
+     SMTP send** (confirmed by the absence of the "SMTP not configured"
+     console fallback, the only path this session had never live-tested
+     before now).
+  4. Verified via the real emailed link (`/verify-email`, direct DB read
+     of the plaintext `verify_token` — no need to wait on the inbox for
+     this one).
+  5. Logged in for real (`/api/auth/login`) — a second real email
+     (MFA code) confirmed dispatched the same way.
+  6. Tripped the (lowered) quota for real after 3 requests; **the user
+     read the real re-verification code from their own inbox** and gave
+     it to complete `/api/telegram/verify-code` end-to-end — the one leg
+     that couldn't be self-served (OTP codes are hashed at rest, never
+     stored in plaintext, matching the design's own security property).
+     Confirmed the quota window actually reopened afterward.
+  7. Confirmed `moderation-check` authorizes the linked super_admin and
+     rejects a plain officer; confirmed `moderation-action` audits
+     correctly (no real Telegram API call — the bridge alone can do that,
+     see the 409-conflict note above).
+  8. Confirmed the **admin-post bypass** end to end: the identical
+     non-command Telegram-channel message got `ADMIN_POST_BYPASS`
+     (silent) from the linked super_admin and a real
+     `UNSUPPORTED_COMMAND` rejection from a plain officer — same input,
+     role-differentiated outcome, proven live.
+  9. Tripped `BURST_VOLUME` for real (9 rapid requests) and confirmed it
+     fired **even on quota-blocked attempts** — both defenses working
+     together as designed, not just each in isolation.
+- **A real, previously-unknown bug was found and fixed as part of this
+  step** (not a security-hardening-v1 defect — pre-existing, unrelated
+  code, found only because this was genuine live testing rather than the
+  mocked/fake-transport automated suite): `GET /api/audit/verify` reported
+  a false "row hash mismatch" starting from the very first audit row ever
+  written to this local database (2026-06-11). Root-caused precisely:
+  `service.js`'s `createRequest()` call passed `channel`/`chatId`/
+  `sourceMessageId` straight through as `undefined` when a caller omitted
+  them (any non-Telegram submission path) — that survives in-memory (so
+  the write-time audit hash included those keys), but `JSON.stringify()`
+  silently drops `undefined`-valued object keys on persist, so **every**
+  reload (a real server restart, or re-running the verify check) recomputed
+  a different hash than the one originally written. Confirmed
+  deterministically (not guessed) via a temporary, reverted export of the
+  internal hashing function to compare the exact canonicalized strings.
+  Impact was real: `verifyAuditChain()` stops at the *first* mismatch, so
+  this false positive would have masked any genuine tampering on every row
+  after it — undermining the actual tamper-evidence value of a system
+  whose "output may support investigations" (the code's own words). Fixed
+  by normalizing those three fields to `null` (matching the pre-existing
+  pattern already used for `testDestination`), with a new regression test
+  (`test/security.test.js`) that submits through the real
+  `AutomationService` → persists to a real temp SQLite file → reloads via
+  a fresh `AutomationStore` instance (simulating a real restart) →
+  confirms the chain verifies clean. Verified fixed live too: a fresh
+  request submitted after restarting the local server with the fix now
+  round-trips with a matching hash (confirmed via the same temporary-export
+  technique). Historical rows from before the fix remain unfixable without
+  mutating audit data (which would itself be a worse practice) — flagged,
+  not silently patched.
+- Test data cleaned up afterward (synthetic officer account, registry
+  record, temporary sessions) — audit log rows were deliberately **not**
+  deleted, since removing rows would itself break chain integrity for no
+  good reason; they're valid local-dev history now that the hash bug is
+  fixed. Full suite **316/316**. Both local processes (backend, and the
+  briefly-started-then-killed bridge) stopped cleanly at the end — nothing
+  left running.
+
+**All 10 steps of the locked build order are now done.** Per this
+branch's standing instruction, no deployment happens until the user
+explicitly reviews this status and approves moving to a deployment
+conversation.
 
 ## Open questions / notes found while implementing
 

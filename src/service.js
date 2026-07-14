@@ -155,9 +155,18 @@ class AutomationService {
     const request = this.store.createRequest({
       requesterId: input.requesterId,
       requesterName: input.requesterName,
-      channel: input.channel,
-      chatId: input.chatId,
-      sourceMessageId: input.sourceMessageId,
+      // Normalized to null (not left undefined) — this object also becomes the
+      // REQUEST_RECEIVED audit row's `details`, hashed as-is at write time. An
+      // explicit undefined-valued key survives in-memory but is silently
+      // dropped by JSON.stringify() on persist, so any reload (server restart,
+      // audit verification) recomputes a different hash than the one written —
+      // a false "tampering detected" report on every request submitted without
+      // these fields (any non-Telegram caller), discovered via the security-
+      // hardening-v1 Step 10 local end-to-end simulation. testDestination
+      // already followed this pattern; channel/chatId/sourceMessageId did not.
+      channel: input.channel || null,
+      chatId: input.chatId || null,
+      sourceMessageId: input.sourceMessageId || null,
       operator: parsed.targetOperators[0],
       targetOperators: parsed.targetOperators,
       requestType: parsed.requestType,

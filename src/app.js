@@ -395,7 +395,13 @@ function createApp(options = {}) {
   // restart clears everyone's quota/challenge state, which is acceptable for a
   // defense whose job is slowing down an in-progress impersonation attempt, not
   // maintaining a long-lived ledger. Injectable so tests can control the clock.
-  const quotaTracker = options.quotaTracker || new QuotaTracker();
+  // QUOTA_MAX_REQUESTS/QUOTA_WINDOW_MS let ops (or a local end-to-end test) tune
+  // the threshold without a code change — unset by default, so production
+  // behavior is unchanged unless someone deliberately opts in.
+  const quotaTracker = options.quotaTracker || new QuotaTracker({
+    ...(process.env.QUOTA_MAX_REQUESTS ? { maxRequests: Number(process.env.QUOTA_MAX_REQUESTS) } : {}),
+    ...(process.env.QUOTA_WINDOW_MS ? { windowMs: Number(process.env.QUOTA_WINDOW_MS) } : {})
+  });
   const otpStore = options.otpStore || new OtpStore();
   // Behavioral anomaly tripwire (security-hardening v1 §11) — a soft net
   // underneath the hard quota/OTP wall above; flags surface to admins as
