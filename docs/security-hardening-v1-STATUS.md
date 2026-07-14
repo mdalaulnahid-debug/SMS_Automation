@@ -612,6 +612,41 @@ branch's standing instruction, no deployment happens until the user
 explicitly reviews this status and approves moving to a deployment
 conversation.
 
+## Follow-on hardening: real page separation for Telegram-linked officers
+
+Not part of the original 10-step order — added after the user asked how to
+stop a Telegram-registered officer from being able to see "the original
+website" at all, rather than just having its admin tabs hidden by JS.
+
+- Root cause: the "Registered Officer" tier (§4 of the design doc) served
+  the same `index.html`/`app.js` bundle used by admins, with admin-only
+  tabs hidden client-side via `.officer-hide` (`public/app.js`). The
+  underlying `/api/ops/*` data was already correctly blocked server-side
+  (`requireAdmin`/`requireSuperAdmin`), but the markup and JS for those
+  surfaces still reached the officer's browser — visible to anyone who
+  opened devtools.
+- Fix: the server already sets an `HttpOnly` session cookie at login
+  (`src/cookies.js`) and gates `GET /` server-side via `guardPage()`
+  (pre-existing infrastructure). Extended the `GET /` and new `GET
+  /portal.html` handlers in `src/app.js`: a session with `role ===
+  'officer'` **and** a linked `telegram_id` is served the new
+  `public/portal.html` / `public/portal.js` instead of `index.html` —
+  a small, self-contained page (account status + sign-out only) that never
+  references `app.js` or contains any admin markup.
+- Scope decision (confirmed with the user): only Telegram-*linked* officer
+  accounts get the stripped page. Officers without a linked Telegram ID
+  keep today's `index.html` + `.officer-hide` experience unchanged.
+- Verified live, locally: created two temporary officer accounts (one
+  Telegram-linked, one not) with real sessions, confirmed via curl that
+  `GET /` and `GET /portal.html` branch correctly for both, confirmed via
+  the browser preview that `portal.html` renders live account data
+  correctly and that `app.js` is never requested by the linked officer's
+  browser (checked network log), and confirmed sign-out from the portal
+  correctly clears the session and returns to `/login.html`. Full suite
+  still 316/316. Temporary test accounts and sessions removed afterward;
+  local server stopped.
+- Nothing deployed — same standing instruction as the rest of this branch.
+
 ## Open questions / notes found while implementing
 
 - **Real personnel data received and imported into local dev (2026-07-08).**

@@ -86,7 +86,7 @@ code review (not assumption):
 | Tier | Who | Sees |
 |---|---|---|
 | **Public** | Anyone, unauthenticated | One static informational page only — what the system is, no operational content. |
-| **Registered Officer** | Registry-verified, logged in | Same informational page + their own account/quota status. No monitoring surfaces — operational work stays in Telegram. |
+| **Registered Officer** | Registry-verified, logged in | Same informational page + their own account/quota status. No monitoring surfaces — operational work stays in Telegram. Officers whose account is linked to a Telegram ID are served a genuinely separate, minimal page (`portal.html`/`portal.js`) rather than the operational app with tabs hidden — see the follow-on hardening note below. |
 | **Admin** | `role=admin` | Everything currently on the Ops + Admin pages: fleet, activity, approvals queue, unmatched, audit, phone-inbox, group moderation. |
 | **Super-admin** | `role=super_admin` | All of Admin + Personnel Registry management, registration-approval queue (post-migration), GD-case approval, system config, key management. |
 
@@ -94,6 +94,22 @@ code review (not assumption):
 serving the page** (redirecting insufficient roles, not just letting the JS
 hide DOM nodes), in addition to the existing API-level `requireAdmin`/
 `requireAnySession` checks, which stay as-is.
+
+**Follow-on hardening (post step-10):** the original implementation of the
+"Registered Officer" tier served the same `index.html`/`app.js` bundle to
+everyone and relied on client-side JS (`.officer-hide`) to hide admin-only
+tabs — the markup and logic still shipped to the officer's browser, just
+hidden, so a technical user could reveal it via devtools even though the
+underlying `/api/ops/*` data stayed correctly blocked server-side. Since the
+server already sets an `HttpOnly` session cookie at login (`src/cookies.js`)
+and gates `GET /` server-side via `guardPage()`, this was extended: a
+session whose `role === 'officer'` **and** whose account has a linked
+`telegram_id` is served `public/portal.html`/`public/portal.js` instead —
+a separate, minimal file with no admin markup or admin JS in it at all.
+Verified via network logs that `app.js` is never fetched by such a session.
+Non-Telegram-linked officers (e.g. accounts created before this existed, or
+via a path with no Telegram link) are unaffected and still get the existing
+`index.html` shell with `.officer-hide` gating.
 
 ## 5. Identity unification
 

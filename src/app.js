@@ -644,7 +644,14 @@ function createApp(options = {}) {
         return json(res, 200, { ok: true });
       }
       if (req.method === 'GET' && req.url === '/') {
-        if (!guardPage(req, res, ['officer', 'admin', 'super_admin'])) return undefined;
+        const gate = guardPage(req, res, ['officer', 'admin', 'super_admin']);
+        if (!gate) return undefined;
+        // A Telegram-registered officer never receives the operational app's HTML/JS at
+        // all — not just a client-side hidden view of it. The decision is made here,
+        // server-side, from the session cookie, before any bytes go out.
+        if (gate.user.role === 'officer' && gate.user.telegram_id) {
+          return serveFile(res, 'portal.html', 'text/html; charset=utf-8');
+        }
         return serveFile(res, 'index.html', 'text/html; charset=utf-8');
       }
       if (req.method === 'GET' && req.url === '/app.js') {
@@ -659,6 +666,20 @@ function createApp(options = {}) {
       if (req.method === 'GET' && req.url === '/admin') {
         if (!guardPage(req, res, ['admin', 'super_admin'])) return undefined;
         return serveFile(res, 'admin.html', 'text/html; charset=utf-8');
+      }
+      if (req.method === 'GET' && req.url === '/portal.js') {
+        return serveFile(res, 'portal.js', 'text/javascript; charset=utf-8');
+      }
+      if (req.method === 'GET' && req.url === '/portal.html') {
+        // Same server-side gate as '/': a non-Telegram-linked officer (or admin)
+        // bookmarking this URL directly still lands on the page meant for them,
+        // not this one.
+        const gate = guardPage(req, res, ['officer', 'admin', 'super_admin']);
+        if (!gate) return undefined;
+        if (gate.user.role === 'officer' && gate.user.telegram_id) {
+          return serveFile(res, 'portal.html', 'text/html; charset=utf-8');
+        }
+        return redirectTo(res, '/');
       }
       if (req.method === 'GET' && req.url === '/login.html') {
         return serveFile(res, 'login.html', 'text/html; charset=utf-8');
