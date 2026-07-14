@@ -62,6 +62,50 @@ localhost-only, deploy only after a full pass and explicit approval.
 
 ---
 
+## 🔜 PLANNED — 2026-07-14: Close the Telegram group's open-access policy (registration enforcement) · `P1`
+
+Closes the one piece of Step 5's original scope intentionally left undone
+(see the note at the bottom of `docs/security-hardening-v1-design.md`).
+**Design reviewed and decisions locked this session — no code written yet.**
+
+**Current state:** the Telegram group is fully open — `planIntake()` in
+`telegram-bridge/bridge.js` only checks `authorizedUsers` for private DMs;
+any group member can submit a request with zero registration check. Only an
+unregistered private-DM sender gets a "You're not registered yet" reply with
+the registration link today.
+
+**What changes:** the group-chat branch starts checking the sender's
+Telegram ID against `auth_users.telegram_id` (the same lookup
+`isAdminTelegramSender` already uses), instead of leaving the group open.
+An unregistered group sender gets the same registration-link reply the DM
+path already sends — no new mechanism, just applying the existing one to
+the group too.
+
+**Rollout sequence (locked):**
+1. Import the real Personnel Registry into **production** (currently only
+   in local dev — see the open note in `docs/security-hardening-v1-STATUS.md`).
+2. Create `config/mail.json` on the VPS (Gmail creds + `superAdminEmail` —
+   **use `opsbarishal@gmail.com`, not a personal email**, per this session's
+   super-admin identity change).
+3. Ship the group-registration-gate change, in **soft-nag mode**: during a
+   **1-week grace window**, an unregistered sender's request is still
+   processed normally, but every reply to them includes the registration
+   link. Zero disruption to real investigative work during the transition.
+4. One-time broadcast to the group announcing the requirement + link, to
+   start the week's clock.
+5. After 7 days, flip to **hard block**: unregistered senders get only the
+   registration-link reply, no request processing, until they register.
+
+**What a registered (plain officer) user sees — already built, unchanged by
+this work:** Telegram usage is identical to today (DM or group, submit,
+get replies). On the web, they land on the minimal `public/portal.html`
+(own account status + a "message the bot" link) — no fleet/activity/audit
+data, no admin console, nothing beyond their own account. See the
+`officer-dashboard-design.md` doc for a planned visual/animation upgrade to
+that page (design only, not yet built).
+
+---
+
 ## ✅ DONE — 2026-07-06: Repo cleanup, untracked AI-tool config dirs
 
 `.agents/`, `.codex/`, `.cursor/`, `.gemini/`, `.github/hooks/`,
