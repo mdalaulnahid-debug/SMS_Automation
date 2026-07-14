@@ -1,6 +1,36 @@
 # Progress Tracker
 
-Last updated: **2026-07-06 — Android theme sync + admin phone-inbox viewer + Telegram bridge flood fix, deployed; GD lost-phone watch designed (not started)**
+Last updated: **2026-07-14 — Security hardening V1 complete (all 10 steps) + follow-on Telegram-officer portal separation, on `feature/security-hardening-v1`, NOT deployed**
+
+---
+
+## Session Handoff (2026-07-14) — Security hardening V1 steps 6–10 done + follow-on portal separation
+
+**Branch:** `feature/security-hardening-v1` (isolated from `main`, localhost-only per standing instruction — nothing deployed this session).
+
+### Steps 6–10 of the locked build order (all now done)
+
+Full narrative in [`docs/security-hardening-v1-STATUS.md`](docs/security-hardening-v1-STATUS.md); design in [`docs/security-hardening-v1-design.md`](docs/security-hardening-v1-design.md).
+
+- **Step 6** — Quota + email-OTP re-verification middleware (`src/quota.js`, `src/otp.js`): per-officer rate limiting; breaching it locks the officer out until they verify a 6-digit code emailed to their registered address.
+- **Step 7** — Admin group actions: admin/super_admin posts in the Telegram group bypass normal request friction (`isAdminTelegramSender`); moderation commands (`/ban`, `/mute`, `/unmute`, `/unban`) added with authorization checks before any Telegram API call.
+- **Step 8** — Shared admin key scoping (**partial by design** — Android Gateway/Admin apps have no session-login of their own, so key auth stays wherever they depend on it). Split into `requireAdmin`/`requireSuperAdmin` (key OR session), `requireAdminSessionOnly`/`requireSuperAdminSessionOnly` (session only), `requireMachine` (key only, Telegram-bridge endpoints).
+- **Step 9** — Behavioral anomaly tripwire (`src/anomalyDetector.js`): non-blocking flags for off-hours activity, request bursts, Telegram identity drift, request-type pattern shifts.
+- **Step 10** — Local end-to-end simulation of the whole system, run live (not just the automated suite): registration → email → login/MFA → quota breach → OTP recovery → admin bypass → moderation auth → anomaly flags. Two real findings:
+  - **Live production bridge detected** — starting the Telegram bridge locally hit a `409 Conflict`, proving a production instance is already live on the VPS. Killed the local one within seconds; never touched the real Telegram API for anything destructive. Remaining Telegram-dependent legs of the E2E test were re-scoped to HTTP-only simulation.
+  - **Pre-existing audit-chain bug found and fixed**: `JSON.stringify()` silently drops `undefined`-valued object keys, so `service.js`'s `createRequest()` call (passing `channel`/`chatId`/`sourceMessageId` as `undefined` rather than `null`) caused every persist-and-reload round trip to report false tamper detection — and `verifyAuditChain()` stops at the first mismatch, so this masked any *real* tampering on every row after it. Fixed (normalize to `null`, matching the existing `testDestination` pattern), regression-tested.
+
+Full suite: **316/316**.
+
+### Follow-on: real page separation for Telegram-linked officers
+
+Not part of the original 10 steps — user asked how to stop a Telegram-registered officer from seeing "the original website" at all, rather than just having admin tabs hidden by JS.
+
+- Previously, the "Registered Officer" tier (§4 of the design doc) got the same `index.html`/`app.js` bundle as admins, with admin tabs hidden via `.officer-hide` — the markup/JS still shipped to the officer's browser, just hidden (visible via devtools).
+- Fix: reused existing server-side infrastructure (`HttpOnly` session cookie set at login, `guardPage()` gating `GET /`) — a session with `role === 'officer'` **and** a linked `telegram_id` is now served a new, genuinely separate minimal page (`public/portal.html` / `public/portal.js` — account status + sign-out only, no admin markup, never references `app.js`) instead of `index.html`. Officers without a linked Telegram ID are unaffected.
+- Verified live locally with two temporary officer accounts (linked/unlinked) and real sessions: server branches correctly, `portal.html` renders real account data, `app.js` is never fetched by the linked officer's browser (checked via network log), sign-out works correctly. Test accounts removed afterward. Suite still 316/316.
+
+**Nothing deployed.** Per this branch's standing instruction, no VPS/production discussion happens until the user explicitly reviews and approves.
 
 ---
 

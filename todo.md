@@ -6,7 +6,24 @@ Start with `progress_tracker.md` for the latest session handoff, test results, a
 
 ---
 
-## 🔨 IN PROGRESS — Security hardening V1 (registration gating + layered access) · `P1`
+## ✅ DONE — 2026-07-14: Security hardening V1 (all 10 steps) + Telegram-officer portal separation · `P1`
+
+All 10 steps below are complete, plus a follow-on hardening item added this
+session (real page separation for Telegram-linked officers — not originally
+in scope; see `progress_tracker.md`'s 2026-07-14 handoff and
+`docs/security-hardening-v1-STATUS.md` for full detail). Full suite
+**316/316**. Built and verified entirely on **localhost**, on
+`feature/security-hardening-v1`. **Not deployed** — awaiting explicit user
+review/approval before any VPS discussion, per this branch's standing
+instruction.
+
+Two notable findings from Step 10's live end-to-end simulation:
+- A live production Telegram bridge was detected on the VPS (409 Conflict
+  when starting the bridge locally) — local instance killed immediately,
+  no real Telegram API calls made for anything destructive.
+- A real, pre-existing audit-chain tamper-detection bug was found and fixed
+  (`JSON.stringify` dropping `undefined` keys caused false-positive tamper
+  reports on every reload) — regression-tested.
 
 Consolidates and supersedes the 2026-06-24 security roadmaps below (IP/device
 tracking, login/access control, insider-threat prevention) with a plan
@@ -31,17 +48,17 @@ localhost-only, deploy only after a full pass and explicit approval.
   genuine machine-to-machine callers (e.g. the Telegram bridge's own
   backend calls).
 
-- [ ] **`P1`** Unit tests: registry-match validation, quota logic, OTP generation/expiry/attempts
-- [ ] **`P1`** Server-side page gating (4-tier: Public/Registered Officer/Admin/Super-admin)
-- [ ] **`P1`** `telegramId` column + identity unification (web login ↔ Telegram)
-- [ ] **`P1`** Personnel Registry data model + admin-upload loading
-- [ ] **`P1`** Registration flow end-to-end (Telegram link → form → registry check → activation)
-- [ ] **`P1`** Quota + email-OTP re-verification middleware
-- [ ] **`P2`** Admin group actions (post-bypass + ban/suspend/mute) — needs bot promoted to group admin first
-- [ ] **`P1`** Shared admin key scoping/retirement for human paths
-- [ ] **`P2`** Behavioral anomaly tripwire (off-hours, bulk, language_code/username drift)
-- [ ] **`P1`** Local end-to-end simulation before any deploy conversation
-- [ ] **`P2`** Encryption at rest (Vultr encrypted block storage)
+- [x] **`P1`** Unit tests: registry-match validation, quota logic, OTP generation/expiry/attempts
+- [x] **`P1`** Server-side page gating (4-tier: Public/Registered Officer/Admin/Super-admin) — extended 2026-07-14 with true page separation (not just client-side hiding) for Telegram-linked officers
+- [x] **`P1`** `telegramId` column + identity unification (web login ↔ Telegram)
+- [x] **`P1`** Personnel Registry data model + admin-upload loading
+- [x] **`P1`** Registration flow end-to-end (Telegram link → form → registry check → activation)
+- [x] **`P1`** Quota + email-OTP re-verification middleware
+- [x] **`P2`** Admin group actions (post-bypass + ban/suspend/mute) — bot confirmed promoted to group admin
+- [x] **`P1`** Shared admin key scoping/retirement for human paths (partial by design — Android apps have no session-login of their own, key auth kept where they depend on it)
+- [x] **`P2`** Behavioral anomaly tripwire (off-hours, bulk, language_code/username drift)
+- [x] **`P1`** Local end-to-end simulation before any deploy conversation
+- [ ] **`P2`** Encryption at rest (Vultr encrypted block storage) — deferred, not part of this V1 pass
 
 ---
 
