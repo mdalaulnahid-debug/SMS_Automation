@@ -265,8 +265,8 @@
     "semantic_hash": "691542780e01dd0058fe9c6c54455530"
   },
   "src/app.js": {
-    "mtime": 1784013647.8598397,
-    "ast_hash": "b7f211c438ce3a73094c71e9b78a5545",
+    "mtime": 1784017825.385434,
+    "ast_hash": "c1c999ecc728e0430bb8b0a15d9c77ea",
     "semantic_hash": ""
   },
   "src/auth.js": {
@@ -2130,8 +2130,8 @@
     "semantic_hash": ""
   },
   ".impeccable/hook.cache.json": {
-    "mtime": 1784016386.2169268,
-    "ast_hash": "4ad01d747cc1fff21ed9cf010274001b",
+    "mtime": 1784018524.7268436,
+    "ast_hash": "792dc7ae6c3c60e57ec903270e82c3c6",
     "semantic_hash": ""
   },
   "config/auth.example.json": {
@@ -3275,8 +3275,8 @@
     "semantic_hash": ""
   },
   "docs/security-hardening-v1-design.md": {
-    "mtime": 1783412319.5265,
-    "ast_hash": "443c67dca85595f6ac1f4c8d7f9b70c8",
+    "mtime": 1784018494.6144443,
+    "ast_hash": "4afb6f4ade35d9fb8c0059c422d1d4dc",
     "semantic_hash": ""
   },
   "src/otp.js": {
@@ -3310,8 +3310,8 @@
     "semantic_hash": ""
   },
   "docs/security-hardening-v1-STATUS.md": {
-    "mtime": 1784016386.102769,
-    "ast_hash": "ce3f2353da0131dec07e15bd0e3d3880",
+    "mtime": 1784018524.60468,
+    "ast_hash": "592b3532c929bb63f2bf7adacedf14ae",
     "semantic_hash": ""
   },
   "src/cookies.js": {
@@ -3382,6 +3382,16 @@
   "test/behavioralAnomaly.test.js": {
     "mtime": 1783778214.5177734,
     "ast_hash": "da6a2f705e86f7e0dc48e02c926aa33c",
+    "semantic_hash": ""
+  },
+  "public/portal.js": {
+    "mtime": 1784017648.4931533,
+    "ast_hash": "10c33e39145122ae432684da511a7adc",
+    "semantic_hash": ""
+  },
+  "public/portal.html": {
+    "mtime": 1784017637.1069875,
+    "ast_hash": "cf1312cd5274a23ad2802f773e040860",
     "semantic_hash": ""
   }
 }
