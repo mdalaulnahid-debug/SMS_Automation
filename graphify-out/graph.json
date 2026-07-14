@@ -47,81 +47,11 @@
       "label": "Open questions / notes found while implementing",
       "file_type": "document",
       "source_file": "docs/security-hardening-v1-STATUS.md",
-      "source_location": "L515",
+      "source_location": "L615",
       "_origin": "ast",
       "id": "docs_security_hardening_v1_status_open_questions_notes_found_while_implementing",
       "community": 68,
       "norm_label": "open questions / notes found while implementing"
-    },
-    {
-      "label": "anomalyDetector.js",
-      "file_type": "code",
-      "source_file": "src/anomalyDetector.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "src_anomalydetector",
-      "community": 1,
-      "norm_label": "anomalydetector.js"
-    },
-    {
-      "label": "AnomalyDetector",
-      "file_type": "code",
-      "source_file": "src/anomalyDetector.js",
-      "source_location": "L26",
-      "_origin": "ast",
-      "id": "src_anomalydetector_anomalydetector",
-      "community": 1,
-      "norm_label": "anomalydetector"
-    },
-    {
-      "label": ".constructor()",
-      "file_type": "code",
-      "source_file": "src/anomalyDetector.js",
-      "source_location": "L27",
-      "_origin": "ast",
-      "id": "src_anomalydetector_anomalydetector_constructor",
-      "community": 1,
-      "norm_label": ".constructor()"
-    },
-    {
-      "label": "._getOrCreateProfile()",
-      "file_type": "code",
-      "source_file": "src/anomalyDetector.js",
-      "source_location": "L48",
-      "_origin": "ast",
-      "id": "src_anomalydetector_anomalydetector_getorcreateprofile",
-      "community": 1,
-      "norm_label": "._getorcreateprofile()"
-    },
-    {
-      "label": "._localHour()",
-      "file_type": "code",
-      "source_file": "src/anomalyDetector.js",
-      "source_location": "L63",
-      "_origin": "ast",
-      "id": "src_anomalydetector_anomalydetector_localhour",
-      "community": 1,
-      "norm_label": "._localhour()"
-    },
-    {
-      "label": "._isOffHours()",
-      "file_type": "code",
-      "source_file": "src/anomalyDetector.js",
-      "source_location": "L67",
-      "_origin": "ast",
-      "id": "src_anomalydetector_anomalydetector_isoffhours",
-      "community": 1,
-      "norm_label": "._isoffhours()"
-    },
-    {
-      "label": ".recordAndCheck()",
-      "file_type": "code",
-      "source_file": "src/anomalyDetector.js",
-      "source_location": "L81",
-      "_origin": "ast",
-      "id": "src_anomalydetector_anomalydetector_recordandcheck",
-      "community": 1,
-      "norm_label": ".recordandcheck()"
     },
     {
       "label": "app.js",
@@ -477,7 +407,7 @@
       "label": "isValidGatewayHeader()",
       "file_type": "code",
       "source_file": "src/app.js",
-      "source_location": "L1451",
+      "source_location": "L1457",
       "_origin": "ast",
       "id": "src_app_isvalidgatewayheader",
       "community": 12,
@@ -487,7 +417,7 @@
       "label": "serveFile()",
       "file_type": "code",
       "source_file": "src/app.js",
-      "source_location": "L1457",
+      "source_location": "L1463",
       "_origin": "ast",
       "id": "src_app_servefile",
       "community": 12,
@@ -497,7 +427,7 @@
       "label": "safeUserFields()",
       "file_type": "code",
       "source_file": "src/app.js",
-      "source_location": "L1466",
+      "source_location": "L1472",
       "_origin": "ast",
       "id": "src_app_safeuserfields",
       "community": 12,
@@ -507,7 +437,7 @@
       "label": "json()",
       "file_type": "code",
       "source_file": "src/app.js",
-      "source_location": "L1481",
+      "source_location": "L1487",
       "_origin": "ast",
       "id": "src_app_json",
       "community": 72,
@@ -517,7 +447,7 @@
       "label": "csv()",
       "file_type": "code",
       "source_file": "src/app.js",
-      "source_location": "L1486",
+      "source_location": "L1492",
       "_origin": "ast",
       "id": "src_app_csv",
       "community": 12,
@@ -527,7 +457,7 @@
       "label": "auditToCsv()",
       "file_type": "code",
       "source_file": "src/app.js",
-      "source_location": "L1495",
+      "source_location": "L1501",
       "_origin": "ast",
       "id": "src_app_audittocsv",
       "community": 12,
@@ -537,7 +467,7 @@
       "label": "readJson()",
       "file_type": "code",
       "source_file": "src/app.js",
-      "source_location": "L1516",
+      "source_location": "L1522",
       "_origin": "ast",
       "id": "src_app_readjson",
       "community": 12,
@@ -547,11 +477,501 @@
       "label": "readBuffer()",
       "file_type": "code",
       "source_file": "src/app.js",
-      "source_location": "L1541",
+      "source_location": "L1547",
       "_origin": "ast",
       "id": "src_app_readbuffer",
       "community": 12,
       "norm_label": "readbuffer()"
+    },
+    {
+      "label": "service.js",
+      "file_type": "code",
+      "source_file": "src/service.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_service",
+      "community": 13,
+      "norm_label": "service.js"
+    },
+    {
+      "label": "{ OPERATORS, STATUSES, DISPATCH_STATUSES, TERMINAL_DISPATCH_STATUSES }",
+      "file_type": "code",
+      "source_file": "src/service.js",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "src_service_operators_statuses_dispatch_statuses_terminal_dispatch_statuses",
+      "community": 13,
+      "norm_label": "{ operators, statuses, dispatch_statuses, terminal_dispatch_statuses }"
+    },
+    {
+      "label": "{ parseRequestText }",
+      "file_type": "code",
+      "source_file": "src/service.js",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "src_service_parserequesttext",
+      "community": 13,
+      "norm_label": "{ parserequesttext }"
+    },
+    {
+      "label": "{ analyzeOperatorReply, inferReplyFamilies, replyContradictsPayload }",
+      "file_type": "code",
+      "source_file": "src/service.js",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "src_service_analyzeoperatorreply_inferreplyfamilies_replycontradictspayload",
+      "community": 13,
+      "norm_label": "{ analyzeoperatorreply, inferreplyfamilies, replycontradictspayload }"
+    },
+    {
+      "label": "AutomationService",
+      "file_type": "code",
+      "source_file": "src/service.js",
+      "source_location": "L16",
+      "_origin": "ast",
+      "id": "src_service_automationservice",
+      "community": 13,
+      "norm_label": "automationservice"
+    },
+    {
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "src/service.js",
+      "source_location": "L17",
+      "_origin": "ast",
+      "id": "src_service_automationservice_constructor",
+      "community": 13,
+      "norm_label": ".constructor()"
+    },
+    {
+      "label": ".submitRequest()",
+      "file_type": "code",
+      "source_file": "src/service.js",
+      "source_location": "L46",
+      "_origin": "ast",
+      "id": "src_service_automationservice_submitrequest",
+      "community": 13,
+      "norm_label": ".submitrequest()"
+    },
+    {
+      "label": ".receiveSmsWebhook()",
+      "file_type": "code",
+      "source_file": "src/service.js",
+      "source_location": "L184",
+      "_origin": "ast",
+      "id": "src_service_automationservice_receivesmswebhook",
+      "community": 13,
+      "norm_label": ".receivesmswebhook()"
+    },
+    {
+      "label": "._finalizeIfTerminal()",
+      "file_type": "code",
+      "source_file": "src/service.js",
+      "source_location": "L530",
+      "_origin": "ast",
+      "id": "src_service_automationservice_finalizeifterminal",
+      "community": 13,
+      "norm_label": "._finalizeifterminal()"
+    },
+    {
+      "label": ".approveReply()",
+      "file_type": "code",
+      "source_file": "src/service.js",
+      "source_location": "L598",
+      "_origin": "ast",
+      "id": "src_service_automationservice_approvereply",
+      "community": 13,
+      "norm_label": ".approvereply()"
+    },
+    {
+      "label": ".markReplyPosted()",
+      "file_type": "code",
+      "source_file": "src/service.js",
+      "source_location": "L635",
+      "_origin": "ast",
+      "id": "src_service_automationservice_markreplyposted",
+      "community": 13,
+      "norm_label": ".markreplyposted()"
+    },
+    {
+      "label": ".markReplyEdited()",
+      "file_type": "code",
+      "source_file": "src/service.js",
+      "source_location": "L672",
+      "_origin": "ast",
+      "id": "src_service_automationservice_markreplyedited",
+      "community": 13,
+      "norm_label": ".markreplyedited()"
+    },
+    {
+      "label": "._getActiveDraftForRequest()",
+      "file_type": "code",
+      "source_file": "src/service.js",
+      "source_location": "L699",
+      "_origin": "ast",
+      "id": "src_service_automationservice_getactivedraftforrequest",
+      "community": 13,
+      "norm_label": "._getactivedraftforrequest()"
+    },
+    {
+      "label": "._getLiveReplyForRequest()",
+      "file_type": "code",
+      "source_file": "src/service.js",
+      "source_location": "L706",
+      "_origin": "ast",
+      "id": "src_service_automationservice_getlivereplyforrequest",
+      "community": 13,
+      "norm_label": "._getlivereplyforrequest()"
+    },
+    {
+      "label": ".rejectRequest()",
+      "file_type": "code",
+      "source_file": "src/service.js",
+      "source_location": "L713",
+      "_origin": "ast",
+      "id": "src_service_automationservice_rejectrequest",
+      "community": 13,
+      "norm_label": ".rejectrequest()"
+    },
+    {
+      "label": ".retryRequest()",
+      "file_type": "code",
+      "source_file": "src/service.js",
+      "source_location": "L725",
+      "_origin": "ast",
+      "id": "src_service_automationservice_retryrequest",
+      "community": 13,
+      "norm_label": ".retryrequest()"
+    },
+    {
+      "label": ".rankReplyCandidates()",
+      "file_type": "code",
+      "source_file": "src/service.js",
+      "source_location": "L760",
+      "_origin": "ast",
+      "id": "src_service_automationservice_rankreplycandidates",
+      "community": 13,
+      "norm_label": ".rankreplycandidates()"
+    },
+    {
+      "label": ".correctMatch()",
+      "file_type": "code",
+      "source_file": "src/service.js",
+      "source_location": "L804",
+      "_origin": "ast",
+      "id": "src_service_automationservice_correctmatch",
+      "community": 13,
+      "norm_label": ".correctmatch()"
+    },
+    {
+      "label": ".manualMatch()",
+      "file_type": "code",
+      "source_file": "src/service.js",
+      "source_location": "L863",
+      "_origin": "ast",
+      "id": "src_service_automationservice_manualmatch",
+      "community": 13,
+      "norm_label": ".manualmatch()"
+    },
+    {
+      "label": ".timeoutWaitingRequests()",
+      "file_type": "code",
+      "source_file": "src/service.js",
+      "source_location": "L902",
+      "_origin": "ast",
+      "id": "src_service_automationservice_timeoutwaitingrequests",
+      "community": 13,
+      "norm_label": ".timeoutwaitingrequests()"
+    },
+    {
+      "label": ".dispatchSentAt()",
+      "file_type": "code",
+      "source_file": "src/service.js",
+      "source_location": "L938",
+      "_origin": "ast",
+      "id": "src_service_automationservice_dispatchsentat",
+      "community": 13,
+      "norm_label": ".dispatchsentat()"
+    },
+    {
+      "label": ".dispatchTimeoutState()",
+      "file_type": "code",
+      "source_file": "src/service.js",
+      "source_location": "L945",
+      "_origin": "ast",
+      "id": "src_service_automationservice_dispatchtimeoutstate",
+      "community": 13,
+      "norm_label": ".dispatchtimeoutstate()"
+    },
+    {
+      "label": ".getDispatchOutbox()",
+      "file_type": "code",
+      "source_file": "src/service.js",
+      "source_location": "L972",
+      "_origin": "ast",
+      "id": "src_service_automationservice_getdispatchoutbox",
+      "community": 13,
+      "norm_label": ".getdispatchoutbox()"
+    },
+    {
+      "label": "._recordManualReviewCandidate()",
+      "file_type": "code",
+      "source_file": "src/service.js",
+      "source_location": "L976",
+      "_origin": "ast",
+      "id": "src_service_automationservice_recordmanualreviewcandidate",
+      "community": 13,
+      "norm_label": "._recordmanualreviewcandidate()"
+    },
+    {
+      "label": "formatCombinedReply()",
+      "file_type": "code",
+      "source_file": "src/service.js",
+      "source_location": "L991",
+      "_origin": "ast",
+      "id": "src_service_formatcombinedreply",
+      "community": 13,
+      "norm_label": "formatcombinedreply()"
+    },
+    {
+      "label": "collectDispatchReplyMessages()",
+      "file_type": "code",
+      "source_file": "src/service.js",
+      "source_location": "L1025",
+      "_origin": "ast",
+      "id": "src_service_collectdispatchreplymessages",
+      "community": 13,
+      "norm_label": "collectdispatchreplymessages()"
+    },
+    {
+      "label": "CONFIDENCE_RANKS",
+      "file_type": "code",
+      "source_file": "src/service.js",
+      "source_location": "L1041",
+      "_origin": "ast",
+      "id": "src_service_confidence_ranks",
+      "community": 13,
+      "norm_label": "confidence_ranks"
+    },
+    {
+      "label": "confidenceRank()",
+      "file_type": "code",
+      "source_file": "src/service.js",
+      "source_location": "L1042",
+      "_origin": "ast",
+      "id": "src_service_confidencerank",
+      "community": 13,
+      "norm_label": "confidencerank()"
+    },
+    {
+      "label": "requestStatusRank()",
+      "file_type": "code",
+      "source_file": "src/service.js",
+      "source_location": "L1046",
+      "_origin": "ast",
+      "id": "src_service_requeststatusrank",
+      "community": 13,
+      "norm_label": "requeststatusrank()"
+    },
+    {
+      "label": "replyTypeScore()",
+      "file_type": "code",
+      "source_file": "src/service.js",
+      "source_location": "L1053",
+      "_origin": "ast",
+      "id": "src_service_replytypescore",
+      "community": 13,
+      "norm_label": "replytypescore()"
+    },
+    {
+      "label": "security.test.js",
+      "file_type": "code",
+      "source_file": "test/security.test.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "test_security_test",
+      "community": 13,
+      "norm_label": "security.test.js"
+    },
+    {
+      "label": "test",
+      "file_type": "code",
+      "source_file": "test/security.test.js",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "test_security_test_test",
+      "community": 13,
+      "norm_label": "test"
+    },
+    {
+      "label": "assert",
+      "file_type": "code",
+      "source_file": "test/security.test.js",
+      "source_location": "L4",
+      "_origin": "ast",
+      "id": "test_security_test_assert",
+      "community": 13,
+      "norm_label": "assert"
+    },
+    {
+      "label": "{ Readable }",
+      "file_type": "code",
+      "source_file": "test/security.test.js",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "test_security_test_readable",
+      "community": 13,
+      "norm_label": "{ readable }"
+    },
+    {
+      "label": "{ createApp }",
+      "file_type": "code",
+      "source_file": "test/security.test.js",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "test_security_test_createapp",
+      "community": 13,
+      "norm_label": "{ createapp }"
+    },
+    {
+      "label": "{ AutomationStore }",
+      "file_type": "code",
+      "source_file": "test/security.test.js",
+      "source_location": "L7",
+      "_origin": "ast",
+      "id": "test_security_test_automationstore",
+      "community": 13,
+      "norm_label": "{ automationstore }"
+    },
+    {
+      "label": "mockReq()",
+      "file_type": "code",
+      "source_file": "test/security.test.js",
+      "source_location": "L9",
+      "_origin": "ast",
+      "id": "test_security_test_mockreq",
+      "community": 13,
+      "norm_label": "mockreq()"
+    },
+    {
+      "label": "mockRes()",
+      "file_type": "code",
+      "source_file": "test/security.test.js",
+      "source_location": "L18",
+      "_origin": "ast",
+      "id": "test_security_test_mockres",
+      "community": 13,
+      "norm_label": "mockres()"
+    },
+    {
+      "label": "call()",
+      "file_type": "code",
+      "source_file": "test/security.test.js",
+      "source_location": "L36",
+      "_origin": "ast",
+      "id": "test_security_test_call",
+      "community": 13,
+      "norm_label": "call()"
+    },
+    {
+      "label": "appWith()",
+      "file_type": "code",
+      "source_file": "test/security.test.js",
+      "source_location": "L48",
+      "_origin": "ast",
+      "id": "test_security_test_appwith",
+      "community": 13,
+      "norm_label": "appwith()"
+    },
+    {
+      "label": "createAdminSession()",
+      "file_type": "code",
+      "source_file": "test/security.test.js",
+      "source_location": "L64",
+      "_origin": "ast",
+      "id": "test_security_test_createadminsession",
+      "community": 13,
+      "norm_label": "createadminsession()"
+    },
+    {
+      "label": "withTempSettingsConfig()",
+      "file_type": "code",
+      "source_file": "test/security.test.js",
+      "source_location": "L419",
+      "_origin": "ast",
+      "id": "test_security_test_withtempsettingsconfig",
+      "community": 13,
+      "norm_label": "withtempsettingsconfig()"
+    },
+    {
+      "label": "anomalyDetector.js",
+      "file_type": "code",
+      "source_file": "src/anomalyDetector.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "anomalydetector.js",
+      "id": "src_anomalydetector"
+    },
+    {
+      "label": "AnomalyDetector",
+      "file_type": "code",
+      "source_file": "src/anomalyDetector.js",
+      "source_location": "L26",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "anomalydetector",
+      "id": "src_anomalydetector_anomalydetector"
+    },
+    {
+      "label": ".constructor()",
+      "file_type": "code",
+      "source_file": "src/anomalyDetector.js",
+      "source_location": "L27",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": ".constructor()",
+      "id": "src_anomalydetector_anomalydetector_constructor"
+    },
+    {
+      "label": "._getOrCreateProfile()",
+      "file_type": "code",
+      "source_file": "src/anomalyDetector.js",
+      "source_location": "L48",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "._getorcreateprofile()",
+      "id": "src_anomalydetector_anomalydetector_getorcreateprofile"
+    },
+    {
+      "label": "._localHour()",
+      "file_type": "code",
+      "source_file": "src/anomalyDetector.js",
+      "source_location": "L63",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "._localhour()",
+      "id": "src_anomalydetector_anomalydetector_localhour"
+    },
+    {
+      "label": "._isOffHours()",
+      "file_type": "code",
+      "source_file": "src/anomalyDetector.js",
+      "source_location": "L67",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": "._isoffhours()",
+      "id": "src_anomalydetector_anomalydetector_isoffhours"
+    },
+    {
+      "label": ".recordAndCheck()",
+      "file_type": "code",
+      "source_file": "src/anomalyDetector.js",
+      "source_location": "L81",
+      "_origin": "ast",
+      "community": 1,
+      "norm_label": ".recordandcheck()",
+      "id": "src_anomalydetector_anomalydetector_recordandcheck"
     },
     {
       "label": "bridge.js",
@@ -559,9 +979,9 @@
       "source_file": "telegram-bridge/bridge.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "telegram_bridge_bridge",
       "community": 5,
-      "norm_label": "bridge.js"
+      "norm_label": "bridge.js",
+      "id": "telegram_bridge_bridge"
     },
     {
       "label": "buildMention()",
@@ -569,9 +989,9 @@
       "source_file": "telegram-bridge/bridge.js",
       "source_location": "L9",
       "_origin": "ast",
-      "id": "telegram_bridge_bridge_buildmention",
       "community": 5,
-      "norm_label": "buildmention()"
+      "norm_label": "buildmention()",
+      "id": "telegram_bridge_bridge_buildmention"
     },
     {
       "label": "shouldSuppressGroupReply()",
@@ -579,9 +999,9 @@
       "source_file": "telegram-bridge/bridge.js",
       "source_location": "L16",
       "_origin": "ast",
-      "id": "telegram_bridge_bridge_shouldsuppressgroupreply",
       "community": 5,
-      "norm_label": "shouldsuppressgroupreply()"
+      "norm_label": "shouldsuppressgroupreply()",
+      "id": "telegram_bridge_bridge_shouldsuppressgroupreply"
     },
     {
       "label": "planIntake()",
@@ -589,9 +1009,9 @@
       "source_file": "telegram-bridge/bridge.js",
       "source_location": "L32",
       "_origin": "ast",
-      "id": "telegram_bridge_bridge_planintake",
       "community": 5,
-      "norm_label": "planintake()"
+      "norm_label": "planintake()",
+      "id": "telegram_bridge_bridge_planintake"
     },
     {
       "label": "handleIntake()",
@@ -599,9 +1019,9 @@
       "source_file": "telegram-bridge/bridge.js",
       "source_location": "L159",
       "_origin": "ast",
-      "id": "telegram_bridge_bridge_handleintake",
       "community": 5,
-      "norm_label": "handleintake()"
+      "norm_label": "handleintake()",
+      "id": "telegram_bridge_bridge_handleintake"
     },
     {
       "label": "postApprovedReplies()",
@@ -609,9 +1029,9 @@
       "source_file": "telegram-bridge/bridge.js",
       "source_location": "L327",
       "_origin": "ast",
-      "id": "telegram_bridge_bridge_postapprovedreplies",
       "community": 5,
-      "norm_label": "postapprovedreplies()"
+      "norm_label": "postapprovedreplies()",
+      "id": "telegram_bridge_bridge_postapprovedreplies"
     },
     {
       "label": "postLiveEdits()",
@@ -619,9 +1039,9 @@
       "source_file": "telegram-bridge/bridge.js",
       "source_location": "L359",
       "_origin": "ast",
-      "id": "telegram_bridge_bridge_postliveedits",
       "community": 5,
-      "norm_label": "postliveedits()"
+      "norm_label": "postliveedits()",
+      "id": "telegram_bridge_bridge_postliveedits"
     },
     {
       "label": "seedNotifiedTimeouts()",
@@ -629,9 +1049,9 @@
       "source_file": "telegram-bridge/bridge.js",
       "source_location": "L391",
       "_origin": "ast",
-      "id": "telegram_bridge_bridge_seednotifiedtimeouts",
       "community": 5,
-      "norm_label": "seednotifiedtimeouts()"
+      "norm_label": "seednotifiedtimeouts()",
+      "id": "telegram_bridge_bridge_seednotifiedtimeouts"
     },
     {
       "label": "notifyTimeouts()",
@@ -639,9 +1059,9 @@
       "source_file": "telegram-bridge/bridge.js",
       "source_location": "L408",
       "_origin": "ast",
-      "id": "telegram_bridge_bridge_notifytimeouts",
       "community": 5,
-      "norm_label": "notifytimeouts()"
+      "norm_label": "notifytimeouts()",
+      "id": "telegram_bridge_bridge_notifytimeouts"
     },
     {
       "label": "anomalyDetector.test.js",
@@ -649,9 +1069,9 @@
       "source_file": "test/anomalyDetector.test.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "test_anomalydetector_test",
       "community": 1,
-      "norm_label": "anomalydetector.test.js"
+      "norm_label": "anomalydetector.test.js",
+      "id": "test_anomalydetector_test"
     },
     {
       "label": "test",
@@ -659,9 +1079,9 @@
       "source_file": "test/anomalyDetector.test.js",
       "source_location": "L3",
       "_origin": "ast",
-      "id": "test_anomalydetector_test_test",
       "community": 1,
-      "norm_label": "test"
+      "norm_label": "test",
+      "id": "test_anomalydetector_test_test"
     },
     {
       "label": "assert",
@@ -669,9 +1089,9 @@
       "source_file": "test/anomalyDetector.test.js",
       "source_location": "L4",
       "_origin": "ast",
-      "id": "test_anomalydetector_test_assert",
       "community": 1,
-      "norm_label": "assert"
+      "norm_label": "assert",
+      "id": "test_anomalydetector_test_assert"
     },
     {
       "label": "{ AnomalyDetector }",
@@ -679,9 +1099,9 @@
       "source_file": "test/anomalyDetector.test.js",
       "source_location": "L5",
       "_origin": "ast",
-      "id": "test_anomalydetector_test_anomalydetector",
       "community": 1,
-      "norm_label": "{ anomalydetector }"
+      "norm_label": "{ anomalydetector }",
+      "id": "test_anomalydetector_test_anomalydetector"
     },
     {
       "label": "bstNoon()",
@@ -689,9 +1109,9 @@
       "source_file": "test/anomalyDetector.test.js",
       "source_location": "L9",
       "_origin": "ast",
-      "id": "test_anomalydetector_test_bstnoon",
       "community": 1,
-      "norm_label": "bstnoon()"
+      "norm_label": "bstnoon()",
+      "id": "test_anomalydetector_test_bstnoon"
     },
     {
       "label": "bstMidnight()",
@@ -699,9 +1119,9 @@
       "source_file": "test/anomalyDetector.test.js",
       "source_location": "L12",
       "_origin": "ast",
-      "id": "test_anomalydetector_test_bstmidnight",
       "community": 1,
-      "norm_label": "bstmidnight()"
+      "norm_label": "bstmidnight()",
+      "id": "test_anomalydetector_test_bstmidnight"
     },
     {
       "label": "behavioralAnomaly.test.js",
@@ -709,9 +1129,9 @@
       "source_file": "test/behavioralAnomaly.test.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "test_behavioralanomaly_test",
-      "community": 75,
-      "norm_label": "behavioralanomaly.test.js"
+      "community": 1,
+      "norm_label": "behavioralanomaly.test.js",
+      "id": "test_behavioralanomaly_test"
     },
     {
       "label": "test",
@@ -719,9 +1139,9 @@
       "source_file": "test/behavioralAnomaly.test.js",
       "source_location": "L10",
       "_origin": "ast",
-      "id": "test_behavioralanomaly_test_test",
-      "community": 75,
-      "norm_label": "test"
+      "community": 1,
+      "norm_label": "test",
+      "id": "test_behavioralanomaly_test_test"
     },
     {
       "label": "assert",
@@ -729,9 +1149,9 @@
       "source_file": "test/behavioralAnomaly.test.js",
       "source_location": "L11",
       "_origin": "ast",
-      "id": "test_behavioralanomaly_test_assert",
-      "community": 75,
-      "norm_label": "assert"
+      "community": 1,
+      "norm_label": "assert",
+      "id": "test_behavioralanomaly_test_assert"
     },
     {
       "label": "{ Readable }",
@@ -739,9 +1159,9 @@
       "source_file": "test/behavioralAnomaly.test.js",
       "source_location": "L12",
       "_origin": "ast",
-      "id": "test_behavioralanomaly_test_readable",
-      "community": 75,
-      "norm_label": "{ readable }"
+      "community": 1,
+      "norm_label": "{ readable }",
+      "id": "test_behavioralanomaly_test_readable"
     },
     {
       "label": "{ createApp }",
@@ -749,9 +1169,9 @@
       "source_file": "test/behavioralAnomaly.test.js",
       "source_location": "L13",
       "_origin": "ast",
-      "id": "test_behavioralanomaly_test_createapp",
-      "community": 75,
-      "norm_label": "{ createapp }"
+      "community": 1,
+      "norm_label": "{ createapp }",
+      "id": "test_behavioralanomaly_test_createapp"
     },
     {
       "label": "{ AnomalyDetector }",
@@ -759,9 +1179,9 @@
       "source_file": "test/behavioralAnomaly.test.js",
       "source_location": "L14",
       "_origin": "ast",
-      "id": "test_behavioralanomaly_test_anomalydetector",
-      "community": 75,
-      "norm_label": "{ anomalydetector }"
+      "community": 1,
+      "norm_label": "{ anomalydetector }",
+      "id": "test_behavioralanomaly_test_anomalydetector"
     },
     {
       "label": "mockReq()",
@@ -769,9 +1189,9 @@
       "source_file": "test/behavioralAnomaly.test.js",
       "source_location": "L16",
       "_origin": "ast",
-      "id": "test_behavioralanomaly_test_mockreq",
-      "community": 75,
-      "norm_label": "mockreq()"
+      "community": 1,
+      "norm_label": "mockreq()",
+      "id": "test_behavioralanomaly_test_mockreq"
     },
     {
       "label": "mockRes()",
@@ -779,9 +1199,9 @@
       "source_file": "test/behavioralAnomaly.test.js",
       "source_location": "L26",
       "_origin": "ast",
-      "id": "test_behavioralanomaly_test_mockres",
-      "community": 75,
-      "norm_label": "mockres()"
+      "community": 1,
+      "norm_label": "mockres()",
+      "id": "test_behavioralanomaly_test_mockres"
     },
     {
       "label": "call()",
@@ -789,9 +1209,9 @@
       "source_file": "test/behavioralAnomaly.test.js",
       "source_location": "L44",
       "_origin": "ast",
-      "id": "test_behavioralanomaly_test_call",
-      "community": 75,
-      "norm_label": "call()"
+      "community": 1,
+      "norm_label": "call()",
+      "id": "test_behavioralanomaly_test_call"
     },
     {
       "label": "appWith()",
@@ -799,9 +1219,9 @@
       "source_file": "test/behavioralAnomaly.test.js",
       "source_location": "L56",
       "_origin": "ast",
-      "id": "test_behavioralanomaly_test_appwith",
-      "community": 75,
-      "norm_label": "appwith()"
+      "community": 1,
+      "norm_label": "appwith()",
+      "id": "test_behavioralanomaly_test_appwith"
     },
     {
       "label": "createLinkedOfficer()",
@@ -809,9 +1229,9 @@
       "source_file": "test/behavioralAnomaly.test.js",
       "source_location": "L68",
       "_origin": "ast",
-      "id": "test_behavioralanomaly_test_createlinkedofficer",
-      "community": 75,
-      "norm_label": "createlinkedofficer()"
+      "community": 1,
+      "norm_label": "createlinkedofficer()",
+      "id": "test_behavioralanomaly_test_createlinkedofficer"
     },
     {
       "label": "personnelRegistryEndpoint.test.js",
@@ -922,426 +1342,6 @@
       "community": 70,
       "norm_label": "createsession()",
       "id": "test_personnelregistryendpoint_test_createsession"
-    },
-    {
-      "label": "security.test.js",
-      "file_type": "code",
-      "source_file": "test/security.test.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 32,
-      "norm_label": "security.test.js",
-      "id": "test_security_test"
-    },
-    {
-      "label": "test",
-      "file_type": "code",
-      "source_file": "test/security.test.js",
-      "source_location": "L3",
-      "_origin": "ast",
-      "community": 32,
-      "norm_label": "test",
-      "id": "test_security_test_test"
-    },
-    {
-      "label": "assert",
-      "file_type": "code",
-      "source_file": "test/security.test.js",
-      "source_location": "L4",
-      "_origin": "ast",
-      "community": 32,
-      "norm_label": "assert",
-      "id": "test_security_test_assert"
-    },
-    {
-      "label": "{ Readable }",
-      "file_type": "code",
-      "source_file": "test/security.test.js",
-      "source_location": "L5",
-      "_origin": "ast",
-      "community": 32,
-      "norm_label": "{ readable }",
-      "id": "test_security_test_readable"
-    },
-    {
-      "label": "{ createApp }",
-      "file_type": "code",
-      "source_file": "test/security.test.js",
-      "source_location": "L6",
-      "_origin": "ast",
-      "community": 32,
-      "norm_label": "{ createapp }",
-      "id": "test_security_test_createapp"
-    },
-    {
-      "label": "{ AutomationStore }",
-      "file_type": "code",
-      "source_file": "test/security.test.js",
-      "source_location": "L7",
-      "_origin": "ast",
-      "community": 32,
-      "norm_label": "{ automationstore }",
-      "id": "test_security_test_automationstore"
-    },
-    {
-      "label": "mockReq()",
-      "file_type": "code",
-      "source_file": "test/security.test.js",
-      "source_location": "L9",
-      "_origin": "ast",
-      "community": 32,
-      "norm_label": "mockreq()",
-      "id": "test_security_test_mockreq"
-    },
-    {
-      "label": "mockRes()",
-      "file_type": "code",
-      "source_file": "test/security.test.js",
-      "source_location": "L18",
-      "_origin": "ast",
-      "community": 32,
-      "norm_label": "mockres()",
-      "id": "test_security_test_mockres"
-    },
-    {
-      "label": "call()",
-      "file_type": "code",
-      "source_file": "test/security.test.js",
-      "source_location": "L36",
-      "_origin": "ast",
-      "community": 32,
-      "norm_label": "call()",
-      "id": "test_security_test_call"
-    },
-    {
-      "label": "appWith()",
-      "file_type": "code",
-      "source_file": "test/security.test.js",
-      "source_location": "L48",
-      "_origin": "ast",
-      "community": 32,
-      "norm_label": "appwith()",
-      "id": "test_security_test_appwith"
-    },
-    {
-      "label": "createAdminSession()",
-      "file_type": "code",
-      "source_file": "test/security.test.js",
-      "source_location": "L64",
-      "_origin": "ast",
-      "community": 32,
-      "norm_label": "createadminsession()",
-      "id": "test_security_test_createadminsession"
-    },
-    {
-      "label": "withTempSettingsConfig()",
-      "file_type": "code",
-      "source_file": "test/security.test.js",
-      "source_location": "L378",
-      "_origin": "ast",
-      "community": 32,
-      "norm_label": "withtempsettingsconfig()",
-      "id": "test_security_test_withtempsettingsconfig"
-    },
-    {
-      "label": "service.js",
-      "file_type": "code",
-      "source_file": "src/service.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "community": 13,
-      "norm_label": "service.js",
-      "id": "src_service"
-    },
-    {
-      "label": "{ OPERATORS, STATUSES, DISPATCH_STATUSES, TERMINAL_DISPATCH_STATUSES }",
-      "file_type": "code",
-      "source_file": "src/service.js",
-      "source_location": "L3",
-      "_origin": "ast",
-      "community": 13,
-      "norm_label": "{ operators, statuses, dispatch_statuses, terminal_dispatch_statuses }",
-      "id": "src_service_operators_statuses_dispatch_statuses_terminal_dispatch_statuses"
-    },
-    {
-      "label": "{ parseRequestText }",
-      "file_type": "code",
-      "source_file": "src/service.js",
-      "source_location": "L4",
-      "_origin": "ast",
-      "community": 13,
-      "norm_label": "{ parserequesttext }",
-      "id": "src_service_parserequesttext"
-    },
-    {
-      "label": "{ analyzeOperatorReply, inferReplyFamilies, replyContradictsPayload }",
-      "file_type": "code",
-      "source_file": "src/service.js",
-      "source_location": "L5",
-      "_origin": "ast",
-      "community": 13,
-      "norm_label": "{ analyzeoperatorreply, inferreplyfamilies, replycontradictspayload }",
-      "id": "src_service_analyzeoperatorreply_inferreplyfamilies_replycontradictspayload"
-    },
-    {
-      "label": "AutomationService",
-      "file_type": "code",
-      "source_file": "src/service.js",
-      "source_location": "L16",
-      "_origin": "ast",
-      "community": 13,
-      "norm_label": "automationservice",
-      "id": "src_service_automationservice"
-    },
-    {
-      "label": ".constructor()",
-      "file_type": "code",
-      "source_file": "src/service.js",
-      "source_location": "L17",
-      "_origin": "ast",
-      "community": 13,
-      "norm_label": ".constructor()",
-      "id": "src_service_automationservice_constructor"
-    },
-    {
-      "label": ".submitRequest()",
-      "file_type": "code",
-      "source_file": "src/service.js",
-      "source_location": "L46",
-      "_origin": "ast",
-      "community": 13,
-      "norm_label": ".submitrequest()",
-      "id": "src_service_automationservice_submitrequest"
-    },
-    {
-      "label": ".receiveSmsWebhook()",
-      "file_type": "code",
-      "source_file": "src/service.js",
-      "source_location": "L175",
-      "_origin": "ast",
-      "community": 13,
-      "norm_label": ".receivesmswebhook()",
-      "id": "src_service_automationservice_receivesmswebhook"
-    },
-    {
-      "label": "._finalizeIfTerminal()",
-      "file_type": "code",
-      "source_file": "src/service.js",
-      "source_location": "L521",
-      "_origin": "ast",
-      "community": 13,
-      "norm_label": "._finalizeifterminal()",
-      "id": "src_service_automationservice_finalizeifterminal"
-    },
-    {
-      "label": ".approveReply()",
-      "file_type": "code",
-      "source_file": "src/service.js",
-      "source_location": "L589",
-      "_origin": "ast",
-      "community": 13,
-      "norm_label": ".approvereply()",
-      "id": "src_service_automationservice_approvereply"
-    },
-    {
-      "label": ".markReplyPosted()",
-      "file_type": "code",
-      "source_file": "src/service.js",
-      "source_location": "L626",
-      "_origin": "ast",
-      "community": 13,
-      "norm_label": ".markreplyposted()",
-      "id": "src_service_automationservice_markreplyposted"
-    },
-    {
-      "label": ".markReplyEdited()",
-      "file_type": "code",
-      "source_file": "src/service.js",
-      "source_location": "L663",
-      "_origin": "ast",
-      "community": 13,
-      "norm_label": ".markreplyedited()",
-      "id": "src_service_automationservice_markreplyedited"
-    },
-    {
-      "label": "._getActiveDraftForRequest()",
-      "file_type": "code",
-      "source_file": "src/service.js",
-      "source_location": "L690",
-      "_origin": "ast",
-      "community": 13,
-      "norm_label": "._getactivedraftforrequest()",
-      "id": "src_service_automationservice_getactivedraftforrequest"
-    },
-    {
-      "label": "._getLiveReplyForRequest()",
-      "file_type": "code",
-      "source_file": "src/service.js",
-      "source_location": "L697",
-      "_origin": "ast",
-      "community": 13,
-      "norm_label": "._getlivereplyforrequest()",
-      "id": "src_service_automationservice_getlivereplyforrequest"
-    },
-    {
-      "label": ".rejectRequest()",
-      "file_type": "code",
-      "source_file": "src/service.js",
-      "source_location": "L704",
-      "_origin": "ast",
-      "community": 13,
-      "norm_label": ".rejectrequest()",
-      "id": "src_service_automationservice_rejectrequest"
-    },
-    {
-      "label": ".retryRequest()",
-      "file_type": "code",
-      "source_file": "src/service.js",
-      "source_location": "L716",
-      "_origin": "ast",
-      "community": 13,
-      "norm_label": ".retryrequest()",
-      "id": "src_service_automationservice_retryrequest"
-    },
-    {
-      "label": ".rankReplyCandidates()",
-      "file_type": "code",
-      "source_file": "src/service.js",
-      "source_location": "L751",
-      "_origin": "ast",
-      "community": 13,
-      "norm_label": ".rankreplycandidates()",
-      "id": "src_service_automationservice_rankreplycandidates"
-    },
-    {
-      "label": ".correctMatch()",
-      "file_type": "code",
-      "source_file": "src/service.js",
-      "source_location": "L795",
-      "_origin": "ast",
-      "community": 13,
-      "norm_label": ".correctmatch()",
-      "id": "src_service_automationservice_correctmatch"
-    },
-    {
-      "label": ".manualMatch()",
-      "file_type": "code",
-      "source_file": "src/service.js",
-      "source_location": "L854",
-      "_origin": "ast",
-      "community": 13,
-      "norm_label": ".manualmatch()",
-      "id": "src_service_automationservice_manualmatch"
-    },
-    {
-      "label": ".timeoutWaitingRequests()",
-      "file_type": "code",
-      "source_file": "src/service.js",
-      "source_location": "L893",
-      "_origin": "ast",
-      "community": 13,
-      "norm_label": ".timeoutwaitingrequests()",
-      "id": "src_service_automationservice_timeoutwaitingrequests"
-    },
-    {
-      "label": ".dispatchSentAt()",
-      "file_type": "code",
-      "source_file": "src/service.js",
-      "source_location": "L929",
-      "_origin": "ast",
-      "community": 13,
-      "norm_label": ".dispatchsentat()",
-      "id": "src_service_automationservice_dispatchsentat"
-    },
-    {
-      "label": ".dispatchTimeoutState()",
-      "file_type": "code",
-      "source_file": "src/service.js",
-      "source_location": "L936",
-      "_origin": "ast",
-      "community": 13,
-      "norm_label": ".dispatchtimeoutstate()",
-      "id": "src_service_automationservice_dispatchtimeoutstate"
-    },
-    {
-      "label": ".getDispatchOutbox()",
-      "file_type": "code",
-      "source_file": "src/service.js",
-      "source_location": "L963",
-      "_origin": "ast",
-      "community": 13,
-      "norm_label": ".getdispatchoutbox()",
-      "id": "src_service_automationservice_getdispatchoutbox"
-    },
-    {
-      "label": "._recordManualReviewCandidate()",
-      "file_type": "code",
-      "source_file": "src/service.js",
-      "source_location": "L967",
-      "_origin": "ast",
-      "community": 13,
-      "norm_label": "._recordmanualreviewcandidate()",
-      "id": "src_service_automationservice_recordmanualreviewcandidate"
-    },
-    {
-      "label": "formatCombinedReply()",
-      "file_type": "code",
-      "source_file": "src/service.js",
-      "source_location": "L982",
-      "_origin": "ast",
-      "community": 13,
-      "norm_label": "formatcombinedreply()",
-      "id": "src_service_formatcombinedreply"
-    },
-    {
-      "label": "collectDispatchReplyMessages()",
-      "file_type": "code",
-      "source_file": "src/service.js",
-      "source_location": "L1016",
-      "_origin": "ast",
-      "community": 13,
-      "norm_label": "collectdispatchreplymessages()",
-      "id": "src_service_collectdispatchreplymessages"
-    },
-    {
-      "label": "CONFIDENCE_RANKS",
-      "file_type": "code",
-      "source_file": "src/service.js",
-      "source_location": "L1032",
-      "_origin": "ast",
-      "community": 13,
-      "norm_label": "confidence_ranks",
-      "id": "src_service_confidence_ranks"
-    },
-    {
-      "label": "confidenceRank()",
-      "file_type": "code",
-      "source_file": "src/service.js",
-      "source_location": "L1033",
-      "_origin": "ast",
-      "community": 13,
-      "norm_label": "confidencerank()",
-      "id": "src_service_confidencerank"
-    },
-    {
-      "label": "requestStatusRank()",
-      "file_type": "code",
-      "source_file": "src/service.js",
-      "source_location": "L1037",
-      "_origin": "ast",
-      "community": 13,
-      "norm_label": "requeststatusrank()",
-      "id": "src_service_requeststatusrank"
-    },
-    {
-      "label": "replyTypeScore()",
-      "file_type": "code",
-      "source_file": "src/service.js",
-      "source_location": "L1044",
-      "_origin": "ast",
-      "community": 13,
-      "norm_label": "replytypescore()",
-      "id": "src_service_replytypescore"
     },
     {
       "label": "backendClient.js",
@@ -2119,7 +2119,7 @@
       "source_file": "test/quotaOtpMiddleware.test.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 48,
+      "community": 81,
       "norm_label": "quotaotpmiddleware.test.js",
       "id": "test_quotaotpmiddleware_test"
     },
@@ -2129,7 +2129,7 @@
       "source_file": "test/quotaOtpMiddleware.test.js",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 48,
+      "community": 81,
       "norm_label": "test",
       "id": "test_quotaotpmiddleware_test_test"
     },
@@ -2139,7 +2139,7 @@
       "source_file": "test/quotaOtpMiddleware.test.js",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 48,
+      "community": 81,
       "norm_label": "assert",
       "id": "test_quotaotpmiddleware_test_assert"
     },
@@ -2149,7 +2149,7 @@
       "source_file": "test/quotaOtpMiddleware.test.js",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 48,
+      "community": 81,
       "norm_label": "{ readable }",
       "id": "test_quotaotpmiddleware_test_readable"
     },
@@ -2159,7 +2159,7 @@
       "source_file": "test/quotaOtpMiddleware.test.js",
       "source_location": "L13",
       "_origin": "ast",
-      "community": 48,
+      "community": 81,
       "norm_label": "{ createapp }",
       "id": "test_quotaotpmiddleware_test_createapp"
     },
@@ -2169,7 +2169,7 @@
       "source_file": "test/quotaOtpMiddleware.test.js",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 48,
+      "community": 81,
       "norm_label": "{ quotatracker }",
       "id": "test_quotaotpmiddleware_test_quotatracker"
     },
@@ -2179,7 +2179,7 @@
       "source_file": "test/quotaOtpMiddleware.test.js",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 48,
+      "community": 81,
       "norm_label": "{ otpstore }",
       "id": "test_quotaotpmiddleware_test_otpstore"
     },
@@ -2189,7 +2189,7 @@
       "source_file": "test/quotaOtpMiddleware.test.js",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 48,
+      "community": 81,
       "norm_label": "mockreq()",
       "id": "test_quotaotpmiddleware_test_mockreq"
     },
@@ -2199,7 +2199,7 @@
       "source_file": "test/quotaOtpMiddleware.test.js",
       "source_location": "L27",
       "_origin": "ast",
-      "community": 48,
+      "community": 81,
       "norm_label": "mockres()",
       "id": "test_quotaotpmiddleware_test_mockres"
     },
@@ -2209,7 +2209,7 @@
       "source_file": "test/quotaOtpMiddleware.test.js",
       "source_location": "L45",
       "_origin": "ast",
-      "community": 48,
+      "community": 81,
       "norm_label": "call()",
       "id": "test_quotaotpmiddleware_test_call"
     },
@@ -2219,7 +2219,7 @@
       "source_file": "test/quotaOtpMiddleware.test.js",
       "source_location": "L57",
       "_origin": "ast",
-      "community": 72,
+      "community": 81,
       "norm_label": "appwith()",
       "id": "test_quotaotpmiddleware_test_appwith"
     },
@@ -2229,7 +2229,7 @@
       "source_file": "test/quotaOtpMiddleware.test.js",
       "source_location": "L70",
       "_origin": "ast",
-      "community": 48,
+      "community": 81,
       "norm_label": "createlinkedofficer()",
       "id": "test_quotaotpmiddleware_test_createlinkedofficer"
     },
@@ -2239,7 +2239,7 @@
       "source_file": "test/quotaOtpMiddleware.test.js",
       "source_location": "L76",
       "_origin": "ast",
-      "community": 48,
+      "community": 81,
       "norm_label": "submitas()",
       "id": "test_quotaotpmiddleware_test_submitas"
     },
@@ -2689,7 +2689,7 @@
       "source_file": "test/registrationApproval.test.js",
       "source_location": "L51",
       "_origin": "ast",
-      "community": 71,
+      "community": 72,
       "norm_label": "appwith()",
       "id": "test_registrationapproval_test_appwith"
     },
@@ -10285,7 +10285,7 @@
       "source_file": "scripts/importTrainingData.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 7,
+      "community": 85,
       "norm_label": "importtrainingdata.js",
       "id": "scripts_importtrainingdata"
     },
@@ -10295,7 +10295,7 @@
       "source_file": "scripts/importTrainingData.js",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 7,
+      "community": 85,
       "norm_label": "{ join }",
       "id": "scripts_importtrainingdata_join"
     },
@@ -10305,7 +10305,7 @@
       "source_file": "scripts/importTrainingData.js",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 7,
+      "community": 85,
       "norm_label": "{ rebuildtrainingcache }",
       "id": "scripts_importtrainingdata_rebuildtrainingcache"
     },
@@ -10315,7 +10315,7 @@
       "source_file": "scripts/importTrainingData.js",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 7,
+      "community": 85,
       "norm_label": "main()",
       "id": "scripts_importtrainingdata_main"
     },
@@ -10641,7 +10641,7 @@
       "source_file": "src/domain.js",
       "source_location": "L27",
       "_origin": "ast",
-      "community": 7,
+      "community": 75,
       "norm_label": "request_types",
       "id": "src_domain_request_types"
     },
@@ -11441,7 +11441,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 7,
+      "community": 75,
       "norm_label": "replyanalyzer.js",
       "id": "src_replyanalyzer"
     },
@@ -11451,7 +11451,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 7,
+      "community": 75,
       "norm_label": "{ request_types }",
       "id": "src_replyanalyzer_request_types"
     },
@@ -11461,7 +11461,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 7,
+      "community": 75,
       "norm_label": "{ extractsilentreference }",
       "id": "src_replyanalyzer_extractsilentreference"
     },
@@ -11471,7 +11471,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 7,
+      "community": 75,
       "norm_label": "{ matchreplyagainsttraining, scorereplyfamiliesfromtraining }",
       "id": "src_replyanalyzer_matchreplyagainsttraining_scorereplyfamiliesfromtraining"
     },
@@ -11481,7 +11481,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 7,
+      "community": 75,
       "norm_label": "reply_patterns",
       "id": "src_replyanalyzer_reply_patterns"
     },
@@ -11491,7 +11491,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 7,
+      "community": 75,
       "norm_label": "strong_reply_family_patterns",
       "id": "src_replyanalyzer_strong_reply_family_patterns"
     },
@@ -11501,7 +11501,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L62",
       "_origin": "ast",
-      "community": 7,
+      "community": 75,
       "norm_label": "analyzeoperatorreply()",
       "id": "src_replyanalyzer_analyzeoperatorreply"
     },
@@ -11511,7 +11511,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L92",
       "_origin": "ast",
-      "community": 7,
+      "community": 75,
       "norm_label": "inferreplyfamilies()",
       "id": "src_replyanalyzer_inferreplyfamilies"
     },
@@ -11521,7 +11521,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L115",
       "_origin": "ast",
-      "community": 7,
+      "community": 75,
       "norm_label": "payloadinreply()",
       "id": "src_replyanalyzer_payloadinreply"
     },
@@ -11531,7 +11531,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L142",
       "_origin": "ast",
-      "community": 7,
+      "community": 75,
       "norm_label": "reply_identifier_extractors",
       "id": "src_replyanalyzer_reply_identifier_extractors"
     },
@@ -11541,7 +11541,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L149",
       "_origin": "ast",
-      "community": 7,
+      "community": 75,
       "norm_label": "stripmsisdnprefix()",
       "id": "src_replyanalyzer_stripmsisdnprefix"
     },
@@ -11551,7 +11551,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L158",
       "_origin": "ast",
-      "community": 7,
+      "community": 75,
       "norm_label": "replycontradictspayload()",
       "id": "src_replyanalyzer_replycontradictspayload"
     },
@@ -11561,7 +11561,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L178",
       "_origin": "ast",
-      "community": 7,
+      "community": 75,
       "norm_label": "matchtrainingpattern()",
       "id": "src_replyanalyzer_matchtrainingpattern"
     },
@@ -11571,7 +11571,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L186",
       "_origin": "ast",
-      "community": 7,
+      "community": 75,
       "norm_label": "confidencescore()",
       "id": "src_replyanalyzer_confidencescore"
     },
@@ -12411,7 +12411,7 @@
       "source_file": "src/trainingData.js",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 7,
+      "community": 32,
       "norm_label": "loadtrainingcatalog()",
       "id": "src_trainingdata_loadtrainingcatalog"
     },
@@ -12431,7 +12431,7 @@
       "source_file": "src/trainingData.js",
       "source_location": "L62",
       "_origin": "ast",
-      "community": 7,
+      "community": 32,
       "norm_label": "matchreplyagainsttraining()",
       "id": "src_trainingdata_matchreplyagainsttraining"
     },
@@ -12441,7 +12441,7 @@
       "source_file": "src/trainingData.js",
       "source_location": "L105",
       "_origin": "ast",
-      "community": 7,
+      "community": 32,
       "norm_label": "scorereplyfamiliesfromtraining()",
       "id": "src_trainingdata_scorereplyfamiliesfromtraining"
     },
@@ -12521,7 +12521,7 @@
       "source_file": "src/trainingData.js",
       "source_location": "L237",
       "_origin": "ast",
-      "community": 7,
+      "community": 32,
       "norm_label": "scoreexampleoverlap()",
       "id": "src_trainingdata_scoreexampleoverlap"
     },
@@ -12531,7 +12531,7 @@
       "source_file": "src/trainingData.js",
       "source_location": "L248",
       "_origin": "ast",
-      "community": 7,
+      "community": 32,
       "norm_label": "tokenizetrainingtext()",
       "id": "src_trainingdata_tokenizetrainingtext"
     },
@@ -12541,7 +12541,7 @@
       "source_file": "src/trainingData.js",
       "source_location": "L253",
       "_origin": "ast",
-      "community": 7,
+      "community": 32,
       "norm_label": "isvolatiletoken()",
       "id": "src_trainingdata_isvolatiletoken"
     },
@@ -12651,7 +12651,7 @@
       "source_file": "src/trainingData.js",
       "source_location": "L383",
       "_origin": "ast",
-      "community": 7,
+      "community": 32,
       "norm_label": "emptymatch()",
       "id": "src_trainingdata_emptymatch"
     },
@@ -13181,7 +13181,7 @@
       "source_file": "test/trainingData.test.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 7,
+      "community": 32,
       "norm_label": "trainingdata.test.js",
       "id": "test_trainingdata_test"
     },
@@ -13191,7 +13191,7 @@
       "source_file": "test/trainingData.test.js",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 7,
+      "community": 32,
       "norm_label": "test",
       "id": "test_trainingdata_test_test"
     },
@@ -13201,7 +13201,7 @@
       "source_file": "test/trainingData.test.js",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 7,
+      "community": 32,
       "norm_label": "assert",
       "id": "test_trainingdata_test_assert"
     },
@@ -13211,7 +13211,7 @@
       "source_file": "test/trainingData.test.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 7,
+      "community": 32,
       "norm_label": "{ existssync, mkdtempsync, mkdirsync, readfilesync, rmsync }",
       "id": "test_trainingdata_test_existssync_mkdtempsync_mkdirsync_readfilesync_rmsync"
     },
@@ -13221,7 +13221,7 @@
       "source_file": "test/trainingData.test.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 7,
+      "community": 32,
       "norm_label": "{ join }",
       "id": "test_trainingdata_test_join"
     },
@@ -13231,7 +13231,7 @@
       "source_file": "test/trainingData.test.js",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 7,
+      "community": 32,
       "norm_label": "{ tmpdir }",
       "id": "test_trainingdata_test_tmpdir"
     },
@@ -13241,7 +13241,7 @@
       "source_file": "test/trainingData.test.js",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 7,
+      "community": 32,
       "norm_label": "xlsx",
       "id": "test_trainingdata_test_xlsx"
     },
@@ -13251,7 +13251,7 @@
       "source_file": "test/trainingData.test.js",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 7,
+      "community": 32,
       "norm_label": "{\r\n  loadtrainingcatalog,\r\n  rebuildtrainingcache,\r\n  matchreplyagainsttraining,\r\n  scorereplyfamiliesfromtraining\r\n}",
       "id": "test_trainingdata_test_loadtrainingcatalog_rebuildtrainingcache_matchreplyagainsttraining_scorereplyfamiliesfromtraining"
     },
@@ -13261,7 +13261,7 @@
       "source_file": "test/trainingData.test.js",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 7,
+      "community": 32,
       "norm_label": "writeworkbook()",
       "id": "test_trainingdata_test_writeworkbook"
     },
@@ -13271,7 +13271,7 @@
       "source_file": "test/trainingData.test.js",
       "source_location": "L26",
       "_origin": "ast",
-      "community": 7,
+      "community": 32,
       "norm_label": "writeworkbookwithleadingrow()",
       "id": "test_trainingdata_test_writeworkbookwithleadingrow"
     },
@@ -14171,7 +14171,7 @@
       "source_file": "architecture.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 39,
+      "community": 83,
       "norm_label": "architecture.md",
       "id": "architecture"
     },
@@ -14211,7 +14211,7 @@
       "source_file": "architecture.md",
       "source_location": "L37",
       "_origin": "ast",
-      "community": 271,
+      "community": 84,
       "norm_label": "3. components",
       "id": "architecture_3_components"
     },
@@ -14221,7 +14221,7 @@
       "source_file": "architecture.md",
       "source_location": "L39",
       "_origin": "ast",
-      "community": 271,
+      "community": 84,
       "norm_label": "3.1 backend (`src/`)",
       "id": "architecture_3_1_backend_src"
     },
@@ -14231,7 +14231,7 @@
       "source_file": "architecture.md",
       "source_location": "L55",
       "_origin": "ast",
-      "community": 271,
+      "community": 84,
       "norm_label": "3.2 android gateway (`android-gateway/`)",
       "id": "architecture_3_2_android_gateway_android_gateway"
     },
@@ -14241,7 +14241,7 @@
       "source_file": "architecture.md",
       "source_location": "L69",
       "_origin": "ast",
-      "community": 271,
+      "community": 84,
       "norm_label": "3.3 dashboard (`public/`)",
       "id": "architecture_3_3_dashboard_public"
     },
@@ -14261,7 +14261,7 @@
       "source_file": "architecture.md",
       "source_location": "L80",
       "_origin": "ast",
-      "community": 271,
+      "community": 86,
       "norm_label": "5. data model",
       "id": "architecture_5_data_model"
     },
@@ -14271,7 +14271,7 @@
       "source_file": "architecture.md",
       "source_location": "L82",
       "_origin": "ast",
-      "community": 271,
+      "community": 86,
       "norm_label": "current implementation",
       "id": "architecture_current_implementation"
     },
@@ -14281,7 +14281,7 @@
       "source_file": "architecture.md",
       "source_location": "L95",
       "_origin": "ast",
-      "community": 271,
+      "community": 86,
       "norm_label": "per-operator dispatches (implemented, phase 1)",
       "id": "architecture_per_operator_dispatches_implemented_phase_1"
     },
@@ -15761,7 +15761,7 @@
       "source_file": "docs/gd-lost-phone-watch-design.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 39,
+      "community": 83,
       "norm_label": "gd-lost-phone-watch-design.md",
       "id": "docs_gd_lost_phone_watch_design"
     },
@@ -15981,7 +15981,7 @@
       "source_file": "docs/security-hardening-v1-design.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 39,
+      "community": 83,
       "norm_label": "security-hardening-v1-design.md",
       "id": "docs_security_hardening_v1_design"
     },
@@ -16481,7 +16481,7 @@
       "source_file": "docs/telegram-bridge.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 510,
+      "community": 39,
       "norm_label": "telegram-bridge.md",
       "id": "docs_telegram_bridge"
     },
@@ -16641,7 +16641,7 @@
       "source_file": "docs/training-and-matching-rules.md",
       "source_location": "L71",
       "_origin": "ast",
-      "community": 371,
+      "community": 82,
       "norm_label": "reply shape rules",
       "id": "docs_training_and_matching_rules_reply_shape_rules"
     },
@@ -16651,7 +16651,7 @@
       "source_file": "docs/training-and-matching-rules.md",
       "source_location": "L73",
       "_origin": "ast",
-      "community": 371,
+      "community": 82,
       "norm_label": "lrl",
       "id": "docs_training_and_matching_rules_lrl"
     },
@@ -16661,7 +16661,7 @@
       "source_file": "docs/training-and-matching-rules.md",
       "source_location": "L90",
       "_origin": "ast",
-      "community": 371,
+      "community": 82,
       "norm_label": "lcl",
       "id": "docs_training_and_matching_rules_lcl"
     },
@@ -16671,7 +16671,7 @@
       "source_file": "docs/training-and-matching-rules.md",
       "source_location": "L112",
       "_origin": "ast",
-      "community": 371,
+      "community": 82,
       "norm_label": "ms-nid",
       "id": "docs_training_and_matching_rules_ms_nid"
     },
@@ -16681,7 +16681,7 @@
       "source_file": "docs/training-and-matching-rules.md",
       "source_location": "L129",
       "_origin": "ast",
-      "community": 371,
+      "community": 82,
       "norm_label": "nid-ms",
       "id": "docs_training_and_matching_rules_nid_ms"
     },
@@ -16691,7 +16691,7 @@
       "source_file": "docs/training-and-matching-rules.md",
       "source_location": "L144",
       "_origin": "ast",
-      "community": 371,
+      "community": 82,
       "norm_label": "imei-ms",
       "id": "docs_training_and_matching_rules_imei_ms"
     },
@@ -17031,7 +17031,7 @@
       "source_file": "progress_tracker.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 39,
+      "community": 83,
       "norm_label": "progress_tracker.md",
       "id": "progress_tracker"
     },
@@ -17401,7 +17401,7 @@
       "source_file": "todo.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 39,
+      "community": 83,
       "norm_label": "todo.md",
       "id": "todo"
     },
@@ -18301,7 +18301,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "docs/security-hardening-v1-STATUS.md",
-      "source_location": "L515",
+      "source_location": "L615",
       "weight": 1.0,
       "source": "docs_security_hardening_v1_status_security_hardening_v1_implementation_status_branch_local",
       "target": "docs_security_hardening_v1_status_open_questions_notes_found_while_implementing",
@@ -18318,166 +18318,6 @@
       "confidence_score": 1.0
     },
     {
-      "relation": "indirect_call",
-      "confidence": "INFERRED",
-      "source_file": "src/anomalyDetector.js",
-      "source_location": "L132",
-      "weight": 1.0,
-      "context": "collection",
-      "source": "src_anomalydetector",
-      "target": "src_anomalydetector_anomalydetector",
-      "confidence_score": 0.5
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/app.js",
-      "source_location": "L26",
-      "weight": 1.0,
-      "source": "src_app",
-      "target": "src_anomalydetector",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "test/anomalyDetector.test.js",
-      "source_location": "L5",
-      "weight": 1.0,
-      "source": "test_anomalydetector_test",
-      "target": "src_anomalydetector",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "test/behavioralAnomaly.test.js",
-      "source_location": "L14",
-      "weight": 1.0,
-      "source": "test_behavioralanomaly_test",
-      "target": "src_anomalydetector",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "src/anomalyDetector.js",
-      "source_location": "L27",
-      "weight": 1.0,
-      "source": "src_anomalydetector_anomalydetector",
-      "target": "src_anomalydetector_anomalydetector_constructor",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "src/anomalyDetector.js",
-      "source_location": "L48",
-      "weight": 1.0,
-      "source": "src_anomalydetector_anomalydetector",
-      "target": "src_anomalydetector_anomalydetector_getorcreateprofile",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "src/anomalyDetector.js",
-      "source_location": "L67",
-      "weight": 1.0,
-      "source": "src_anomalydetector_anomalydetector",
-      "target": "src_anomalydetector_anomalydetector_isoffhours",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "src/anomalyDetector.js",
-      "source_location": "L63",
-      "weight": 1.0,
-      "source": "src_anomalydetector_anomalydetector",
-      "target": "src_anomalydetector_anomalydetector_localhour",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "src/anomalyDetector.js",
-      "source_location": "L81",
-      "weight": 1.0,
-      "source": "src_anomalydetector_anomalydetector",
-      "target": "src_anomalydetector_anomalydetector_recordandcheck",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/app.js",
-      "source_location": "L26",
-      "weight": 1.0,
-      "source": "src_app",
-      "target": "src_anomalydetector_anomalydetector",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "test/anomalyDetector.test.js",
-      "source_location": "L5",
-      "weight": 1.0,
-      "source": "test_anomalydetector_test",
-      "target": "src_anomalydetector_anomalydetector",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "test/behavioralAnomaly.test.js",
-      "source_location": "L14",
-      "weight": 1.0,
-      "source": "test_behavioralanomaly_test",
-      "target": "src_anomalydetector_anomalydetector",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/anomalyDetector.js",
-      "source_location": "L83",
-      "weight": 1.0,
-      "source": "src_anomalydetector_anomalydetector_recordandcheck",
-      "target": "src_anomalydetector_anomalydetector_getorcreateprofile",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/anomalyDetector.js",
-      "source_location": "L68",
-      "weight": 1.0,
-      "source": "src_anomalydetector_anomalydetector_isoffhours",
-      "target": "src_anomalydetector_anomalydetector_localhour",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/anomalyDetector.js",
-      "source_location": "L86",
-      "weight": 1.0,
-      "source": "src_anomalydetector_anomalydetector_recordandcheck",
-      "target": "src_anomalydetector_anomalydetector_isoffhours",
-      "confidence_score": 1.0
-    },
-    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
@@ -18491,7 +18331,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L1495",
+      "source_location": "L1501",
       "weight": 1.0,
       "source": "src_app",
       "target": "src_app_audittocsv",
@@ -18551,7 +18391,7 @@
       "relation": "indirect_call",
       "confidence": "INFERRED",
       "source_file": "src/app.js",
-      "source_location": "L1558",
+      "source_location": "L1564",
       "weight": 1.0,
       "context": "collection",
       "source": "src_app",
@@ -18562,7 +18402,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L1486",
+      "source_location": "L1492",
       "weight": 1.0,
       "source": "src_app",
       "target": "src_app_csv",
@@ -18612,7 +18452,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L1451",
+      "source_location": "L1457",
       "weight": 1.0,
       "source": "src_app",
       "target": "src_app_isvalidgatewayheader",
@@ -18632,7 +18472,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L1481",
+      "source_location": "L1487",
       "weight": 1.0,
       "source": "src_app",
       "target": "src_app_json",
@@ -18732,7 +18572,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L1541",
+      "source_location": "L1547",
       "weight": 1.0,
       "source": "src_app",
       "target": "src_app_readbuffer",
@@ -18762,7 +18602,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L1516",
+      "source_location": "L1522",
       "weight": 1.0,
       "source": "src_app",
       "target": "src_app_readjson",
@@ -18782,7 +18622,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L1466",
+      "source_location": "L1472",
       "weight": 1.0,
       "source": "src_app",
       "target": "src_app_safeuserfields",
@@ -18822,7 +18662,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L1457",
+      "source_location": "L1463",
       "weight": 1.0,
       "source": "src_app",
       "target": "src_app_servefile",
@@ -18872,6 +18712,28 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "src/app.js",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "src_app",
+      "target": "src_service",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/app.js",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "src_app",
+      "target": "src_service_automationservice",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "src/server.js",
       "source_location": "L4",
       "weight": 1.0,
@@ -18897,9 +18759,9 @@
       "source_file": "test/behavioralAnomaly.test.js",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_behavioralanomaly_test",
-      "target": "src_app",
-      "confidence_score": 1.0
+      "target": "src_app"
     },
     {
       "relation": "imports_from",
@@ -18963,9 +18825,9 @@
       "source_file": "test/security.test.js",
       "source_location": "L6",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "test_security_test",
-      "target": "src_app"
+      "target": "src_app",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports_from",
@@ -18984,50 +18846,6 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app.js",
-      "source_location": "L114",
-      "weight": 1.0,
-      "source": "src_app_buildactivityfeed",
-      "target": "src_app_automationstore"
-    },
-    {
-      "relation": "references",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/app.js",
-      "source_location": "L172",
-      "weight": 1.0,
-      "source": "src_app_buildadmindata",
-      "target": "src_app_automationstore"
-    },
-    {
-      "relation": "references",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/app.js",
-      "source_location": "L64",
-      "weight": 1.0,
-      "source": "src_app_decorategatewayhealth",
-      "target": "src_app_automationstore"
-    },
-    {
-      "relation": "references",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/app.js",
-      "source_location": "L1454",
-      "weight": 1.0,
-      "source": "src_app_isvalidgatewayheader",
-      "target": "src_app_automationstore"
-    },
-    {
-      "relation": "references",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "src/app.js",
       "source_location": "L206",
       "weight": 1.0,
       "source": "src_app_buildadmindata",
@@ -19039,7 +18857,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "src/app.js",
-      "source_location": "L408",
+      "source_location": "L414",
       "weight": 1.0,
       "source": "src_app_createapp",
       "target": "src_app_operatorqueue"
@@ -19145,7 +18963,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/app.js",
-      "source_location": "L421",
+      "source_location": "L427",
       "weight": 1.0,
       "source": "src_app_createapp",
       "target": "src_app_json",
@@ -19191,9 +19009,9 @@
       "source_file": "test/behavioralAnomaly.test.js",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_behavioralanomaly_test",
-      "target": "src_app_createapp",
-      "confidence_score": 1.0
+      "target": "src_app_createapp"
     },
     {
       "relation": "calls",
@@ -19323,9 +19141,9 @@
       "source_file": "test/security.test.js",
       "source_location": "L6",
       "weight": 1.0,
-      "confidence_score": 1.0,
       "source": "test_security_test",
-      "target": "src_app_createapp"
+      "target": "src_app_createapp",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -19361,15 +19179,896 @@
       "target": "src_app_createapp"
     },
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "src_service",
+      "target": "src_service_analyzeoperatorreply_inferreplyfamilies_replycontradictspayload",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "indirect_call",
       "confidence": "INFERRED",
-      "source_file": "telegram-bridge/bridge.js",
-      "source_location": "L442",
+      "source_file": "src/service.js",
+      "source_location": "L1060",
       "weight": 1.0,
       "context": "collection",
-      "source": "telegram_bridge_bridge",
-      "target": "telegram_bridge_bridge_buildmention",
+      "source": "src_service",
+      "target": "src_service_automationservice",
       "confidence_score": 0.5
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L1025",
+      "weight": 1.0,
+      "source": "src_service",
+      "target": "src_service_collectdispatchreplymessages",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L1041",
+      "weight": 1.0,
+      "source": "src_service",
+      "target": "src_service_confidence_ranks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L1042",
+      "weight": 1.0,
+      "source": "src_service",
+      "target": "src_service_confidencerank",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "indirect_call",
+      "confidence": "INFERRED",
+      "source_file": "src/service.js",
+      "source_location": "L1064",
+      "weight": 1.0,
+      "context": "collection",
+      "source": "src_service",
+      "target": "src_service_formatcombinedreply",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "src_service",
+      "target": "src_service_operators_statuses_dispatch_statuses_terminal_dispatch_statuses",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "src_service",
+      "target": "src_service_parserequesttext",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L1053",
+      "weight": 1.0,
+      "source": "src_service",
+      "target": "src_service_replytypescore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L1046",
+      "weight": 1.0,
+      "source": "src_service",
+      "target": "src_service_requeststatusrank",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test/persistence.test.js",
+      "source_location": "L11",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "test_persistence_test",
+      "target": "src_service"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test/replyMatching.test.js",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "test_replymatching_test",
+      "target": "src_service"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test/security.test.js",
+      "source_location": "L374",
+      "weight": 1.0,
+      "source": "test_security_test",
+      "target": "src_service",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test/workflow.test.js",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "test_workflow_test",
+      "target": "src_service"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L598",
+      "weight": 1.0,
+      "source": "src_service_automationservice",
+      "target": "src_service_automationservice_approvereply",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "src_service_automationservice",
+      "target": "src_service_automationservice_constructor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L804",
+      "weight": 1.0,
+      "source": "src_service_automationservice",
+      "target": "src_service_automationservice_correctmatch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L938",
+      "weight": 1.0,
+      "source": "src_service_automationservice",
+      "target": "src_service_automationservice_dispatchsentat",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L945",
+      "weight": 1.0,
+      "source": "src_service_automationservice",
+      "target": "src_service_automationservice_dispatchtimeoutstate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L530",
+      "weight": 1.0,
+      "source": "src_service_automationservice",
+      "target": "src_service_automationservice_finalizeifterminal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L699",
+      "weight": 1.0,
+      "source": "src_service_automationservice",
+      "target": "src_service_automationservice_getactivedraftforrequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L972",
+      "weight": 1.0,
+      "source": "src_service_automationservice",
+      "target": "src_service_automationservice_getdispatchoutbox",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L706",
+      "weight": 1.0,
+      "source": "src_service_automationservice",
+      "target": "src_service_automationservice_getlivereplyforrequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L863",
+      "weight": 1.0,
+      "source": "src_service_automationservice",
+      "target": "src_service_automationservice_manualmatch",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L672",
+      "weight": 1.0,
+      "source": "src_service_automationservice",
+      "target": "src_service_automationservice_markreplyedited",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L635",
+      "weight": 1.0,
+      "source": "src_service_automationservice",
+      "target": "src_service_automationservice_markreplyposted",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L760",
+      "weight": 1.0,
+      "source": "src_service_automationservice",
+      "target": "src_service_automationservice_rankreplycandidates",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L184",
+      "weight": 1.0,
+      "source": "src_service_automationservice",
+      "target": "src_service_automationservice_receivesmswebhook",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L976",
+      "weight": 1.0,
+      "source": "src_service_automationservice",
+      "target": "src_service_automationservice_recordmanualreviewcandidate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L713",
+      "weight": 1.0,
+      "source": "src_service_automationservice",
+      "target": "src_service_automationservice_rejectrequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L725",
+      "weight": 1.0,
+      "source": "src_service_automationservice",
+      "target": "src_service_automationservice_retryrequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L46",
+      "weight": 1.0,
+      "source": "src_service_automationservice",
+      "target": "src_service_automationservice_submitrequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L902",
+      "weight": 1.0,
+      "source": "src_service_automationservice",
+      "target": "src_service_automationservice_timeoutwaitingrequests",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test/persistence.test.js",
+      "source_location": "L11",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "test_persistence_test",
+      "target": "src_service_automationservice"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test/replyMatching.test.js",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "test_replymatching_test",
+      "target": "src_service_automationservice"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test/security.test.js",
+      "source_location": "L374",
+      "weight": 1.0,
+      "source": "test_security_test",
+      "target": "src_service_automationservice",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test/workflow.test.js",
+      "source_location": "L8",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "test_workflow_test",
+      "target": "src_service_automationservice"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L460",
+      "weight": 1.0,
+      "source": "src_service_automationservice_receivesmswebhook",
+      "target": "src_service_automationservice_finalizeifterminal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L384",
+      "weight": 1.0,
+      "source": "src_service_automationservice_receivesmswebhook",
+      "target": "src_service_automationservice_getactivedraftforrequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L369",
+      "weight": 1.0,
+      "source": "src_service_automationservice_receivesmswebhook",
+      "target": "src_service_automationservice_recordmanualreviewcandidate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L250",
+      "weight": 1.0,
+      "source": "src_service_automationservice_receivesmswebhook",
+      "target": "src_service_confidencerank",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L382",
+      "weight": 1.0,
+      "source": "src_service_automationservice_receivesmswebhook",
+      "target": "src_service_formatcombinedreply",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L251",
+      "weight": 1.0,
+      "source": "src_service_automationservice_receivesmswebhook",
+      "target": "src_service_replytypescore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L254",
+      "weight": 1.0,
+      "source": "src_service_automationservice_receivesmswebhook",
+      "target": "src_service_requeststatusrank",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L545",
+      "weight": 1.0,
+      "source": "src_service_automationservice_finalizeifterminal",
+      "target": "src_service_automationservice_getactivedraftforrequest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L541",
+      "weight": 1.0,
+      "source": "src_service_automationservice_finalizeifterminal",
+      "target": "src_service_formatcombinedreply",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L891",
+      "weight": 1.0,
+      "source": "src_service_automationservice_manualmatch",
+      "target": "src_service_automationservice_finalizeifterminal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L926",
+      "weight": 1.0,
+      "source": "src_service_automationservice_timeoutwaitingrequests",
+      "target": "src_service_automationservice_finalizeifterminal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L777",
+      "weight": 1.0,
+      "source": "src_service_automationservice_rankreplycandidates",
+      "target": "src_service_confidencerank",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L775",
+      "weight": 1.0,
+      "source": "src_service_automationservice_rankreplycandidates",
+      "target": "src_service_replytypescore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L827",
+      "weight": 1.0,
+      "source": "src_service_automationservice_correctmatch",
+      "target": "src_service_automationservice_recordmanualreviewcandidate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L842",
+      "weight": 1.0,
+      "source": "src_service_automationservice_correctmatch",
+      "target": "src_service_formatcombinedreply",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L881",
+      "weight": 1.0,
+      "source": "src_service_automationservice_manualmatch",
+      "target": "src_service_automationservice_recordmanualreviewcandidate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L912",
+      "weight": 1.0,
+      "source": "src_service_automationservice_timeoutwaitingrequests",
+      "target": "src_service_automationservice_dispatchtimeoutstate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L939",
+      "weight": 1.0,
+      "source": "src_service_automationservice_dispatchsentat",
+      "target": "src_service_automationservice_getdispatchoutbox",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L946",
+      "weight": 1.0,
+      "source": "src_service_automationservice_dispatchtimeoutstate",
+      "target": "src_service_automationservice_getdispatchoutbox",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/service.js",
+      "source_location": "L1001",
+      "weight": 1.0,
+      "source": "src_service_formatcombinedreply",
+      "target": "src_service_collectdispatchreplymessages",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test/security.test.js",
+      "source_location": "L48",
+      "weight": 1.0,
+      "source": "test_security_test",
+      "target": "test_security_test_appwith",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test/security.test.js",
+      "source_location": "L4",
+      "weight": 1.0,
+      "source": "test_security_test",
+      "target": "test_security_test_assert",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test/security.test.js",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "test_security_test",
+      "target": "test_security_test_automationstore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test/security.test.js",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "test_security_test",
+      "target": "test_security_test_call",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test/security.test.js",
+      "source_location": "L64",
+      "weight": 1.0,
+      "source": "test_security_test",
+      "target": "test_security_test_createadminsession",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test/security.test.js",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "test_security_test",
+      "target": "test_security_test_createapp",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test/security.test.js",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "test_security_test",
+      "target": "test_security_test_mockreq",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test/security.test.js",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "test_security_test",
+      "target": "test_security_test_mockres",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test/security.test.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "test_security_test",
+      "target": "test_security_test_readable",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test/security.test.js",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "test_security_test",
+      "target": "test_security_test_test",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "test/security.test.js",
+      "source_location": "L419",
+      "weight": 1.0,
+      "source": "test_security_test",
+      "target": "test_security_test_withtempsettingsconfig",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "test/security.test.js",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "test_security_test_mockreq",
+      "target": "test_security_test_readable"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "test/security.test.js",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "test_security_test_call",
+      "target": "test_security_test_mockreq",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "test/security.test.js",
+      "source_location": "L37",
+      "weight": 1.0,
+      "source": "test_security_test_call",
+      "target": "test_security_test_mockres",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "test/security.test.js",
+      "source_location": "L70",
+      "weight": 1.0,
+      "source": "test_security_test_createadminsession",
+      "target": "test_security_test_call",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "indirect_call",
+      "confidence": "INFERRED",
+      "source_file": "src/anomalyDetector.js",
+      "source_location": "L132",
+      "weight": 1.0,
+      "context": "collection",
+      "confidence_score": 0.5,
+      "source": "src_anomalydetector",
+      "target": "src_anomalydetector_anomalydetector"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test/anomalyDetector.test.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "test_anomalydetector_test",
+      "target": "src_anomalydetector"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test/behavioralAnomaly.test.js",
+      "source_location": "L14",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "test_behavioralanomaly_test",
+      "target": "src_anomalydetector"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/anomalyDetector.js",
+      "source_location": "L27",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_anomalydetector_anomalydetector",
+      "target": "src_anomalydetector_anomalydetector_constructor"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/anomalyDetector.js",
+      "source_location": "L48",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_anomalydetector_anomalydetector",
+      "target": "src_anomalydetector_anomalydetector_getorcreateprofile"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/anomalyDetector.js",
+      "source_location": "L67",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_anomalydetector_anomalydetector",
+      "target": "src_anomalydetector_anomalydetector_isoffhours"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/anomalyDetector.js",
+      "source_location": "L63",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_anomalydetector_anomalydetector",
+      "target": "src_anomalydetector_anomalydetector_localhour"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "src/anomalyDetector.js",
+      "source_location": "L81",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_anomalydetector_anomalydetector",
+      "target": "src_anomalydetector_anomalydetector_recordandcheck"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test/anomalyDetector.test.js",
+      "source_location": "L5",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "test_anomalydetector_test",
+      "target": "src_anomalydetector_anomalydetector"
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "test/behavioralAnomaly.test.js",
+      "source_location": "L14",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "test_behavioralanomaly_test",
+      "target": "src_anomalydetector_anomalydetector"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/anomalyDetector.js",
+      "source_location": "L83",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_anomalydetector_anomalydetector_recordandcheck",
+      "target": "src_anomalydetector_anomalydetector_getorcreateprofile"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/anomalyDetector.js",
+      "source_location": "L68",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_anomalydetector_anomalydetector_isoffhours",
+      "target": "src_anomalydetector_anomalydetector_localhour"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/anomalyDetector.js",
+      "source_location": "L86",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "src_anomalydetector_anomalydetector_recordandcheck",
+      "target": "src_anomalydetector_anomalydetector_isoffhours"
     },
     {
       "relation": "indirect_call",
@@ -19378,9 +20077,9 @@
       "source_location": "L442",
       "weight": 1.0,
       "context": "collection",
+      "confidence_score": 0.5,
       "source": "telegram_bridge_bridge",
-      "target": "telegram_bridge_bridge_handleintake",
-      "confidence_score": 0.5
+      "target": "telegram_bridge_bridge_buildmention"
     },
     {
       "relation": "indirect_call",
@@ -19389,9 +20088,9 @@
       "source_location": "L442",
       "weight": 1.0,
       "context": "collection",
+      "confidence_score": 0.5,
       "source": "telegram_bridge_bridge",
-      "target": "telegram_bridge_bridge_notifytimeouts",
-      "confidence_score": 0.5
+      "target": "telegram_bridge_bridge_handleintake"
     },
     {
       "relation": "indirect_call",
@@ -19400,9 +20099,9 @@
       "source_location": "L442",
       "weight": 1.0,
       "context": "collection",
+      "confidence_score": 0.5,
       "source": "telegram_bridge_bridge",
-      "target": "telegram_bridge_bridge_planintake",
-      "confidence_score": 0.5
+      "target": "telegram_bridge_bridge_notifytimeouts"
     },
     {
       "relation": "indirect_call",
@@ -19411,9 +20110,9 @@
       "source_location": "L442",
       "weight": 1.0,
       "context": "collection",
+      "confidence_score": 0.5,
       "source": "telegram_bridge_bridge",
-      "target": "telegram_bridge_bridge_postapprovedreplies",
-      "confidence_score": 0.5
+      "target": "telegram_bridge_bridge_planintake"
     },
     {
       "relation": "indirect_call",
@@ -19422,9 +20121,9 @@
       "source_location": "L442",
       "weight": 1.0,
       "context": "collection",
+      "confidence_score": 0.5,
       "source": "telegram_bridge_bridge",
-      "target": "telegram_bridge_bridge_postliveedits",
-      "confidence_score": 0.5
+      "target": "telegram_bridge_bridge_postapprovedreplies"
     },
     {
       "relation": "indirect_call",
@@ -19433,9 +20132,9 @@
       "source_location": "L442",
       "weight": 1.0,
       "context": "collection",
+      "confidence_score": 0.5,
       "source": "telegram_bridge_bridge",
-      "target": "telegram_bridge_bridge_seednotifiedtimeouts",
-      "confidence_score": 0.5
+      "target": "telegram_bridge_bridge_postliveedits"
     },
     {
       "relation": "indirect_call",
@@ -19444,9 +20143,20 @@
       "source_location": "L442",
       "weight": 1.0,
       "context": "collection",
+      "confidence_score": 0.5,
       "source": "telegram_bridge_bridge",
-      "target": "telegram_bridge_bridge_shouldsuppressgroupreply",
-      "confidence_score": 0.5
+      "target": "telegram_bridge_bridge_seednotifiedtimeouts"
+    },
+    {
+      "relation": "indirect_call",
+      "confidence": "INFERRED",
+      "source_file": "telegram-bridge/bridge.js",
+      "source_location": "L442",
+      "weight": 1.0,
+      "context": "collection",
+      "confidence_score": 0.5,
+      "source": "telegram_bridge_bridge",
+      "target": "telegram_bridge_bridge_shouldsuppressgroupreply"
     },
     {
       "relation": "imports_from",
@@ -19488,9 +20198,9 @@
       "source_file": "telegram-bridge/bridge.js",
       "source_location": "L425",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_bridge_notifytimeouts",
-      "target": "telegram_bridge_bridge_buildmention",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_bridge_buildmention"
     },
     {
       "relation": "calls",
@@ -19499,9 +20209,9 @@
       "source_file": "telegram-bridge/bridge.js",
       "source_location": "L343",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_bridge_postapprovedreplies",
-      "target": "telegram_bridge_bridge_buildmention",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_bridge_buildmention"
     },
     {
       "relation": "calls",
@@ -19510,9 +20220,9 @@
       "source_file": "telegram-bridge/bridge.js",
       "source_location": "L366",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_bridge_postliveedits",
-      "target": "telegram_bridge_bridge_buildmention",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_bridge_buildmention"
     },
     {
       "relation": "imports",
@@ -19543,9 +20253,9 @@
       "source_file": "telegram-bridge/bridge.js",
       "source_location": "L300",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_bridge_handleintake",
-      "target": "telegram_bridge_bridge_shouldsuppressgroupreply",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_bridge_shouldsuppressgroupreply"
     },
     {
       "relation": "imports",
@@ -19565,9 +20275,9 @@
       "source_file": "telegram-bridge/bridge.js",
       "source_location": "L167",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "telegram_bridge_bridge_handleintake",
-      "target": "telegram_bridge_bridge_planintake",
-      "confidence_score": 1.0
+      "target": "telegram_bridge_bridge_planintake"
     },
     {
       "relation": "imports",
@@ -19751,9 +20461,9 @@
       "source_file": "test/anomalyDetector.test.js",
       "source_location": "L5",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_anomalydetector_test",
-      "target": "test_anomalydetector_test_anomalydetector",
-      "confidence_score": 1.0
+      "target": "test_anomalydetector_test_anomalydetector"
     },
     {
       "relation": "contains",
@@ -19761,9 +20471,9 @@
       "source_file": "test/anomalyDetector.test.js",
       "source_location": "L4",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_anomalydetector_test",
-      "target": "test_anomalydetector_test_assert",
-      "confidence_score": 1.0
+      "target": "test_anomalydetector_test_assert"
     },
     {
       "relation": "contains",
@@ -19771,9 +20481,9 @@
       "source_file": "test/anomalyDetector.test.js",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_anomalydetector_test",
-      "target": "test_anomalydetector_test_bstmidnight",
-      "confidence_score": 1.0
+      "target": "test_anomalydetector_test_bstmidnight"
     },
     {
       "relation": "contains",
@@ -19781,9 +20491,9 @@
       "source_file": "test/anomalyDetector.test.js",
       "source_location": "L9",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_anomalydetector_test",
-      "target": "test_anomalydetector_test_bstnoon",
-      "confidence_score": 1.0
+      "target": "test_anomalydetector_test_bstnoon"
     },
     {
       "relation": "contains",
@@ -19791,9 +20501,9 @@
       "source_file": "test/anomalyDetector.test.js",
       "source_location": "L3",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_anomalydetector_test",
-      "target": "test_anomalydetector_test_test",
-      "confidence_score": 1.0
+      "target": "test_anomalydetector_test_test"
     },
     {
       "relation": "contains",
@@ -19801,9 +20511,9 @@
       "source_file": "test/behavioralAnomaly.test.js",
       "source_location": "L14",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_behavioralanomaly_test",
-      "target": "test_behavioralanomaly_test_anomalydetector",
-      "confidence_score": 1.0
+      "target": "test_behavioralanomaly_test_anomalydetector"
     },
     {
       "relation": "contains",
@@ -19811,9 +20521,9 @@
       "source_file": "test/behavioralAnomaly.test.js",
       "source_location": "L56",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_behavioralanomaly_test",
-      "target": "test_behavioralanomaly_test_appwith",
-      "confidence_score": 1.0
+      "target": "test_behavioralanomaly_test_appwith"
     },
     {
       "relation": "contains",
@@ -19821,9 +20531,9 @@
       "source_file": "test/behavioralAnomaly.test.js",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_behavioralanomaly_test",
-      "target": "test_behavioralanomaly_test_assert",
-      "confidence_score": 1.0
+      "target": "test_behavioralanomaly_test_assert"
     },
     {
       "relation": "contains",
@@ -19831,9 +20541,9 @@
       "source_file": "test/behavioralAnomaly.test.js",
       "source_location": "L44",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_behavioralanomaly_test",
-      "target": "test_behavioralanomaly_test_call",
-      "confidence_score": 1.0
+      "target": "test_behavioralanomaly_test_call"
     },
     {
       "relation": "contains",
@@ -19841,9 +20551,9 @@
       "source_file": "test/behavioralAnomaly.test.js",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_behavioralanomaly_test",
-      "target": "test_behavioralanomaly_test_createapp",
-      "confidence_score": 1.0
+      "target": "test_behavioralanomaly_test_createapp"
     },
     {
       "relation": "contains",
@@ -19851,9 +20561,9 @@
       "source_file": "test/behavioralAnomaly.test.js",
       "source_location": "L68",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_behavioralanomaly_test",
-      "target": "test_behavioralanomaly_test_createlinkedofficer",
-      "confidence_score": 1.0
+      "target": "test_behavioralanomaly_test_createlinkedofficer"
     },
     {
       "relation": "contains",
@@ -19861,9 +20571,9 @@
       "source_file": "test/behavioralAnomaly.test.js",
       "source_location": "L16",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_behavioralanomaly_test",
-      "target": "test_behavioralanomaly_test_mockreq",
-      "confidence_score": 1.0
+      "target": "test_behavioralanomaly_test_mockreq"
     },
     {
       "relation": "contains",
@@ -19871,9 +20581,9 @@
       "source_file": "test/behavioralAnomaly.test.js",
       "source_location": "L26",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_behavioralanomaly_test",
-      "target": "test_behavioralanomaly_test_mockres",
-      "confidence_score": 1.0
+      "target": "test_behavioralanomaly_test_mockres"
     },
     {
       "relation": "contains",
@@ -19881,9 +20591,9 @@
       "source_file": "test/behavioralAnomaly.test.js",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_behavioralanomaly_test",
-      "target": "test_behavioralanomaly_test_readable",
-      "confidence_score": 1.0
+      "target": "test_behavioralanomaly_test_readable"
     },
     {
       "relation": "contains",
@@ -19891,9 +20601,9 @@
       "source_file": "test/behavioralAnomaly.test.js",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_behavioralanomaly_test",
-      "target": "test_behavioralanomaly_test_test",
-      "confidence_score": 1.0
+      "target": "test_behavioralanomaly_test_test"
     },
     {
       "relation": "references",
@@ -19913,9 +20623,9 @@
       "source_file": "test/behavioralAnomaly.test.js",
       "source_location": "L46",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_behavioralanomaly_test_call",
-      "target": "test_behavioralanomaly_test_mockreq",
-      "confidence_score": 1.0
+      "target": "test_behavioralanomaly_test_mockreq"
     },
     {
       "relation": "calls",
@@ -19924,9 +20634,9 @@
       "source_file": "test/behavioralAnomaly.test.js",
       "source_location": "L45",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "test_behavioralanomaly_test_call",
-      "target": "test_behavioralanomaly_test_mockres",
-      "confidence_score": 1.0
+      "target": "test_behavioralanomaly_test_mockres"
     },
     {
       "relation": "contains",
@@ -20060,727 +20770,6 @@
       "confidence_score": 1.0,
       "source": "test_personnelregistryendpoint_test_createsession",
       "target": "test_personnelregistryendpoint_test_call"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "test/security.test.js",
-      "source_location": "L48",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "test_security_test",
-      "target": "test_security_test_appwith"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "test/security.test.js",
-      "source_location": "L4",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "test_security_test",
-      "target": "test_security_test_assert"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "test/security.test.js",
-      "source_location": "L7",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "test_security_test",
-      "target": "test_security_test_automationstore"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "test/security.test.js",
-      "source_location": "L36",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "test_security_test",
-      "target": "test_security_test_call"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "test/security.test.js",
-      "source_location": "L64",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "test_security_test",
-      "target": "test_security_test_createadminsession"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "test/security.test.js",
-      "source_location": "L6",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "test_security_test",
-      "target": "test_security_test_createapp"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "test/security.test.js",
-      "source_location": "L9",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "test_security_test",
-      "target": "test_security_test_mockreq"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "test/security.test.js",
-      "source_location": "L18",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "test_security_test",
-      "target": "test_security_test_mockres"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "test/security.test.js",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "test_security_test",
-      "target": "test_security_test_readable"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "test/security.test.js",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "test_security_test",
-      "target": "test_security_test_test"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "test/security.test.js",
-      "source_location": "L378",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "test_security_test",
-      "target": "test_security_test_withtempsettingsconfig"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "test/security.test.js",
-      "source_location": "L38",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "test_security_test_call",
-      "target": "test_security_test_mockreq"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "test/security.test.js",
-      "source_location": "L37",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "test_security_test_call",
-      "target": "test_security_test_mockres"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "test/security.test.js",
-      "source_location": "L70",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "test_security_test_createadminsession",
-      "target": "test_security_test_call"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L5",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service",
-      "target": "src_service_analyzeoperatorreply_inferreplyfamilies_replycontradictspayload"
-    },
-    {
-      "relation": "indirect_call",
-      "confidence": "INFERRED",
-      "source_file": "src/service.js",
-      "source_location": "L1051",
-      "weight": 1.0,
-      "context": "collection",
-      "confidence_score": 0.5,
-      "source": "src_service",
-      "target": "src_service_automationservice"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L1016",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service",
-      "target": "src_service_collectdispatchreplymessages"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L1032",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service",
-      "target": "src_service_confidence_ranks"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L1033",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service",
-      "target": "src_service_confidencerank"
-    },
-    {
-      "relation": "indirect_call",
-      "confidence": "INFERRED",
-      "source_file": "src/service.js",
-      "source_location": "L1055",
-      "weight": 1.0,
-      "context": "collection",
-      "confidence_score": 0.5,
-      "source": "src_service",
-      "target": "src_service_formatcombinedreply"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L3",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service",
-      "target": "src_service_operators_statuses_dispatch_statuses_terminal_dispatch_statuses"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L4",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service",
-      "target": "src_service_parserequesttext"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L1044",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service",
-      "target": "src_service_replytypescore"
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L1037",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service",
-      "target": "src_service_requeststatusrank"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "test/persistence.test.js",
-      "source_location": "L11",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "test_persistence_test",
-      "target": "src_service"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "test/replyMatching.test.js",
-      "source_location": "L8",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "test_replymatching_test",
-      "target": "src_service"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "test/workflow.test.js",
-      "source_location": "L8",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "test_workflow_test",
-      "target": "src_service"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L589",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice",
-      "target": "src_service_automationservice_approvereply"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L17",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice",
-      "target": "src_service_automationservice_constructor"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L795",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice",
-      "target": "src_service_automationservice_correctmatch"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L929",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice",
-      "target": "src_service_automationservice_dispatchsentat"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L936",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice",
-      "target": "src_service_automationservice_dispatchtimeoutstate"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L521",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice",
-      "target": "src_service_automationservice_finalizeifterminal"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L690",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice",
-      "target": "src_service_automationservice_getactivedraftforrequest"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L963",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice",
-      "target": "src_service_automationservice_getdispatchoutbox"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L697",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice",
-      "target": "src_service_automationservice_getlivereplyforrequest"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L854",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice",
-      "target": "src_service_automationservice_manualmatch"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L663",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice",
-      "target": "src_service_automationservice_markreplyedited"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L626",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice",
-      "target": "src_service_automationservice_markreplyposted"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L751",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice",
-      "target": "src_service_automationservice_rankreplycandidates"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L175",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice",
-      "target": "src_service_automationservice_receivesmswebhook"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L967",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice",
-      "target": "src_service_automationservice_recordmanualreviewcandidate"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L704",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice",
-      "target": "src_service_automationservice_rejectrequest"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L716",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice",
-      "target": "src_service_automationservice_retryrequest"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L46",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice",
-      "target": "src_service_automationservice_submitrequest"
-    },
-    {
-      "relation": "method",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L893",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice",
-      "target": "src_service_automationservice_timeoutwaitingrequests"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "test/persistence.test.js",
-      "source_location": "L11",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "test_persistence_test",
-      "target": "src_service_automationservice"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "test/replyMatching.test.js",
-      "source_location": "L8",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "test_replymatching_test",
-      "target": "src_service_automationservice"
-    },
-    {
-      "relation": "imports",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "test/workflow.test.js",
-      "source_location": "L8",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "test_workflow_test",
-      "target": "src_service_automationservice"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L451",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice_receivesmswebhook",
-      "target": "src_service_automationservice_finalizeifterminal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L375",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice_receivesmswebhook",
-      "target": "src_service_automationservice_getactivedraftforrequest"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L360",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice_receivesmswebhook",
-      "target": "src_service_automationservice_recordmanualreviewcandidate"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L241",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice_receivesmswebhook",
-      "target": "src_service_confidencerank"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L373",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice_receivesmswebhook",
-      "target": "src_service_formatcombinedreply"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L242",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice_receivesmswebhook",
-      "target": "src_service_replytypescore"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L245",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice_receivesmswebhook",
-      "target": "src_service_requeststatusrank"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L536",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice_finalizeifterminal",
-      "target": "src_service_automationservice_getactivedraftforrequest"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L532",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice_finalizeifterminal",
-      "target": "src_service_formatcombinedreply"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L882",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice_manualmatch",
-      "target": "src_service_automationservice_finalizeifterminal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L917",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice_timeoutwaitingrequests",
-      "target": "src_service_automationservice_finalizeifterminal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L768",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice_rankreplycandidates",
-      "target": "src_service_confidencerank"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L766",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice_rankreplycandidates",
-      "target": "src_service_replytypescore"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L818",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice_correctmatch",
-      "target": "src_service_automationservice_recordmanualreviewcandidate"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L833",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice_correctmatch",
-      "target": "src_service_formatcombinedreply"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L872",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice_manualmatch",
-      "target": "src_service_automationservice_recordmanualreviewcandidate"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L903",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice_timeoutwaitingrequests",
-      "target": "src_service_automationservice_dispatchtimeoutstate"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L930",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice_dispatchsentat",
-      "target": "src_service_automationservice_getdispatchoutbox"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L937",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_automationservice_dispatchtimeoutstate",
-      "target": "src_service_automationservice_getdispatchoutbox"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "src/service.js",
-      "source_location": "L992",
-      "weight": 1.0,
-      "confidence_score": 1.0,
-      "source": "src_service_formatcombinedreply",
-      "target": "src_service_collectdispatchreplymessages"
     },
     {
       "relation": "indirect_call",
@@ -48490,5 +48479,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "3c33ba12d4b818a663c73b9177dfaba0abaecd6a"
+  "built_at_commit": "efd09fbd6b0851c78670b86b510fc348168716e3"
 }

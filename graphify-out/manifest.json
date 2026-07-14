@@ -265,8 +265,8 @@
     "semantic_hash": "691542780e01dd0058fe9c6c54455530"
   },
   "src/app.js": {
-    "mtime": 1783778114.9660227,
-    "ast_hash": "682bc598226f075b6f94c3742dd1fcd7",
+    "mtime": 1784013647.8598397,
+    "ast_hash": "b7f211c438ce3a73094c71e9b78a5545",
     "semantic_hash": ""
   },
   "src/auth.js": {
@@ -330,8 +330,8 @@
     "semantic_hash": "c2ddb13641a9fcb3398445932020564b"
   },
   "src/service.js": {
-    "mtime": 1783500448.6262121,
-    "ast_hash": "8d46ce7fbe777e1baad2e99c8aa05efc",
+    "mtime": 1784016078.8562808,
+    "ast_hash": "371f170e6c1bd7362113e9346418c538",
     "semantic_hash": ""
   },
   "src/settingsStore.js": {
@@ -345,7 +345,7 @@
     "semantic_hash": "b3a4f73f626432c7cebb2b6f05196ca1"
   },
   "src/store.js": {
-    "mtime": 1783322656.216388,
+    "mtime": 1784016270.9186656,
     "ast_hash": "209df87eb932352b74520cdb867fb837",
     "semantic_hash": ""
   },
@@ -395,8 +395,8 @@
     "semantic_hash": ""
   },
   "test/security.test.js": {
-    "mtime": 1783777359.9560401,
-    "ast_hash": "c13ec79b218591097d16bc85d52b7cc0",
+    "mtime": 1784016155.6555064,
+    "ast_hash": "eba932c954af4528eba296e9e7e50a1c",
     "semantic_hash": ""
   },
   "test/settingsStore.test.js": {
@@ -2130,8 +2130,8 @@
     "semantic_hash": ""
   },
   ".impeccable/hook.cache.json": {
-    "mtime": 1783778325.085519,
-    "ast_hash": "d0981682fe77a0c74396599d19e9eb18",
+    "mtime": 1784016386.2169268,
+    "ast_hash": "4ad01d747cc1fff21ed9cf010274001b",
     "semantic_hash": ""
   },
   "config/auth.example.json": {
@@ -3310,8 +3310,8 @@
     "semantic_hash": ""
   },
   "docs/security-hardening-v1-STATUS.md": {
-    "mtime": 1783778324.9713402,
-    "ast_hash": "b9c1d30b2fb6447727c96d0b650a76e7",
+    "mtime": 1784016386.102769,
+    "ast_hash": "ce3f2353da0131dec07e15bd0e3d3880",
     "semantic_hash": ""
   },
   "src/cookies.js": {
