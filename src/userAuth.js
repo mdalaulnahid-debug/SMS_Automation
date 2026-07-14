@@ -269,6 +269,21 @@ class UserAuthStore {
     return this.getUserById(userId);
   }
 
+  // Self-service password change — requires proving the CURRENT password (not
+  // just a valid session), so a hijacked/left-open session alone can't lock
+  // the real owner out or plant a new credential.
+  changePassword(userId, currentPassword, newPassword) {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('User not found.');
+    if (!verifyPassword(currentPassword, user.password_hash)) {
+      throw new Error('Current password is incorrect.');
+    }
+    if (String(newPassword || '').length < 8) {
+      throw new Error('New password must be at least 8 characters.');
+    }
+    this.db.prepare('UPDATE auth_users SET password_hash = ? WHERE id = ?').run(hashPassword(newPassword), userId);
+  }
+
   // Step 1 of login: verify password, issue a short-lived MFA code + pending token.
   // Returns { pendingToken, mfaCode, email } — caller emails mfaCode to the user and returns pendingToken to the client.
   startLogin({ email, password }) {

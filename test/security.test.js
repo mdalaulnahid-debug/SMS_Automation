@@ -416,6 +416,41 @@ test('audit export returns CSV with the hash columns', async () => {
   assert.ok(res.raw.split('\r\n').length > 1);
 });
 
+test('change-password requires a session, rejects a wrong current password, and applies a correct one', async () => {
+  const app = appWith({ adminApiKey: 'topsecret' });
+  const token = await createAdminSession(app, 'change-pw-test@example.com');
+
+  const noSession = await call(app, {
+    method: 'POST',
+    url: '/api/auth/change-password',
+    headers: { 'content-type': 'application/json' },
+    body: { currentPassword: 'longenough1', newPassword: 'brandnewpass1' }
+  });
+  assert.equal(noSession.status, 401);
+
+  const wrongCurrent = await call(app, {
+    method: 'POST',
+    url: '/api/auth/change-password',
+    headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
+    body: { currentPassword: 'wrongcurrent1', newPassword: 'brandnewpass1' }
+  });
+  assert.equal(wrongCurrent.status, 400);
+
+  const ok = await call(app, {
+    method: 'POST',
+    url: '/api/auth/change-password',
+    headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
+    body: { currentPassword: 'longenough1', newPassword: 'brandnewpass1' }
+  });
+  assert.equal(ok.status, 200);
+
+  assert.throws(
+    () => app.userAuth.startLogin({ email: 'change-pw-test@example.com', password: 'longenough1' }),
+    /Invalid email or password/
+  );
+  assert.doesNotThrow(() => app.userAuth.startLogin({ email: 'change-pw-test@example.com', password: 'brandnewpass1' }));
+});
+
 function withTempSettingsConfig(fn) {
   const { mkdtempSync, rmSync, writeFileSync } = require('node:fs');
   const { join } = require('node:path');

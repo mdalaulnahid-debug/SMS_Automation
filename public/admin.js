@@ -829,6 +829,24 @@ document.getElementById('authorizedUserForm').addEventListener('submit', async (
 
 document.getElementById('settingsOperator').addEventListener('change', loadSettings);
 
+document.getElementById('changePasswordForm').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const currentPassword = document.getElementById('currentPassword').value;
+  const newPassword = document.getElementById('newPassword').value;
+  const resultEl = document.getElementById('changePasswordResult');
+  try {
+    await postJson('/api/auth/change-password', { currentPassword, newPassword });
+    resultEl.textContent = 'Password changed.';
+    resultEl.style.color = 'var(--success)';
+    resultEl.style.display = 'block';
+    document.getElementById('changePasswordForm').reset();
+  } catch (error) {
+    resultEl.textContent = error.message || 'Failed to change password.';
+    resultEl.style.color = 'var(--danger)';
+    resultEl.style.display = 'block';
+  }
+});
+
 document.getElementById('telegramGroupForm').addEventListener('submit', async (event) => {
   event.preventDefault();
   const groupChatId = document.getElementById('settingsGroupChatId').value.trim();

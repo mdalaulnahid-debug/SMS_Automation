@@ -539,6 +539,16 @@
             </div>
             <div class="tools-grid">
               <section class="data-surface tool-panel">
+                <div class="tool-title"><span class="material-symbols-outlined">password</span>My Account</div>
+                <div class="tool-note">Change your own login password. Requires your current password.</div>
+                <form id="changePasswordForm" class="tool-form">
+                  <label>Current password<input id="currentPassword" class="input-field" type="password" autocomplete="current-password" required /></label>
+                  <label>New password (min 8 characters)<input id="newPassword" class="input-field" type="password" autocomplete="new-password" required minlength="8" /></label>
+                  <button type="submit" class="btn-primary">Change password</button>
+                  <div id="changePasswordResult" class="tool-note" style="display:none"></div>
+                </form>
+              </section>
+              <section class="data-surface tool-panel">
                 <div class="tool-title"><span class="material-symbols-outlined">qr_code_2</span>Provision Gateway</div>
                 <div class="tool-note">Generate a constrained setup payload for a device runtime phone.</div>
                 <div class="tool-form">

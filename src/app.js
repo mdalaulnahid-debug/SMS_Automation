@@ -520,6 +520,21 @@ function createApp(options = {}) {
     return result;
   }
 
+  // Step-up re-authentication for the super-admin console: session.created_at
+  // is set at MFA-completion time (see completeLogin()), so its age doubles as
+  // "how long since this person last proved who they are" with no extra
+  // schema. A super_admin whose session is older than the window is bounced
+  // back through a full password+MFA login before reaching /admin, rather
+  // than trusting however-old a session happens to still be valid.
+  const SUPER_ADMIN_REAUTH_WINDOW_MS = 15 * 60 * 1000;
+  function requireFreshSuperAdmin(req, res, session, returnPath) {
+    if (session.user.role !== 'super_admin') return true;
+    const age = Date.now() - new Date(session.session.created_at).getTime();
+    if (age <= SUPER_ADMIN_REAUTH_WINDOW_MS) return true;
+    redirectTo(res, `/login.html?stepup=1&return=${encodeURIComponent(returnPath)}`);
+    return false;
+  }
+
   // User accounts / login (officers + admins) — separate from the legacy single admin API key.
   const authDbPath = options.authDbPath !== undefined
     ? options.authDbPath
@@ -664,7 +679,9 @@ function createApp(options = {}) {
         return serveFile(res, 'theme.css', 'text/css; charset=utf-8');
       }
       if (req.method === 'GET' && req.url === '/admin') {
-        if (!guardPage(req, res, ['admin', 'super_admin'])) return undefined;
+        const gate = guardPage(req, res, ['admin', 'super_admin']);
+        if (!gate) return undefined;
+        if (!requireFreshSuperAdmin(req, res, gate, '/admin')) return undefined;
         return serveFile(res, 'admin.html', 'text/html; charset=utf-8');
       }
       if (req.method === 'GET' && req.url === '/portal.js') {
@@ -681,7 +698,10 @@ function createApp(options = {}) {
         }
         return redirectTo(res, '/');
       }
-      if (req.method === 'GET' && req.url === '/login.html') {
+      if (req.method === 'GET' && req.url.startsWith('/login.html')) {
+        // startsWith, not ===: the step-up re-auth redirect appends
+        // ?stepup=1&return=... (req.url includes the query string in Node's
+        // http module), which an exact match would 404 on.
         return serveFile(res, 'login.html', 'text/html; charset=utf-8');
       }
       if (req.method === 'GET' && req.url === '/register.html') {
@@ -1464,6 +1484,17 @@ function createApp(options = {}) {
         // verify_token, mfa_code_hash, ...) — safeUserFields() is the allowlist
         // that keeps this endpoint from leaking those to any logged-in client.
         return json(res, 200, { user: safeUserFields(session.user) });
+      }
+      if (req.method === 'POST' && req.url === '/api/auth/change-password') {
+        const session = requireSession(req, res);
+        if (!session) return undefined;
+        const body = await readJson(req);
+        try {
+          userAuth.changePassword(session.user.id, body.currentPassword, body.newPassword);
+        } catch (error) {
+          return json(res, 400, { error: error.message });
+        }
+        return json(res, 200, { ok: true });
       }
       return json(res, 404, { error: 'Not found' });
     } catch (error) {

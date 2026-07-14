@@ -76,6 +76,35 @@ test('register -> verify -> login -> mfa -> session', () => {
   assert.equal(store.validateSession(session.token), null);
 });
 
+test('changePassword requires the current password and rejects a wrong one', () => {
+  const store = new UserAuthStore(':memory:');
+  const reg = store.register({ email: 'officer@example.com', password: 'longenough1', name: 'Officer One' });
+  store.verifyEmail(reg.verifyToken);
+  const login = store.startLogin({ email: 'officer@example.com', password: 'longenough1' });
+  const session = store.completeLogin({ pendingToken: login.pendingToken, code: login.mfaCode });
+
+  assert.throws(
+    () => store.changePassword(session.user.id, 'wrongcurrent1', 'brandnewpass1'),
+    /Current password is incorrect/
+  );
+  // Old password still works — a rejected attempt must not have side effects.
+  assert.doesNotThrow(() => store.startLogin({ email: 'officer@example.com', password: 'longenough1' }));
+
+  store.changePassword(session.user.id, 'longenough1', 'brandnewpass1');
+  assert.throws(() => store.startLogin({ email: 'officer@example.com', password: 'longenough1' }), /Invalid email or password/);
+  assert.doesNotThrow(() => store.startLogin({ email: 'officer@example.com', password: 'brandnewpass1' }));
+});
+
+test('changePassword rejects a new password shorter than 8 characters', () => {
+  const store = new UserAuthStore(':memory:');
+  const reg = store.register({ email: 'officer@example.com', password: 'longenough1', name: 'Officer One' });
+  store.verifyEmail(reg.verifyToken);
+  const login = store.startLogin({ email: 'officer@example.com', password: 'longenough1' });
+  const session = store.completeLogin({ pendingToken: login.pendingToken, code: login.mfaCode });
+
+  assert.throws(() => store.changePassword(session.user.id, 'longenough1', 'short1'), /at least 8 characters/);
+});
+
 test('wrong password and duplicate registration are rejected', () => {
   const store = new UserAuthStore(':memory:');
   store.register({ email: 'a@example.com', password: 'longenough1', name: 'A' });

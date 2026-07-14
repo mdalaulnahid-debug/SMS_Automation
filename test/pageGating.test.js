@@ -151,6 +151,37 @@ test('a super_admin session unlocks /admin too', async () => {
   assert.equal(res.status, 200);
 });
 
+// Step-up re-authentication follow-on: session.created_at (set at MFA-completion
+// time) doubles as "how long since this super_admin last proved who they are."
+test('a super_admin session older than the 15-minute re-auth window is bounced to step-up login, not served /admin', async () => {
+  const app = appWith();
+  const { token, setCookie } = await registerAndLogin(app, { email: 'super2@example.com', password: 'longenough1', role: 'super_admin' });
+  const cookieHeader = cookieHeaderFrom(setCookie);
+
+  const fresh = await call(app, { method: 'GET', url: '/admin', headers: { cookie: cookieHeader } });
+  assert.equal(fresh.status, 200);
+
+  const staleCreatedAt = new Date(Date.now() - 20 * 60 * 1000).toISOString();
+  app.userAuth.db.prepare('UPDATE auth_sessions SET created_at = ? WHERE token = ?').run(staleCreatedAt, token);
+
+  const stale = await call(app, { method: 'GET', url: '/admin', headers: { cookie: cookieHeader } });
+  assert.equal(stale.status, 302);
+  assert.equal(stale.headers.location, '/login.html?stepup=1&return=%2Fadmin');
+  assert.equal(stale.raw, '', 'the admin console HTML must never be sent while the session is stale');
+});
+
+test('the step-up re-auth window does not apply to a plain admin session, only super_admin', async () => {
+  const app = appWith();
+  const { token, setCookie } = await registerAndLogin(app, { email: 'admin2@example.com', password: 'longenough1', role: 'admin' });
+  const cookieHeader = cookieHeaderFrom(setCookie);
+
+  const staleCreatedAt = new Date(Date.now() - 20 * 60 * 1000).toISOString();
+  app.userAuth.db.prepare('UPDATE auth_sessions SET created_at = ? WHERE token = ?').run(staleCreatedAt, token);
+
+  const stillOk = await call(app, { method: 'GET', url: '/admin', headers: { cookie: cookieHeader } });
+  assert.equal(stillOk.status, 200);
+});
+
 test('logout clears the session cookie and the page gate rejects the old cookie afterward', async () => {
   const app = appWith();
   const { token, setCookie } = await registerAndLogin(app, { email: 'officer3@example.com', password: 'longenough1', role: 'officer' });
