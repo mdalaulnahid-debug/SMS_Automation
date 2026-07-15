@@ -34,13 +34,13 @@
   </head>
   <body>
     <div class="gate-shell glass-panel">
-      <div class="brand-row">
+      <a class="brand-row" href="/welcome" style="text-decoration:none;color:inherit">
         <img class="brand-logo" src="/assets/police-insignia.svg" alt="Bangladesh Police" />
         <div>
           <div class="brand-title">SMS Automation</div>
           <div class="brand-sub">LIC Barishal</div>
         </div>
-      </div>
+      </a>
 
       <!-- Step 1: Email + password -->
       <div id="stepPassword">
@@ -53,7 +53,10 @@
             <input id="loginEmail" class="input-field" type="email" autocomplete="email" required placeholder="officer@example.com" />
           </div>
           <div class="form-group">
-            <label class="form-label" for="loginPassword">Password</label>
+            <div style="display:flex;align-items:baseline;justify-content:space-between">
+              <label class="form-label" for="loginPassword">Password</label>
+              <a href="/forgot-password.html" style="font-size:11px;font-weight:700;color:var(--accent);text-decoration:none">Forgot password?</a>
+            </div>
             <input id="loginPassword" class="input-field" type="password" autocomplete="current-password" required placeholder="••••••••" />
           </div>
           <div id="loginError" class="error-msg"></div>

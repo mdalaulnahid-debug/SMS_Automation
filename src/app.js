@@ -616,6 +616,40 @@ function createApp(options = {}) {
     };
   }
 
+  // Shared by /api/telegram/registration-link and checkRegistration below —
+  // one place that knows how a registration token becomes a URL.
+  function buildRegistrationLink(req, telegramId) {
+    const { token } = userAuth.createRegistrationToken(telegramId);
+    const baseUrl = process.env.PUBLIC_BASE_URL || `http://${req.headers.host}`;
+    return `${baseUrl}/register.html?token=${encodeURIComponent(token)}`;
+  }
+
+  // Group-registration gate (security-hardening v1 follow-on) — closes the
+  // one piece of step 5 left open: the Telegram group was fully open
+  // regardless of registration. Scoped to channel:'telegram' only; gateway
+  // webhooks, admin-console test submissions, and any other channel are
+  // untouched. Reuses the same registrationWindowEndsAt field step 5 already
+  // uses for auto-activate-vs-approval-gate — one grace period, one source
+  // of truth, no new config. Returns:
+  //   null                         — registered, or not a Telegram request; proceed untouched.
+  //   { registrationNote }         — grace window open; proceed, but nudge in the reply.
+  //   { ok:false, errorCode, ... } — grace window closed; block, same shape checkOfficerQuota uses.
+  function checkRegistration(req, requesterId, channel) {
+    if (channel !== 'telegram') return null;
+    const officer = requesterId && userAuth.getUserByTelegramId(requesterId);
+    if (officer) return null;
+
+    const link = buildRegistrationLink(req, requesterId);
+    if (isWithinRegistrationWindow(authConfig.registrationWindowEndsAt)) {
+      return { registrationNote: `You're not registered yet. Complete registration here to keep using this:\n${link}` };
+    }
+    return {
+      ok: false,
+      errorCode: 'REGISTRATION_REQUIRED',
+      replyText: `You're not registered yet. Complete registration here to get access:\n${link}`
+    };
+  }
+
   // Behavioral anomaly tripwire (security-hardening v1 §11) — same
   // linked-officer-only scoping as checkOfficerQuota, but never blocks:
   // every flag is audit-logged for admin review, the response to the
@@ -698,6 +732,11 @@ function createApp(options = {}) {
         }
         return redirectTo(res, '/');
       }
+      if (req.method === 'GET' && req.url === '/welcome') {
+        // The "Public" access tier (design doc §4): a static informational page,
+        // reachable with no session at all — unlike '/', which requires login.
+        return serveFile(res, 'welcome.html', 'text/html; charset=utf-8');
+      }
       if (req.method === 'GET' && req.url.startsWith('/login.html')) {
         // startsWith, not ===: the step-up re-auth redirect appends
         // ?stepup=1&return=... (req.url includes the query string in Node's
@@ -706,6 +745,19 @@ function createApp(options = {}) {
       }
       if (req.method === 'GET' && req.url === '/register.html') {
         return serveFile(res, 'register.html', 'text/html; charset=utf-8');
+      }
+      if (req.method === 'GET' && req.url === '/forgot-password.html') {
+        return serveFile(res, 'forgot-password.html', 'text/html; charset=utf-8');
+      }
+      if (
+        req.method === 'GET' &&
+        (req.url.startsWith('/reset-password.html') || req.url === '/reset-password' || req.url.startsWith('/reset-password?'))
+      ) {
+        // Both paths serve the same vanilla page: mailer.resetPasswordEmail()
+        // links to the extension-less /reset-password (matching the React
+        // app's future route at cutover — see docs/redesign.md Phase 6);
+        // this alias keeps that emailed link working today, before cutover.
+        return serveFile(res, 'reset-password.html', 'text/html; charset=utf-8');
       }
       if (req.method === 'GET' && req.url === '/admin.js') {
         return serveFile(res, 'admin.js', 'text/javascript; charset=utf-8');
@@ -968,6 +1020,44 @@ function createApp(options = {}) {
           return json(res, 400, { error: error.message });
         }
       }
+      if (req.method === 'GET' && req.url === '/api/admin/users') {
+        // Owner-only roster of accounts — backs the "Team" promote/demote
+        // console. Every candidate already passed Personnel Registry
+        // phone+email verification to register at all, so this is an
+        // upgrade of existing trust, not a second, less-scrutinized entry
+        // path onto the team.
+        if (!requireSuperAdminSessionOnly(req, res)) return undefined;
+        return json(res, 200, { users: userAuth.listUsers() });
+      }
+      if (req.method === 'POST' && req.url.startsWith('/api/admin/users/') && req.url.endsWith('/role')) {
+        if (!requireSuperAdminSessionOnly(req, res)) return undefined;
+        const userId = decodeURIComponent(req.url.slice('/api/admin/users/'.length, -'/role'.length));
+        const body = await readJson(req);
+        const newRole = body.role;
+        // Deliberately excludes super_admin: creating a second owner-level
+        // account is a rarer, more deliberate action than a one-click UI
+        // toggle should allow — same reasoning as this endpoint never being
+        // reachable via the legacy shared key (requireSuperAdminSessionOnly).
+        if (newRole !== 'officer' && newRole !== 'admin') {
+          return json(res, 400, { error: 'role must be "officer" or "admin".' });
+        }
+        const actorToken = require('./auth').presentedToken(req);
+        const actorSession = actorToken && userAuth.validateSession(actorToken);
+        if (actorSession && actorSession.user.id === userId) {
+          return json(res, 400, { error: 'You cannot change your own role.' });
+        }
+        const target = userAuth.getUserById(userId);
+        if (!target) return json(res, 404, { error: 'User not found.' });
+        if (target.role === 'super_admin') {
+          return json(res, 400, { error: 'Cannot change a super_admin\'s role here.' });
+        }
+        const previousRole = target.role;
+        userAuth.setRole(userId, newRole);
+        store.audit(actorSession ? actorSession.user.email : 'super-admin', 'USER_ROLE_CHANGED', null, {
+          userId, email: target.email, previousRole, newRole
+        });
+        return json(res, 200, { ok: true, userId, previousRole, newRole });
+      }
       if (req.method === 'POST' && req.url === '/api/telegram/chat-mismatch') {
         // Reported by the Telegram bridge process when it sees a message from a chat that
         // doesn't match its configured groupChatId — the exact failure mode that silently
@@ -1106,6 +1196,11 @@ function createApp(options = {}) {
         if (!requestRateLimiter.check(rateLimitId)) {
           return json(res, 429, { error: 'Too many requests. Please wait a moment before submitting again.' });
         }
+        const registrationCheck = checkRegistration(req, body.requesterId, body.channel);
+        if (registrationCheck && registrationCheck.ok === false) {
+          checkBehavioralAnomaly(body, { ok: false });
+          return json(res, 400, registrationCheck);
+        }
         const quotaRejection = await checkOfficerQuota(body.requesterId);
         if (quotaRejection) {
           // Still fed to the tripwire — a quota-blocked burst is itself a
@@ -1114,6 +1209,9 @@ function createApp(options = {}) {
           return json(res, 400, quotaRejection);
         }
         const result = await service.submitRequest(body);
+        if (registrationCheck && registrationCheck.registrationNote && result.ok) {
+          result.registrationNote = registrationCheck.registrationNote;
+        }
         checkBehavioralAnomaly(body, result);
         return json(res, result.ok ? 201 : 400, result);
       }
@@ -1374,9 +1472,7 @@ function createApp(options = {}) {
         if (!requireMachine(req, res)) return undefined;
         const body = await readJson(req);
         if (!body.telegramId) return json(res, 400, { error: 'telegramId required' });
-        const { token } = userAuth.createRegistrationToken(body.telegramId);
-        const baseUrl = process.env.PUBLIC_BASE_URL || `http://${req.headers.host}`;
-        return json(res, 200, { url: `${baseUrl}/register.html?token=${encodeURIComponent(token)}` });
+        return json(res, 200, { url: buildRegistrationLink(req, body.telegramId) });
       }
       if (req.method === 'POST' && req.url === '/api/telegram/verify-code') {
         // Called by the Telegram bridge when a private-DM sender replies with
@@ -1495,6 +1591,36 @@ function createApp(options = {}) {
           return json(res, 400, { error: error.message });
         }
         return json(res, 200, { ok: true });
+      }
+      if (req.method === 'POST' && req.url === '/api/auth/forgot-password') {
+        const body = await readJson(req);
+        // Always 200 regardless of whether the email matched an account —
+        // a different response shape here would let an attacker enumerate
+        // registered emails via this endpoint.
+        const result = userAuth.requestPasswordReset(body.email);
+        if (result) {
+          const baseUrl = process.env.PUBLIC_BASE_URL || `http://${req.headers.host}`;
+          const { subject, html, text } = mailer.resetPasswordEmail(baseUrl, result.resetToken);
+          try {
+            await mailer.sendMail({ to: result.email, subject, html, text });
+          } catch (error) {
+            // Swallow — a transport failure must not produce a different
+            // HTTP outcome than "no account matched", or this endpoint
+            // becomes an email-enumeration oracle. The reset token is
+            // already written; log server-side so an operator can notice.
+            console.error(`[forgot-password] failed to send reset email to ${result.email}:`, error.message);
+          }
+        }
+        return json(res, 200, { ok: true, message: 'If an account exists for that email, a reset link has been sent.' });
+      }
+      if (req.method === 'POST' && req.url === '/api/auth/reset-password') {
+        const body = await readJson(req);
+        try {
+          userAuth.resetPassword(body.token, body.newPassword);
+        } catch (error) {
+          return json(res, 400, { error: error.message });
+        }
+        return json(res, 200, { ok: true, message: 'Password updated. You can sign in now.' });
       }
       return json(res, 404, { error: 'Not found' });
     } catch (error) {

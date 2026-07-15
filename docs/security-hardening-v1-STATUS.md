@@ -11,6 +11,14 @@ git pull`, read this file, then the design doc, then `git log main..HEAD`
 for what's actually landed. Everything built/tested on **localhost only** —
 never run `scripts/deploy.sh` on this branch.
 
+**⚠️ 2026-07-15: confirmed this branch is 40 commits ahead of `main` and has
+never been merged.** Production is still running pre-hardening code — this
+was discovered while fixing an unrelated production bug report (production's
+`register.html` is missing fields that were added in commit `822e494`, step
+5). The full merge + deploy is a real decision the user needs to make
+explicitly (registry-gated registration is a behavior change, not just a
+bugfix) — tracked as a `P1` CRITICAL item in `todo.md`.
+
 ## Status by component (per design doc §14 build order)
 
 | # | Component | Status |

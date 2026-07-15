@@ -63,4 +63,13 @@ function reVerificationCodeEmail(code) {
   };
 }
 
-module.exports = { sendMail, verificationEmail, mfaCodeEmail, reVerificationCodeEmail };
+function resetPasswordEmail(baseUrl, token) {
+  const link = `${baseUrl}/reset-password?token=${token}`;
+  return {
+    subject: 'Reset your LIC Barishal Ops password',
+    text: `Reset your password: ${link}\n\nThis link expires in 1 hour. If you did not request this, you can ignore this email — your password will not change.`,
+    html: `<p>Click below to set a new password for your LIC Barishal Ops account:</p><p><a href="${link}">${link}</a></p><p>This link expires in 1 hour. If you did not request this, you can ignore this email — your password will not change.</p>`
+  };
+}
+
+module.exports = { sendMail, verificationEmail, mfaCodeEmail, reVerificationCodeEmail, resetPasswordEmail };

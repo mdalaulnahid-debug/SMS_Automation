@@ -162,7 +162,8 @@ async function handleIntake(message, {
   telegram,
   log = () => {},
   reportedMismatchChatIds = new Set(),
-  reportedUnauthorizedSenders = new Set()
+  reportedUnauthorizedSenders = new Set(),
+  reportedRegistrationNudges = new Set()
 }) {
   const plan = planIntake(message, config);
 
@@ -312,9 +313,18 @@ async function handleIntake(message, {
   log(`intake: accepted ${result.request.requestId} (${plan.request.text})${fwdNote}`);
   if (config.ackOnIntake) {
     const operators = (result.request.targetOperators || []).join(', ') || 'operator';
+    let ackText = `✅ Request received — sending to ${operators}. Reply will be posted here when received.`;
+    // Group-registration gate soft-nag (security-hardening v1 follow-on): the
+    // sender isn't registered yet but the grace window is still open, so the
+    // request went through — nudge once per sender per bridge run rather than
+    // on every message, same dedupe shape as reportedUnauthorizedSenders.
+    if (result.registrationNote && !reportedRegistrationNudges.has(plan.request.requesterId)) {
+      reportedRegistrationNudges.add(plan.request.requesterId);
+      ackText += `\n\n${result.registrationNote}`;
+    }
     await telegram.sendMessage({
       chatId: plan.request.chatId,
-      text: `✅ Request received — sending to ${operators}. Reply will be posted here when received.`,
+      text: ackText,
       replyToMessageId: plan.replyToMessageId
     });
   }

@@ -6,6 +6,40 @@ Start with `progress_tracker.md` for the latest session handoff, test results, a
 
 ---
 
+## ⚠️ CRITICAL — 2026-07-15: `feature/security-hardening-v1` never merged/deployed (40 commits behind main) · `P1`
+
+Discovered while patching a production bug report (missing fields on
+`register.html`). The **entire** Security Hardening V1 initiative — steps
+1–9, registry-gated registration, server-side page gating, quota/OTP
+middleware, admin group actions, anomaly tripwire, plus every session's work
+built on top of it since — has never been merged to `main` or deployed.
+Production is running pre-hardening code. A cosmetic-only hand patch was
+applied directly to production's `register.html` (adds the missing
+Designation/Unit/Phone fields) at the user's explicit request; registration
+still won't enforce a registry match until the real merge+deploy happens.
+
+- [ ] **`P1`** Decide and execute: merge `feature/security-hardening-v1` → `main`, deploy properly. Needs explicit user sign-off — registry-gated registration is a real behavior change (any registrant whose phone+email don't match an imported Personnel Registry record gets rejected), not just a bugfix.
+
+---
+
+## ✅ DONE — 2026-07-15: React redesign progress (Phases 0/1/1.5 + auth pages) + forgot/reset-password · `P1`
+
+Full detail in `progress_tracker.md`'s 2026-07-15 handoff and
+[`docs/redesign.md`](docs/redesign.md). Built and verified entirely on
+**localhost**; `public/` stays live and untouched. Not deployed.
+
+- [x] React app scaffold (`web/`): Vite + React 19 + TypeScript + Tailwind v4 + shadcn/ui, dev proxy to `:3000`
+- [x] "Signal Room" design system (ink-navy + indigo accent + real operator hues), replacing the initial ROMER-ported tokens
+- [x] Foundation: typed API client, auth context, theme provider, `AppShell`, router
+- [x] Settings redesign: flat 7-form grid → 6 named categories
+- [x] Auth pages: Login (password → MFA, step-up re-auth), Register, Forgot password, Reset password
+- [x] Post-login routing: every role lands on `/welcome`; admin/super_admin get a visible Admin Console link instead of being redirected past it
+- [x] Forgot/reset-password backend (`userAuth.js`, 2 new endpoints) + wired into **both** the vanilla site and the React app
+- [x] `scripts/reset-password.js` — standalone SSH-run recovery CLI for production account email/password resets
+- [ ] **`P2`** Phase 2/3 (already planned in `docs/redesign.md`, not built): finish Officer Portal port, then Ops UI / Admin Console ports (Phases 4/5)
+
+---
+
 ## ✅ DONE — 2026-07-14: Security hardening V1 (all 10 steps) + Telegram-officer portal separation · `P1`
 
 All 10 steps below are complete, plus a follow-on hardening item added this
@@ -62,11 +96,16 @@ localhost-only, deploy only after a full pass and explicit approval.
 
 ---
 
-## 🔜 PLANNED — 2026-07-14: Close the Telegram group's open-access policy (registration enforcement) · `P1`
+## ✅ BUILT, NOT DEPLOYED — 2026-07-14/15: Close the Telegram group's open-access policy (registration enforcement) · `P1`
 
 Closes the one piece of Step 5's original scope intentionally left undone
 (see the note at the bottom of `docs/security-hardening-v1-design.md`).
-**Design reviewed and decisions locked this session — no code written yet.**
+**Code built and tested 2026-07-15** (`checkRegistration()`/
+`buildRegistrationLink()` in `src/app.js`, wired into `POST /api/requests`;
+`test/registrationGate.test.js`) — same soft-nag design locked below. Still
+part of the un-merged `feature/security-hardening-v1` branch (see the
+CRITICAL deployment-gap entry above); nothing here reaches production until
+that merge/deploy happens.
 
 **Current state:** the Telegram group is fully open — `planIntake()` in
 `telegram-bridge/bridge.js` only checks `authorizedUsers` for private DMs;
@@ -227,32 +266,28 @@ security checklist, edge cases): [`docs/gd-lost-phone-watch-design.md`](docs/gd-
 - [ ] **`P2`** Admin console UI (case list/detail, new-case form + image upload)
 - [ ] **`P2`** Local end-to-end simulation before any deploy conversation
 
-## 🔜 PLANNED — React + Vite frontend migration · `P1` (large, multi-session)
+## 🟡 IN PROGRESS — React + Vite frontend migration · `P1` (large, multi-session)
 
 Migrate the vanilla static frontend to a **React + Vite SPA** so React-native AI
-design tools (magic MCP, v0, shadcn/ui, Claude Design code export) can drop in
-directly, instead of being hand-translated into vanilla CSS/JS. **Staged: build
-+ verify fully on localhost first, deploy to the VPS only after a signed-off
-parity pass.** Full write-up in this session's handoff in `progress_tracker.md`.
+design tools (Magic MCP/21st.dev, shadcn/ui) can drop in directly, instead of
+being hand-translated into vanilla CSS/JS. **Staged: build + verify fully on
+localhost first, deploy to the VPS only after a signed-off parity pass.** Full
+architecture + phase plan: [`docs/redesign.md`](docs/redesign.md).
 
-**Recommended stack (pending user sign-off):** React 18 + Vite + **TypeScript** +
-**Tailwind** (port `theme.css` teal M3 tokens into the Tailwind theme) + optional
-shadcn/ui. New app lives in **`web/`**; existing `public/` stays serving until the
-final deploy step (instant rollback).
-
-**Pending decisions before Phase 0:**
-- [ ] TypeScript + Tailwind (rec) vs. lower-risk JS / plain CSS variables?
-- [ ] shadcn/ui primitives in the mix, or own components only?
-- [ ] Confirm app location `web/`.
+**Stack (locked):** React 19 + Vite + TypeScript + Tailwind CSS v4 +
+shadcn/ui (`base` library). New app lives in `web/`; `public/` stays serving
+until the final deploy step (instant rollback). Design system: **"Signal
+Room"** (see `docs/redesign.md` / `web/src/index.css`).
 
 **Phases (each verified on localhost before the next):**
-- [ ] **P1** Phase 0 — scaffold `web/` (Vite+React+TS+Tailwind), port `theme.css` tokens, dev proxy `/api` → :3000
-- [ ] **P1** Phase 1 — foundation: port `shared.js` → typed API module + hooks, auth context (session token + legacy key), theme provider, base UI primitives
-- [ ] **P1** Phase 2 — auth pages (`login`, `register`)
-- [ ] **P1** Phase 3 — Ops UI (Home, Activity monitor-console, Access/settings) from `index.html` + `app.js`
-- [ ] **P1** Phase 4 — Admin console (Approvals Queue, Unmatched, Rejected, Audit, Tools) from `admin.html` + `admin.js` — largest piece (~880 lines)
-- [ ] **P1** Phase 5 — React Router + SPA shell; `src/server.js` serves the built bundle with SPA fallback (backend logic unchanged)
-- [ ] **P1** Phase 6 — full localhost verification: feature-parity checklist across every screen/flow, dark+light, mobile+desktop
+- [x] **P1** Phase 0 — scaffold `web/`, port design tokens, dev proxy `/api` → :3000, Welcome page
+- [x] **P1** Phase 1 — foundation: typed API client, auth context, theme provider, `AppShell`, router
+- [x] **P1** Phase 1.5 — Settings redesign (flat grid → 6 named categories)
+- [x] **P1** Phase 2 — auth pages: Login, Register, Forgot password, Reset password
+- [ ] **P1** Phase 3 — Officer Portal port (`portal.html` → React) — planned in detail in `docs/redesign.md`, not built
+- [ ] **P1** Phase 4 — Ops UI (Home, Activity monitor-console) from `index.html` + `app.js`
+- [ ] **P1** Phase 5 — Admin console (Approvals Queue, Unmatched, Rejected, Audit, Tools) from `admin.html` + `admin.js` — largest piece (~880 lines)
+- [ ] **P1** Phase 6 — `src/server.js` serves the built `web/dist` bundle with SPA fallback; full localhost feature-parity pass
 - [ ] **P2** Phase 7 — update `deploy.sh` to `npm run build` → ship `web/dist/`; staged VPS deploy + verify; keep old `public/` for rollback
 
 **Unchanged by this migration:** backend `src/`, Telegram bridge, Android apps,

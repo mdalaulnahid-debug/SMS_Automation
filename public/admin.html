@@ -303,6 +303,7 @@
           <button class="sidebar-item" data-section="audit"><span class="sidebar-label"><span class="material-symbols-outlined">policy</span>Audit</span><span class="sidebar-count" id="countAudit">0</span></button>
           <button class="sidebar-item" data-section="phoneinbox"><span class="sidebar-label"><span class="material-symbols-outlined">smartphone</span>Phone Inbox</span></button>
           <button class="sidebar-item" data-section="tools"><span class="sidebar-label"><span class="material-symbols-outlined">construction</span>Tools</span></button>
+          <button class="sidebar-item" id="teamSidebarItem" data-section="team" style="display:none"><span class="sidebar-label"><span class="material-symbols-outlined">group</span>Team</span></button>
         </aside>
 
         <main class="admin-main">
@@ -639,6 +640,18 @@
                 </div>
               </section>
             </div>
+          </section>
+          <section id="section-team" class="admin-section">
+            <div class="section-heading">
+              <div>
+                <div class="section-title">Team</div>
+                <div class="section-subtitle">Promote a registered officer to admin, or demote back. Super-admin only — every account here already passed Personnel Registry verification to register at all.</div>
+              </div>
+            </div>
+            <section class="data-surface tool-panel">
+              <div id="teamResult" class="tool-note" style="display:none"></div>
+              <div id="teamList" class="mono-list" style="margin-top:8px"></div>
+            </section>
           </section>
         </main>
       </div>

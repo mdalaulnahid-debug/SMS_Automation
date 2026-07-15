@@ -10,6 +10,11 @@ This repo now has **three actively relevant application surfaces**:
 | **Android Gateway App** | `android-gateway/app/` | Kotlin gateway runtime app on each operator phone: HTTP server for outbound SMS, SMS receiver for inbound, webhook forward to backend |
 | **Android Admin App** | `android-gateway/adminapp/` | Separate Android supervisor console for overview, approvals, gateways, incidents, audit, and backend-admin connectivity |
 
+The web front end (`public/`, vanilla HTML/CSS/JS, no build step) is what's
+actually deployed today. A React + Vite + TypeScript rewrite is in progress
+in `web/` (`cd web && npm run dev`, proxies `/api` to the backend on `:3000`)
+— localhost-only, not deployed yet. See [`docs/redesign.md`](docs/redesign.md).
+
 ## Work From Any PC
 
 You can pull this repo on a home or office PC and continue work quickly, but there are two

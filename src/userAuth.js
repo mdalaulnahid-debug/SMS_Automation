@@ -128,6 +128,12 @@ class UserAuthStore {
     if (!columns.some((col) => col.name === 'unit')) {
       this.db.exec('ALTER TABLE auth_users ADD COLUMN unit TEXT');
     }
+    if (!columns.some((col) => col.name === 'reset_token')) {
+      this.db.exec('ALTER TABLE auth_users ADD COLUMN reset_token TEXT');
+    }
+    if (!columns.some((col) => col.name === 'reset_token_expires_at')) {
+      this.db.exec('ALTER TABLE auth_users ADD COLUMN reset_token_expires_at TEXT');
+    }
     this.db.exec(
       'CREATE UNIQUE INDEX IF NOT EXISTS idx_auth_users_telegram_id ON auth_users(telegram_id) WHERE telegram_id IS NOT NULL'
     );
@@ -282,6 +288,40 @@ class UserAuthStore {
       throw new Error('New password must be at least 8 characters.');
     }
     this.db.prepare('UPDATE auth_users SET password_hash = ? WHERE id = ?').run(hashPassword(newPassword), userId);
+  }
+
+  // Forgot-password: issues a reset token for an *existing, non-disabled*
+  // account. Returns null (not a thrown error) when the email doesn't match
+  // anything, so the API layer can always respond 200 either way and never
+  // leak which emails have accounts — the same shape as most real-world
+  // reset flows, deliberately not mirroring startLogin()'s throw-on-miss.
+  requestPasswordReset(email) {
+    const user = this._row(email);
+    if (!user || user.status === 'disabled') return null;
+    const resetToken = generateToken();
+    const expiresAt = new Date(Date.now() + MFA_PENDING_TTL_MS * 6).toISOString(); // 1 hour
+    this.db
+      .prepare('UPDATE auth_users SET reset_token = ?, reset_token_expires_at = ? WHERE id = ?')
+      .run(resetToken, expiresAt, user.id);
+    return { resetToken, email: user.email, name: user.name };
+  }
+
+  // Completes a reset: verifies the token, sets the new password, and
+  // invalidates every existing session for the account — a password reset
+  // is exactly the moment a stale/hijacked session should stop working.
+  resetPassword(resetToken, newPassword) {
+    const user = this.db.prepare('SELECT * FROM auth_users WHERE reset_token = ?').get(resetToken);
+    if (!user) throw new Error('Invalid or already-used reset link.');
+    if (!user.reset_token_expires_at || new Date(user.reset_token_expires_at).getTime() < Date.now()) {
+      throw new Error('Reset link expired. Please request a new one.');
+    }
+    if (String(newPassword || '').length < 8) {
+      throw new Error('New password must be at least 8 characters.');
+    }
+    this.db
+      .prepare('UPDATE auth_users SET password_hash = ?, reset_token = NULL, reset_token_expires_at = NULL WHERE id = ?')
+      .run(hashPassword(newPassword), user.id);
+    this.db.prepare('DELETE FROM auth_sessions WHERE user_id = ?').run(user.id);
   }
 
   // Step 1 of login: verify password, issue a short-lived MFA code + pending token.
