@@ -320,7 +320,7 @@
     "semantic_hash": "61e7f703a86e4a13915d46ba35b0a582"
   },
   "src/replyAnalyzer.js": {
-    "mtime": 1785666224.0363252,
+    "mtime": 1785672501.6754045,
     "ast_hash": "4842a6ed5100e9d93acbeafe40d74abf",
     "semantic_hash": ""
   },
@@ -330,8 +330,8 @@
     "semantic_hash": "c2ddb13641a9fcb3398445932020564b"
   },
   "src/service.js": {
-    "mtime": 1785651560.1421676,
-    "ast_hash": "371f170e6c1bd7362113e9346418c538",
+    "mtime": 1785675002.667987,
+    "ast_hash": "61590601dc720f5bbbe2b8c17fff9094",
     "semantic_hash": ""
   },
   "src/settingsStore.js": {
@@ -390,8 +390,8 @@
     "semantic_hash": "cfec7c5c5793373d20cf53b1f8a614ef"
   },
   "test/replyMatching.test.js": {
-    "mtime": 1785666344.3371854,
-    "ast_hash": "bb702ddee7422ba0907d6846b01057b3",
+    "mtime": 1785672501.6754045,
+    "ast_hash": "ba25a0b55affb23f8d3132fbf76ff48b",
     "semantic_hash": ""
   },
   "test/security.test.js": {
@@ -2130,8 +2130,8 @@
     "semantic_hash": ""
   },
   ".impeccable/hook.cache.json": {
-    "mtime": 1785666344.464015,
-    "ast_hash": "4676f2415cd34fdba5013cc3e6520681",
+    "mtime": 1785675309.104555,
+    "ast_hash": "3170c9543435d6d87fd72fd62560890c",
     "semantic_hash": ""
   },
   "config/auth.example.json": {
@@ -3665,23 +3665,28 @@
     "semantic_hash": ""
   },
   "scripts/classify-unmatched.js": {
-    "mtime": 1785660011.1093357,
-    "ast_hash": "a85df746652933cc04cc1d401e86dbe5",
+    "mtime": 1785672501.6737618,
+    "ast_hash": "e73639c1c6bca6dace1a5715c5dde99f",
     "semantic_hash": ""
   },
   "scripts/correlate-unmatched.js": {
-    "mtime": 1785665688.2923164,
-    "ast_hash": "bbb446f006aff1f291960a50ec8595ff",
+    "mtime": 1785672501.6743107,
+    "ast_hash": "94bad3318aac88360b5b03d05f2360e8",
     "semantic_hash": ""
   },
   "scripts/deploy-and-reveal-gate.sh": {
-    "mtime": 1785658279.5540774,
-    "ast_hash": "baa8b123ca1083f05ea9dda2702090d5",
+    "mtime": 1785672501.6750991,
+    "ast_hash": "7c38fa6eadd7dc63b056014150f2e4ef",
     "semantic_hash": ""
   },
   "scripts/diagnose-unmatched.js": {
-    "mtime": 1785659064.9140177,
-    "ast_hash": "de864fc12ef92977f5998190bee2af19",
+    "mtime": 1785672501.6754045,
+    "ast_hash": "1ecc66c5723ccbad7a6aded215866e28",
+    "semantic_hash": ""
+  },
+  "scripts/reprocess-unmatched-dryrun.js": {
+    "mtime": 1785675308.9797301,
+    "ast_hash": "92e146761a91a4c3ad8c8c162cd31c16",
     "semantic_hash": ""
   }
 }
