@@ -67,30 +67,24 @@ function appWith(registrationWindowEndsAt) {
 // Registers, verifies (against whatever window policy is active), and logs in,
 // returning a bearer token for the resulting session.
 async function createSession(app, { email, role, pastWindow }) {
-  // Registration now requires a Personnel Registry match (security-hardening
-  // v1 step 5) — seed one covering this email/phone before registering.
-  const phone = `017${String(Math.floor(Math.random() * 1e8)).padStart(8, '0')}`;
-  app.userAuth.replaceRegistry(
-    [...app.userAuth.listRegistry(), { name: 'Test User', phone, email }],
-    'test-seed'
-  );
-  await call(app, {
-    method: 'POST',
-    url: '/api/auth/register',
-    body: { email, password: 'longenough1', name: 'Test User', phone }
-  });
-  const user = app.userAuth.getUserByEmail(email);
-  app.userAuth.verifyEmail(user.verify_token, {
+  // Bypasses the now invite-gated HTTP register endpoint — this test file
+  // exercises the pending_approval/registration-window feature itself
+  // (unchanged), not the front door that reaches it, so calling the
+  // low-level userAuth.register() primitive directly is the faithful fix.
+  const reg = app.userAuth.register({ email, password: 'longenough1', name: 'Test User' });
+  app.userAuth.verifyEmail(reg.verifyToken, {
     registrationWindowEndsAt: pastWindow ? new Date(Date.now() - 60_000).toISOString() : null
   });
-  if (role) app.userAuth.setRole(user.id, role);
+  if (role) app.userAuth.setRole(reg.id, role);
   if (app.userAuth.getUserByEmail(email).status === 'pending_approval') {
-    app.userAuth.approveRegistration(user.id); // unblock login so tests can get a session regardless of role under test
+    app.userAuth.approveRegistration(reg.id); // unblock login so tests can get a session regardless of role under test
   }
 
-  const login = app.userAuth.startLogin({ email, password: 'longenough1' });
+  const login = role === 'super_admin'
+    ? app.userAuth.startSuperAdminLogin({ email, password: 'longenough1' })
+    : app.userAuth.startLogin({ email, password: 'longenough1' });
   const session = app.userAuth.completeLogin({ pendingToken: login.pendingToken, code: login.mfaCode });
-  return { token: session.token, userId: user.id };
+  return { token: session.token, userId: reg.id };
 }
 
 test('GET /api/admin/registrations/pending requires super_admin specifically, not just admin', async () => {
@@ -118,17 +112,9 @@ test('a pending_approval registration shows up in the queue and can be approved'
   const superAdmin = await createSession(app, { email: 'super2@example.com', role: 'super_admin' });
 
   // Register someone AFTER the window has closed, so they land on pending_approval.
-  app.userAuth.replaceRegistry(
-    [...app.userAuth.listRegistry(), { name: 'Waiting Officer', phone: '01799999999', email: 'waiting@example.com' }],
-    'test-seed'
-  );
-  await call(app, {
-    method: 'POST',
-    url: '/api/auth/register',
-    body: { email: 'waiting@example.com', password: 'longenough1', name: 'Waiting Officer', phone: '01799999999' }
-  });
+  const waitingReg = app.userAuth.register({ email: 'waiting@example.com', password: 'longenough1', name: 'Waiting Officer', phone: '01799999999' });
+  app.userAuth.verifyEmail(waitingReg.verifyToken, { registrationWindowEndsAt: new Date(Date.now() - 60_000).toISOString() });
   const waitingUser = app.userAuth.getUserByEmail('waiting@example.com');
-  app.userAuth.verifyEmail(waitingUser.verify_token, { registrationWindowEndsAt: new Date(Date.now() - 60_000).toISOString() });
 
   const pendingList = await call(app, {
     method: 'GET',
@@ -229,7 +215,16 @@ test('settings/registration-window endpoints require super_admin', async () => {
 
 test('/api/ops/overview, /api/ops/activity, and /api/ops/gateways reject an officer session and accept admin/super_admin', async () => {
   const app = appWith();
-  const officer = await createSession(app, { email: 'officer-ops@example.com', role: 'officer' });
+  // Officer accounts can no longer log in at all (userAuth.startLogin blocks
+  // that role) — mint the session directly to prove the endpoint's own role
+  // check still holds as defense in depth, independent of the login block.
+  const officerReg = app.userAuth.register({ email: 'officer-ops@example.com', password: 'longenough1', name: 'Officer Ops' });
+  app.userAuth.verifyEmail(officerReg.verifyToken, {});
+  const officerToken = require('node:crypto').randomBytes(32).toString('hex');
+  app.userAuth.db
+    .prepare('INSERT INTO auth_sessions (token, user_id, created_at, expires_at, ip, user_agent) VALUES (?, ?, ?, ?, ?, ?)')
+    .run(officerToken, officerReg.id, new Date().toISOString(), new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString(), '127.0.0.1', 'test');
+  const officer = { token: officerToken };
   const admin = await createSession(app, { email: 'admin-ops@example.com', role: 'admin' });
 
   for (const url of ['/api/ops/overview', '/api/ops/activity', '/api/ops/gateways']) {

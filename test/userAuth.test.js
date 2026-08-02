@@ -51,7 +51,7 @@ async function call(app, opts) {
 test('register -> verify -> login -> mfa -> session', () => {
   const store = new UserAuthStore(':memory:');
 
-  const reg = store.register({ email: 'Officer@Example.com', password: 'longenough1', name: 'Officer One' });
+  const reg = store.register({ email: 'Officer@Example.com', password: 'longenough1', name: 'Officer One', role: 'admin' });
   assert.ok(reg.verifyToken);
 
   assert.throws(() => store.startLogin({ email: 'officer@example.com', password: 'longenough1' }), /verify your email/);
@@ -78,7 +78,7 @@ test('register -> verify -> login -> mfa -> session', () => {
 
 test('changePassword requires the current password and rejects a wrong one', () => {
   const store = new UserAuthStore(':memory:');
-  const reg = store.register({ email: 'officer@example.com', password: 'longenough1', name: 'Officer One' });
+  const reg = store.register({ email: 'officer@example.com', password: 'longenough1', name: 'Officer One', role: 'admin' });
   store.verifyEmail(reg.verifyToken);
   const login = store.startLogin({ email: 'officer@example.com', password: 'longenough1' });
   const session = store.completeLogin({ pendingToken: login.pendingToken, code: login.mfaCode });
@@ -97,7 +97,7 @@ test('changePassword requires the current password and rejects a wrong one', () 
 
 test('changePassword rejects a new password shorter than 8 characters', () => {
   const store = new UserAuthStore(':memory:');
-  const reg = store.register({ email: 'officer@example.com', password: 'longenough1', name: 'Officer One' });
+  const reg = store.register({ email: 'officer@example.com', password: 'longenough1', name: 'Officer One', role: 'admin' });
   store.verifyEmail(reg.verifyToken);
   const login = store.startLogin({ email: 'officer@example.com', password: 'longenough1' });
   const session = store.completeLogin({ pendingToken: login.pendingToken, code: login.mfaCode });
@@ -397,7 +397,7 @@ test('verifyEmail lands on pending_approval once the migration window has closed
 
 test('a pending_approval account cannot log in until approved', () => {
   const store = new UserAuthStore(':memory:');
-  const reg = store.register({ email: 'waiting@example.com', password: 'longenough1', name: 'Waiting' });
+  const reg = store.register({ email: 'waiting@example.com', password: 'longenough1', name: 'Waiting', role: 'admin' });
   const past = new Date(Date.now() - 60_000).toISOString();
   store.verifyEmail(reg.verifyToken, { registrationWindowEndsAt: past });
 
@@ -442,7 +442,10 @@ test('super-admin bootstrap creates a verified account directly', () => {
   const sa = store.createVerifiedUser({ email: 'super@example.com', password: 'topsecretpass', name: 'Super Admin', role: 'super_admin' });
   assert.equal(sa.role, 'super_admin');
   assert.equal(sa.email_verified, 1);
-  const login = store.startLogin({ email: 'super@example.com', password: 'topsecretpass' });
+  // super_admin can only complete login via startSuperAdminLogin (the hidden
+  // gate) — startLogin (the public /login page) rejects it outright.
+  assert.throws(() => store.startLogin({ email: 'super@example.com', password: 'topsecretpass' }), /Invalid email or password/);
+  const login = store.startSuperAdminLogin({ email: 'super@example.com', password: 'topsecretpass' });
   const session = store.completeLogin({ pendingToken: login.pendingToken, code: login.mfaCode });
   assert.equal(session.user.role, 'super_admin');
 });
@@ -467,13 +470,14 @@ function appWith(envOverrides = {}) {
 
 test('full HTTP register/verify/login/mfa/me/logout flow', async () => {
   const app = appWith();
-  // Registration now requires a Personnel Registry match (security-hardening v1 step 5).
-  app.userAuth.replaceRegistry([{ name: 'Officer One', phone: '01712340000', email: 'officer@example.com' }], 'test-seed');
+  // Registration is invite-only (access-model correction, 2026-07-15) — a
+  // super-admin issues the invite; the invitee only ever supplies a password.
+  const invite = app.userAuth.createInvite({ email: 'officer@example.com', name: 'Officer One', phone: '01712340000', role: 'admin' });
 
   const register = await call(app, {
     method: 'POST',
     url: '/api/auth/register',
-    body: { email: 'officer@example.com', password: 'longenough1', name: 'Officer One', phone: '01712340000' }
+    body: { invitationToken: invite.token, password: 'longenough1' }
   });
   assert.equal(register.status, 200);
 

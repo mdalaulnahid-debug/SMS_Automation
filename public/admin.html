@@ -645,10 +645,61 @@
             <div class="section-heading">
               <div>
                 <div class="section-title">Team</div>
-                <div class="section-subtitle">Promote a registered officer to admin, or demote back. Super-admin only — every account here already passed Personnel Registry verification to register at all.</div>
+                <div class="section-subtitle">Website access is admin/super-admin only, invite-only. Create an account directly, or send an invite link for someone to complete themselves. Super-admin only.</div>
               </div>
             </div>
+
             <section class="data-surface tool-panel">
+              <div class="section-title" style="font-size:14px">Super-admin sign-in URL</div>
+              <div class="section-subtitle" style="margin-bottom:12px">Super-admin accounts can only sign in through this hidden URL — never through the normal sign-in page. Keep it private; rotating it invalidates the old link immediately.</div>
+              <div id="gateUrlDisplay" class="mono" style="word-break:break-all;padding:10px 12px;border-radius:10px;background:var(--surface-2);border:1px solid var(--divider)"></div>
+              <div style="display:flex;gap:8px;margin-top:10px">
+                <button id="copyGateUrlBtn" type="button" class="btn-secondary">Copy</button>
+                <button id="regenerateGateUrlBtn" type="button" class="btn-secondary">Rotate URL</button>
+              </div>
+              <div id="gateUrlResult" class="tool-note" style="display:none"></div>
+            </section>
+
+            <section class="data-surface tool-panel">
+              <div class="section-title" style="font-size:14px">Invite a new admin</div>
+              <div class="section-subtitle" style="margin-bottom:12px">Generates a one-time registration link (valid 7 days) — copy it and hand it to them yourself.</div>
+              <form id="inviteForm" class="tool-form">
+                <input id="inviteEmail" class="input-field" type="email" placeholder="Email" required />
+                <input id="inviteName" class="input-field" type="text" placeholder="Full name" required />
+                <input id="invitePhone" class="input-field" type="tel" placeholder="Phone (optional)" />
+                <input id="inviteDesignation" class="input-field" type="text" placeholder="Designation (optional)" />
+                <input id="inviteUnit" class="input-field" type="text" placeholder="Unit (optional)" />
+                <select id="inviteRole" class="input-field">
+                  <option value="admin">admin</option>
+                  <option value="super_admin">super_admin</option>
+                </select>
+                <button class="btn-primary" type="submit">Generate invite link</button>
+              </form>
+              <div id="inviteResult" class="tool-note" style="display:none"></div>
+              <div id="inviteList" class="mono-list" style="margin-top:8px"></div>
+            </section>
+
+            <section class="data-surface tool-panel" style="margin-top:16px">
+              <div class="section-title" style="font-size:14px">Create account directly</div>
+              <div class="section-subtitle" style="margin-bottom:12px">No invite round trip — the account is active immediately with the password you set here. Hand it to them out of band.</div>
+              <form id="directAccountForm" class="tool-form">
+                <input id="directEmail" class="input-field" type="email" placeholder="Email" required />
+                <input id="directName" class="input-field" type="text" placeholder="Full name" required />
+                <input id="directPhone" class="input-field" type="tel" placeholder="Phone (optional)" />
+                <input id="directDesignation" class="input-field" type="text" placeholder="Designation (optional)" />
+                <input id="directUnit" class="input-field" type="text" placeholder="Unit (optional)" />
+                <select id="directRole" class="input-field">
+                  <option value="admin">admin</option>
+                  <option value="super_admin">super_admin</option>
+                </select>
+                <input id="directPassword" class="input-field" type="password" placeholder="Password (min 8 characters)" required minlength="8" />
+                <button class="btn-primary" type="submit">Create account</button>
+              </form>
+              <div id="directAccountResult" class="tool-note" style="display:none"></div>
+            </section>
+
+            <section class="data-surface tool-panel" style="margin-top:16px">
+              <div class="section-title" style="font-size:14px">Existing accounts</div>
               <div id="teamResult" class="tool-note" style="display:none"></div>
               <div id="teamList" class="mono-list" style="margin-top:8px"></div>
             </section>

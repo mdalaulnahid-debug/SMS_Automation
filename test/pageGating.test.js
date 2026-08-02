@@ -65,32 +65,23 @@ function appWith() {
   });
 }
 
-// Full register -> verify -> login -> mfa flow, returning the session token
-// and the Set-Cookie header value the mfa/verify step issued.
+// Directly creates a verified account + a session row, bypassing the real
+// login/MFA flow entirely. This is deliberate: since the access-model
+// correction (2026-07-15) blocks officer-role accounts from completing
+// login at all (userAuth.startLogin), these page-gating tests need a way
+// to construct an officer session anyway — the point is to prove the
+// server-side page gate (guardPage/requireAdmin) still rejects that role
+// as defense in depth, independent of whether the login flow can produce
+// one for real. Session creation is the same shape completeLogin() uses.
 async function registerAndLogin(app, { email, password, role }) {
-  // Registration now requires a Personnel Registry match (security-hardening
-  // v1 step 5) — seed one covering this email/phone before registering.
-  const phone = `017${String(Math.floor(Math.random() * 1e8)).padStart(8, '0')}`;
-  app.userAuth.replaceRegistry(
-    [...app.userAuth.listRegistry(), { name: 'Test User', phone, email }],
-    'test-seed'
-  );
-  await call(app, {
-    method: 'POST',
-    url: '/api/auth/register',
-    body: { email, password, name: 'Test User', phone }
-  });
-  const user = app.userAuth.getUserByEmail(email);
-  await call(app, { method: 'GET', url: `/verify-email?token=${user.verify_token}` });
-  if (role) app.userAuth.setRole(user.id, role);
-
-  const freshLogin = app.userAuth.startLogin({ email, password });
-  const mfa = await call(app, {
-    method: 'POST',
-    url: '/api/auth/mfa/verify',
-    body: { pendingToken: freshLogin.pendingToken, code: freshLogin.mfaCode }
-  });
-  return { token: mfa.json.token, setCookie: mfa.headers['Set-Cookie'] };
+  const user = app.userAuth.createVerifiedUser({ email, password, name: 'Test User', role: role || 'officer' });
+  const token = require('node:crypto').randomBytes(32).toString('hex');
+  const now = new Date().toISOString();
+  const expiresAt = new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString();
+  app.userAuth.db
+    .prepare('INSERT INTO auth_sessions (token, user_id, created_at, expires_at, ip, user_agent) VALUES (?, ?, ?, ?, ?, ?)')
+    .run(token, user.id, now, expiresAt, '127.0.0.1', 'test');
+  return { token, setCookie: `sessionToken=${token}; Path=/; HttpOnly; SameSite=Lax` };
 }
 
 function cookieHeaderFrom(setCookieValue) {
