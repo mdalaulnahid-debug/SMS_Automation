@@ -180,8 +180,8 @@
     "semantic_hash": "1a2b112ef3ab4de207cd27d5fcd61968"
   },
   "public/admin.js": {
-    "mtime": 1785651560.1328113,
-    "ast_hash": "1c52b124571da472c0d94ca2eab50888",
+    "mtime": 1785653782.394889,
+    "ast_hash": "da21ff971cabf611c1280126abc8c3e4",
     "semantic_hash": ""
   },
   "public/app-version.json": {
@@ -265,8 +265,8 @@
     "semantic_hash": "691542780e01dd0058fe9c6c54455530"
   },
   "src/app.js": {
-    "mtime": 1785651560.1328113,
-    "ast_hash": "dd17e13fde4e88159a5a7bce3edb576e",
+    "mtime": 1785653528.9856346,
+    "ast_hash": "d4fae7cc9e29c881ab2c609a9ea05c6b",
     "semantic_hash": ""
   },
   "src/auth.js": {
@@ -355,8 +355,8 @@
     "semantic_hash": "11bcb3c17399ffb58f989b28ea1d899e"
   },
   "src/userAuth.js": {
-    "mtime": 1785651560.1421676,
-    "ast_hash": "cb0bcb4b9e1d6aef91f321a15ed50697",
+    "mtime": 1785653468.534852,
+    "ast_hash": "eb8b02817e1ff8b35a153b109581cee2",
     "semantic_hash": ""
   },
   "telegram-bridge/backendClient.js": {
@@ -395,8 +395,8 @@
     "semantic_hash": ""
   },
   "test/security.test.js": {
-    "mtime": 1785651560.1476748,
-    "ast_hash": "2f8a5d6fc8f87dcf0a70372e98767f7b",
+    "mtime": 1785653172.1218092,
+    "ast_hash": "5935077c3438d9a21c0a6ddf6b978681",
     "semantic_hash": ""
   },
   "test/settingsStore.test.js": {
@@ -415,8 +415,8 @@
     "semantic_hash": "5d6b8ae7b5fb343a7e673dc0c646d4a4"
   },
   "test/userAuth.test.js": {
-    "mtime": 1785651560.152215,
-    "ast_hash": "e7862c6b57aac2ea69ac055654c97e37",
+    "mtime": 1785653606.5890934,
+    "ast_hash": "81babf54e8a6f9fe58a86441f2a46bd9",
     "semantic_hash": ""
   },
   "test/workflow.test.js": {
@@ -2130,8 +2130,8 @@
     "semantic_hash": ""
   },
   ".impeccable/hook.cache.json": {
-    "mtime": 1784180657.3951774,
-    "ast_hash": "0f8c02d79b09ebfe511546b5b556e2e0",
+    "mtime": 1785656895.1927795,
+    "ast_hash": "5dcdb7cdbb32b7622d2f73eb55c7fe8f",
     "semantic_hash": ""
   },
   "config/auth.example.json": {
@@ -3075,8 +3075,8 @@
     "semantic_hash": ""
   },
   "public/admin.html": {
-    "mtime": 1785651560.1328113,
-    "ast_hash": "53f7a19528ab0f8d9990977c32a7fdc6",
+    "mtime": 1785653757.110873,
+    "ast_hash": "c6059fac3234dfcebe37dd5d580b9e31",
     "semantic_hash": ""
   },
   "public/index.html": {
@@ -3090,8 +3090,8 @@
     "semantic_hash": ""
   },
   "public/register.html": {
-    "mtime": 1785651560.1328113,
-    "ast_hash": "8b163f6260f2d9f7e7c7496c3ab2a410",
+    "mtime": 1785651957.7307134,
+    "ast_hash": "f483ffa57165fcd96c1558688c1c91d1",
     "semantic_hash": ""
   },
   "public/setup.html": {
@@ -3325,13 +3325,13 @@
     "semantic_hash": ""
   },
   "test/pageGating.test.js": {
-    "mtime": 1785651560.1476748,
-    "ast_hash": "c8c368a3a5afe30208b98621e52edd8e",
+    "mtime": 1785652179.7757342,
+    "ast_hash": "4ea00a171e91dc5d33530efe3bbeb249",
     "semantic_hash": ""
   },
   "test/personnelRegistryEndpoint.test.js": {
-    "mtime": 1785651560.1476748,
-    "ast_hash": "8da42928c2c732353835e6e08d63c5e5",
+    "mtime": 1785653671.658953,
+    "ast_hash": "083557b5331756af55d35ee2bed03825",
     "semantic_hash": ""
   },
   "test/personnelRegistryWorkbook.test.js": {
@@ -3340,13 +3340,13 @@
     "semantic_hash": ""
   },
   "test/registrationApproval.test.js": {
-    "mtime": 1785651560.1476748,
-    "ast_hash": "e23e163417d4ecef14778c737ce820ce",
+    "mtime": 1785653680.7009995,
+    "ast_hash": "695ef7974ec7f2f3bbf3e2a92787204e",
     "semantic_hash": ""
   },
   "test/registrationFlow.test.js": {
-    "mtime": 1785651560.1476748,
-    "ast_hash": "633a29828afe20aab89101b29e8fae06",
+    "mtime": 1785653594.0269527,
+    "ast_hash": "08bebcecdb4bfe71e4acbc2034669c07",
     "semantic_hash": ""
   },
   "data/personnel-registry/README.md": {
@@ -3400,8 +3400,8 @@
     "semantic_hash": ""
   },
   "test/adminPromotion.test.js": {
-    "mtime": 1785651560.1421676,
-    "ast_hash": "1b68492cb41218edf69544e6bbb9f7ef",
+    "mtime": 1785653658.887479,
+    "ast_hash": "35f9bde756f6af59ea6c615d21d8f176",
     "semantic_hash": ""
   },
   "test/registrationGate.test.js": {
@@ -3555,8 +3555,8 @@
     "semantic_hash": ""
   },
   "web/src/pages/auth/Register.tsx": {
-    "mtime": 1785651560.1631525,
-    "ast_hash": "073bdfcaa48fec0805b7c19d22ec68e0",
+    "mtime": 1785651986.4542494,
+    "ast_hash": "af40c27add530eed2732577d939825dd",
     "semantic_hash": ""
   },
   "web/src/pages/auth/ResetPassword.tsx": {
@@ -3652,6 +3652,16 @@
   "web/public/icons.svg": {
     "mtime": 1785651560.1587722,
     "ast_hash": "21c7473c592c67dc87223d49892c8f0a",
+    "semantic_hash": ""
+  },
+  "test/superAdminGate.test.js": {
+    "mtime": 1785653719.378148,
+    "ast_hash": "dc580c35cf041748d157d8df0f2aaa98",
+    "semantic_hash": ""
+  },
+  "public/super-admin-login.html": {
+    "mtime": 1785653553.783502,
+    "ast_hash": "ef7eb4cb0e3402a21057f4a6e0748fd4",
     "semantic_hash": ""
   }
 }
