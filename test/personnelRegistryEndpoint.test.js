@@ -154,15 +154,10 @@ test('an empty/all-invalid workbook is rejected rather than wiping the registry 
 // --- POST /api/admin/personnel-registry/add (single-record, super_admin-only) ---
 
 async function createSession(app, { email, role }) {
-  app.userAuth.replaceRegistry(
-    [...app.userAuth.listRegistry(), { name: 'Test User', phone: '01700000001', email }],
-    'test-seed'
-  );
-  await call(app, { method: 'POST', url: '/api/auth/register', body: { email, password: 'longenough1', name: 'Test User', phone: '01700000001' } });
-  const user = app.userAuth.getUserByEmail(email);
-  app.userAuth.verifyEmail(user.verify_token, {});
-  if (role) app.userAuth.setRole(user.id, role);
-  const login = app.userAuth.startLogin({ email, password: 'longenough1' });
+  app.userAuth.createVerifiedUser({ email, password: 'longenough1', name: 'Test User', role: role || 'admin' });
+  const login = role === 'super_admin'
+    ? app.userAuth.startSuperAdminLogin({ email, password: 'longenough1' })
+    : app.userAuth.startLogin({ email, password: 'longenough1' });
   const session = app.userAuth.completeLogin({ pendingToken: login.pendingToken, code: login.mfaCode });
   return session.token;
 }

@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Link, useSearchParams } from "react-router-dom";
-import { MailCheck, ShieldCheck } from "lucide-react";
+import { Lock, MailCheck, ShieldCheck } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,11 +11,6 @@ import { Button } from "@/components/ui/button";
 
 const schema = z
   .object({
-    name: z.string().min(1, "Full name is required."),
-    designation: z.string().min(1, "Designation is required."),
-    unit: z.string().min(1, "Unit is required."),
-    phone: z.string().min(1, "Official phone number is required."),
-    email: z.string().min(1, "Email is required.").email("Enter a valid email address."),
     password: z.string().min(10, "Password must be at least 10 characters."),
     confirm: z.string().min(1, "Confirm your password."),
   })
@@ -25,12 +20,34 @@ const schema = z
   });
 type Fields = z.infer<typeof schema>;
 
+type InviteStatus = "loading" | "denied" | "valid";
+
 export function Register() {
   const [params] = useSearchParams();
-  const registrationToken = params.get("token") || "";
+  const invitationToken = params.get("token") || "";
+  const [status, setStatus] = useState<InviteStatus>("loading");
+  const [invitee, setInvitee] = useState<{ email: string; name: string } | null>(null);
   const [serverError, setServerError] = useState<string | null>(null);
-  const [doneEmail, setDoneEmail] = useState<string | null>(null);
+  const [done, setDone] = useState(false);
   const form = useForm<Fields>({ resolver: zodResolver(schema) });
+
+  useEffect(() => {
+    if (!invitationToken) {
+      setStatus("denied");
+      return;
+    }
+    fetch(`/api/auth/invite-status?token=${encodeURIComponent(invitationToken)}`)
+      .then((res) => res.json())
+      .then((data: { valid: boolean; email?: string; name?: string }) => {
+        if (!data.valid || !data.email) {
+          setStatus("denied");
+          return;
+        }
+        setInvitee({ email: data.email, name: data.name || data.email });
+        setStatus("valid");
+      })
+      .catch(() => setStatus("denied"));
+  }, [invitationToken]);
 
   const onSubmit = async (fields: Fields) => {
     setServerError(null);
@@ -38,19 +55,11 @@ export function Register() {
       const res = await fetch("/api/auth/register", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({
-          name: fields.name,
-          designation: fields.designation,
-          unit: fields.unit,
-          phone: fields.phone,
-          email: fields.email,
-          password: fields.password,
-          ...(registrationToken ? { registrationToken } : {}),
-        }),
+        body: JSON.stringify({ invitationToken, password: fields.password }),
       });
       const data = (await res.json()) as { error?: string };
       if (!res.ok) throw new Error(data.error || "Registration failed.");
-      setDoneEmail(fields.email);
+      setDone(true);
     } catch (error) {
       setServerError(error instanceof Error ? error.message : "Registration failed.");
     }
@@ -81,39 +90,42 @@ export function Register() {
         </CardHeader>
 
         <CardContent>
-          {doneEmail ? (
+          {status === "loading" && (
+            <p className="py-6 text-center text-[13px] text-muted-foreground">Checking your invitation…</p>
+          )}
+
+          {status === "denied" && (
             <div className="flex flex-col items-center gap-3 py-4 text-center">
-              <span className="flex size-12 items-center justify-center rounded-full bg-success/10 text-success">
-                <MailCheck className="size-6" aria-hidden="true" />
+              <span className="flex size-12 items-center justify-center rounded-full bg-destructive/10 text-destructive">
+                <Lock className="size-6" aria-hidden="true" />
               </span>
               <h1 className="text-xl font-bold tracking-tight text-foreground" style={{ fontFamily: "var(--font-display)" }}>
-                Check your email
+                You are not authorized for Registration
               </h1>
               <p className="text-[13px] leading-relaxed text-muted-foreground">
-                A verification link was sent to <strong className="text-foreground">{doneEmail}</strong>. Click it to
-                activate your account, then sign in.
+                Accounts are created by invitation only. If you were expecting access, ask a super-admin to send you a
+                registration link.
               </p>
               <Link to="/login" className="mt-2 text-[13px] font-semibold text-primary no-underline hover:underline">
                 Go to sign in →
               </Link>
             </div>
-          ) : (
+          )}
+
+          {status === "valid" && invitee && !done && (
             <>
               <h1 className="text-2xl font-bold tracking-tight text-foreground" style={{ fontFamily: "var(--font-display)" }}>
-                Create account
+                Create your account
               </h1>
               <p className="mt-2 text-[13px] leading-relaxed text-muted-foreground">
-                Your phone and email must match your official record. Your account will be reviewed by an admin before
-                access is granted.
+                You've been invited to join SMS Automation. Set a password to finish setting up your account.
               </p>
+              <div className="mt-4 rounded-lg border border-border bg-muted/40 px-3 py-2.5">
+                <p className="text-[13.5px] font-bold text-foreground">{invitee.name}</p>
+                <p className="text-[12px] text-muted-foreground">{invitee.email}</p>
+              </div>
 
-              <form onSubmit={form.handleSubmit(onSubmit)} className="mt-6 flex flex-col gap-4" noValidate>
-                <Field id="name" label="Full name" placeholder="SI Ahmed" autoComplete="name" form={form} />
-                <Field id="designation" label="Designation" placeholder="Sub-Inspector" form={form} />
-                <Field id="unit" label="Unit" placeholder="LIC Barishal" form={form} />
-                <Field id="phone" label="Official phone number" placeholder="017XXXXXXXX" type="tel" autoComplete="tel" form={form} />
-                <Field id="email" label="Official email" placeholder="officer@example.com" type="email" autoComplete="email" form={form} />
-
+              <form onSubmit={form.handleSubmit(onSubmit)} className="mt-5 flex flex-col gap-4" noValidate>
                 <div className="flex flex-col gap-1.5">
                   <Label htmlFor="password">Password</Label>
                   <Input
@@ -155,44 +167,28 @@ export function Register() {
                   {form.formState.isSubmitting ? "Creating account…" : "Create account"}
                 </Button>
               </form>
-
-              <p className="mt-5 text-center text-[13px] text-muted-foreground">
-                Already have an account?{" "}
-                <Link to="/login" className="font-semibold text-primary no-underline hover:underline">
-                  Sign in
-                </Link>
-              </p>
             </>
+          )}
+
+          {done && invitee && (
+            <div className="flex flex-col items-center gap-3 py-4 text-center">
+              <span className="flex size-12 items-center justify-center rounded-full bg-success/10 text-success">
+                <MailCheck className="size-6" aria-hidden="true" />
+              </span>
+              <h1 className="text-xl font-bold tracking-tight text-foreground" style={{ fontFamily: "var(--font-display)" }}>
+                Check your email
+              </h1>
+              <p className="text-[13px] leading-relaxed text-muted-foreground">
+                A verification link was sent to <strong className="text-foreground">{invitee.email}</strong>. Click it
+                to activate your account, then sign in.
+              </p>
+              <Link to="/login" className="mt-2 text-[13px] font-semibold text-primary no-underline hover:underline">
+                Go to sign in →
+              </Link>
+            </div>
           )}
         </CardContent>
       </Card>
     </main>
-  );
-}
-
-type FieldProps = {
-  id: keyof Fields;
-  label: string;
-  placeholder: string;
-  type?: string;
-  autoComplete?: string;
-  form: ReturnType<typeof useForm<Fields>>;
-};
-
-function Field({ id, label, placeholder, type = "text", autoComplete, form }: FieldProps) {
-  const error = form.formState.errors[id];
-  return (
-    <div className="flex flex-col gap-1.5">
-      <Label htmlFor={id}>{label}</Label>
-      <Input
-        id={id}
-        type={type}
-        autoComplete={autoComplete}
-        placeholder={placeholder}
-        aria-invalid={Boolean(error)}
-        {...form.register(id)}
-      />
-      {error && <p className="text-[12px] text-destructive">{error.message as string}</p>}
-    </div>
   );
 }

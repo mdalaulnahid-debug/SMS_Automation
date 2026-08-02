@@ -1,5 +1,11 @@
 'use strict';
 
+// Registration is invite-only (access-model correction, 2026-07-15): a
+// super-admin issues an invite bound to a specific email/role via
+// userAuth.createInvite(); POST /api/auth/register only ever accepts an
+// invitationToken + password, never self-declared identity. Supersedes the
+// old registry-match self-serve flow this file used to test.
+
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const { Readable } = require('node:stream');
@@ -56,106 +62,166 @@ function appWith() {
   });
 }
 
-test('POST /api/auth/register rejects a phone/email pair not found in the Personnel Registry', async () => {
+async function createSuperAdminSession(app) {
+  app.userAuth.createVerifiedUser({ email: 'owner@example.com', password: 'longenough1', name: 'Owner', role: 'super_admin' });
+  // super_admin can only complete login via the hidden gate now.
+  const login = app.userAuth.startSuperAdminLogin({ email: 'owner@example.com', password: 'longenough1' });
+  const session = app.userAuth.completeLogin({ pendingToken: login.pendingToken, code: login.mfaCode });
+  return session.token;
+}
+
+test('GET /api/auth/invite-status reports invalid for a missing/unknown token', async () => {
   const app = appWith();
-  const res = await call(app, {
-    method: 'POST',
-    url: '/api/auth/register',
-    body: { name: 'Nobody', email: 'nobody@example.com', phone: '01700000000', password: 'longenough1' }
-  });
-  assert.equal(res.status, 400);
-  assert.match(res.json.error, /Personnel Registry/);
-  assert.equal(app.userAuth.getUserByEmail('nobody@example.com'), null);
+  const res = await call(app, { method: 'GET', url: '/api/auth/invite-status?token=bogus' });
+  assert.equal(res.status, 200);
+  assert.equal(res.json.valid, false);
 });
 
-test('POST /api/auth/register rejects a registered phone paired with someone else\'s email (no mix-and-match)', async () => {
+test('GET /api/auth/invite-status reports valid + the invitee identity for a real invite', async () => {
   const app = appWith();
-  app.userAuth.replaceRegistry([
-    { name: 'SI Ahmed', phone: '01711111111', email: 'ahmed@police.gov.bd' },
-    { name: 'SI Karim', phone: '01722222222', email: 'karim@police.gov.bd' }
-  ], 'admin-1');
-
-  const res = await call(app, {
-    method: 'POST',
-    url: '/api/auth/register',
-    body: { name: 'SI Ahmed', email: 'karim@police.gov.bd', phone: '01711111111', password: 'longenough1' }
-  });
-  assert.equal(res.status, 400);
-  assert.match(res.json.error, /Personnel Registry/);
+  const invite = app.userAuth.createInvite({ email: 'ahmed@police.gov.bd', name: 'SI Ahmed', role: 'admin' });
+  const res = await call(app, { method: 'GET', url: `/api/auth/invite-status?token=${invite.token}` });
+  assert.equal(res.status, 200);
+  assert.equal(res.json.valid, true);
+  assert.equal(res.json.email, 'ahmed@police.gov.bd');
+  assert.equal(res.json.name, 'SI Ahmed');
 });
 
-test('POST /api/auth/register succeeds when phone and email match the same registry record, and persists designation/unit', async () => {
+test('POST /api/auth/register rejects with no invitationToken — "You are not authorized for Registration"', async () => {
   const app = appWith();
-  app.userAuth.replaceRegistry([
-    { name: 'SI Ahmed', designation: 'Sub-Inspector', unit: 'LIC Barishal', phone: '01711111111', email: 'ahmed@police.gov.bd' }
-  ], 'admin-1');
+  const res = await call(app, { method: 'POST', url: '/api/auth/register', body: { password: 'longenough1' } });
+  assert.equal(res.status, 400);
+  assert.match(res.json.error, /not authorized for Registration/);
+});
+
+test('POST /api/auth/register rejects a bogus invitationToken', async () => {
+  const app = appWith();
+  const res = await call(app, {
+    method: 'POST',
+    url: '/api/auth/register',
+    body: { invitationToken: 'bogus-token', password: 'longenough1' }
+  });
+  assert.equal(res.status, 400);
+  assert.match(res.json.error, /not authorized for Registration/);
+  assert.equal(app.userAuth.getUserByEmail('ahmed@police.gov.bd'), null);
+});
+
+test('POST /api/auth/register succeeds with a valid invite, using the invite\'s identity (not client-submitted fields)', async () => {
+  const app = appWith();
+  const invite = app.userAuth.createInvite({
+    email: 'ahmed@police.gov.bd', name: 'SI Ahmed', phone: '01711111111',
+    designation: 'Sub-Inspector', unit: 'LIC Barishal', role: 'admin'
+  });
 
   const res = await call(app, {
     method: 'POST',
     url: '/api/auth/register',
-    body: {
-      name: 'SI Ahmed', designation: 'Sub-Inspector', unit: 'LIC Barishal',
-      email: 'ahmed@police.gov.bd', phone: '01711111111', password: 'longenough1'
-    }
+    // A tampered/different email in the body must be ignored — identity
+    // comes from the invite record, never from this request.
+    body: { invitationToken: invite.token, password: 'longenough1', email: 'attacker@example.com', role: 'super_admin' }
   });
   assert.equal(res.status, 200);
+
   const user = app.userAuth.getUserByEmail('ahmed@police.gov.bd');
-  assert.ok(user);
+  assert.ok(user, 'account created under the invited email, not the submitted one');
+  assert.equal(user.role, 'admin', 'role comes from the invite, not the request body');
   assert.equal(user.designation, 'Sub-Inspector');
   assert.equal(user.unit, 'LIC Barishal');
-  assert.equal(user.telegram_id, null);
+  assert.equal(app.userAuth.getUserByEmail('attacker@example.com'), null);
+});
+
+test('an invite cannot be used twice', async () => {
+  const app = appWith();
+  const invite = app.userAuth.createInvite({ email: 'ahmed@police.gov.bd', name: 'SI Ahmed', role: 'admin' });
+
+  const first = await call(app, {
+    method: 'POST',
+    url: '/api/auth/register',
+    body: { invitationToken: invite.token, password: 'longenough1' }
+  });
+  assert.equal(first.status, 200);
+
+  const second = await call(app, {
+    method: 'POST',
+    url: '/api/auth/register',
+    body: { invitationToken: invite.token, password: 'differentpass1' }
+  });
+  assert.equal(second.status, 400);
+  assert.match(second.json.error, /already been used/);
+});
+
+test('POST /api/admin/invites requires a super_admin session', async () => {
+  const app = appWith();
+  const res = await call(app, {
+    method: 'POST',
+    url: '/api/admin/invites',
+    body: { email: 'new-admin@example.com', name: 'New Admin', role: 'admin' }
+  });
+  assert.equal(res.status, 401);
+});
+
+test('POST /api/admin/invites creates an invite and returns a working registration link', async () => {
+  const app = appWith();
+  const token = await createSuperAdminSession(app);
+
+  const res = await call(app, {
+    method: 'POST',
+    url: '/api/admin/invites',
+    headers: { authorization: `Bearer ${token}` },
+    body: { email: 'new-admin@example.com', name: 'New Admin', role: 'admin' }
+  });
+  assert.equal(res.status, 200);
+  assert.ok(res.json.token);
+  assert.match(res.json.registrationLink, /\/register\?token=/);
+
+  const status = await call(app, { method: 'GET', url: `/api/auth/invite-status?token=${res.json.token}` });
+  assert.equal(status.json.valid, true);
+});
+
+test('POST /api/admin/accounts requires a super_admin session', async () => {
+  const app = appWith();
+  const res = await call(app, {
+    method: 'POST',
+    url: '/api/admin/accounts',
+    body: { email: 'direct@example.com', name: 'Direct', role: 'admin', password: 'longenough1' }
+  });
+  assert.equal(res.status, 401);
+});
+
+test('POST /api/admin/accounts creates an active account immediately, no invite round trip', async () => {
+  const app = appWith();
+  const token = await createSuperAdminSession(app);
+
+  const res = await call(app, {
+    method: 'POST',
+    url: '/api/admin/accounts',
+    headers: { authorization: `Bearer ${token}` },
+    body: { email: 'direct@example.com', name: 'Direct Admin', role: 'admin', password: 'longenough1' }
+  });
+  assert.equal(res.status, 200);
+
+  const user = app.userAuth.getUserByEmail('direct@example.com');
+  assert.ok(user);
+  assert.equal(user.status, 'active');
+  assert.equal(user.email_verified, 1);
+  assert.doesNotThrow(() => app.userAuth.startLogin({ email: 'direct@example.com', password: 'longenough1' }));
+});
+
+test('POST /api/admin/accounts rejects role "officer" — website access is admin/super_admin only', async () => {
+  const app = appWith();
+  const token = await createSuperAdminSession(app);
+
+  const res = await call(app, {
+    method: 'POST',
+    url: '/api/admin/accounts',
+    headers: { authorization: `Bearer ${token}` },
+    body: { email: 'officer-attempt@example.com', name: 'Nope', role: 'officer', password: 'longenough1' }
+  });
+  assert.equal(res.status, 400);
 });
 
 test('POST /api/telegram/registration-link requires admin auth', async () => {
   const app = appWith();
   const res = await call(app, { method: 'POST', url: '/api/telegram/registration-link', body: { telegramId: '999' } });
   assert.equal(res.status, 401);
-});
-
-test('POST /api/telegram/registration-link mints a token, and registering with it links the telegramId', async () => {
-  const app = appWith();
-  app.userAuth.replaceRegistry([
-    { name: 'SI Ahmed', phone: '01711111111', email: 'ahmed@police.gov.bd' }
-  ], 'admin-1');
-
-  const link = await call(app, {
-    method: 'POST',
-    url: '/api/telegram/registration-link',
-    headers: { 'x-api-key': 'unused-legacy-key' },
-    body: { telegramId: '424242' }
-  });
-  assert.equal(link.status, 200);
-  assert.match(link.json.url, /\/register\.html\?token=/);
-  const token = new URL(link.json.url).searchParams.get('token');
-
-  const reg = await call(app, {
-    method: 'POST',
-    url: '/api/auth/register',
-    body: {
-      name: 'SI Ahmed', email: 'ahmed@police.gov.bd', phone: '01711111111', password: 'longenough1',
-      registrationToken: token
-    }
-  });
-  assert.equal(reg.status, 200);
-  const user = app.userAuth.getUserByEmail('ahmed@police.gov.bd');
-  assert.equal(user.telegram_id, '424242');
-});
-
-test('POST /api/auth/register rejects an invalid/expired registrationToken even when phone+email match', async () => {
-  const app = appWith();
-  app.userAuth.replaceRegistry([
-    { name: 'SI Ahmed', phone: '01711111111', email: 'ahmed@police.gov.bd' }
-  ], 'admin-1');
-
-  const reg = await call(app, {
-    method: 'POST',
-    url: '/api/auth/register',
-    body: {
-      name: 'SI Ahmed', email: 'ahmed@police.gov.bd', phone: '01711111111', password: 'longenough1',
-      registrationToken: 'bogus-token'
-    }
-  });
-  assert.equal(reg.status, 400);
-  assert.match(reg.json.error, /Invalid or expired/);
-  assert.equal(app.userAuth.getUserByEmail('ahmed@police.gov.bd'), null);
 });

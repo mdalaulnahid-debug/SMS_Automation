@@ -829,6 +829,46 @@ document.getElementById('authorizedUserForm').addEventListener('submit', async (
 
 document.getElementById('settingsOperator').addEventListener('change', loadSettings);
 
+// --- Super-admin hidden sign-in URL ---
+
+async function loadGateUrl() {
+  const res = await apiFetch('/api/admin/super-admin-gate');
+  if (!res.ok) return;
+  const { url } = await res.json();
+  document.getElementById('gateUrlDisplay').textContent = url;
+}
+
+document.getElementById('copyGateUrlBtn').addEventListener('click', async () => {
+  const url = document.getElementById('gateUrlDisplay').textContent;
+  const resultEl = document.getElementById('gateUrlResult');
+  try {
+    await navigator.clipboard.writeText(url);
+    resultEl.textContent = 'Copied.';
+    resultEl.style.color = 'var(--success)';
+    resultEl.style.display = 'block';
+  } catch {
+    resultEl.textContent = 'Could not copy — select and copy manually.';
+    resultEl.style.color = 'var(--danger)';
+    resultEl.style.display = 'block';
+  }
+});
+
+document.getElementById('regenerateGateUrlBtn').addEventListener('click', async () => {
+  const resultEl = document.getElementById('gateUrlResult');
+  if (!confirm('Rotate the super-admin sign-in URL? The current link stops working immediately.')) return;
+  try {
+    const body = await postJson('/api/admin/super-admin-gate/regenerate', {});
+    document.getElementById('gateUrlDisplay').textContent = body.url;
+    resultEl.textContent = 'URL rotated. The old link no longer works.';
+    resultEl.style.color = 'var(--success)';
+    resultEl.style.display = 'block';
+  } catch (error) {
+    resultEl.textContent = error.message || 'Failed to rotate the URL.';
+    resultEl.style.color = 'var(--danger)';
+    resultEl.style.display = 'block';
+  }
+});
+
 // --- Team (promote-officer-to-admin, super-admin only) ---
 
 function currentSessionUserId() {
@@ -885,6 +925,77 @@ document.getElementById('teamList').addEventListener('click', async (event) => {
     await loadTeam();
   } catch (error) {
     resultEl.textContent = error.message || 'Failed to update role.';
+    resultEl.style.color = 'var(--danger)';
+    resultEl.style.display = 'block';
+  }
+});
+
+// --- Invite-only registration (super-admin only) ---
+
+async function loadInvites() {
+  const res = await apiFetch('/api/admin/invites');
+  if (!res.ok) return;
+  const { invites } = await res.json();
+  renderInvites(invites);
+}
+
+function renderInvites(invites) {
+  const pending = invites.filter((i) => !i.consumed_at && new Date(i.expires_at).getTime() > Date.now());
+  document.getElementById('inviteList').innerHTML = pending.length
+    ? pending.map((invite) => `
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--divider)">
+        <div>
+          <div>${esc(invite.name || invite.email)}</div>
+          <div class="mono" style="color:var(--text-muted);font-size:11px">${esc(invite.email)} · <span class="chip chip-accent">${esc(invite.role)}</span> · expires ${new Date(invite.expires_at).toLocaleDateString()}</div>
+        </div>
+      </div>`).join('')
+    : '<div class="empty">No pending invites.</div>';
+}
+
+document.getElementById('inviteForm').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const resultEl = document.getElementById('inviteResult');
+  try {
+    const body = await postJson('/api/admin/invites', {
+      email: document.getElementById('inviteEmail').value.trim(),
+      name: document.getElementById('inviteName').value.trim(),
+      phone: document.getElementById('invitePhone').value.trim(),
+      designation: document.getElementById('inviteDesignation').value.trim(),
+      unit: document.getElementById('inviteUnit').value.trim(),
+      role: document.getElementById('inviteRole').value
+    });
+    resultEl.innerHTML = `Invite created. Send this link: <div class="mono" style="margin-top:6px;word-break:break-all;user-select:all">${esc(body.registrationLink)}</div>`;
+    resultEl.style.color = 'var(--success)';
+    resultEl.style.display = 'block';
+    document.getElementById('inviteForm').reset();
+    await loadInvites();
+  } catch (error) {
+    resultEl.textContent = error.message || 'Failed to create invite.';
+    resultEl.style.color = 'var(--danger)';
+    resultEl.style.display = 'block';
+  }
+});
+
+document.getElementById('directAccountForm').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const resultEl = document.getElementById('directAccountResult');
+  try {
+    const body = await postJson('/api/admin/accounts', {
+      email: document.getElementById('directEmail').value.trim(),
+      name: document.getElementById('directName').value.trim(),
+      phone: document.getElementById('directPhone').value.trim(),
+      designation: document.getElementById('directDesignation').value.trim(),
+      unit: document.getElementById('directUnit').value.trim(),
+      role: document.getElementById('directRole').value,
+      password: document.getElementById('directPassword').value
+    });
+    resultEl.textContent = `Account created for ${body.email}.`;
+    resultEl.style.color = 'var(--success)';
+    resultEl.style.display = 'block';
+    document.getElementById('directAccountForm').reset();
+    await loadTeam();
+  } catch (error) {
+    resultEl.textContent = error.message || 'Failed to create account.';
     resultEl.style.color = 'var(--danger)';
     resultEl.style.display = 'block';
   }
@@ -1119,6 +1230,8 @@ function boot() {
   if (isSuperAdminUnlocked()) {
     document.getElementById('teamSidebarItem').style.display = '';
     loadTeam();
+    loadInvites();
+    loadGateUrl();
   }
 }
 

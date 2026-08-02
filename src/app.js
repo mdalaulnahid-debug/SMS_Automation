@@ -743,7 +743,25 @@ function createApp(options = {}) {
         // http module), which an exact match would 404 on.
         return serveFile(res, 'login.html', 'text/html; charset=utf-8');
       }
-      if (req.method === 'GET' && req.url === '/register.html') {
+      if (req.method === 'GET' && req.url.startsWith('/console/')) {
+        // The hidden super-admin login wall — reachable only by whoever
+        // already knows the current slug (logged once to the server console
+        // at first boot / rotation, never linked from any page). A wrong or
+        // guessed slug 404s exactly like any other unknown path — it must
+        // not be distinguishable from "this route doesn't exist."
+        const slug = decodeURIComponent(req.url.slice('/console/'.length).split('?')[0]);
+        if (slug !== userAuth.getSuperAdminGateSlug()) {
+          return json(res, 404, { error: 'Not found' });
+        }
+        return serveFile(res, 'super-admin-login.html', 'text/html; charset=utf-8');
+      }
+      if (
+        req.method === 'GET' &&
+        (req.url === '/register.html' || req.url === '/register' || req.url.startsWith('/register?'))
+      ) {
+        // Both paths serve the same vanilla page: invite links are built as
+        // /register?token=... (matching the React app's future route at
+        // cutover), this alias keeps that link working today, before cutover.
         return serveFile(res, 'register.html', 'text/html; charset=utf-8');
       }
       if (req.method === 'GET' && req.url === '/forgot-password.html') {
@@ -1019,6 +1037,23 @@ function createApp(options = {}) {
         } catch (error) {
           return json(res, 400, { error: error.message });
         }
+      }
+      if (req.method === 'GET' && req.url === '/api/admin/super-admin-gate') {
+        if (!requireSuperAdminSessionOnly(req, res)) return undefined;
+        const slug = userAuth.getSuperAdminGateSlug();
+        const baseUrl = process.env.PUBLIC_BASE_URL || `http://${req.headers.host}`;
+        return json(res, 200, { url: `${baseUrl}/console/${slug}` });
+      }
+      if (req.method === 'POST' && req.url === '/api/admin/super-admin-gate/regenerate') {
+        // Rotates the hidden URL immediately — the old one 404s the instant
+        // this returns. Useful if the current URL is suspected to have leaked.
+        if (!requireSuperAdminSessionOnly(req, res)) return undefined;
+        const slug = userAuth.regenerateSuperAdminGateSlug();
+        const baseUrl = process.env.PUBLIC_BASE_URL || `http://${req.headers.host}`;
+        const actorToken = require('./auth').presentedToken(req);
+        const actorSession = actorToken && userAuth.validateSession(actorToken);
+        store.audit(actorSession ? actorSession.user.email : 'super-admin', 'SUPER_ADMIN_GATE_ROTATED', null, {});
+        return json(res, 200, { url: `${baseUrl}/console/${slug}` });
       }
       if (req.method === 'GET' && req.url === '/api/admin/users') {
         // Owner-only roster of accounts — backs the "Team" promote/demote
@@ -1421,48 +1456,113 @@ function createApp(options = {}) {
         if (!requireAdminSessionOnly(req, res)) return undefined;
         return json(res, 200, { timedOut: await service.timeoutWaitingRequests() });
       }
+      if (req.method === 'GET' && req.url.startsWith('/api/auth/invite-status')) {
+        // Public, unauthenticated — lets the Register page decide whether to
+        // show the form at all, before the visitor types anything.
+        const token = new URL(req.url, 'http://x').searchParams.get('token') || '';
+        const invite = userAuth.getInviteIfValid(token);
+        if (!invite) return json(res, 200, { valid: false });
+        return json(res, 200, { valid: true, email: invite.email, name: invite.name });
+      }
       if (req.method === 'POST' && req.url === '/api/auth/register') {
+        // Access-model correction (2026-07-15): registration is invite-only.
+        // A super-admin issues the invite (POST /api/admin/invites) for a
+        // specific email/role — there is no self-serve path anymore. The
+        // invitee only ever supplies a password here; every other field
+        // (email, name, phone, designation, unit, role) comes from the
+        // invite record itself, never from this request body, so a
+        // tampered submission can't grant a different identity or role.
         const body = await readJson(req);
-
-        // Self-declared identity is never trusted (design doc §6) — phone and
-        // email must both match the SAME Personnel Registry record. An admin
-        // must have imported the registry before registration can succeed at
-        // all; that's a deliberate consequence of "no registry match, no
-        // account", not an oversight.
-        const registry = userAuth.buildPersonnelRegistry();
-        const match = registry.matchByPhoneAndEmail(body.phone, body.email);
-        if (!match) {
-          return json(res, 400, { error: 'Phone and email must match an official record in the Personnel Registry. Contact an administrator if you believe this is an error.' });
-        }
-
-        let telegramId = null;
-        if (body.registrationToken) {
-          try {
-            telegramId = userAuth.consumeRegistrationToken(body.registrationToken);
-          } catch (error) {
-            return json(res, 400, { error: error.message });
-          }
+        let invite;
+        try {
+          invite = userAuth.validateInvite(body.invitationToken);
+        } catch (error) {
+          return json(res, 400, { error: error.message });
         }
 
         let result;
         try {
           result = userAuth.register({
-            email: body.email,
+            email: invite.email,
             password: body.password,
+            name: invite.name || invite.email,
+            phone: invite.phone,
+            designation: invite.designation,
+            unit: invite.unit,
+            role: invite.role
+          });
+        } catch (error) {
+          return json(res, 400, { error: error.message });
+        }
+        userAuth.consumeInvite(body.invitationToken);
+        const baseUrl = process.env.PUBLIC_BASE_URL || `http://${req.headers.host}`;
+        const { subject, html, text } = mailer.verificationEmail(baseUrl, result.verifyToken);
+        await mailer.sendMail({ to: result.email, subject, html, text });
+        return json(res, 200, { ok: true, message: 'Registered. Check your email to verify your account.' });
+      }
+      if (req.method === 'GET' && req.url === '/api/admin/invites') {
+        if (!requireSuperAdminSessionOnly(req, res)) return undefined;
+        return json(res, 200, { invites: userAuth.listInvites() });
+      }
+      if (req.method === 'POST' && req.url === '/api/admin/invites') {
+        if (!requireSuperAdminSessionOnly(req, res)) return undefined;
+        const body = await readJson(req);
+        const actorToken = require('./auth').presentedToken(req);
+        const actorSession = actorToken && userAuth.validateSession(actorToken);
+        let invite;
+        try {
+          invite = userAuth.createInvite({
+            email: body.email,
             name: body.name,
             phone: body.phone,
             designation: body.designation,
             unit: body.unit,
-            role: 'officer',
-            telegramId
+            role: body.role || 'admin',
+            createdBy: actorSession ? actorSession.user.email : 'super-admin'
           });
         } catch (error) {
           return json(res, 400, { error: error.message });
         }
         const baseUrl = process.env.PUBLIC_BASE_URL || `http://${req.headers.host}`;
-        const { subject, html, text } = mailer.verificationEmail(baseUrl, result.verifyToken);
-        await mailer.sendMail({ to: result.email, subject, html, text });
-        return json(res, 200, { ok: true, message: 'Registered. Check your email to verify your account.' });
+        const registrationLink = `${baseUrl}/register?token=${encodeURIComponent(invite.token)}`;
+        store.audit(actorSession ? actorSession.user.email : 'super-admin', 'REGISTRATION_INVITE_CREATED', null, {
+          email: invite.email, role: invite.role
+        });
+        return json(res, 200, { ok: true, token: invite.token, registrationLink, expiresAt: invite.expiresAt });
+      }
+      if (req.method === 'POST' && req.url === '/api/admin/accounts') {
+        // Direct account creation — the other half of "super admin can both
+        // create and send request for New Account": no invite round trip,
+        // the account is active immediately with a password the super-admin
+        // sets and hands over out-of-band.
+        if (!requireSuperAdminSessionOnly(req, res)) return undefined;
+        const body = await readJson(req);
+        if (body.role !== 'admin' && body.role !== 'super_admin') {
+          return json(res, 400, { error: 'role must be "admin" or "super_admin".' });
+        }
+        if (!body.password || String(body.password).length < 8) {
+          return json(res, 400, { error: 'Password must be at least 8 characters.' });
+        }
+        if (!body.email || !body.name) {
+          return json(res, 400, { error: 'Email and name are required.' });
+        }
+        const existing = userAuth.getUserByEmail(body.email);
+        if (existing) return json(res, 400, { error: 'An account with this email already exists.' });
+        const user = userAuth.createVerifiedUser({
+          email: body.email,
+          password: body.password,
+          name: body.name,
+          role: body.role,
+          phone: body.phone,
+          designation: body.designation,
+          unit: body.unit
+        });
+        const actorToken = require('./auth').presentedToken(req);
+        const actorSession = actorToken && userAuth.validateSession(actorToken);
+        store.audit(actorSession ? actorSession.user.email : 'super-admin', 'ACCOUNT_CREATED_DIRECT', null, {
+          email: user.email, role: user.role
+        });
+        return json(res, 200, { ok: true, userId: user.id, email: user.email });
       }
       if (req.method === 'POST' && req.url === '/api/telegram/registration-link') {
         // Called by the Telegram bridge (authenticated the same way as its other
@@ -1542,6 +1642,23 @@ function createApp(options = {}) {
         let result;
         try {
           result = userAuth.startLogin({ email: body.email, password: body.password });
+        } catch (error) {
+          return json(res, 401, { error: error.message });
+        }
+        const { subject, html, text } = mailer.mfaCodeEmail(result.mfaCode);
+        await mailer.sendMail({ to: result.email, subject, html, text });
+        return json(res, 200, { ok: true, pendingToken: result.pendingToken, message: 'Enter the code emailed to you.' });
+      }
+      if (req.method === 'POST' && req.url === '/api/auth/super-login') {
+        // Step 1 of the hidden super-admin gate — reachable only from the
+        // page served at the random /console/<slug> URL. Rejects any
+        // non-super_admin account even with a correct password. Step 2
+        // reuses the ordinary /api/auth/mfa/verify unchanged (it's already
+        // role-agnostic — a pendingToken is a pendingToken).
+        const body = await readJson(req);
+        let result;
+        try {
+          result = userAuth.startSuperAdminLogin({ email: body.email, password: body.password });
         } catch (error) {
           return json(res, 401, { error: error.message });
         }

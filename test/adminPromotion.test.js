@@ -63,16 +63,25 @@ function appWith() {
   });
 }
 
+// Creates the account directly (bypassing the now invite-gated HTTP
+// register endpoint, same as every other test file after the access-model
+// correction). An officer-role account can no longer log in at all
+// (userAuth.startLogin blocks it) — callers that need an officer only for
+// its user record (as a promote/demote target, never as an actor) get
+// token: null back instead of throwing.
 async function createSessionAs(app, { email, role }) {
-  const phone = `017${String(Math.floor(Math.random() * 1e8)).padStart(8, '0')}`;
-  app.userAuth.replaceRegistry([...app.userAuth.listRegistry(), { name: 'Test User', phone, email }], 'test-seed');
-  await call(app, { method: 'POST', url: '/api/auth/register', body: { email, password: 'longenough1', name: 'Test User', phone } });
-  const user = app.userAuth.getUserByEmail(email);
-  app.userAuth.verifyEmail(user.verify_token, {});
-  if (role) app.userAuth.setRole(user.id, role);
-  const login = app.userAuth.startLogin({ email, password: 'longenough1' });
-  const session = app.userAuth.completeLogin({ pendingToken: login.pendingToken, code: login.mfaCode });
-  return { token: session.token, user: app.userAuth.getUserByEmail(email) };
+  const user = app.userAuth.createVerifiedUser({ email, password: 'longenough1', name: 'Test User', role: role || 'officer' });
+  try {
+    // super_admin can only complete login via startSuperAdminLogin (the
+    // hidden gate) — every other role uses the ordinary startLogin.
+    const login = role === 'super_admin'
+      ? app.userAuth.startSuperAdminLogin({ email, password: 'longenough1' })
+      : app.userAuth.startLogin({ email, password: 'longenough1' });
+    const session = app.userAuth.completeLogin({ pendingToken: login.pendingToken, code: login.mfaCode });
+    return { token: session.token, user: app.userAuth.getUserByEmail(email) };
+  } catch {
+    return { token: null, user: app.userAuth.getUserByEmail(email) };
+  }
 }
 
 test('GET /api/admin/users rejects the legacy admin key and a plain admin session, only super_admin gets in', async () => {

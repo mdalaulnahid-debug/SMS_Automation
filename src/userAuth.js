@@ -52,7 +52,27 @@ CREATE TABLE IF NOT EXISTS registration_tokens (
   expires_at TEXT NOT NULL,
   consumed_at TEXT
 );
+CREATE TABLE IF NOT EXISTS registration_invites (
+  token TEXT PRIMARY KEY,
+  email TEXT NOT NULL,
+  name TEXT,
+  phone TEXT,
+  designation TEXT,
+  unit TEXT,
+  role TEXT NOT NULL DEFAULT 'admin',
+  created_by TEXT,
+  created_at TEXT NOT NULL,
+  expires_at TEXT NOT NULL,
+  consumed_at TEXT
+);
+CREATE TABLE IF NOT EXISTS super_admin_gate (
+  id INTEGER PRIMARY KEY CHECK (id = 1),
+  slug TEXT NOT NULL,
+  created_at TEXT NOT NULL
+);
 `;
+
+const INVITE_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days to complete an invited registration
 
 const REGISTRATION_TOKEN_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours to complete registration via a bot-issued link
 
@@ -110,6 +130,36 @@ class UserAuthStore {
     this.db.exec('PRAGMA journal_mode = WAL;');
     this.db.exec(SCHEMA);
     this._migrateSchema();
+    this._ensureSuperAdminGateSlug();
+  }
+
+  // The hidden super-admin login wall's URL is a random slug, generated once
+  // on first boot and never displayed anywhere in the UI — logged to the
+  // server console so whoever has server/log access can retrieve it once and
+  // bookmark it. Regenerating it (regenerateSuperAdminGateSlug) invalidates
+  // the old URL immediately.
+  _ensureSuperAdminGateSlug() {
+    const existing = this.db.prepare('SELECT slug FROM super_admin_gate WHERE id = 1').get();
+    if (existing) return existing.slug;
+    const slug = randomBytes(9).toString('base64url');
+    this.db
+      .prepare('INSERT INTO super_admin_gate (id, slug, created_at) VALUES (1, ?, ?)')
+      .run(slug, new Date().toISOString());
+    console.log(`[super-admin gate] hidden sign-in URL: /console/${slug} — this is only logged once, bookmark it now.`);
+    return slug;
+  }
+
+  getSuperAdminGateSlug() {
+    return this.db.prepare('SELECT slug FROM super_admin_gate WHERE id = 1').get().slug;
+  }
+
+  // Lets an already-authenticated super_admin rotate the hidden URL (e.g.
+  // after suspecting it leaked). Logs the new one the same way as first boot.
+  regenerateSuperAdminGateSlug() {
+    const slug = randomBytes(9).toString('base64url');
+    this.db.prepare('UPDATE super_admin_gate SET slug = ?, created_at = ? WHERE id = 1').run(slug, new Date().toISOString());
+    console.log(`[super-admin gate] hidden sign-in URL rotated: /console/${slug} — this is only logged once, bookmark it now.`);
+    return slug;
   }
 
   // CREATE TABLE IF NOT EXISTS above is a no-op against an auth_users table that
@@ -220,8 +270,10 @@ class UserAuthStore {
     return { id, email, verifyToken };
   }
 
-  // Directly creates an active, pre-verified account (used for the super-admin bootstrap).
-  createVerifiedUser({ email, password, name, role }) {
+  // Directly creates an active, pre-verified account — used for the
+  // super-admin bootstrap, and for a super-admin creating an account
+  // by hand from the admin console (no invite round trip needed).
+  createVerifiedUser({ email, password, name, role, phone, designation, unit }) {
     email = String(email || '').trim().toLowerCase();
     if (this._row(email)) return this._row(email);
     const id = randomBytes(16).toString('hex');
@@ -229,11 +281,76 @@ class UserAuthStore {
     this.db
       .prepare(
         `INSERT INTO auth_users
-         (id, email, password_hash, name, role, status, email_verified, created_at)
-         VALUES (?, ?, ?, ?, ?, 'active', 1, ?)`
+         (id, email, password_hash, name, phone, designation, unit, role, status, email_verified, created_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'active', 1, ?)`
       )
-      .run(id, email, hashPassword(password), name, role, now);
+      .run(id, email, hashPassword(password), name, phone || null, designation || null, unit || null, role, now);
     return this._row(email);
+  }
+
+  // Registration invite: a super-admin-issued token binding a specific
+  // email/identity to a role. This is now the ONLY way a new admin account
+  // gets created via the web registration form — there is no open sign-up
+  // path left. (Officer accounts are never invited; startLogin() blocks
+  // that role from the website entirely — see the access-model correction
+  // in SESSION_MEMORY.md, 2026-07-15.)
+  createInvite({ email, name, phone, designation, unit, role = 'admin', createdBy }) {
+    email = String(email || '').trim().toLowerCase();
+    if (!isValidEmail(email)) throw new Error('Invalid email address.');
+    if (role !== 'admin' && role !== 'super_admin') {
+      throw new Error('Invites can only be issued for the admin or super_admin role.');
+    }
+    if (this._row(email)) throw new Error('An account with this email already exists.');
+    const token = generateToken();
+    const now = new Date().toISOString();
+    const expiresAt = new Date(Date.now() + INVITE_TTL_MS).toISOString();
+    this.db
+      .prepare(
+        `INSERT INTO registration_invites
+         (token, email, name, phone, designation, unit, role, created_by, created_at, expires_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+      )
+      .run(
+        token, email, name ? String(name).trim() : null, phone ? String(phone).trim() : null,
+        designation ? String(designation).trim() : null, unit ? String(unit).trim() : null,
+        role, createdBy || null, now, expiresAt
+      );
+    return { token, email, name, role, expiresAt };
+  }
+
+  // Read-only check for the Register page — never throws, just tells the
+  // caller whether to show the form at all ("You are not authorized for
+  // Registration" is the caller's job to render when this returns null).
+  getInviteIfValid(token) {
+    if (!token) return null;
+    const invite = this.db.prepare('SELECT * FROM registration_invites WHERE token = ?').get(String(token));
+    if (!invite || invite.consumed_at) return null;
+    if (new Date(invite.expires_at).getTime() < Date.now()) return null;
+    return invite;
+  }
+
+  // Throwing variant for the actual registration submit — same checks as
+  // getInviteIfValid, but with a message the UI can surface as a real error.
+  validateInvite(token) {
+    const invite = this.db.prepare('SELECT * FROM registration_invites WHERE token = ?').get(String(token || ''));
+    if (!invite) throw new Error('You are not authorized for Registration.');
+    if (invite.consumed_at) throw new Error('This invitation has already been used.');
+    if (new Date(invite.expires_at).getTime() < Date.now()) {
+      throw new Error('This invitation has expired. Ask a super-admin to send a new one.');
+    }
+    return invite;
+  }
+
+  consumeInvite(token) {
+    this.db.prepare('UPDATE registration_invites SET consumed_at = ? WHERE token = ?').run(new Date().toISOString(), token);
+  }
+
+  listInvites() {
+    return this.db
+      .prepare(
+        'SELECT token, email, name, role, created_by, created_at, expires_at, consumed_at FROM registration_invites ORDER BY created_at DESC'
+      )
+      .all();
   }
 
   // registrationWindowEndsAt (optional) decides what verifying lands the account
@@ -324,9 +441,11 @@ class UserAuthStore {
     this.db.prepare('DELETE FROM auth_sessions WHERE user_id = ?').run(user.id);
   }
 
-  // Step 1 of login: verify password, issue a short-lived MFA code + pending token.
-  // Returns { pendingToken, mfaCode, email } — caller emails mfaCode to the user and returns pendingToken to the client.
-  startLogin({ email, password }) {
+  // Shared core of step 1: password + status checks, issues the MFA code.
+  // Role gating is the caller's job (startLogin vs startSuperAdminLogin
+  // enforce opposite rules on the same underlying account), so this never
+  // rejects on role itself.
+  _beginLogin(email, password) {
     const user = this._row(email);
     if (!user) throw new Error('Invalid email or password.');
     if (!verifyPassword(password, user.password_hash)) throw new Error('Invalid email or password.');
@@ -342,6 +461,39 @@ class UserAuthStore {
       .prepare('UPDATE auth_users SET mfa_code_hash = ?, mfa_code_expires_at = ?, pending_session_token = ? WHERE id = ?')
       .run(hashToken(mfaCode), expiresAt, pendingToken, user.id);
 
+    return { user, pendingToken, mfaCode };
+  }
+
+  // Step 1 of the NORMAL login (/login): verify password, issue a short-lived
+  // MFA code + pending token. Returns { pendingToken, mfaCode, email } —
+  // caller emails mfaCode to the user and returns pendingToken to the client.
+  startLogin({ email, password }) {
+    const { user, pendingToken, mfaCode } = this._beginLogin(email, password);
+    // Access-model correction (2026-07-15): the website is a supervision/
+    // admin tool now, not something regular officers use — they interact
+    // with the system entirely through Telegram. Any pre-existing officer-
+    // role account (from before this change) is blocked here rather than
+    // deleted, so nothing destructive happens to old data.
+    if (user.role === 'officer') {
+      throw new Error('Officer accounts do not have website access. Use the Telegram bot to submit requests.');
+    }
+    // Super-admin never authenticates through the public /login page at all
+    // — that's the whole point of the hidden gate (see startSuperAdminLogin).
+    // The message stays generic; it must not hint that a separate URL exists.
+    if (user.role === 'super_admin') {
+      throw new Error('Invalid email or password.');
+    }
+    return { pendingToken, mfaCode, email: user.email, name: user.name };
+  }
+
+  // Step 1 of the HIDDEN super-admin gate — the only login path that accepts
+  // a super_admin account. Rejects every other role, including admin, so a
+  // correct password for a non-super_admin account still can't get in here.
+  startSuperAdminLogin({ email, password }) {
+    const { user, pendingToken, mfaCode } = this._beginLogin(email, password);
+    if (user.role !== 'super_admin') {
+      throw new Error('Invalid email or password.');
+    }
     return { pendingToken, mfaCode, email: user.email, name: user.name };
   }
 

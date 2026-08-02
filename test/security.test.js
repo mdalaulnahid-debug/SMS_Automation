@@ -62,15 +62,7 @@ function appWith(authConfig, gatewayConfig) {
 // a Personnel Registry record (required for registration since step 5) and
 // logs a fresh admin in, returning a bearer token.
 async function createAdminSession(app, email = 'security-test-admin@example.com') {
-  const phone = `017${String(Math.floor(Math.random() * 1e8)).padStart(8, '0')}`;
-  app.userAuth.replaceRegistry(
-    [...app.userAuth.listRegistry(), { name: 'Test Admin', phone, email }],
-    'test-seed'
-  );
-  await call(app, { method: 'POST', url: '/api/auth/register', body: { email, password: 'longenough1', name: 'Test Admin', phone } });
-  const user = app.userAuth.getUserByEmail(email);
-  app.userAuth.verifyEmail(user.verify_token, {});
-  app.userAuth.setRole(user.id, 'admin');
+  app.userAuth.createVerifiedUser({ email, password: 'longenough1', name: 'Test Admin', role: 'admin' });
   const login = app.userAuth.startLogin({ email, password: 'longenough1' });
   const session = app.userAuth.completeLogin({ pendingToken: login.pendingToken, code: login.mfaCode });
   return session.token;
