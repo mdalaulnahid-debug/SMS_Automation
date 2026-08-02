@@ -215,6 +215,249 @@ test('bridge-level unauthorized private DM is reported once, group members are n
   assert.equal(reported.length, 1, 'should not report the same chat+sender twice');
 });
 
+test('handleIntake replies with a registration link on a first-time unauthorized private DM', async () => {
+  const telegram = fakeTelegram();
+  const backend = {
+    reportUnauthorizedAttempt: async () => {},
+    requestRegistrationLink: async (telegramId) => `https://example.com/register.html?token=tok-${telegramId}`
+  };
+  const dmMsg = { text: 'hello', chat: { id: '555', type: 'private' }, from: { id: 555, first_name: 'Nazmul' }, message_id: 1 };
+  const res = await handleIntake(dmMsg, { config: CONFIG, backend, telegram });
+  assert.equal(res.action, 'unauthorized');
+  assert.equal(telegram.sent.length, 1);
+  assert.equal(telegram.sent[0].chatId, '555');
+  assert.match(telegram.sent[0].text, /tok-555/);
+});
+
+test('handleIntake does not re-send the registration link on a repeat DM from the same unauthorized sender', async () => {
+  const telegram = fakeTelegram();
+  let calls = 0;
+  const backend = {
+    reportUnauthorizedAttempt: async () => {},
+    requestRegistrationLink: async () => { calls += 1; return 'https://example.com/register.html?token=tok'; }
+  };
+  const reportedUnauthorizedSenders = new Set();
+  const dmMsg = { text: 'hello', chat: { id: '555', type: 'private' }, from: { id: 555 }, message_id: 1 };
+  await handleIntake(dmMsg, { config: CONFIG, backend, telegram, reportedUnauthorizedSenders });
+  await handleIntake(dmMsg, { config: CONFIG, backend, telegram, reportedUnauthorizedSenders });
+  assert.equal(calls, 1);
+  assert.equal(telegram.sent.length, 1);
+});
+
+test('handleIntake stays silent if requestRegistrationLink returns no url (backend unreachable)', async () => {
+  const telegram = fakeTelegram();
+  const backend = {
+    reportUnauthorizedAttempt: async () => {},
+    requestRegistrationLink: async () => null
+  };
+  const dmMsg = { text: 'hello', chat: { id: '555', type: 'private' }, from: { id: 555 }, message_id: 1 };
+  const res = await handleIntake(dmMsg, { config: CONFIG, backend, telegram });
+  assert.equal(res.action, 'unauthorized');
+  assert.equal(telegram.sent.length, 0);
+});
+
+test('planIntake treats a bare 6-digit private DM from an authorized sender as an OTP verify attempt, not a request', () => {
+  const plan = planIntake(
+    { text: '482913', chat: { id: '777888999', type: 'private' }, from: { id: 777888999 }, message_id: 9 },
+    CONFIG
+  );
+  assert.equal(plan.action, 'otp_verify');
+  assert.equal(plan.telegramId, '777888999');
+  assert.equal(plan.code, '482913');
+  assert.equal(plan.chatId, '777888999');
+});
+
+test('planIntake does not treat a 6-digit group message as an OTP verify attempt', () => {
+  const plan = planIntake(
+    { text: '482913', chat: { id: CONFIG.groupChatId }, from: { id: 777888999 }, message_id: 9 },
+    CONFIG
+  );
+  assert.notEqual(plan.action, 'otp_verify');
+});
+
+test('planIntake does not treat an unauthorized private sender\'s 6-digit message as an OTP verify attempt — authorization still gates first', () => {
+  const plan = planIntake(
+    { text: '482913', chat: { id: '555', type: 'private' }, from: { id: 555 }, message_id: 9 },
+    CONFIG
+  );
+  assert.equal(plan.action, 'unauthorized');
+});
+
+test('handleIntake verifies a correct OTP code and replies with success', async () => {
+  const telegram = fakeTelegram();
+  const backend = { verifyOtpCode: async () => ({ ok: true }) };
+  const res = await handleIntake(
+    { text: '482913', chat: { id: '777888999', type: 'private' }, from: { id: 777888999 }, message_id: 9 },
+    { config: CONFIG, backend, telegram }
+  );
+  assert.equal(res.action, 'otp_verify_result');
+  assert.equal(telegram.sent.length, 1);
+  assert.match(telegram.sent[0].text, /Verified/);
+  assert.equal(telegram.sent[0].chatId, '777888999');
+});
+
+test('handleIntake relays a specific message for each OTP failure reason', async () => {
+  const telegram = fakeTelegram();
+  const reasons = {
+    NO_ACTIVE_CHALLENGE: /don't have an active/,
+    EXPIRED: /expired/,
+    INCORRECT: /Incorrect code/,
+    ATTEMPTS_EXCEEDED: /Too many incorrect attempts/
+  };
+  for (const [reason, expected] of Object.entries(reasons)) {
+    telegram.sent.length = 0;
+    const backend = { verifyOtpCode: async () => ({ ok: false, reason }) };
+    await handleIntake(
+      { text: '482913', chat: { id: '777888999', type: 'private' }, from: { id: 777888999 }, message_id: 9 },
+      { config: CONFIG, backend, telegram }
+    );
+    assert.match(telegram.sent[0].text, expected, `reason ${reason}`);
+  }
+});
+
+// --- Admin group actions (security-hardening v1 step 7, design doc §9) ---
+
+test('planIntake recognizes /ban, /mute, /unmute as replies, targeting the replied-to sender', () => {
+  const replyTo = { message_id: 3, from: { id: 42, first_name: 'Rogue', last_name: 'User' } };
+  const ban = planIntake(
+    { text: '/ban', chat: { id: CONFIG.groupChatId }, from: { id: 555888999 }, message_id: 10, reply_to_message: replyTo },
+    CONFIG
+  );
+  assert.equal(ban.action, 'moderate');
+  assert.equal(ban.moderationAction, 'ban');
+  assert.equal(ban.targetId, '42');
+  assert.equal(ban.targetName, 'Rogue User');
+  assert.equal(ban.actorId, '555888999');
+
+  const mute = planIntake(
+    { text: '/mute 30', chat: { id: CONFIG.groupChatId }, from: { id: 555888999 }, message_id: 11, reply_to_message: replyTo },
+    CONFIG
+  );
+  assert.equal(mute.moderationAction, 'mute');
+  assert.equal(mute.durationMinutes, 30);
+
+  const muteNoDuration = planIntake(
+    { text: '/mute', chat: { id: CONFIG.groupChatId }, from: { id: 555888999 }, message_id: 12, reply_to_message: replyTo },
+    CONFIG
+  );
+  assert.equal(muteNoDuration.durationMinutes, null);
+
+  const unmute = planIntake(
+    { text: '/unmute', chat: { id: CONFIG.groupChatId }, from: { id: 555888999 }, message_id: 13, reply_to_message: replyTo },
+    CONFIG
+  );
+  assert.equal(unmute.moderationAction, 'unmute');
+});
+
+test('planIntake requires /ban, /mute, /unmute to be sent as a reply — otherwise a usage-error plan, not a moderation action', () => {
+  const plan = planIntake(
+    { text: '/ban', chat: { id: CONFIG.groupChatId }, from: { id: 555888999 }, message_id: 10 },
+    CONFIG
+  );
+  assert.equal(plan.action, 'moderate_usage_error');
+  assert.match(plan.replyText, /Reply to the member/);
+});
+
+test('planIntake recognizes /unban with an explicit numeric id, not as a reply', () => {
+  const plan = planIntake(
+    { text: '/unban 42', chat: { id: CONFIG.groupChatId }, from: { id: 555888999 }, message_id: 14 },
+    CONFIG
+  );
+  assert.equal(plan.action, 'moderate');
+  assert.equal(plan.moderationAction, 'unban');
+  assert.equal(plan.targetId, '42');
+  assert.equal(plan.targetName, null);
+});
+
+test('planIntake never treats moderation-looking commands in a private DM as moderation', () => {
+  const plan = planIntake(
+    { text: '/ban', chat: { id: '777888999', type: 'private' }, from: { id: 777888999 }, message_id: 1 },
+    CONFIG
+  );
+  assert.notEqual(plan.action, 'moderate');
+});
+
+test('handleIntake rejects a moderation command from an unauthorized sender without calling the Telegram API', async () => {
+  const telegram = fakeTelegram();
+  let apiCalled = false;
+  telegram.banChatMember = async () => { apiCalled = true; };
+  const backend = { checkModerationAuthorized: async () => ({ authorized: false }) };
+  const replyTo = { message_id: 3, from: { id: 42, first_name: 'Rogue' } };
+  const res = await handleIntake(
+    { text: '/ban', chat: { id: CONFIG.groupChatId }, from: { id: 555888999 }, message_id: 10, reply_to_message: replyTo },
+    { config: CONFIG, backend, telegram }
+  );
+  assert.equal(res.action, 'moderate_unauthorized');
+  assert.equal(apiCalled, false);
+  assert.match(telegram.sent[0].text, /not authorized/);
+});
+
+test('handleIntake executes an authorized ban, reports it for audit, and confirms in-chat', async () => {
+  const telegram = fakeTelegram();
+  const banCalls = [];
+  telegram.banChatMember = async (args) => { banCalls.push(args); };
+  const reported = [];
+  const backend = {
+    checkModerationAuthorized: async () => ({ authorized: true, actorName: 'Admin Officer' }),
+    reportModerationAction: async (detail) => { reported.push(detail); }
+  };
+  const replyTo = { message_id: 3, from: { id: 42, first_name: 'Rogue', last_name: 'User' } };
+  const res = await handleIntake(
+    { text: '/ban', chat: { id: CONFIG.groupChatId }, from: { id: 555888999 }, message_id: 10, reply_to_message: replyTo },
+    { config: CONFIG, backend, telegram }
+  );
+  assert.equal(res.action, 'moderate_result');
+  assert.equal(res.success, true);
+  assert.equal(banCalls.length, 1);
+  assert.equal(banCalls[0].userId, 42);
+  assert.equal(reported.length, 1);
+  assert.equal(reported[0].action, 'ban');
+  assert.equal(reported[0].success, true);
+  assert.match(telegram.sent[0].text, /Banned Rogue User/);
+});
+
+test('handleIntake surfaces a clear message when the bot lacks group-admin rights', async () => {
+  const telegram = fakeTelegram();
+  telegram.banChatMember = async () => { throw new Error('Telegram banChatMember failed: 400 CHAT_ADMIN_REQUIRED'); };
+  const reported = [];
+  const backend = {
+    checkModerationAuthorized: async () => ({ authorized: true }),
+    reportModerationAction: async (detail) => { reported.push(detail); }
+  };
+  const replyTo = { message_id: 3, from: { id: 42, first_name: 'Rogue' } };
+  const res = await handleIntake(
+    { text: '/ban', chat: { id: CONFIG.groupChatId }, from: { id: 555888999 }, message_id: 10, reply_to_message: replyTo },
+    { config: CONFIG, backend, telegram }
+  );
+  assert.equal(res.success, false);
+  assert.equal(reported[0].success, false);
+  assert.match(reported[0].error, /not a group admin/);
+  assert.match(telegram.sent[0].text, /not a group admin/);
+});
+
+test('handleIntake replies with the usage-error text when a moderation command is not a reply', async () => {
+  const telegram = fakeTelegram();
+  const res = await handleIntake(
+    { text: '/mute', chat: { id: CONFIG.groupChatId }, from: { id: 555888999 }, message_id: 10 },
+    { config: CONFIG, backend: {}, telegram }
+  );
+  assert.equal(res.action, 'moderate_usage_error');
+  assert.match(telegram.sent[0].text, /Reply to the member/);
+});
+
+test('handleIntake suppresses any reply for the admin-post bypass, unlike a normal validation failure', async () => {
+  const telegram = fakeTelegram();
+  const backend = {
+    submitRequest: async () => ({ ok: false, errorCode: 'ADMIN_POST_BYPASS', replyText: null })
+  };
+  const res = await handleIntake(
+    { text: 'Reminder: report by 6pm.', chat: { id: CONFIG.groupChatId }, from: { id: 555888999 }, message_id: 20 },
+    { config: CONFIG, backend, telegram }
+  );
+  assert.equal(res.action, 'rejected');
+  assert.equal(telegram.sent.length, 0, 'an admin post must never get a bot reply');
+});
+
 test('planIntake always requires authorization for private chats, regardless of group allowlist', () => {
   const unauthorizedDm = planIntake(
     { text: 'LRL 01712345678', chat: { id: '555', type: 'private' }, from: { id: 555 }, message_id: 1 },
@@ -244,6 +487,37 @@ test('handleIntake routes an authorized private DM submission and ack back to th
   assert.equal(res.action, 'submitted');
   assert.equal(telegram.sent.length, 1);
   assert.equal(telegram.sent[0].chatId, '777888999', 'ack must go to the private chat, never the group');
+});
+
+test('handleIntake appends a registrationNote to the ack once, deduped per sender', async () => {
+  const telegram = fakeTelegram();
+  const backend = {
+    submitRequest: async () => ({
+      ok: true,
+      request: { requestId: 'REQ-1', targetOperators: ['GP'] },
+      registrationNote: "You're not registered yet. Complete registration here to keep using this:\nhttp://x/register.html?token=abc"
+    })
+  };
+  const reportedRegistrationNudges = new Set();
+  const msg = { text: 'LRL 01712345678', chat: { id: '777888999', type: 'private' }, from: { id: 777888999 }, message_id: 5 };
+
+  await handleIntake(msg, { config: { ...CONFIG, ackOnIntake: true }, backend, telegram, reportedRegistrationNudges });
+  assert.match(telegram.sent[0].text, /register\.html\?token=abc/);
+
+  await handleIntake({ ...msg, message_id: 6 }, { config: { ...CONFIG, ackOnIntake: true }, backend, telegram, reportedRegistrationNudges });
+  assert.doesNotMatch(telegram.sent[1].text, /register\.html/, 'the second ack for the same sender must not repeat the nudge');
+});
+
+test('handleIntake never adds a registrationNote to the ack when the backend did not send one', async () => {
+  const telegram = fakeTelegram();
+  const backend = {
+    submitRequest: async () => ({ ok: true, request: { requestId: 'REQ-1', targetOperators: ['GP'] } })
+  };
+  await handleIntake(
+    { text: 'LRL 01712345678', chat: { id: '777888999', type: 'private' }, from: { id: 777888999 }, message_id: 7 },
+    { config: { ...CONFIG, ackOnIntake: true }, backend, telegram }
+  );
+  assert.doesNotMatch(telegram.sent[0].text, /register\.html/);
 });
 
 test('handleIntake routes a rejected private DM reply back to the private chat, not the group', async () => {

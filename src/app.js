@@ -18,7 +18,12 @@ const {
 const { loadGatewayConfig, loadAuthConfig, loadTelegramConfig, loadMailConfig } = require('./config');
 const { isAdmin, isValidGateway } = require('./auth');
 const { getBackendUrls, getLanAddresses, getPreferredLanIp } = require('./network');
-const { UserAuthStore } = require('./userAuth');
+const { UserAuthStore, SESSION_TTL_MS, isWithinRegistrationWindow } = require('./userAuth');
+const { serializeSessionCookie, clearSessionCookie, sessionTokenFromRequest } = require('./cookies');
+const { parseRegistryWorkbook } = require('./personnelRegistry');
+const { QuotaTracker } = require('./quota');
+const { OtpStore } = require('./otp');
+const { AnomalyDetector } = require('./anomalyDetector');
 const mailer = require('./mailer');
 
 // Sliding-window per-requester rate limiter.
@@ -186,6 +191,13 @@ function buildAdminData(store, queue) {
   const recentUnauthorizedAttempts = store.auditLogs.filter((row) => {
     return row.action === 'TELEGRAM_UNAUTHORIZED_ATTEMPT' && now - new Date(row.timestamp).getTime() < 24 * 60 * 60 * 1000;
   });
+  // Behavioral anomaly tripwire (security-hardening v1 §11) — soft review
+  // items, same 24h-rolling-audit-log pattern as the other Telegram signals
+  // above, not a new alert-count contributor (see summarizeAlerts) since
+  // these are explicitly non-blocking and shouldn't read as "needs action".
+  const recentAnomalyFlags = store.auditLogs.filter((row) => {
+    return row.action === 'BEHAVIORAL_ANOMALY_FLAGGED' && now - new Date(row.timestamp).getTime() < 24 * 60 * 60 * 1000;
+  });
   const alerts = summarizeAlerts(store, requests, gateways, unmatched);
   const activity = buildActivityFeed(store, requests, gateways);
   const today = new Date().toDateString();
@@ -212,6 +224,7 @@ function buildAdminData(store, queue) {
       duplicateRiskGroups: duplicateRiskGroups.length,
       telegramChatMismatches24h: recentChatMismatches.length,
       telegramUnauthorizedAttempts24h: recentUnauthorizedAttempts.length,
+      behavioralAnomalies24h: recentAnomalyFlags.length,
       todayRequests: requests.filter((r) => new Date(r.createdAt).toDateString() === today).length,
       completedToday: requests.filter((r) => r.status === 'COMPLETED' && new Date(r.createdAt).toDateString() === today).length
     },
@@ -238,6 +251,15 @@ function buildAdminData(store, queue) {
         chatType: row.details?.chatType,
         fromId: row.details?.fromId,
         fromName: row.details?.fromName,
+        timestamp: row.timestamp
+      })),
+      recentAnomalyFlags: recentAnomalyFlags.map((row) => ({
+        officerId: row.details?.officerId,
+        telegramId: row.details?.telegramId,
+        officerEmail: row.actor,
+        flagType: row.details?.flagType,
+        detail: row.details?.detail,
+        requestId: row.requestId,
         timestamp: row.timestamp
       })),
       duplicateRiskGroups: duplicateRiskGroups.map((group) => ({
@@ -358,8 +380,35 @@ function createApp(options = {}) {
     smsGateway,
     denyUnknownRequesters: authConfig.denyUnknownRequesters,
     autoApproveChannels,
-    manualReviewStore
+    manualReviewStore,
+    // userAuth is constructed further below in this function, but this predicate is
+    // only ever called during request handling (long after createApp() returns), so
+    // the closure sees it fully initialized by then.
+    isAdminTelegramSender: (telegramId) => {
+      const user = telegramId && userAuth.getUserByTelegramId(telegramId);
+      return Boolean(user) && (user.role === 'admin' || user.role === 'super_admin') && user.status === 'active';
+    }
   });
+
+  // Per-officer request quota + OTP re-verification challenge (security-hardening
+  // v1 §7) — in-memory, per-process, matching requestRateLimiter's scope; a
+  // restart clears everyone's quota/challenge state, which is acceptable for a
+  // defense whose job is slowing down an in-progress impersonation attempt, not
+  // maintaining a long-lived ledger. Injectable so tests can control the clock.
+  // QUOTA_MAX_REQUESTS/QUOTA_WINDOW_MS let ops (or a local end-to-end test) tune
+  // the threshold without a code change — unset by default, so production
+  // behavior is unchanged unless someone deliberately opts in.
+  const quotaTracker = options.quotaTracker || new QuotaTracker({
+    ...(process.env.QUOTA_MAX_REQUESTS ? { maxRequests: Number(process.env.QUOTA_MAX_REQUESTS) } : {}),
+    ...(process.env.QUOTA_WINDOW_MS ? { windowMs: Number(process.env.QUOTA_WINDOW_MS) } : {})
+  });
+  const otpStore = options.otpStore || new OtpStore();
+  // Behavioral anomaly tripwire (security-hardening v1 §11) — a soft net
+  // underneath the hard quota/OTP wall above; flags surface to admins as
+  // review items (buildAdminData's stats/diagnostics below), never blocks
+  // a request itself. Same in-memory, per-process, injectable-clock scope
+  // as quotaTracker/otpStore.
+  const anomalyDetector = options.anomalyDetector || new AnomalyDetector();
 
   // Restore the per-operator waiting lists from any persisted QUEUED requests.
   queue.rebuild();
@@ -379,16 +428,112 @@ function createApp(options = {}) {
     return false;
   };
 
-  // Accepts any authenticated session (any role) OR the legacy admin API key.
-  // Used for the ops dashboard endpoints that officers can also access.
-  const requireAnySession = (req, res) => {
+  // Stricter than requireAdmin — role must specifically be super_admin, for
+  // actions the design doc reserves to that tier (registration approval,
+  // registry/window management). The legacy shared key still satisfies this
+  // for now, consistent with how it satisfies requireAdmin elsewhere; full
+  // retirement of that key for human paths is a later, separate step.
+  const requireSuperAdmin = (req, res) => {
     if (isAdmin(req, authConfig)) return true;
     const sessionToken = require('./auth').presentedToken(req);
     const session = sessionToken && userAuth.validateSession(sessionToken);
-    if (session) return true;
-    json(res, 401, { error: 'Login required.' });
+    if (session && session.user.role === 'super_admin') return true;
+    json(res, 401, { error: 'Super-admin authentication required.' });
     return false;
   };
+
+  // --- Shared admin key retirement (security-hardening v1 §10) ---
+  // Verified at implementation time which callers actually present the legacy
+  // key: the Telegram bridge (its own reporting/moderation endpoints) and the
+  // Android Gateway + Android Admin apps (dashboard, overview/requests/replies/
+  // unmatched/audit, settings, reply-drafts, requests reject/retry, gateway/*)
+  // — grepped directly from android-gateway/*/src. The Android Admin App has no
+  // session-login flow of its own, so requireAdmin/requireSuperAdmin above stay
+  // exactly as they are (key-or-session) for every endpoint either Android app
+  // calls — retiring the key there would break a real, currently-working human
+  // tool with no replacement auth path. Session-only requirement below applies
+  // only to endpoints confirmed to have zero Android app dependency: every
+  // security-hardening-v1-introduced endpoint (Personnel Registry, registration
+  // approval/window, ops dashboard) plus the pre-existing admin.html-only tools
+  // (QR provisioning, users, audit export, unmatched-candidates, timeouts) —
+  // admin.html already supports real session login today, so nothing human
+  // actually loses access.
+  const requireAdminSessionOnly = (req, res) => {
+    const sessionToken = require('./auth').presentedToken(req);
+    const session = sessionToken && userAuth.validateSession(sessionToken);
+    if (session && (session.user.role === 'admin' || session.user.role === 'super_admin')) return true;
+    json(res, 401, { error: 'Admin session login required.' });
+    return false;
+  };
+
+  const requireSuperAdminSessionOnly = (req, res) => {
+    const sessionToken = require('./auth').presentedToken(req);
+    const session = sessionToken && userAuth.validateSession(sessionToken);
+    if (session && session.user.role === 'super_admin') return true;
+    json(res, 401, { error: 'Super-admin session login required.' });
+    return false;
+  };
+
+  // For the Telegram bridge's own reporting/moderation endpoints — a human
+  // session was never valid here (no human calls these URLs directly), so
+  // this is the legacy key check under an honest name, not a behavior change.
+  const requireMachine = (req, res) => {
+    if (isAdmin(req, authConfig)) return true;
+    json(res, 401, { error: 'Machine authentication required.' });
+    return false;
+  };
+
+  // Page-level gate for browser navigation (GET /, GET /admin) — distinct from
+  // requireAdmin/requireAnySession above, which respond with a JSON 401 and are
+  // meant for fetch()/XHR API calls. A plain page navigation never carries an
+  // Authorization/x-api-key header (browsers don't attach those to page loads,
+  // only to explicit fetch/XHR calls) or the legacy admin key, so this checks the
+  // session cookie set at login instead, and redirects rather than returning
+  // JSON. This is the fix for the previous gap where / and /admin served their
+  // HTML/JS unconditionally, before any auth check ran at all.
+  function pageSession(req) {
+    const token = sessionTokenFromRequest(req);
+    if (!token) return null;
+    return userAuth.validateSession(token);
+  }
+
+  function redirectTo(res, location) {
+    res.writeHead(302, { location });
+    res.end();
+  }
+
+  // Serves the page only if the session's role is in allowedRoles. Redirects to
+  // /login.html if there's no valid session, or to / if there is one but the
+  // role isn't allowed (e.g. an officer hitting /admin lands somewhere real,
+  // not stuck in a login loop). Returns the session on success so callers that
+  // need it (none yet) can reuse it without re-validating.
+  function guardPage(req, res, allowedRoles) {
+    const result = pageSession(req);
+    if (!result) {
+      redirectTo(res, '/login.html');
+      return null;
+    }
+    if (!allowedRoles.includes(result.user.role)) {
+      redirectTo(res, '/');
+      return null;
+    }
+    return result;
+  }
+
+  // Step-up re-authentication for the super-admin console: session.created_at
+  // is set at MFA-completion time (see completeLogin()), so its age doubles as
+  // "how long since this person last proved who they are" with no extra
+  // schema. A super_admin whose session is older than the window is bounced
+  // back through a full password+MFA login before reaching /admin, rather
+  // than trusting however-old a session happens to still be valid.
+  const SUPER_ADMIN_REAUTH_WINDOW_MS = 15 * 60 * 1000;
+  function requireFreshSuperAdmin(req, res, session, returnPath) {
+    if (session.user.role !== 'super_admin') return true;
+    const age = Date.now() - new Date(session.session.created_at).getTime();
+    if (age <= SUPER_ADMIN_REAUTH_WINDOW_MS) return true;
+    redirectTo(res, `/login.html?stepup=1&return=${encodeURIComponent(returnPath)}`);
+    return false;
+  }
 
   // User accounts / login (officers + admins) — separate from the legacy single admin API key.
   const authDbPath = options.authDbPath !== undefined
@@ -425,6 +570,110 @@ function createApp(options = {}) {
     return result;
   }
 
+  // Quota + OTP re-verification gate (security-hardening v1 §7) — only
+  // applies to a request whose Telegram sender is a linked, registered
+  // officer; unlinked senders (unregistered, or a channel other than
+  // Telegram) aren't this defense's concern and pass through untouched.
+  // Returns null when the request may proceed, or a service.submitRequest-
+  // shaped rejection ({ ok:false, errorCode, replyText }) when it must not.
+  async function checkOfficerQuota(requesterId) {
+    const officer = requesterId && userAuth.getUserByTelegramId(requesterId);
+    if (!officer) return null;
+
+    if (otpStore.hasActiveChallenge(officer.id)) {
+      return {
+        ok: false,
+        errorCode: 'VERIFICATION_REQUIRED',
+        replyText: 'You already have a pending re-verification code — check your email and reply here with it to continue.'
+      };
+    }
+
+    const quota = quotaTracker.recordRequest(officer.id);
+    if (!quota.requiresVerification) return null;
+
+    const { code, throttled } = otpStore.issueCode(officer.id);
+    if (throttled) {
+      // The per-hour issuance cap tripped instead — never possible to reach
+      // normally (issuing one code per quota breach, and the quota window is
+      // hours long), but if it ever does, fail safe: block with a message
+      // that doesn't imply a code is on its way when none was sent.
+      store.audit('system', 'TELEGRAM_QUOTA_CHALLENGE_THROTTLED', null, { officerId: officer.id, telegramId: requesterId });
+      return {
+        ok: false,
+        errorCode: 'VERIFICATION_REQUIRED',
+        replyText: 'Too many re-verification codes requested recently. Contact an administrator.'
+      };
+    }
+
+    store.audit('system', 'TELEGRAM_QUOTA_BREACH', null, { officerId: officer.id, telegramId: requesterId, email: officer.email });
+    const { subject, html, text } = mailer.reVerificationCodeEmail(code);
+    await mailer.sendMail({ to: officer.email, subject, html, text });
+
+    return {
+      ok: false,
+      errorCode: 'VERIFICATION_REQUIRED',
+      replyText: `You've reached your request limit. A verification code was sent to your registered email — reply here with it to continue.`
+    };
+  }
+
+  // Shared by /api/telegram/registration-link and checkRegistration below —
+  // one place that knows how a registration token becomes a URL.
+  function buildRegistrationLink(req, telegramId) {
+    const { token } = userAuth.createRegistrationToken(telegramId);
+    const baseUrl = process.env.PUBLIC_BASE_URL || `http://${req.headers.host}`;
+    return `${baseUrl}/register.html?token=${encodeURIComponent(token)}`;
+  }
+
+  // Group-registration gate (security-hardening v1 follow-on) — closes the
+  // one piece of step 5 left open: the Telegram group was fully open
+  // regardless of registration. Scoped to channel:'telegram' only; gateway
+  // webhooks, admin-console test submissions, and any other channel are
+  // untouched. Reuses the same registrationWindowEndsAt field step 5 already
+  // uses for auto-activate-vs-approval-gate — one grace period, one source
+  // of truth, no new config. Returns:
+  //   null                         — registered, or not a Telegram request; proceed untouched.
+  //   { registrationNote }         — grace window open; proceed, but nudge in the reply.
+  //   { ok:false, errorCode, ... } — grace window closed; block, same shape checkOfficerQuota uses.
+  function checkRegistration(req, requesterId, channel) {
+    if (channel !== 'telegram') return null;
+    const officer = requesterId && userAuth.getUserByTelegramId(requesterId);
+    if (officer) return null;
+
+    const link = buildRegistrationLink(req, requesterId);
+    if (isWithinRegistrationWindow(authConfig.registrationWindowEndsAt)) {
+      return { registrationNote: `You're not registered yet. Complete registration here to keep using this:\n${link}` };
+    }
+    return {
+      ok: false,
+      errorCode: 'REGISTRATION_REQUIRED',
+      replyText: `You're not registered yet. Complete registration here to get access:\n${link}`
+    };
+  }
+
+  // Behavioral anomaly tripwire (security-hardening v1 §11) — same
+  // linked-officer-only scoping as checkOfficerQuota, but never blocks:
+  // every flag is audit-logged for admin review, the response to the
+  // bridge is untouched either way. Runs regardless of whether the request
+  // parsed (an off-hours/burst/identity signal doesn't depend on the text
+  // being well-formed), but only folds in requestType when it did.
+  function checkBehavioralAnomaly(body, result) {
+    const officer = body.requesterId && userAuth.getUserByTelegramId(body.requesterId);
+    if (!officer) return;
+    const flags = anomalyDetector.recordAndCheck(officer.id, {
+      languageCode: body.languageCode || null,
+      username: body.username || null,
+      requestType: result.ok ? result.request.requestType : null
+    });
+    for (const flag of flags) {
+      store.audit(officer.email, 'BEHAVIORAL_ANOMALY_FLAGGED', result.ok ? result.request.requestId : null, {
+        officerId: officer.id,
+        telegramId: body.requesterId,
+        flagType: flag.type,
+        detail: flag.detail
+      });
+    }
+  }
+
   async function handle(req, res) {
     try {
       if (req.method === 'GET' && req.url === '/setup') {
@@ -444,6 +693,14 @@ function createApp(options = {}) {
         return json(res, 200, { ok: true });
       }
       if (req.method === 'GET' && req.url === '/') {
+        const gate = guardPage(req, res, ['officer', 'admin', 'super_admin']);
+        if (!gate) return undefined;
+        // A Telegram-registered officer never receives the operational app's HTML/JS at
+        // all — not just a client-side hidden view of it. The decision is made here,
+        // server-side, from the session cookie, before any bytes go out.
+        if (gate.user.role === 'officer' && gate.user.telegram_id) {
+          return serveFile(res, 'portal.html', 'text/html; charset=utf-8');
+        }
         return serveFile(res, 'index.html', 'text/html; charset=utf-8');
       }
       if (req.method === 'GET' && req.url === '/app.js') {
@@ -456,13 +713,51 @@ function createApp(options = {}) {
         return serveFile(res, 'theme.css', 'text/css; charset=utf-8');
       }
       if (req.method === 'GET' && req.url === '/admin') {
+        const gate = guardPage(req, res, ['admin', 'super_admin']);
+        if (!gate) return undefined;
+        if (!requireFreshSuperAdmin(req, res, gate, '/admin')) return undefined;
         return serveFile(res, 'admin.html', 'text/html; charset=utf-8');
       }
-      if (req.method === 'GET' && req.url === '/login.html') {
+      if (req.method === 'GET' && req.url === '/portal.js') {
+        return serveFile(res, 'portal.js', 'text/javascript; charset=utf-8');
+      }
+      if (req.method === 'GET' && req.url === '/portal.html') {
+        // Same server-side gate as '/': a non-Telegram-linked officer (or admin)
+        // bookmarking this URL directly still lands on the page meant for them,
+        // not this one.
+        const gate = guardPage(req, res, ['officer', 'admin', 'super_admin']);
+        if (!gate) return undefined;
+        if (gate.user.role === 'officer' && gate.user.telegram_id) {
+          return serveFile(res, 'portal.html', 'text/html; charset=utf-8');
+        }
+        return redirectTo(res, '/');
+      }
+      if (req.method === 'GET' && req.url === '/welcome') {
+        // The "Public" access tier (design doc §4): a static informational page,
+        // reachable with no session at all — unlike '/', which requires login.
+        return serveFile(res, 'welcome.html', 'text/html; charset=utf-8');
+      }
+      if (req.method === 'GET' && req.url.startsWith('/login.html')) {
+        // startsWith, not ===: the step-up re-auth redirect appends
+        // ?stepup=1&return=... (req.url includes the query string in Node's
+        // http module), which an exact match would 404 on.
         return serveFile(res, 'login.html', 'text/html; charset=utf-8');
       }
       if (req.method === 'GET' && req.url === '/register.html') {
         return serveFile(res, 'register.html', 'text/html; charset=utf-8');
+      }
+      if (req.method === 'GET' && req.url === '/forgot-password.html') {
+        return serveFile(res, 'forgot-password.html', 'text/html; charset=utf-8');
+      }
+      if (
+        req.method === 'GET' &&
+        (req.url.startsWith('/reset-password.html') || req.url === '/reset-password' || req.url.startsWith('/reset-password?'))
+      ) {
+        // Both paths serve the same vanilla page: mailer.resetPasswordEmail()
+        // links to the extension-less /reset-password (matching the React
+        // app's future route at cutover — see docs/redesign.md Phase 6);
+        // this alias keeps that emailed link working today, before cutover.
+        return serveFile(res, 'reset-password.html', 'text/html; charset=utf-8');
       }
       if (req.method === 'GET' && req.url === '/admin.js') {
         return serveFile(res, 'admin.js', 'text/javascript; charset=utf-8');
@@ -536,7 +831,7 @@ function createApp(options = {}) {
         });
       }
       if (req.method === 'POST' && req.url === '/api/admin/generate-qr') {
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireAdminSessionOnly(req, res)) return undefined;
         const body = await readJson(req);
         const { gwId, url, pin, secret } = body;
         if (!gwId || !url) return json(res, 400, { error: 'gwId and url required' });
@@ -641,12 +936,134 @@ function createApp(options = {}) {
           return json(res, 400, { error: error.message });
         }
       }
+      if (req.method === 'GET' && req.url === '/api/admin/personnel-registry') {
+        if (!requireAdminSessionOnly(req, res)) return undefined;
+        return json(res, 200, { records: userAuth.listRegistry(), count: userAuth.registrySize() });
+      }
+      if (req.method === 'POST' && req.url === '/api/admin/personnel-registry/import') {
+        if (!requireAdminSessionOnly(req, res)) return undefined;
+        let buffer;
+        try {
+          buffer = await readBuffer(req);
+        } catch (error) {
+          return json(res, 400, { error: error.message });
+        }
+        let records;
+        try {
+          records = parseRegistryWorkbook(buffer);
+        } catch (error) {
+          return json(res, 400, { error: error.message });
+        }
+        if (records.length === 0) {
+          return json(res, 400, { error: 'No valid records found in the uploaded sheet.' });
+        }
+        const actor = require('./auth').presentedToken(req);
+        const session = actor && userAuth.validateSession(actor);
+        const result = userAuth.replaceRegistry(records, session ? session.user.email : 'admin');
+        store.audit(session ? session.user.email : 'admin', 'PERSONNEL_REGISTRY_IMPORTED', null, {
+          count: result.count,
+          importedAt: result.importedAt
+        });
+        return json(res, 200, { ok: true, ...result });
+      }
+      if (req.method === 'POST' && req.url === '/api/admin/personnel-registry/add') {
+        // Stricter than the bulk import above (super_admin, not just admin) —
+        // adding one officer between spreadsheet re-imports is a more
+        // targeted, easier-to-fat-finger action than a full re-upload.
+        if (!requireSuperAdminSessionOnly(req, res)) return undefined;
+        const body = await readJson(req);
+        const actor = require('./auth').presentedToken(req);
+        const session = actor && userAuth.validateSession(actor);
+        let record;
+        try {
+          record = userAuth.addRegistryRecord(body, session ? session.user.email : 'super_admin');
+        } catch (error) {
+          return json(res, 400, { error: error.message });
+        }
+        store.audit(session ? session.user.email : 'super_admin', 'PERSONNEL_REGISTRY_RECORD_ADDED', null, {
+          name: record.name, phone: record.phone, email: record.email
+        });
+        return json(res, 200, { ok: true, record });
+      }
+      if (req.method === 'GET' && req.url === '/api/admin/registrations/pending') {
+        if (!requireSuperAdminSessionOnly(req, res)) return undefined;
+        return json(res, 200, { registrations: userAuth.listPendingApprovals() });
+      }
+      if (req.method === 'POST' && req.url === '/api/admin/registrations/approve') {
+        if (!requireSuperAdminSessionOnly(req, res)) return undefined;
+        const body = await readJson(req);
+        if (!body.userId) return json(res, 400, { error: 'userId is required' });
+        try {
+          const user = userAuth.approveRegistration(body.userId);
+          store.audit('super-admin', 'REGISTRATION_APPROVED', null, { userId: user.id, email: user.email });
+          return json(res, 200, { ok: true, user: { id: user.id, email: user.email, status: user.status } });
+        } catch (error) {
+          return json(res, 400, { error: error.message });
+        }
+      }
+      if (req.method === 'GET' && req.url === '/api/admin/settings/registration-window') {
+        if (!requireSuperAdminSessionOnly(req, res)) return undefined;
+        return json(res, 200, {
+          registrationWindowEndsAt: authConfig.registrationWindowEndsAt,
+          isOpen: isWithinRegistrationWindow(authConfig.registrationWindowEndsAt)
+        });
+      }
+      if (req.method === 'POST' && req.url === '/api/admin/settings/registration-window') {
+        if (!requireSuperAdminSessionOnly(req, res)) return undefined;
+        const body = await readJson(req);
+        try {
+          const endsAt = settingsStore.writeRegistrationWindowEndsAt(body.endsAt);
+          authConfig.registrationWindowEndsAt = endsAt; // apply immediately, no restart — same pattern as /setup
+          store.audit('super-admin', 'REGISTRATION_WINDOW_UPDATED', null, { endsAt });
+          return json(res, 200, { ok: true, registrationWindowEndsAt: endsAt });
+        } catch (error) {
+          return json(res, 400, { error: error.message });
+        }
+      }
+      if (req.method === 'GET' && req.url === '/api/admin/users') {
+        // Owner-only roster of accounts — backs the "Team" promote/demote
+        // console. Every candidate already passed Personnel Registry
+        // phone+email verification to register at all, so this is an
+        // upgrade of existing trust, not a second, less-scrutinized entry
+        // path onto the team.
+        if (!requireSuperAdminSessionOnly(req, res)) return undefined;
+        return json(res, 200, { users: userAuth.listUsers() });
+      }
+      if (req.method === 'POST' && req.url.startsWith('/api/admin/users/') && req.url.endsWith('/role')) {
+        if (!requireSuperAdminSessionOnly(req, res)) return undefined;
+        const userId = decodeURIComponent(req.url.slice('/api/admin/users/'.length, -'/role'.length));
+        const body = await readJson(req);
+        const newRole = body.role;
+        // Deliberately excludes super_admin: creating a second owner-level
+        // account is a rarer, more deliberate action than a one-click UI
+        // toggle should allow — same reasoning as this endpoint never being
+        // reachable via the legacy shared key (requireSuperAdminSessionOnly).
+        if (newRole !== 'officer' && newRole !== 'admin') {
+          return json(res, 400, { error: 'role must be "officer" or "admin".' });
+        }
+        const actorToken = require('./auth').presentedToken(req);
+        const actorSession = actorToken && userAuth.validateSession(actorToken);
+        if (actorSession && actorSession.user.id === userId) {
+          return json(res, 400, { error: 'You cannot change your own role.' });
+        }
+        const target = userAuth.getUserById(userId);
+        if (!target) return json(res, 404, { error: 'User not found.' });
+        if (target.role === 'super_admin') {
+          return json(res, 400, { error: 'Cannot change a super_admin\'s role here.' });
+        }
+        const previousRole = target.role;
+        userAuth.setRole(userId, newRole);
+        store.audit(actorSession ? actorSession.user.email : 'super-admin', 'USER_ROLE_CHANGED', null, {
+          userId, email: target.email, previousRole, newRole
+        });
+        return json(res, 200, { ok: true, userId, previousRole, newRole });
+      }
       if (req.method === 'POST' && req.url === '/api/telegram/chat-mismatch') {
         // Reported by the Telegram bridge process when it sees a message from a chat that
         // doesn't match its configured groupChatId — the exact failure mode that silently
         // broke intake on 2026-06-20 (config drift between the bridge's groupChatId and the
         // real group) until someone happened to check pm2 logs. Now audit-visible instead.
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireMachine(req, res)) return undefined;
         const body = await readJson(req);
         if (!body.chatId) return json(res, 400, { error: 'chatId required' });
         store.audit('telegram-bridge', 'TELEGRAM_CHAT_MISMATCH', null, {
@@ -661,7 +1078,7 @@ function createApp(options = {}) {
         // group allowlist rejection, or any private DM (private chats are always
         // authorized-only, see telegram-bridge/bridge.js planIntake). Closes the gap where
         // this previously only ever produced a console log line in the bridge process.
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireMachine(req, res)) return undefined;
         const body = await readJson(req);
         if (!body.chatId || !body.fromId) return json(res, 400, { error: 'chatId and fromId required' });
         store.audit('telegram-bridge', 'TELEGRAM_UNAUTHORIZED_ATTEMPT', null, {
@@ -684,11 +1101,16 @@ function createApp(options = {}) {
         });
       }
       if (req.method === 'GET' && req.url === '/api/ops/overview') {
-        if (!requireAnySession(req, res)) return undefined;
+        // Tightened from requireAnySession to requireAdmin (security-hardening v1,
+        // access-tier model §4): a Registered Officer session must never receive
+        // fleet/queue operational data, even via a direct API call — the public
+        // landing page no longer renders this for that tier, and the boundary
+        // has to hold at the API too, not just in what the page happens to draw.
+        if (!requireAdminSessionOnly(req, res)) return undefined;
         return json(res, 200, buildOpsData(store, queue));
       }
       if (req.method === 'GET' && req.url === '/api/ops/activity') {
-        if (!requireAnySession(req, res)) return undefined;
+        if (!requireAdminSessionOnly(req, res)) return undefined;
         const ops = buildOpsData(store, queue);
         return json(res, 200, {
           generatedAt: ops.generatedAt,
@@ -697,7 +1119,7 @@ function createApp(options = {}) {
         });
       }
       if (req.method === 'GET' && req.url === '/api/ops/gateways') {
-        if (!requireAnySession(req, res)) return undefined;
+        if (!requireAdminSessionOnly(req, res)) return undefined;
         const ops = buildOpsData(store, queue);
         return json(res, 200, {
           generatedAt: ops.generatedAt,
@@ -735,7 +1157,7 @@ function createApp(options = {}) {
         return json(res, 200, { unmatched: admin.unmatched, requests: admin.requests });
       }
       if (req.method === 'GET' && req.url === '/api/admin/rejected-messages') {
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireAdminSessionOnly(req, res)) return undefined;
         // Reads the FULL in-memory audit log, not the 250-row slice /api/admin/audit uses —
         // REQUEST_VALIDATION_FAILED is a small fraction of total audit volume (most of it is
         // SMS_INBOUND/SMS_REPLY_UNMATCHED noise), so a rejected message could otherwise be
@@ -774,7 +1196,23 @@ function createApp(options = {}) {
         if (!requestRateLimiter.check(rateLimitId)) {
           return json(res, 429, { error: 'Too many requests. Please wait a moment before submitting again.' });
         }
+        const registrationCheck = checkRegistration(req, body.requesterId, body.channel);
+        if (registrationCheck && registrationCheck.ok === false) {
+          checkBehavioralAnomaly(body, { ok: false });
+          return json(res, 400, registrationCheck);
+        }
+        const quotaRejection = await checkOfficerQuota(body.requesterId);
+        if (quotaRejection) {
+          // Still fed to the tripwire — a quota-blocked burst is itself a
+          // meaningful timing/volume signal, even with no requestType to report.
+          checkBehavioralAnomaly(body, { ok: false });
+          return json(res, 400, quotaRejection);
+        }
         const result = await service.submitRequest(body);
+        if (registrationCheck && registrationCheck.registrationNote && result.ok) {
+          result.registrationNote = registrationCheck.registrationNote;
+        }
+        checkBehavioralAnomaly(body, result);
         return json(res, result.ok ? 201 : 400, result);
       }
       if (req.method === 'POST' && req.url === '/api/sms/inbound') {
@@ -884,11 +1322,11 @@ function createApp(options = {}) {
         return json(res, 200, { ok: true });
       }
       if (req.method === 'GET' && req.url === '/api/users') {
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireAdminSessionOnly(req, res)) return undefined;
         return json(res, 200, { users: store.listUsers() });
       }
       if (req.method === 'POST' && req.url === '/api/users') {
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireAdminSessionOnly(req, res)) return undefined;
         const body = await readJson(req);
         if (!body.telegramId) return json(res, 400, { error: 'telegramId is required.' });
         const user = store.upsertUser({
@@ -902,7 +1340,7 @@ function createApp(options = {}) {
         return json(res, 200, { user });
       }
       if (req.method === 'POST' && req.url.startsWith('/api/users/') && req.url.endsWith('/status')) {
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireAdminSessionOnly(req, res)) return undefined;
         const telegramId = decodeURIComponent(req.url.split('/').at(-2) || '');
         const body = await readJson(req);
         const user = store.setUserStatus(telegramId, body.status);
@@ -910,11 +1348,11 @@ function createApp(options = {}) {
         return json(res, 200, { user });
       }
       if (req.method === 'GET' && req.url === '/api/audit/verify') {
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireAdminSessionOnly(req, res)) return undefined;
         return json(res, 200, store.verifyAuditChain());
       }
       if (req.method === 'GET' && req.url === '/api/audit/export') {
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireAdminSessionOnly(req, res)) return undefined;
         return csv(res, 'audit-log.csv', auditToCsv(store.auditLogs));
       }
       if (req.method === 'GET' && req.url.startsWith('/api/reply-drafts')) {
@@ -955,39 +1393,69 @@ function createApp(options = {}) {
         return json(res, 200, { request });
       }
       if (req.method === 'POST' && req.url === '/api/manual-match') {
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireAdminSessionOnly(req, res)) return undefined;
         const body = await readJson(req);
         if (!body.inboxId || !body.requestId) return json(res, 400, { error: 'inboxId and requestId required.' });
         const result = service.manualMatch(body.inboxId, body.requestId);
         return json(res, 200, result);
       }
       if (req.method === 'GET' && req.url.startsWith('/api/admin/unmatched/') && req.url.endsWith('/candidates')) {
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireAdminSessionOnly(req, res)) return undefined;
         const inboxId = decodeURIComponent(req.url.split('/').at(-2) || '');
         const candidates = service.rankReplyCandidates(inboxId);
         return json(res, 200, { candidates });
       }
       if (req.method === 'POST' && req.url === '/api/admin/correct-match') {
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireAdminSessionOnly(req, res)) return undefined;
         const body = await readJson(req);
         if (!body.inboxId || !body.requestId) return json(res, 400, { error: 'inboxId and requestId required.' });
         const result = service.correctMatch(body.inboxId, body.requestId);
         return json(res, 200, result);
       }
       if (req.method === 'GET' && req.url === '/api/sms/unmatched') {
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireAdminSessionOnly(req, res)) return undefined;
         const unmatched = store.smsInbox.filter((row) => !row.matchedRequestId && !row.analysis?.ignored);
         return json(res, 200, { unmatched });
       }
       if (req.method === 'POST' && req.url === '/api/timeouts/run') {
-        if (!requireAdmin(req, res)) return undefined;
+        if (!requireAdminSessionOnly(req, res)) return undefined;
         return json(res, 200, { timedOut: await service.timeoutWaitingRequests() });
       }
       if (req.method === 'POST' && req.url === '/api/auth/register') {
         const body = await readJson(req);
+
+        // Self-declared identity is never trusted (design doc §6) — phone and
+        // email must both match the SAME Personnel Registry record. An admin
+        // must have imported the registry before registration can succeed at
+        // all; that's a deliberate consequence of "no registry match, no
+        // account", not an oversight.
+        const registry = userAuth.buildPersonnelRegistry();
+        const match = registry.matchByPhoneAndEmail(body.phone, body.email);
+        if (!match) {
+          return json(res, 400, { error: 'Phone and email must match an official record in the Personnel Registry. Contact an administrator if you believe this is an error.' });
+        }
+
+        let telegramId = null;
+        if (body.registrationToken) {
+          try {
+            telegramId = userAuth.consumeRegistrationToken(body.registrationToken);
+          } catch (error) {
+            return json(res, 400, { error: error.message });
+          }
+        }
+
         let result;
         try {
-          result = userAuth.register({ email: body.email, password: body.password, name: body.name, phone: body.phone, role: 'officer' });
+          result = userAuth.register({
+            email: body.email,
+            password: body.password,
+            name: body.name,
+            phone: body.phone,
+            designation: body.designation,
+            unit: body.unit,
+            role: 'officer',
+            telegramId
+          });
         } catch (error) {
           return json(res, 400, { error: error.message });
         }
@@ -996,10 +1464,72 @@ function createApp(options = {}) {
         await mailer.sendMail({ to: result.email, subject, html, text });
         return json(res, 200, { ok: true, message: 'Registered. Check your email to verify your account.' });
       }
+      if (req.method === 'POST' && req.url === '/api/telegram/registration-link') {
+        // Called by the Telegram bridge (authenticated the same way as its other
+        // reporting endpoints — the shared adminApiKey) when an unregistered
+        // sender DMs the bot, so it can reply with a link to the web
+        // registration form pre-bound to that Telegram identity.
+        if (!requireMachine(req, res)) return undefined;
+        const body = await readJson(req);
+        if (!body.telegramId) return json(res, 400, { error: 'telegramId required' });
+        return json(res, 200, { url: buildRegistrationLink(req, body.telegramId) });
+      }
+      if (req.method === 'POST' && req.url === '/api/telegram/verify-code') {
+        // Called by the Telegram bridge when a private-DM sender replies with
+        // what looks like a re-verification code (security-hardening v1 §7) —
+        // same bridge-auth pattern as registration-link. Not tied to a specific
+        // in-flight request; success just reopens the officer's quota window.
+        if (!requireMachine(req, res)) return undefined;
+        const body = await readJson(req);
+        if (!body.telegramId || !body.code) return json(res, 400, { error: 'telegramId and code required' });
+        const officer = userAuth.getUserByTelegramId(body.telegramId);
+        if (!officer) return json(res, 200, { ok: false, reason: 'NO_ACTIVE_CHALLENGE' });
+
+        const result = otpStore.verifyCode(officer.id, body.code);
+        if (result.ok) {
+          quotaTracker.resetAfterVerification(officer.id);
+          store.audit('system', 'TELEGRAM_OTP_VERIFIED', null, { officerId: officer.id, telegramId: body.telegramId });
+        } else {
+          store.audit('system', 'TELEGRAM_OTP_FAILED', null, { officerId: officer.id, telegramId: body.telegramId, reason: result.reason });
+        }
+        return json(res, 200, result);
+      }
+      if (req.method === 'POST' && req.url === '/api/telegram/moderation-check') {
+        // Checked fresh on every moderation-command attempt (security-hardening v1
+        // §9) — the bridge never caches admin status, so a role change or account
+        // disablement takes effect on the very next command, not after some
+        // periodic refresh interval.
+        if (!requireMachine(req, res)) return undefined;
+        const body = await readJson(req);
+        if (!body.telegramId) return json(res, 400, { error: 'telegramId required' });
+        const user = userAuth.getUserByTelegramId(body.telegramId);
+        const authorized = Boolean(user) && (user.role === 'admin' || user.role === 'super_admin') && user.status === 'active';
+        return json(res, 200, { authorized, actorName: authorized ? user.name : null });
+      }
+      if (req.method === 'POST' && req.url === '/api/telegram/moderation-action') {
+        // Reported by the bridge after it has already executed a moderation action
+        // via the Telegram API (this backend holds no bot token and cannot perform
+        // the action itself) — audit-only, per design doc §9's "every admin message
+        // and moderation action is audit-logged" requirement.
+        if (!requireMachine(req, res)) return undefined;
+        const body = await readJson(req);
+        if (!body.action || !body.actorTelegramId) return json(res, 400, { error: 'action and actorTelegramId required' });
+        store.audit(body.actorName || body.actorTelegramId, 'TELEGRAM_MODERATION_ACTION', null, {
+          action: body.action,
+          actorTelegramId: body.actorTelegramId,
+          targetTelegramId: body.targetTelegramId || null,
+          targetName: body.targetName || null,
+          chatId: body.chatId || null,
+          durationMinutes: body.durationMinutes || null,
+          success: Boolean(body.success),
+          error: body.error || null
+        });
+        return json(res, 200, { ok: true });
+      }
       if (req.method === 'GET' && req.url.startsWith('/verify-email')) {
         const token = new URL(req.url, 'http://x').searchParams.get('token') || '';
         try {
-          userAuth.verifyEmail(token);
+          userAuth.verifyEmail(token, { registrationWindowEndsAt: authConfig.registrationWindowEndsAt });
           res.writeHead(302, { location: '/login.html?verified=1' });
           return res.end();
         } catch (error) {
@@ -1028,6 +1558,10 @@ function createApp(options = {}) {
             ip: req.socket?.remoteAddress,
             userAgent: req.headers['user-agent']
           });
+          // Also set the session as a cookie — page navigations (GET /, GET /admin)
+          // never carry the Authorization header the JSON `token` is used with, so
+          // guardPage() needs this to enforce access on the initial HTML request.
+          res.setHeader('Set-Cookie', serializeSessionCookie(result.token, { maxAgeSeconds: SESSION_TTL_MS / 1000 }));
           return json(res, 200, result);
         } catch (error) {
           return json(res, 401, { error: error.message });
@@ -1036,12 +1570,57 @@ function createApp(options = {}) {
       if (req.method === 'POST' && req.url === '/api/auth/logout') {
         const token = require('./auth').presentedToken(req);
         userAuth.logout(token);
+        res.setHeader('Set-Cookie', clearSessionCookie());
         return json(res, 200, { ok: true });
       }
       if (req.method === 'GET' && req.url === '/api/auth/me') {
         const session = requireSession(req, res);
         if (!session) return undefined;
-        return json(res, 200, { user: session.user });
+        // requireSession's user is the FULL auth_users row (password_hash,
+        // verify_token, mfa_code_hash, ...) — safeUserFields() is the allowlist
+        // that keeps this endpoint from leaking those to any logged-in client.
+        return json(res, 200, { user: safeUserFields(session.user) });
+      }
+      if (req.method === 'POST' && req.url === '/api/auth/change-password') {
+        const session = requireSession(req, res);
+        if (!session) return undefined;
+        const body = await readJson(req);
+        try {
+          userAuth.changePassword(session.user.id, body.currentPassword, body.newPassword);
+        } catch (error) {
+          return json(res, 400, { error: error.message });
+        }
+        return json(res, 200, { ok: true });
+      }
+      if (req.method === 'POST' && req.url === '/api/auth/forgot-password') {
+        const body = await readJson(req);
+        // Always 200 regardless of whether the email matched an account —
+        // a different response shape here would let an attacker enumerate
+        // registered emails via this endpoint.
+        const result = userAuth.requestPasswordReset(body.email);
+        if (result) {
+          const baseUrl = process.env.PUBLIC_BASE_URL || `http://${req.headers.host}`;
+          const { subject, html, text } = mailer.resetPasswordEmail(baseUrl, result.resetToken);
+          try {
+            await mailer.sendMail({ to: result.email, subject, html, text });
+          } catch (error) {
+            // Swallow — a transport failure must not produce a different
+            // HTTP outcome than "no account matched", or this endpoint
+            // becomes an email-enumeration oracle. The reset token is
+            // already written; log server-side so an operator can notice.
+            console.error(`[forgot-password] failed to send reset email to ${result.email}:`, error.message);
+          }
+        }
+        return json(res, 200, { ok: true, message: 'If an account exists for that email, a reset link has been sent.' });
+      }
+      if (req.method === 'POST' && req.url === '/api/auth/reset-password') {
+        const body = await readJson(req);
+        try {
+          userAuth.resetPassword(body.token, body.newPassword);
+        } catch (error) {
+          return json(res, 400, { error: error.message });
+        }
+        return json(res, 200, { ok: true, message: 'Password updated. You can sign in now.' });
       }
       return json(res, 404, { error: 'Not found' });
     } catch (error) {
@@ -1063,6 +1642,24 @@ async function serveFile(res, fileName, contentType) {
   const content = await readFileAsync(join(__dirname, '..', 'public', fileName), 'utf8');
   res.writeHead(200, { 'content-type': contentType, 'cache-control': 'no-store' });
   res.end(content);
+}
+
+// Allowlist for exposing an auth_users row to its own owner via /api/auth/me —
+// the row itself carries password_hash, verify_token, mfa_code_hash, and
+// pending_session_token, none of which any client should ever receive.
+function safeUserFields(user) {
+  return {
+    id: user.id,
+    email: user.email,
+    name: user.name,
+    phone: user.phone || null,
+    designation: user.designation || null,
+    unit: user.unit || null,
+    role: user.role,
+    status: user.status,
+    telegramLinked: Boolean(user.telegram_id),
+    createdAt: user.created_at
+  };
 }
 
 function json(res, statusCode, payload) {
@@ -1116,6 +1713,28 @@ function readJson(req) {
         reject(new Error(`Invalid JSON: ${error.message}`));
       }
     });
+    req.on('error', reject);
+  });
+}
+
+// Collects the raw request body as a Buffer, for binary uploads (the
+// Personnel Registry .xlsx import) where JSON parsing doesn't apply. The
+// client sends the file's raw bytes directly as the body (fetch() can POST
+// a File/Blob that way) — no multipart parsing needed on the server, which
+// this codebase has no existing precedent for.
+function readBuffer(req, maxBytes = 5_000_000) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    let total = 0;
+    req.on('data', (chunk) => {
+      total += chunk.length;
+      if (total > maxBytes) {
+        reject(new Error('Request body too large'));
+        return;
+      }
+      chunks.push(chunk);
+    });
+    req.on('end', () => resolve(Buffer.concat(chunks)));
     req.on('error', reject);
   });
 }

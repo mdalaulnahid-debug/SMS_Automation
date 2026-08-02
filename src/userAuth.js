@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS auth_users (
   password_hash TEXT NOT NULL,
   name TEXT NOT NULL,
   phone TEXT,
+  telegram_id TEXT,
   role TEXT NOT NULL DEFAULT 'officer',
   status TEXT NOT NULL DEFAULT 'pending_verification',
   email_verified INTEGER NOT NULL DEFAULT 0,
@@ -34,7 +35,26 @@ CREATE TABLE IF NOT EXISTS auth_sessions (
   ip TEXT,
   user_agent TEXT
 );
+CREATE TABLE IF NOT EXISTS personnel_registry (
+  id TEXT PRIMARY KEY,
+  name TEXT NOT NULL,
+  designation TEXT,
+  unit TEXT,
+  phone TEXT NOT NULL,
+  email TEXT NOT NULL,
+  imported_at TEXT NOT NULL,
+  imported_by TEXT
+);
+CREATE TABLE IF NOT EXISTS registration_tokens (
+  telegram_id TEXT PRIMARY KEY,
+  token TEXT NOT NULL UNIQUE,
+  created_at TEXT NOT NULL,
+  expires_at TEXT NOT NULL,
+  consumed_at TEXT
+);
 `;
+
+const REGISTRATION_TOKEN_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours to complete registration via a bot-issued link
 
 const SESSION_TTL_MS = 8 * 60 * 60 * 1000; // 8 hours
 const MFA_PENDING_TTL_MS = 10 * 60 * 1000; // 10 minutes to enter the MFA code
@@ -61,6 +81,17 @@ function hashToken(token) {
   return scryptSync(token, 'mfa-static-salt', 32).toString('hex');
 }
 
+// Registration activation policy (design doc §3, decided 2026-07-07): while a
+// migration window is set and still in the future, a registry-matched
+// registration auto-activates; otherwise it needs super-admin approval. No
+// window configured at all (the default) means "always auto-activate" — this
+// must never change behavior for a deployment that hasn't opted into the
+// registration-gating rollout yet.
+function isWithinRegistrationWindow(registrationWindowEndsAt, now = Date.now()) {
+  if (!registrationWindowEndsAt) return true;
+  return new Date(registrationWindowEndsAt).getTime() > now;
+}
+
 function generateToken() {
   return randomBytes(32).toString('hex');
 }
@@ -78,6 +109,34 @@ class UserAuthStore {
     this.db = new DatabaseSync(dbPath || ':memory:');
     this.db.exec('PRAGMA journal_mode = WAL;');
     this.db.exec(SCHEMA);
+    this._migrateSchema();
+  }
+
+  // CREATE TABLE IF NOT EXISTS above is a no-op against an auth_users table that
+  // already existed before telegram_id was added (any real deployment's DB file).
+  // Add the column if it's missing, then ensure the uniqueness index either way —
+  // one Telegram identity must map to at most one account. A partial index (WHERE
+  // telegram_id IS NOT NULL) allows any number of unlinked (NULL) accounts.
+  _migrateSchema() {
+    const columns = this.db.prepare('PRAGMA table_info(auth_users)').all();
+    if (!columns.some((col) => col.name === 'telegram_id')) {
+      this.db.exec('ALTER TABLE auth_users ADD COLUMN telegram_id TEXT');
+    }
+    if (!columns.some((col) => col.name === 'designation')) {
+      this.db.exec('ALTER TABLE auth_users ADD COLUMN designation TEXT');
+    }
+    if (!columns.some((col) => col.name === 'unit')) {
+      this.db.exec('ALTER TABLE auth_users ADD COLUMN unit TEXT');
+    }
+    if (!columns.some((col) => col.name === 'reset_token')) {
+      this.db.exec('ALTER TABLE auth_users ADD COLUMN reset_token TEXT');
+    }
+    if (!columns.some((col) => col.name === 'reset_token_expires_at')) {
+      this.db.exec('ALTER TABLE auth_users ADD COLUMN reset_token_expires_at TEXT');
+    }
+    this.db.exec(
+      'CREATE UNIQUE INDEX IF NOT EXISTS idx_auth_users_telegram_id ON auth_users(telegram_id) WHERE telegram_id IS NOT NULL'
+    );
   }
 
   close() {
@@ -96,18 +155,49 @@ class UserAuthStore {
     return this._row(email) || null;
   }
 
+  // The join key between the two identity systems that have never been linked
+  // (web login here vs. the Telegram bridge's flat authorizedUsers config) —
+  // see docs/security-hardening-v1-design.md §5. Telegram user IDs are treated
+  // as strings throughout (matching how config/telegram.json already keys
+  // authorizedUsers), since they're large integers with no arithmetic use.
+  getUserByTelegramId(telegramId) {
+    if (!telegramId) return null;
+    return this.db.prepare('SELECT * FROM auth_users WHERE telegram_id = ?').get(String(telegramId)) || null;
+  }
+
+  // Links a Telegram identity to an existing account. Rejects if that Telegram
+  // ID is already linked to a DIFFERENT account (the partial unique index
+  // enforces this at the DB level too; this just turns the raw constraint
+  // error into a clear, catchable application error).
+  linkTelegramId(userId, telegramId) {
+    const normalized = String(telegramId || '').trim();
+    if (!normalized) throw new Error('Telegram ID is required.');
+    const existing = this.getUserByTelegramId(normalized);
+    if (existing && existing.id !== userId) {
+      throw new Error('This Telegram account is already linked to another user.');
+    }
+    this.db.prepare('UPDATE auth_users SET telegram_id = ? WHERE id = ?').run(normalized, userId);
+  }
+
   listUsers() {
-    return this.db.prepare('SELECT id, email, name, phone, role, status, email_verified, created_at, last_login_at FROM auth_users ORDER BY created_at').all();
+    return this.db.prepare('SELECT id, email, name, phone, telegram_id, role, status, email_verified, created_at, last_login_at FROM auth_users ORDER BY created_at').all();
   }
 
   // Registration: creates a pending_verification user and returns the raw verify token (caller emails it).
-  register({ email, password, name, phone, role = 'officer' }) {
+  // telegramId is optional — set when registration originated from the bot's
+  // registration-link flow (not built yet; the field exists so that flow has
+  // somewhere to plug in without another schema change).
+  register({ email, password, name, phone, role = 'officer', telegramId, designation, unit }) {
     email = String(email || '').trim().toLowerCase();
     if (!isValidEmail(email)) throw new Error('Invalid email address.');
     if (!password || String(password).length < 8) throw new Error('Password must be at least 8 characters.');
     if (!name || !String(name).trim()) throw new Error('Name is required.');
     if (!ROLES.includes(role)) throw new Error('Invalid role.');
     if (this._row(email)) throw new Error('An account with this email already exists.');
+    const normalizedTelegramId = telegramId ? String(telegramId).trim() : null;
+    if (normalizedTelegramId && this.getUserByTelegramId(normalizedTelegramId)) {
+      throw new Error('This Telegram account is already linked to another user.');
+    }
 
     const id = randomBytes(16).toString('hex');
     const verifyToken = generateToken();
@@ -117,10 +207,15 @@ class UserAuthStore {
     this.db
       .prepare(
         `INSERT INTO auth_users
-         (id, email, password_hash, name, phone, role, status, email_verified, verify_token, verify_token_expires_at, created_at)
-         VALUES (?, ?, ?, ?, ?, ?, 'pending_verification', 0, ?, ?, ?)`
+         (id, email, password_hash, name, phone, telegram_id, designation, unit, role, status, email_verified, verify_token, verify_token_expires_at, created_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'pending_verification', 0, ?, ?, ?)`
       )
-      .run(id, email, hashPassword(password), String(name).trim(), phone ? String(phone).trim() : null, role, verifyToken, expiresAt, now);
+      .run(
+        id, email, hashPassword(password), String(name).trim(),
+        phone ? String(phone).trim() : null, normalizedTelegramId,
+        designation ? String(designation).trim() : null, unit ? String(unit).trim() : null,
+        role, verifyToken, expiresAt, now
+      );
 
     return { id, email, verifyToken };
   }
@@ -141,18 +236,92 @@ class UserAuthStore {
     return this._row(email);
   }
 
-  verifyEmail(token) {
+  // registrationWindowEndsAt (optional) decides what verifying lands the account
+  // in: 'active' immediately (default, and always during a migration window) or
+  // 'pending_approval' (post-window steady state — see isWithinRegistrationWindow).
+  verifyEmail(token, { registrationWindowEndsAt } = {}) {
     const user = this.db.prepare('SELECT * FROM auth_users WHERE verify_token = ?').get(token);
     if (!user) throw new Error('Invalid or already-used verification link.');
     if (new Date(user.verify_token_expires_at).getTime() < Date.now()) {
       throw new Error('Verification link expired. Please register again or request a new link.');
     }
+    const status = isWithinRegistrationWindow(registrationWindowEndsAt) ? 'active' : 'pending_approval';
     this.db
       .prepare(
-        `UPDATE auth_users SET email_verified = 1, status = 'active', verify_token = NULL, verify_token_expires_at = NULL WHERE id = ?`
+        `UPDATE auth_users SET email_verified = 1, status = ?, verify_token = NULL, verify_token_expires_at = NULL WHERE id = ?`
       )
-      .run(user.id);
+      .run(status, user.id);
     return this.getUserById(user.id);
+  }
+
+  listPendingApprovals() {
+    return this.db
+      .prepare(
+        'SELECT id, email, name, phone, telegram_id, role, created_at FROM auth_users WHERE status = ? ORDER BY created_at'
+      )
+      .all('pending_approval');
+  }
+
+  // Super-admin activates a pending_approval account. Only meaningful from
+  // that specific status — approving an already-active or disabled account
+  // would silently paper over a status this action was never meant to touch.
+  approveRegistration(userId) {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('User not found.');
+    if (user.status !== 'pending_approval') {
+      throw new Error(`Cannot approve a user with status "${user.status}" (expected pending_approval).`);
+    }
+    this.db.prepare(`UPDATE auth_users SET status = 'active' WHERE id = ?`).run(userId);
+    return this.getUserById(userId);
+  }
+
+  // Self-service password change — requires proving the CURRENT password (not
+  // just a valid session), so a hijacked/left-open session alone can't lock
+  // the real owner out or plant a new credential.
+  changePassword(userId, currentPassword, newPassword) {
+    const user = this.getUserById(userId);
+    if (!user) throw new Error('User not found.');
+    if (!verifyPassword(currentPassword, user.password_hash)) {
+      throw new Error('Current password is incorrect.');
+    }
+    if (String(newPassword || '').length < 8) {
+      throw new Error('New password must be at least 8 characters.');
+    }
+    this.db.prepare('UPDATE auth_users SET password_hash = ? WHERE id = ?').run(hashPassword(newPassword), userId);
+  }
+
+  // Forgot-password: issues a reset token for an *existing, non-disabled*
+  // account. Returns null (not a thrown error) when the email doesn't match
+  // anything, so the API layer can always respond 200 either way and never
+  // leak which emails have accounts — the same shape as most real-world
+  // reset flows, deliberately not mirroring startLogin()'s throw-on-miss.
+  requestPasswordReset(email) {
+    const user = this._row(email);
+    if (!user || user.status === 'disabled') return null;
+    const resetToken = generateToken();
+    const expiresAt = new Date(Date.now() + MFA_PENDING_TTL_MS * 6).toISOString(); // 1 hour
+    this.db
+      .prepare('UPDATE auth_users SET reset_token = ?, reset_token_expires_at = ? WHERE id = ?')
+      .run(resetToken, expiresAt, user.id);
+    return { resetToken, email: user.email, name: user.name };
+  }
+
+  // Completes a reset: verifies the token, sets the new password, and
+  // invalidates every existing session for the account — a password reset
+  // is exactly the moment a stale/hijacked session should stop working.
+  resetPassword(resetToken, newPassword) {
+    const user = this.db.prepare('SELECT * FROM auth_users WHERE reset_token = ?').get(resetToken);
+    if (!user) throw new Error('Invalid or already-used reset link.');
+    if (!user.reset_token_expires_at || new Date(user.reset_token_expires_at).getTime() < Date.now()) {
+      throw new Error('Reset link expired. Please request a new one.');
+    }
+    if (String(newPassword || '').length < 8) {
+      throw new Error('New password must be at least 8 characters.');
+    }
+    this.db
+      .prepare('UPDATE auth_users SET password_hash = ?, reset_token = NULL, reset_token_expires_at = NULL WHERE id = ?')
+      .run(hashPassword(newPassword), user.id);
+    this.db.prepare('DELETE FROM auth_sessions WHERE user_id = ?').run(user.id);
   }
 
   // Step 1 of login: verify password, issue a short-lived MFA code + pending token.
@@ -162,6 +331,7 @@ class UserAuthStore {
     if (!user) throw new Error('Invalid email or password.');
     if (!verifyPassword(password, user.password_hash)) throw new Error('Invalid email or password.');
     if (user.status === 'disabled') throw new Error('This account has been disabled. Contact an administrator.');
+    if (user.status === 'pending_approval') throw new Error('Your registration is pending administrator approval.');
     if (!user.email_verified) throw new Error('Please verify your email before logging in.');
 
     const mfaCode = generateMfaCode();
@@ -212,7 +382,10 @@ class UserAuthStore {
       return null;
     }
     const user = this.getUserById(session.user_id);
-    if (!user || user.status === 'disabled') return null;
+    // Defense in depth: startLogin() already blocks pending_approval from ever
+    // reaching a session, but a session shouldn't stay valid if status changes
+    // out from under it later either (matches the existing disabled check).
+    if (!user || user.status === 'disabled' || user.status === 'pending_approval') return null;
     return { session, user };
   }
 
@@ -226,9 +399,126 @@ class UserAuthStore {
   }
 
   setStatus(userId, status) {
-    if (!['active', 'disabled', 'pending_verification'].includes(status)) throw new Error('Invalid status.');
+    if (!['active', 'disabled', 'pending_verification', 'pending_approval'].includes(status)) {
+      throw new Error('Invalid status.');
+    }
     this.db.prepare('UPDATE auth_users SET status = ? WHERE id = ?').run(status, userId);
+  }
+
+  // --- Personnel Registry (design doc §6) ---
+  // A registration attempt is validated against this — self-declared identity
+  // (whatever someone types in) is never trusted. See personnelRegistry.js
+  // for the pure phone+email matching logic this data feeds.
+
+  // Wholesale replace: an admin re-import is expected to supersede the
+  // previous roster entirely (the source spreadsheet IS the roster, not a
+  // diff against it), not merge with it. Runs in a transaction so a failed
+  // import can never leave the registry half-updated.
+  replaceRegistry(records, importedBy) {
+    const now = new Date().toISOString();
+    this.db.exec('BEGIN');
+    try {
+      this.db.exec('DELETE FROM personnel_registry');
+      const insert = this.db.prepare(
+        `INSERT INTO personnel_registry (id, name, designation, unit, phone, email, imported_at, imported_by)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+      );
+      for (const record of records) {
+        insert.run(
+          randomBytes(12).toString('hex'),
+          String(record.name || '').trim(),
+          record.designation ? String(record.designation).trim() : null,
+          record.unit ? String(record.unit).trim() : null,
+          String(record.phone || '').trim(),
+          String(record.email || '').trim().toLowerCase(),
+          now,
+          importedBy || null
+        );
+      }
+      this.db.exec('COMMIT');
+    } catch (error) {
+      this.db.exec('ROLLBACK');
+      throw error;
+    }
+    return { count: records.length, importedAt: now };
+  }
+
+  // Adds a single record without touching the rest of the roster — for a
+  // super-admin adding one new officer between spreadsheet re-imports,
+  // rather than needing a full re-upload for one person. Unlike
+  // replaceRegistry, this rejects an exact (phone, email) duplicate instead
+  // of silently creating a second row for the same person.
+  addRegistryRecord({ name, designation, unit, phone, email }, addedBy) {
+    const trimmedName = String(name || '').trim();
+    const trimmedPhone = String(phone || '').trim();
+    const normalizedEmail = String(email || '').trim().toLowerCase();
+    if (!trimmedName) throw new Error('Name is required.');
+    if (!trimmedPhone) throw new Error('Phone is required.');
+    if (!isValidEmail(normalizedEmail)) throw new Error('Invalid email address.');
+    if (this.buildPersonnelRegistry().matchByPhoneAndEmail(trimmedPhone, normalizedEmail)) {
+      throw new Error('A registry record with this phone and email already exists.');
+    }
+
+    const id = randomBytes(12).toString('hex');
+    const now = new Date().toISOString();
+    this.db
+      .prepare(
+        `INSERT INTO personnel_registry (id, name, designation, unit, phone, email, imported_at, imported_by)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?)`
+      )
+      .run(id, trimmedName, designation ? String(designation).trim() : null, unit ? String(unit).trim() : null, trimmedPhone, normalizedEmail, now, addedBy || null);
+
+    return this.db.prepare('SELECT * FROM personnel_registry WHERE id = ?').get(id);
+  }
+
+  listRegistry() {
+    return this.db.prepare('SELECT * FROM personnel_registry ORDER BY name').all();
+  }
+
+  registrySize() {
+    return this.db.prepare('SELECT COUNT(*) AS c FROM personnel_registry').get().c;
+  }
+
+  // Builds a ready-to-use PersonnelRegistry (the pure matcher in
+  // personnelRegistry.js) from the currently-persisted roster.
+  buildPersonnelRegistry() {
+    const { PersonnelRegistry } = require('./personnelRegistry');
+    return new PersonnelRegistry(this.listRegistry());
+  }
+
+  // --- Registration-link tokens (design doc §5) ---
+  // Minted when an unregistered Telegram sender DMs the bot, so the bot can
+  // reply with a link to the web registration form that already knows which
+  // Telegram identity to link on success. One active token per Telegram id —
+  // a repeat DM before the first link is used just re-issues (INSERT OR
+  // REPLACE), rather than piling up rows for the same sender.
+  createRegistrationToken(telegramId, { now = Date.now(), ttlMs = REGISTRATION_TOKEN_TTL_MS } = {}) {
+    const normalized = String(telegramId || '').trim();
+    if (!normalized) throw new Error('Telegram ID is required.');
+    const token = generateToken();
+    const createdAt = new Date(now).toISOString();
+    const expiresAt = new Date(now + ttlMs).toISOString();
+    this.db
+      .prepare(
+        `INSERT INTO registration_tokens (telegram_id, token, created_at, expires_at, consumed_at)
+         VALUES (?, ?, ?, ?, NULL)
+         ON CONFLICT(telegram_id) DO UPDATE SET token = excluded.token, created_at = excluded.created_at, expires_at = excluded.expires_at, consumed_at = NULL`
+      )
+      .run(normalized, token, createdAt, expiresAt);
+    return { token, expiresAt };
+  }
+
+  // Validates and burns a registration token, returning the Telegram ID it
+  // was minted for. Single-use (consumed_at set on success) so a link can't
+  // be replayed to link a second account to the same Telegram identity.
+  consumeRegistrationToken(token, { now = Date.now() } = {}) {
+    const row = this.db.prepare('SELECT * FROM registration_tokens WHERE token = ?').get(String(token || ''));
+    if (!row) throw new Error('Invalid or expired registration link.');
+    if (row.consumed_at) throw new Error('This registration link has already been used.');
+    if (new Date(row.expires_at).getTime() < now) throw new Error('This registration link has expired. Ask the bot for a new one.');
+    this.db.prepare('UPDATE registration_tokens SET consumed_at = ? WHERE telegram_id = ?').run(new Date(now).toISOString(), row.telegram_id);
+    return row.telegram_id;
   }
 }
 
-module.exports = { UserAuthStore, isValidEmail, ROLES };
+module.exports = { UserAuthStore, isValidEmail, ROLES, SESSION_TTL_MS, isWithinRegistrationWindow };

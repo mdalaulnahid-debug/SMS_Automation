@@ -329,6 +329,54 @@ test('invalid request does not enter request queue and writes audit failure', as
   assert.equal(audit.details.errorCode, 'MIXED_REQUEST_TYPES');
 });
 
+test('a non-command Telegram message from a recognized admin bypasses validation-failure rejection', async () => {
+  const { store, service } = createHarness({}, { isAdminTelegramSender: (id) => id === '555111' });
+  const result = await service.submitRequest({
+    channel: 'telegram',
+    chatId: 'operations-group',
+    requesterName: 'Admin Officer',
+    requesterId: '555111',
+    text: 'Reminder: report to the station by 6pm today.'
+  });
+  assert.equal(result.ok, false);
+  assert.equal(result.errorCode, 'ADMIN_POST_BYPASS');
+  assert.equal(result.replyText, null, 'no reply should be relayed for an admin post');
+  assert.equal(store.listRequests().length, 0);
+
+  const audit = store.auditLogs.at(-1);
+  assert.equal(audit.action, 'TELEGRAM_ADMIN_POST');
+  assert.equal(audit.actor, 'Admin Officer');
+  assert.equal(audit.details.text, 'Reminder: report to the station by 6pm today.');
+});
+
+test('the same non-command message from a non-admin sender still gets a normal validation-failure rejection', async () => {
+  const { store, service } = createHarness({}, { isAdminTelegramSender: (id) => id === '555111' });
+  const result = await service.submitRequest({
+    channel: 'telegram',
+    chatId: 'operations-group',
+    requesterName: 'Regular Officer',
+    requesterId: '777888',
+    text: 'Reminder: report to the station by 6pm today.'
+  });
+  assert.equal(result.ok, false);
+  assert.notEqual(result.errorCode, 'ADMIN_POST_BYPASS');
+  assert.ok(result.replyText, 'a non-admin still gets an actionable rejection reply');
+  assert.equal(store.auditLogs.at(-1).action, 'REQUEST_VALIDATION_FAILED');
+});
+
+test('a valid command from a recognized admin is processed normally, not bypassed', async () => {
+  const { store, service } = createHarness({ GP: { secret: 's', trustedSenders: ['12345'] } }, { isAdminTelegramSender: (id) => id === '555111' });
+  const result = await service.submitRequest({
+    channel: 'telegram',
+    chatId: 'operations-group',
+    requesterName: 'Admin Officer',
+    requesterId: '555111',
+    text: 'LRL 01712345678'
+  });
+  assert.equal(result.ok, true, 'a well-formed command must still be processed even from an admin sender');
+  assert.equal(store.listRequests().length, 1);
+});
+
 test('dispatches multiple same-operator requests without blocking', async () => {
   const { store, service } = createHarness();
   await service.submitRequest({

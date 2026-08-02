@@ -303,6 +303,7 @@
           <button class="sidebar-item" data-section="audit"><span class="sidebar-label"><span class="material-symbols-outlined">policy</span>Audit</span><span class="sidebar-count" id="countAudit">0</span></button>
           <button class="sidebar-item" data-section="phoneinbox"><span class="sidebar-label"><span class="material-symbols-outlined">smartphone</span>Phone Inbox</span></button>
           <button class="sidebar-item" data-section="tools"><span class="sidebar-label"><span class="material-symbols-outlined">construction</span>Tools</span></button>
+          <button class="sidebar-item" id="teamSidebarItem" data-section="team" style="display:none"><span class="sidebar-label"><span class="material-symbols-outlined">group</span>Team</span></button>
         </aside>
 
         <main class="admin-main">
@@ -539,6 +540,16 @@
             </div>
             <div class="tools-grid">
               <section class="data-surface tool-panel">
+                <div class="tool-title"><span class="material-symbols-outlined">password</span>My Account</div>
+                <div class="tool-note">Change your own login password. Requires your current password.</div>
+                <form id="changePasswordForm" class="tool-form">
+                  <label>Current password<input id="currentPassword" class="input-field" type="password" autocomplete="current-password" required /></label>
+                  <label>New password (min 8 characters)<input id="newPassword" class="input-field" type="password" autocomplete="new-password" required minlength="8" /></label>
+                  <button type="submit" class="btn-primary">Change password</button>
+                  <div id="changePasswordResult" class="tool-note" style="display:none"></div>
+                </form>
+              </section>
+              <section class="data-surface tool-panel">
                 <div class="tool-title"><span class="material-symbols-outlined">qr_code_2</span>Provision Gateway</div>
                 <div class="tool-note">Generate a constrained setup payload for a device runtime phone.</div>
                 <div class="tool-form">
@@ -598,6 +609,28 @@
                 <div id="settingsResult" class="tool-note" style="display:none"></div>
               </section>
               <section class="data-surface tool-panel">
+                <div class="tool-title"><span class="material-symbols-outlined">badge</span>Personnel Registry</div>
+                <div class="tool-note">The roster registration is validated against — phone + email must match a record here. Bulk import wholesale-replaces the roster.</div>
+                <form id="registryImportForm" class="tool-form">
+                  <label>Roster spreadsheet (.xlsx)<input id="registryFileInput" class="input-field" type="file" accept=".xlsx" /></label>
+                  <button type="submit" class="btn-primary">Import spreadsheet</button>
+                  <div class="tool-note">Re-importing replaces the entire roster — the file should contain everyone, not just changes.</div>
+                </form>
+                <div id="registrySuperAdminBlock" style="display:none;margin-top:8px;padding-top:12px;border-top:1px solid var(--divider)">
+                  <div class="tool-note">Add one officer without a full re-import (super-admin only).</div>
+                  <form id="registryAddForm" class="tool-form" style="margin-top:8px">
+                    <label>Name<input id="regAddName" class="input-field" required /></label>
+                    <label>Designation<input id="regAddDesignation" class="input-field" /></label>
+                    <label>Unit<input id="regAddUnit" class="input-field" /></label>
+                    <label>Official phone<input id="regAddPhone" class="input-field" required /></label>
+                    <label>Official email<input id="regAddEmail" class="input-field" type="email" required /></label>
+                    <button type="submit" class="btn-secondary">Add to registry</button>
+                  </form>
+                </div>
+                <div id="registryResult" class="tool-note" style="display:none"></div>
+                <div id="registryList" class="mono-list" style="margin-top:8px"></div>
+              </section>
+              <section class="data-surface tool-panel">
                 <div class="tool-title"><span class="material-symbols-outlined">shield_lock</span>Release / Publish</div>
                 <div class="tool-note">Keep high-risk actions visually isolated from daily review work.</div>
                 <div class="banner banner-warn"><span class="material-symbols-outlined">warning</span>APK publishing remains controlled through the existing admin release flow and backend endpoint.</div>
@@ -607,6 +640,18 @@
                 </div>
               </section>
             </div>
+          </section>
+          <section id="section-team" class="admin-section">
+            <div class="section-heading">
+              <div>
+                <div class="section-title">Team</div>
+                <div class="section-subtitle">Promote a registered officer to admin, or demote back. Super-admin only — every account here already passed Personnel Registry verification to register at all.</div>
+              </div>
+            </div>
+            <section class="data-surface tool-panel">
+              <div id="teamResult" class="tool-note" style="display:none"></div>
+              <div id="teamList" class="mono-list" style="margin-top:8px"></div>
+            </section>
           </section>
         </main>
       </div>

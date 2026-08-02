@@ -53,7 +53,13 @@ function loadAuthConfig() {
     denyUnknownRequesters:
       process.env.DENY_UNKNOWN_REQUESTERS !== undefined
         ? truthy(process.env.DENY_UNKNOWN_REQUESTERS)
-        : Boolean(file.denyUnknownRequesters)
+        : Boolean(file.denyUnknownRequesters),
+    // ISO timestamp: while set and in the future, new registrations auto-activate
+    // on a Personnel Registry match (the 2026-07-07 migration-window decision).
+    // Unset (the default, until an admin explicitly starts the rollout) means
+    // "always auto-activate" — this must never change behavior for a deployment
+    // that hasn't opted into the registration-gating rollout yet.
+    registrationWindowEndsAt: file.registrationWindowEndsAt || null
   };
 }
 

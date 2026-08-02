@@ -19,6 +19,10 @@ function gatewaysConfigPath() {
   return process.env.SMS_GATEWAYS_CONFIG || join(__dirname, '..', 'config', 'gateways.json');
 }
 
+function authConfigPath() {
+  return process.env.SMS_AUTH_CONFIG || join(__dirname, '..', 'config', 'auth.json');
+}
+
 function readJsonFile(path) {
   if (!existsSync(path)) return {};
   try {
@@ -119,14 +123,32 @@ function removeAuthorizedUser(telegramUserId) {
   return trimmedId;
 }
 
+// Merges into the existing auth.json rather than replacing it, so adminApiKey/etc.
+// are preserved. Caller (app.js) is responsible for applying the new value to its
+// in-memory authConfig immediately, same as the /setup route does for adminApiKey —
+// this is a long-running process that otherwise only reads the file once at startup.
+function writeRegistrationWindowEndsAt(endsAt) {
+  const trimmed = String(endsAt ?? '').trim();
+  if (trimmed && Number.isNaN(new Date(trimmed).getTime())) {
+    throw new Error('endsAt must be a valid ISO date string, or empty to clear the window.');
+  }
+  const path = authConfigPath();
+  const file = readJsonFile(path);
+  file.registrationWindowEndsAt = trimmed || null;
+  writeJsonFile(path, file);
+  return file.registrationWindowEndsAt;
+}
+
 module.exports = {
   telegramConfigPath,
   gatewaysConfigPath,
+  authConfigPath,
   readTelegramGroupChatId,
   writeTelegramGroupChatId,
   readOperatorContacts,
   writeOperatorShortcode,
   readAuthorizedUsers,
   writeAuthorizedUser,
-  removeAuthorizedUser
+  removeAuthorizedUser,
+  writeRegistrationWindowEndsAt
 };

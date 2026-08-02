@@ -51,4 +51,25 @@ function mfaCodeEmail(code) {
   };
 }
 
-module.exports = { sendMail, verificationEmail, mfaCodeEmail };
+// Sent when an officer's Telegram request quota trips (security-hardening v1
+// §7) — reaches the registry-verified inbox, not the Telegram account itself,
+// which is the actual impersonation defense: whoever is driving the Telegram
+// session has to also control this inbox to keep submitting requests.
+function reVerificationCodeEmail(code) {
+  return {
+    subject: `Re-verification required: ${code}`,
+    text: `You've reached your request limit on Telegram. Reply with this code in the same Telegram chat to continue: ${code}\n\nThis code expires in 5 minutes. If you did not expect this, contact an administrator — someone may be using your Telegram account.`,
+    html: `<p>You've reached your request limit on Telegram. Reply with this code in the same Telegram chat to continue:</p><p style="font-size:24px;font-weight:bold;letter-spacing:4px">${code}</p><p>This code expires in 5 minutes.</p><p>If you did not expect this, contact an administrator — someone may be using your Telegram account.</p>`
+  };
+}
+
+function resetPasswordEmail(baseUrl, token) {
+  const link = `${baseUrl}/reset-password?token=${token}`;
+  return {
+    subject: 'Reset your LIC Barishal Ops password',
+    text: `Reset your password: ${link}\n\nThis link expires in 1 hour. If you did not request this, you can ignore this email — your password will not change.`,
+    html: `<p>Click below to set a new password for your LIC Barishal Ops account:</p><p><a href="${link}">${link}</a></p><p>This link expires in 1 hour. If you did not request this, you can ignore this email — your password will not change.</p>`
+  };
+}
+
+module.exports = { sendMail, verificationEmail, mfaCodeEmail, reVerificationCodeEmail, resetPasswordEmail };

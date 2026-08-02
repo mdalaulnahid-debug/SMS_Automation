@@ -76,18 +76,49 @@ back here for project context.
 
 ## Frontend stack & planned direction
 
-**Current:** vanilla static HTML/CSS/JS, **no build step, no framework** — the
-browser runs `public/*.html` + `*.js` directly, and `deploy.sh` just copies the
-files. Simple, but React-native AI design tools (magic MCP, v0, shadcn/ui, Claude
-Design code export) can't drop their output in; it has to be hand-translated.
+**Current, live in production:** vanilla static HTML/CSS/JS, **no build step,
+no framework** — the browser runs `public/*.html` + `*.js` directly, and
+`deploy.sh` just copies the files.
 
-**Planned (`P1`, staged, not started):** migrate `public/` → a **React + Vite
-SPA** (recommended: TypeScript + Tailwind with the teal M3 tokens ported into the
-Tailwind theme; new app in `web/`) so those AI tools work directly. Build + verify
-on **localhost first**, deploy to VPS only after a parity pass; old `public/` kept
-for rollback. This adds a `npm run build` step to the deploy pipeline. Full plan +
-phase list with priorities in `todo.md` (PLANNED section) and
-`progress_tracker.md` (latest handoff). Backend/bridge/Android/auth/APIs unchanged.
+**In progress (`P1`), localhost only, not deployed:** migrating to a **React +
+Vite SPA** in `web/` — TypeScript + Tailwind CSS v4 + shadcn/ui (`base`
+library), design system codenamed **"Signal Room"** (ink-navy dark ground,
+indigo `#6e7bff`/`#4f46e5` UI-chrome accent, real GP/Robi/Banglalink operator
+hues used only where operator identity is genuine data, Chakra Petch + Manrope
++ IBM Plex Mono). Phases 0/1/1.5 done (scaffold, API client/auth context/
+`AppShell`, Settings redesign); auth pages (Login/Register/Forgot-password/
+Reset-password) built and verified against the real backend. Full architecture
+and phase plan: [`docs/redesign.md`](docs/redesign.md). `public/` stays live
+and untouched until a full parity pass + explicit deploy approval — same
+localhost-only discipline as everything else in progress.
+
+**Forgot/reset password (2026-07-15), backend + both frontends:**
+`userAuth.js` gained `requestPasswordReset()`/`resetPassword()` (1-hour
+single-use token, invalidates all sessions on reset), `POST
+/api/auth/forgot-password` / `POST /api/auth/reset-password` in `app.js`
+(the forgot-password endpoint always returns 200 regardless of whether the
+email matched an account — including on mail-transport failure — to avoid
+becoming an email-enumeration oracle). Wired into both the vanilla site
+(`public/forgot-password.html`, `public/reset-password.html`, link added to
+`login.html`) and the new React app. `scripts/reset-password.js` is a
+standalone recovery CLI meant to be run by hand over SSH on the VPS — it never
+receives the plaintext password from Claude, only from whoever runs it.
+
+## ⚠️ Deployment gap — `feature/security-hardening-v1` was never merged
+
+Discovered 2026-07-15: this branch is **40 commits ahead of `main`**, covering
+the *entire* Security Hardening V1 initiative (steps 1–9: registry-gated
+registration, server-side page gating, quota/OTP middleware, admin group
+actions, anomaly tripwire) plus everything built after it. None of it has
+been merged or deployed — production is still running pre-hardening code.
+Concretely: production's `register.html` only has Name/Email/Password (no
+Designation/Unit/Phone, no registry-match requirement) — the older version
+from before step 5 was ever written. A cosmetic-only hand patch was applied
+directly to production's `register.html` to add the missing fields (user
+request, informed it wouldn't enable registry matching without the paired
+backend deploy). **Real fix, not yet done:** merge `feature/security-
+hardening-v1` → `main` and deploy properly — needs explicit user sign-off
+given the size of what's shipping.
 
 ## Planned feature — Lost/Stolen Phone Recovery Watch (GD-linked)
 

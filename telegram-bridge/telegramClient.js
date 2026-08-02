@@ -109,6 +109,49 @@ class TelegramClient {
     }));
   }
 
+  // Moderation (security-hardening v1 §9). Every one of these requires the
+  // bot to have been promoted to group admin with ban/restrict rights —
+  // an operational step outside this codebase; without it Telegram
+  // rejects the call with CHAT_ADMIN_REQUIRED, which the caller surfaces
+  // as a normal error rather than this client swallowing it.
+  banChatMember({ chatId, userId, untilDate }) {
+    return this._throttledSend(() => this.call('banChatMember', {
+      chat_id: chatId,
+      user_id: userId,
+      ...(untilDate ? { until_date: untilDate } : {})
+    }));
+  }
+
+  unbanChatMember({ chatId, userId }) {
+    return this._throttledSend(() => this.call('unbanChatMember', {
+      chat_id: chatId,
+      user_id: userId,
+      only_if_banned: true
+    }));
+  }
+
+  // Mute (until_date omitted or falsy) or unmute (permissions all true).
+  restrictChatMember({ chatId, userId, muted, untilDate }) {
+    const allowed = !muted;
+    return this._throttledSend(() => this.call('restrictChatMember', {
+      chat_id: chatId,
+      user_id: userId,
+      permissions: {
+        can_send_messages: allowed,
+        can_send_audios: allowed,
+        can_send_documents: allowed,
+        can_send_photos: allowed,
+        can_send_videos: allowed,
+        can_send_video_notes: allowed,
+        can_send_voice_notes: allowed,
+        can_send_polls: allowed,
+        can_send_other_messages: allowed,
+        can_add_web_page_previews: allowed
+      },
+      ...(muted && untilDate ? { until_date: untilDate } : {})
+    }));
+  }
+
   // Edit an existing Telegram message in-place (live posting updates).
   // Falls back to sendThreadedReply if the message is too old to edit (>48h).
   editMessage({ chatId, messageId, text, replyToMessageId, mention }) {

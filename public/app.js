@@ -98,6 +98,80 @@ function updateAdminVisibility() {
   apiKeyStatus.style.color = key ? 'var(--success)' : 'var(--text-muted)';
 }
 
+// Access-tier boundary (docs/security-hardening-v1-design.md §4): a plain
+// 'officer' session (Registered Officer) gets the informational Home + its
+// own account status, never the fleet/activity monitoring surfaces — those
+// stay reserved for admin/super_admin, matching the server-side gating on
+// /api/ops/*. The legacy admin-key path (no sessionUser at all) is always
+// treated as operational, same as before this tier existed.
+function currentRole() {
+  try {
+    const user = JSON.parse(localStorage.getItem('sessionUser') || '{}');
+    return user.role || null;
+  } catch {
+    return null;
+  }
+}
+
+function isOperationalRole() {
+  const role = currentRole();
+  return !role || role === 'admin' || role === 'super_admin';
+}
+
+function renderAccountStatus() {
+  let user;
+  try {
+    user = JSON.parse(localStorage.getItem('sessionUser') || '{}');
+  } catch {
+    return;
+  }
+  if (!user.email) return;
+
+  const statusLabels = { active: 'Active', pending_approval: 'Pending review' };
+  const statusTones = { active: 'chip-success', pending_approval: 'chip-warning' };
+  const statusLabel = statusLabels[user.status] || user.status || 'Active';
+  const statusChip = document.getElementById('accountStatusChip');
+  statusChip.textContent = statusLabel;
+  statusChip.className = `chip ${statusTones[user.status] || 'chip-muted'}`;
+
+  document.getElementById('accountSubtitle').textContent = user.status === 'pending_approval'
+    ? 'Your registration is awaiting administrator approval.'
+    : 'Registered Officer';
+
+  const fields = [
+    { label: 'Name', value: user.name },
+    { label: 'Designation', value: user.designation },
+    { label: 'Unit', value: user.unit },
+    { label: 'Email', value: user.email },
+    { label: 'Phone', value: user.phone },
+    { label: 'Telegram', value: user.telegramLinked ? 'Linked' : 'Not linked' }
+  ];
+  document.getElementById('accountGrid').innerHTML = fields.map(({ label, value }) => `
+    <div>
+      <div class="account-field-label">${esc(label)}</div>
+      <div class="account-field-value${value ? '' : ' muted'}">${value ? esc(value) : '—'}</div>
+    </div>`).join('');
+
+  document.getElementById('accountCard').hidden = false;
+}
+
+function applyRoleView() {
+  const operational = isOperationalRole();
+  document.querySelectorAll('.officer-hide').forEach((element) => {
+    element.hidden = !operational;
+  });
+  document.getElementById('homeOperational').hidden = !operational;
+  document.getElementById('homeInfo').hidden = operational;
+  if (!operational) {
+    renderAccountStatus();
+    // A previous admin/super_admin session on this browser may have left the
+    // Activity tab selected in localStorage (restoreTab() runs before role is
+    // known) — force back to Home rather than leave a hidden, unfetched panel
+    // marked active.
+    if (document.querySelector('.officer-hide.active')) selectTab('home');
+  }
+}
+
 document.getElementById('settingsApiKey').value = localStorage.getItem('adminApiKey') || '';
 document.getElementById('settingsApiKey').addEventListener('input', (event) => {
   const value = event.target.value.trim();
@@ -318,8 +392,16 @@ function boot() {
   booted = true;
   pollHealth();
   setInterval(pollHealth, 30_000);
-  refreshOps();
-  setInterval(refreshOps, 15_000);
+  applyRoleView();
+  // A Registered Officer session must never call /api/ops/* — that endpoint
+  // is now admin-only server-side (security-hardening v1 §4), and calling it
+  // anyway would 401 and trip apiFetch's onAuthRequired handler, which is
+  // sessionLogout() here — silently signing the officer out just for opening
+  // the home page. Skip the fetch/poll loop entirely for that tier instead.
+  if (isOperationalRole()) {
+    refreshOps();
+    setInterval(refreshOps, 15_000);
+  }
 }
 
 window._bootTime = Date.now();

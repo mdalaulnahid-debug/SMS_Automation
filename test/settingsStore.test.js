@@ -10,27 +10,33 @@ function withTempConfigDir(fn) {
   const root = mkdtempSync(join(tmpdir(), 'settings-store-'));
   const telegramPath = join(root, 'telegram.json');
   const gatewaysPath = join(root, 'gateways.json');
+  const authPath = join(root, 'auth.json');
   writeFileSync(telegramPath, JSON.stringify({ botToken: 'tok', groupChatId: -111, adminApiKey: 'k' }, null, 2));
   writeFileSync(gatewaysPath, JSON.stringify({
     GP: { gatewayUrl: '', trustedSenders: ['12345'] }
   }, null, 2));
+  writeFileSync(authPath, JSON.stringify({ adminApiKey: 'k' }, null, 2));
 
   const prevTelegram = process.env.SMS_TELEGRAM_CONFIG;
   const prevGateways = process.env.SMS_GATEWAYS_CONFIG;
+  const prevAuth = process.env.SMS_AUTH_CONFIG;
   process.env.SMS_TELEGRAM_CONFIG = telegramPath;
   process.env.SMS_GATEWAYS_CONFIG = gatewaysPath;
+  process.env.SMS_AUTH_CONFIG = authPath;
 
   // Re-require so the module picks up the freshly-set env vars cleanly per test.
   delete require.cache[require.resolve('../src/settingsStore')];
   const settingsStore = require('../src/settingsStore');
 
   try {
-    fn(settingsStore, { telegramPath, gatewaysPath });
+    fn(settingsStore, { telegramPath, gatewaysPath, authPath });
   } finally {
     if (prevTelegram === undefined) delete process.env.SMS_TELEGRAM_CONFIG;
     else process.env.SMS_TELEGRAM_CONFIG = prevTelegram;
     if (prevGateways === undefined) delete process.env.SMS_GATEWAYS_CONFIG;
     else process.env.SMS_GATEWAYS_CONFIG = prevGateways;
+    if (prevAuth === undefined) delete process.env.SMS_AUTH_CONFIG;
+    else process.env.SMS_AUTH_CONFIG = prevAuth;
     rmSync(root, { recursive: true, force: true });
   }
 }
@@ -142,5 +148,30 @@ test('removeAuthorizedUser deletes one entry and preserves the rest', () => {
 test('removeAuthorizedUser throws for an unknown id', () => {
   withTempConfigDir((settingsStore) => {
     assert.throws(() => settingsStore.removeAuthorizedUser('999'), /No authorized user/);
+  });
+});
+
+test('writeRegistrationWindowEndsAt writes the value, preserving other auth.json fields', () => {
+  withTempConfigDir((settingsStore, { authPath }) => {
+    const written = settingsStore.writeRegistrationWindowEndsAt('2026-07-14T00:00:00.000Z');
+    assert.equal(written, '2026-07-14T00:00:00.000Z');
+
+    const onDisk = JSON.parse(readFileSync(authPath, 'utf8'));
+    assert.equal(onDisk.registrationWindowEndsAt, '2026-07-14T00:00:00.000Z');
+    assert.equal(onDisk.adminApiKey, 'k', 'must preserve the existing adminApiKey, not clobber the file');
+  });
+});
+
+test('writeRegistrationWindowEndsAt with an empty value clears the window', () => {
+  withTempConfigDir((settingsStore) => {
+    settingsStore.writeRegistrationWindowEndsAt('2026-07-14T00:00:00.000Z');
+    const cleared = settingsStore.writeRegistrationWindowEndsAt('');
+    assert.equal(cleared, null);
+  });
+});
+
+test('writeRegistrationWindowEndsAt rejects an invalid date string', () => {
+  withTempConfigDir((settingsStore) => {
+    assert.throws(() => settingsStore.writeRegistrationWindowEndsAt('not-a-date'), /valid ISO date/);
   });
 });

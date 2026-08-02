@@ -34,13 +34,13 @@
   </head>
   <body>
     <div class="gate-shell glass-panel">
-      <div class="brand-row">
+      <a class="brand-row" href="/welcome" style="text-decoration:none;color:inherit">
         <img class="brand-logo" src="/assets/police-insignia.svg" alt="Bangladesh Police" />
         <div>
           <div class="brand-title">SMS Automation</div>
           <div class="brand-sub">LIC Barishal</div>
         </div>
-      </div>
+      </a>
 
       <!-- Step 1: Email + password -->
       <div id="stepPassword">
@@ -53,7 +53,10 @@
             <input id="loginEmail" class="input-field" type="email" autocomplete="email" required placeholder="officer@example.com" />
           </div>
           <div class="form-group">
-            <label class="form-label" for="loginPassword">Password</label>
+            <div style="display:flex;align-items:baseline;justify-content:space-between">
+              <label class="form-label" for="loginPassword">Password</label>
+              <a href="/forgot-password.html" style="font-size:11px;font-weight:700;color:var(--accent);text-decoration:none">Forgot password?</a>
+            </div>
             <input id="loginPassword" class="input-field" type="password" autocomplete="current-password" required placeholder="••••••••" />
           </div>
           <div id="loginError" class="error-msg"></div>
@@ -86,8 +89,16 @@
     <script>
       'use strict';
 
-      // Skip login page if already authenticated.
+      const params = new URLSearchParams(location.search);
+      const isStepUp = params.get('stepup') === '1';
+      const returnPath = params.get('return');
+
+      // Skip login page if already authenticated — except during a step-up
+      // re-auth (security-hardening v1 follow-on: super-admin console access
+      // requires a *fresh* login, so a still-valid-but-stale localStorage
+      // session must not silently bounce past this form).
       (function checkExistingSession() {
+        if (isStepUp) return;
         const token = localStorage.getItem('sessionToken');
         const raw = localStorage.getItem('sessionUser');
         if (!token || !raw) return;
@@ -98,14 +109,21 @@
       })();
 
       // Show "email verified" banner when redirected from verify-email.
-      if (new URLSearchParams(location.search).get('verified') === '1') {
+      if (params.get('verified') === '1') {
         document.getElementById('verifiedBanner').style.display = 'block';
+      }
+      if (isStepUp) {
+        document.querySelector('.gate-heading').textContent = 'Re-enter your password';
+        document.querySelector('#stepPassword .gate-sub').textContent =
+          'For super-admin console access, sign in again to confirm it’s really you.';
       }
 
       let pendingToken = null;
 
       function redirectByRole(role) {
-        if (role === 'super_admin' || role === 'admin') {
+        if (returnPath) {
+          location.replace(returnPath);
+        } else if (role === 'super_admin' || role === 'admin') {
           location.replace('/admin');
         } else {
           location.replace('/');

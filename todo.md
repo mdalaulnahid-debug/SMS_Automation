@@ -6,7 +6,58 @@ Start with `progress_tracker.md` for the latest session handoff, test results, a
 
 ---
 
-## 🔨 IN PROGRESS — Security hardening V1 (registration gating + layered access) · `P1`
+## ⚠️ CRITICAL — 2026-07-15: `feature/security-hardening-v1` never merged/deployed (40 commits behind main) · `P1`
+
+Discovered while patching a production bug report (missing fields on
+`register.html`). The **entire** Security Hardening V1 initiative — steps
+1–9, registry-gated registration, server-side page gating, quota/OTP
+middleware, admin group actions, anomaly tripwire, plus every session's work
+built on top of it since — has never been merged to `main` or deployed.
+Production is running pre-hardening code. A cosmetic-only hand patch was
+applied directly to production's `register.html` (adds the missing
+Designation/Unit/Phone fields) at the user's explicit request; registration
+still won't enforce a registry match until the real merge+deploy happens.
+
+- [ ] **`P1`** Decide and execute: merge `feature/security-hardening-v1` → `main`, deploy properly. Needs explicit user sign-off — registry-gated registration is a real behavior change (any registrant whose phone+email don't match an imported Personnel Registry record gets rejected), not just a bugfix.
+
+---
+
+## ✅ DONE — 2026-07-15: React redesign progress (Phases 0/1/1.5 + auth pages) + forgot/reset-password · `P1`
+
+Full detail in `progress_tracker.md`'s 2026-07-15 handoff and
+[`docs/redesign.md`](docs/redesign.md). Built and verified entirely on
+**localhost**; `public/` stays live and untouched. Not deployed.
+
+- [x] React app scaffold (`web/`): Vite + React 19 + TypeScript + Tailwind v4 + shadcn/ui, dev proxy to `:3000`
+- [x] "Signal Room" design system (ink-navy + indigo accent + real operator hues), replacing the initial ROMER-ported tokens
+- [x] Foundation: typed API client, auth context, theme provider, `AppShell`, router
+- [x] Settings redesign: flat 7-form grid → 6 named categories
+- [x] Auth pages: Login (password → MFA, step-up re-auth), Register, Forgot password, Reset password
+- [x] Post-login routing: every role lands on `/welcome`; admin/super_admin get a visible Admin Console link instead of being redirected past it
+- [x] Forgot/reset-password backend (`userAuth.js`, 2 new endpoints) + wired into **both** the vanilla site and the React app
+- [x] `scripts/reset-password.js` — standalone SSH-run recovery CLI for production account email/password resets
+- [ ] **`P2`** Phase 2/3 (already planned in `docs/redesign.md`, not built): finish Officer Portal port, then Ops UI / Admin Console ports (Phases 4/5)
+
+---
+
+## ✅ DONE — 2026-07-14: Security hardening V1 (all 10 steps) + Telegram-officer portal separation · `P1`
+
+All 10 steps below are complete, plus a follow-on hardening item added this
+session (real page separation for Telegram-linked officers — not originally
+in scope; see `progress_tracker.md`'s 2026-07-14 handoff and
+`docs/security-hardening-v1-STATUS.md` for full detail). Full suite
+**316/316**. Built and verified entirely on **localhost**, on
+`feature/security-hardening-v1`. **Not deployed** — awaiting explicit user
+review/approval before any VPS discussion, per this branch's standing
+instruction.
+
+Two notable findings from Step 10's live end-to-end simulation:
+- A live production Telegram bridge was detected on the VPS (409 Conflict
+  when starting the bridge locally) — local instance killed immediately,
+  no real Telegram API calls made for anything destructive.
+- A real, pre-existing audit-chain tamper-detection bug was found and fixed
+  (`JSON.stringify` dropping `undefined` keys caused false-positive tamper
+  reports on every reload) — regression-tested.
 
 Consolidates and supersedes the 2026-06-24 security roadmaps below (IP/device
 tracking, login/access control, insider-threat prevention) with a plan
@@ -31,17 +82,66 @@ localhost-only, deploy only after a full pass and explicit approval.
   genuine machine-to-machine callers (e.g. the Telegram bridge's own
   backend calls).
 
-- [ ] **`P1`** Unit tests: registry-match validation, quota logic, OTP generation/expiry/attempts
-- [ ] **`P1`** Server-side page gating (4-tier: Public/Registered Officer/Admin/Super-admin)
-- [ ] **`P1`** `telegramId` column + identity unification (web login ↔ Telegram)
-- [ ] **`P1`** Personnel Registry data model + admin-upload loading
-- [ ] **`P1`** Registration flow end-to-end (Telegram link → form → registry check → activation)
-- [ ] **`P1`** Quota + email-OTP re-verification middleware
-- [ ] **`P2`** Admin group actions (post-bypass + ban/suspend/mute) — needs bot promoted to group admin first
-- [ ] **`P1`** Shared admin key scoping/retirement for human paths
-- [ ] **`P2`** Behavioral anomaly tripwire (off-hours, bulk, language_code/username drift)
-- [ ] **`P1`** Local end-to-end simulation before any deploy conversation
-- [ ] **`P2`** Encryption at rest (Vultr encrypted block storage)
+- [x] **`P1`** Unit tests: registry-match validation, quota logic, OTP generation/expiry/attempts
+- [x] **`P1`** Server-side page gating (4-tier: Public/Registered Officer/Admin/Super-admin) — extended 2026-07-14 with true page separation (not just client-side hiding) for Telegram-linked officers
+- [x] **`P1`** `telegramId` column + identity unification (web login ↔ Telegram)
+- [x] **`P1`** Personnel Registry data model + admin-upload loading
+- [x] **`P1`** Registration flow end-to-end (Telegram link → form → registry check → activation)
+- [x] **`P1`** Quota + email-OTP re-verification middleware
+- [x] **`P2`** Admin group actions (post-bypass + ban/suspend/mute) — bot confirmed promoted to group admin
+- [x] **`P1`** Shared admin key scoping/retirement for human paths (partial by design — Android apps have no session-login of their own, key auth kept where they depend on it)
+- [x] **`P2`** Behavioral anomaly tripwire (off-hours, bulk, language_code/username drift)
+- [x] **`P1`** Local end-to-end simulation before any deploy conversation
+- [ ] **`P2`** Encryption at rest (Vultr encrypted block storage) — deferred, not part of this V1 pass
+
+---
+
+## ✅ BUILT, NOT DEPLOYED — 2026-07-14/15: Close the Telegram group's open-access policy (registration enforcement) · `P1`
+
+Closes the one piece of Step 5's original scope intentionally left undone
+(see the note at the bottom of `docs/security-hardening-v1-design.md`).
+**Code built and tested 2026-07-15** (`checkRegistration()`/
+`buildRegistrationLink()` in `src/app.js`, wired into `POST /api/requests`;
+`test/registrationGate.test.js`) — same soft-nag design locked below. Still
+part of the un-merged `feature/security-hardening-v1` branch (see the
+CRITICAL deployment-gap entry above); nothing here reaches production until
+that merge/deploy happens.
+
+**Current state:** the Telegram group is fully open — `planIntake()` in
+`telegram-bridge/bridge.js` only checks `authorizedUsers` for private DMs;
+any group member can submit a request with zero registration check. Only an
+unregistered private-DM sender gets a "You're not registered yet" reply with
+the registration link today.
+
+**What changes:** the group-chat branch starts checking the sender's
+Telegram ID against `auth_users.telegram_id` (the same lookup
+`isAdminTelegramSender` already uses), instead of leaving the group open.
+An unregistered group sender gets the same registration-link reply the DM
+path already sends — no new mechanism, just applying the existing one to
+the group too.
+
+**Rollout sequence (locked):**
+1. Import the real Personnel Registry into **production** (currently only
+   in local dev — see the open note in `docs/security-hardening-v1-STATUS.md`).
+2. Create `config/mail.json` on the VPS (Gmail creds + `superAdminEmail` —
+   **use `opsbarishal@gmail.com`, not a personal email**, per this session's
+   super-admin identity change).
+3. Ship the group-registration-gate change, in **soft-nag mode**: during a
+   **1-week grace window**, an unregistered sender's request is still
+   processed normally, but every reply to them includes the registration
+   link. Zero disruption to real investigative work during the transition.
+4. One-time broadcast to the group announcing the requirement + link, to
+   start the week's clock.
+5. After 7 days, flip to **hard block**: unregistered senders get only the
+   registration-link reply, no request processing, until they register.
+
+**What a registered (plain officer) user sees — already built, unchanged by
+this work:** Telegram usage is identical to today (DM or group, submit,
+get replies). On the web, they land on the minimal `public/portal.html`
+(own account status + a "message the bot" link) — no fleet/activity/audit
+data, no admin console, nothing beyond their own account. See the
+`officer-dashboard-design.md` doc for a planned visual/animation upgrade to
+that page (design only, not yet built).
 
 ---
 
@@ -166,32 +266,28 @@ security checklist, edge cases): [`docs/gd-lost-phone-watch-design.md`](docs/gd-
 - [ ] **`P2`** Admin console UI (case list/detail, new-case form + image upload)
 - [ ] **`P2`** Local end-to-end simulation before any deploy conversation
 
-## 🔜 PLANNED — React + Vite frontend migration · `P1` (large, multi-session)
+## 🟡 IN PROGRESS — React + Vite frontend migration · `P1` (large, multi-session)
 
 Migrate the vanilla static frontend to a **React + Vite SPA** so React-native AI
-design tools (magic MCP, v0, shadcn/ui, Claude Design code export) can drop in
-directly, instead of being hand-translated into vanilla CSS/JS. **Staged: build
-+ verify fully on localhost first, deploy to the VPS only after a signed-off
-parity pass.** Full write-up in this session's handoff in `progress_tracker.md`.
+design tools (Magic MCP/21st.dev, shadcn/ui) can drop in directly, instead of
+being hand-translated into vanilla CSS/JS. **Staged: build + verify fully on
+localhost first, deploy to the VPS only after a signed-off parity pass.** Full
+architecture + phase plan: [`docs/redesign.md`](docs/redesign.md).
 
-**Recommended stack (pending user sign-off):** React 18 + Vite + **TypeScript** +
-**Tailwind** (port `theme.css` teal M3 tokens into the Tailwind theme) + optional
-shadcn/ui. New app lives in **`web/`**; existing `public/` stays serving until the
-final deploy step (instant rollback).
-
-**Pending decisions before Phase 0:**
-- [ ] TypeScript + Tailwind (rec) vs. lower-risk JS / plain CSS variables?
-- [ ] shadcn/ui primitives in the mix, or own components only?
-- [ ] Confirm app location `web/`.
+**Stack (locked):** React 19 + Vite + TypeScript + Tailwind CSS v4 +
+shadcn/ui (`base` library). New app lives in `web/`; `public/` stays serving
+until the final deploy step (instant rollback). Design system: **"Signal
+Room"** (see `docs/redesign.md` / `web/src/index.css`).
 
 **Phases (each verified on localhost before the next):**
-- [ ] **P1** Phase 0 — scaffold `web/` (Vite+React+TS+Tailwind), port `theme.css` tokens, dev proxy `/api` → :3000
-- [ ] **P1** Phase 1 — foundation: port `shared.js` → typed API module + hooks, auth context (session token + legacy key), theme provider, base UI primitives
-- [ ] **P1** Phase 2 — auth pages (`login`, `register`)
-- [ ] **P1** Phase 3 — Ops UI (Home, Activity monitor-console, Access/settings) from `index.html` + `app.js`
-- [ ] **P1** Phase 4 — Admin console (Approvals Queue, Unmatched, Rejected, Audit, Tools) from `admin.html` + `admin.js` — largest piece (~880 lines)
-- [ ] **P1** Phase 5 — React Router + SPA shell; `src/server.js` serves the built bundle with SPA fallback (backend logic unchanged)
-- [ ] **P1** Phase 6 — full localhost verification: feature-parity checklist across every screen/flow, dark+light, mobile+desktop
+- [x] **P1** Phase 0 — scaffold `web/`, port design tokens, dev proxy `/api` → :3000, Welcome page
+- [x] **P1** Phase 1 — foundation: typed API client, auth context, theme provider, `AppShell`, router
+- [x] **P1** Phase 1.5 — Settings redesign (flat grid → 6 named categories)
+- [x] **P1** Phase 2 — auth pages: Login, Register, Forgot password, Reset password
+- [ ] **P1** Phase 3 — Officer Portal port (`portal.html` → React) — planned in detail in `docs/redesign.md`, not built
+- [ ] **P1** Phase 4 — Ops UI (Home, Activity monitor-console) from `index.html` + `app.js`
+- [ ] **P1** Phase 5 — Admin console (Approvals Queue, Unmatched, Rejected, Audit, Tools) from `admin.html` + `admin.js` — largest piece (~880 lines)
+- [ ] **P1** Phase 6 — `src/server.js` serves the built `web/dist` bundle with SPA fallback; full localhost feature-parity pass
 - [ ] **P2** Phase 7 — update `deploy.sh` to `npm run build` → ship `web/dist/`; staged VPS deploy + verify; keep old `public/` for rollback
 
 **Unchanged by this migration:** backend `src/`, Telegram bridge, Android apps,

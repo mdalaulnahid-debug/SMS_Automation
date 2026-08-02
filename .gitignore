@@ -18,6 +18,12 @@ android-gateway/keystore.properties
 public/gateway-app.apk
 data/telegram-offset.json
 config/vps.md
+
+# Personnel Registry source spreadsheet — real officer names/phone/email.
+# Kept locally for convenient re-upload via the admin console; never tracked.
+data/personnel-registry/*.xlsx
+data/personnel-registry/*.xls
+data/personnel-registry/~$*
 Training Data/Automation/~$*.xlsx
 Training Data/Automation/*.tmp
 

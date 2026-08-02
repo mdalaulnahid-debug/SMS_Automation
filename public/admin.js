@@ -829,6 +829,85 @@ document.getElementById('authorizedUserForm').addEventListener('submit', async (
 
 document.getElementById('settingsOperator').addEventListener('change', loadSettings);
 
+// --- Team (promote-officer-to-admin, super-admin only) ---
+
+function currentSessionUserId() {
+  try {
+    return JSON.parse(localStorage.getItem('sessionUser') || '{}').id || null;
+  } catch {
+    return null;
+  }
+}
+
+async function loadTeam() {
+  const res = await apiFetch('/api/admin/users');
+  if (!res.ok) return;
+  const { users } = await res.json();
+  renderTeam(users);
+}
+
+function renderTeam(users) {
+  const selfId = currentSessionUserId();
+  document.getElementById('teamList').innerHTML = users.length
+    ? users.map((user) => {
+        const isSelf = user.id === selfId;
+        const roleTone = user.role === 'super_admin' ? 'chip-violet' : user.role === 'admin' ? 'chip-accent' : 'chip-muted';
+        let action = '';
+        if (user.role === 'officer') {
+          action = `<button type="button" class="btn-secondary" data-promote="${esc(user.id)}">Promote to admin</button>`;
+        } else if (user.role === 'admin') {
+          action = `<button type="button" class="btn-secondary" data-demote="${esc(user.id)}">Demote to officer</button>`;
+        }
+        return `
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--divider)">
+        <div>
+          <div>${esc(user.name)} ${isSelf ? '<span class="mono" style="color:var(--text-muted)">(you)</span>' : ''}</div>
+          <div class="mono" style="color:var(--text-muted);font-size:11px">${esc(user.email)} · <span class="chip ${roleTone}">${esc(user.role)}</span> · ${esc(user.status)}</div>
+        </div>
+        <span>${isSelf || user.role === 'super_admin' ? '' : action}</span>
+      </div>`;
+      }).join('')
+    : '<div class="empty">No accounts yet.</div>';
+}
+
+document.getElementById('teamList').addEventListener('click', async (event) => {
+  const promoteId = event.target?.dataset?.promote;
+  const demoteId = event.target?.dataset?.demote;
+  const userId = promoteId || demoteId;
+  if (!userId) return;
+  const newRole = promoteId ? 'admin' : 'officer';
+  const resultEl = document.getElementById('teamResult');
+  try {
+    await postJson(`/api/admin/users/${encodeURIComponent(userId)}/role`, { role: newRole });
+    resultEl.textContent = `Role updated to ${newRole}.`;
+    resultEl.style.color = 'var(--success)';
+    resultEl.style.display = 'block';
+    await loadTeam();
+  } catch (error) {
+    resultEl.textContent = error.message || 'Failed to update role.';
+    resultEl.style.color = 'var(--danger)';
+    resultEl.style.display = 'block';
+  }
+});
+
+document.getElementById('changePasswordForm').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const currentPassword = document.getElementById('currentPassword').value;
+  const newPassword = document.getElementById('newPassword').value;
+  const resultEl = document.getElementById('changePasswordResult');
+  try {
+    await postJson('/api/auth/change-password', { currentPassword, newPassword });
+    resultEl.textContent = 'Password changed.';
+    resultEl.style.color = 'var(--success)';
+    resultEl.style.display = 'block';
+    document.getElementById('changePasswordForm').reset();
+  } catch (error) {
+    resultEl.textContent = error.message || 'Failed to change password.';
+    resultEl.style.color = 'var(--danger)';
+    resultEl.style.display = 'block';
+  }
+});
+
 document.getElementById('telegramGroupForm').addEventListener('submit', async (event) => {
   event.preventDefault();
   const groupChatId = document.getElementById('settingsGroupChatId').value.trim();
@@ -850,6 +929,70 @@ document.getElementById('operatorContactForm').addEventListener('submit', async 
     await refreshAdmin();
   } catch (error) {
     showSettingsResult(error.message || 'Failed to update operator number.', true);
+  }
+});
+
+// --- Personnel Registry (bulk import + super-admin single-add) ---
+
+function showRegistryResult(message, isError) {
+  const el = document.getElementById('registryResult');
+  el.textContent = message;
+  el.style.display = 'block';
+  el.style.color = isError ? 'var(--danger)' : 'var(--success)';
+}
+
+function renderRegistryList(records) {
+  document.getElementById('registryList').innerHTML = records.length
+    ? `<div class="tool-note">${records.length} record(s) in the registry.</div>` + records.map((r) => `
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 0;border-top:1px solid var(--divider)">
+        <span class="mono">${esc(r.name)} — ${esc(r.designation || '')} ${esc(r.unit ? `(${r.unit})` : '')}</span>
+      </div>`).join('')
+    : '<div class="empty">No registry records imported yet — registration will reject every attempt until an admin imports the roster.</div>';
+}
+
+async function loadPersonnelRegistry() {
+  const res = await apiFetch('/api/admin/personnel-registry');
+  if (!res.ok) return;
+  const data = await res.json();
+  renderRegistryList(data.records || []);
+}
+
+document.getElementById('registryImportForm').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  const input = document.getElementById('registryFileInput');
+  const file = input.files?.[0];
+  if (!file) {
+    showRegistryResult('Choose a .xlsx file first.', true);
+    return;
+  }
+  try {
+    const buffer = await file.arrayBuffer();
+    const res = await apiFetch('/api/admin/personnel-registry/import', { method: 'POST', body: buffer });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Import failed.');
+    showRegistryResult(`Imported ${data.count} record(s) — roster replaced.`, false);
+    input.value = '';
+    await loadPersonnelRegistry();
+  } catch (error) {
+    showRegistryResult(error.message || 'Import failed.', true);
+  }
+});
+
+document.getElementById('registryAddForm').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  try {
+    const record = await postJson('/api/admin/personnel-registry/add', {
+      name: document.getElementById('regAddName').value.trim(),
+      designation: document.getElementById('regAddDesignation').value.trim(),
+      unit: document.getElementById('regAddUnit').value.trim(),
+      phone: document.getElementById('regAddPhone').value.trim(),
+      email: document.getElementById('regAddEmail').value.trim()
+    }).then((body) => body.record);
+    showRegistryResult(`Added ${record.name} to the registry.`, false);
+    document.getElementById('registryAddForm').reset();
+    await loadPersonnelRegistry();
+  } catch (error) {
+    showRegistryResult(error.message || 'Failed to add record.', true);
   }
 });
 
@@ -971,6 +1114,12 @@ function boot() {
   setInterval(refreshAdmin, 15_000);
   // Load once only — the 15s refresh interval would otherwise clobber an in-progress edit.
   loadSettings();
+  document.getElementById('registrySuperAdminBlock').style.display = isSuperAdminUnlocked() ? 'block' : 'none';
+  loadPersonnelRegistry();
+  if (isSuperAdminUnlocked()) {
+    document.getElementById('teamSidebarItem').style.display = '';
+    loadTeam();
+  }
 }
 
 (async function sessionInit() {

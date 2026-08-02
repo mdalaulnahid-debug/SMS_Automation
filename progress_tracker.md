@@ -1,6 +1,110 @@
 # Progress Tracker
 
-Last updated: **2026-07-06 — Android theme sync + admin phone-inbox viewer + Telegram bridge flood fix, deployed; GD lost-phone watch designed (not started)**
+Last updated: **2026-07-15 — React migration (Phases 0/1/1.5 + auth pages), forgot/reset-password (backend + both frontends), production register.html drift discovered & patched, on `feature/security-hardening-v1`, still NOT merged/deployed**
+
+---
+
+## Session Handoff (2026-07-15) — React redesign progress, forgot/reset-password, production deployment-gap discovery
+
+**Branch:** `feature/security-hardening-v1` still, still isolated from `main` for all new backend/vanilla work. New React app lives in `web/` (its own `package.json`, not gated by the branch discipline the same way — but still not deployed).
+
+### React migration (`web/`) — Phases 0, 1, 1.5 + auth pages
+
+Full architecture and phase plan in [`docs/redesign.md`](docs/redesign.md).
+Vite + React 19 + TypeScript + Tailwind CSS v4 + shadcn/ui (`base` library).
+Design system codenamed **"Signal Room"** (approved after a 3-concept pitch,
+Artifact-based comparison): ink-navy `#0a0f1c` dark ground, indigo
+`#6e7bff`/`#4f46e5` as the one reserved UI-chrome accent, real GP/Robi/
+Banglalink brand hues used only where operator identity is genuine data (the
+Telegram Bridge settings page's operator selector), Chakra Petch + Manrope +
+IBM Plex Mono.
+
+- **Phase 0** — scaffold, ported design tokens, dev proxy `/api` → `:3000`, Welcome landing page from a fetched Magic MCP (21st.dev) component.
+- **Phase 1 / 1.5** — typed API client, auth context, theme provider, `AppShell`, router; Settings rebuilt from one flat 7-form grid into 6 named categories (Profile/Telegram Bridge/Personnel Registry/Provisioning/Developer Tools/Release).
+- **Auth pages** — `Login.tsx` (password → MFA state machine, `react-hook-form` + `zod`, `input-otp` for the 6-digit code, step-up re-auth support), `Register.tsx` (full parity with vanilla's registry-match contract), `ForgotPassword.tsx`, `ResetPassword.tsx`.
+- **Routing decision (revised this session):** every role lands on `/welcome` after login (not just officers) — `resolveHomeRoute()` no longer branches by role; admin/super_admin get a visible "Admin Console" link in the header instead of being auto-redirected past the landing page.
+- One real bug hit and fixed during Login verification: `lib/api.ts`'s `apiFetch` treats any `401` as "session expired, log out" — but `/api/auth/login`/`/api/auth/mfa/verify` legitimately return `401` for wrong credentials. Login/Register/ForgotPassword/ResetPassword all use a separate plain `fetch` for their own endpoints instead of the shared `apiFetch`, to avoid that collision.
+- One environment quirk (not an app bug): `computer{action:"left_click"}` doesn't reliably fire on the `@base-ui` `<Button>` primitive in this session's browser tool — worked around with direct `element.click()` JS dispatch throughout. Ground-truth DOM state (className, `.matches()`) was always correct; only the click *simulation* was unreliable.
+
+### Group-registration gate + promote-to-admin (vanilla, `src/app.js`)
+
+Both built and tested earlier this session, now considered done (previously
+tracked as "planned" in `todo.md`): `checkRegistration()` soft-nag/hard-block
+gate wired into `POST /api/requests`, `GET /api/admin/users` +
+`POST /api/admin/users/:id/role` for admin promotion/demotion (super-admin
+only, self-role-change blocked, super_admin creation blocked). `public/
+welcome.html` (public landing page) added, later became the gated Welcome
+page's vanilla counterpart.
+
+### Forgot-password / reset-password — backend + both frontends
+
+`userAuth.js`: `requestPasswordReset(email)` (1-hour single-use token,
+returns `null` — not a throw — for a non-matching email, so the API layer can
+respond identically either way) and `resetPassword(token, newPassword)`
+(invalidates every existing session on the account — a reset is exactly the
+moment a hijacked session should stop working). New endpoints `POST
+/api/auth/forgot-password` / `POST /api/auth/reset-password` in `app.js`. One
+real bug caught during testing: the mail-send call was originally unhandled,
+so a transport failure produced a `500` for an existing account vs `200` for
+a non-existent one — an email-enumeration side channel. Fixed by swallowing
+the mail-send error (logged server-side) so the HTTP response is identical
+regardless. Wired into the vanilla site too (`public/forgot-password.html`,
+`public/reset-password.html`, link added to `login.html`) and a `/reset-
+password` (no-extension) alias added in `app.js` so the emailed link works
+today and stays correct once the React app takes over that route at cutover.
+
+`scripts/reset-password.js` (new) — a standalone CLI for resetting a
+production account's email/password directly against `data/auth.db`, meant
+to be copy-pasted and run by hand over SSH by the account owner. Built after
+a real support case (user locked out, needed both email and password
+changed) — Claude never handles the plaintext password in any of this; the
+script prompts for it interactively on whoever's own terminal runs it.
+
+### ⚠️ Deployment-gap discovery
+
+While patching production's `register.html` (found it missing Designation/
+Unit/Phone fields — reported by the user), discovered `feature/security-
+hardening-v1` is **40 commits ahead of `main`** and none of it — the entire
+V1 hardening initiative, steps 1 through 9 — has ever been merged or
+deployed. Production is running pre-hardening code. Applied a cosmetic-only
+hand patch directly to production's `register.html` (adds the 3 missing
+fields so the form matches what's in this repo) at the user's explicit
+request, with the caveat clearly stated that registration won't actually
+enforce a registry match until the paired backend commit ships too. **Real
+fix is unstarted:** merge the branch to `main` and deploy — needs explicit
+sign-off given the size (registry-gated registration will start rejecting
+any registrant whose phone+email don't match an imported Personnel Registry
+record — a behavior change large enough to need its own conversation).
+
+---
+
+## Session Handoff (2026-07-14) — Security hardening V1 steps 6–10 done + follow-on portal separation
+
+**Branch:** `feature/security-hardening-v1` (isolated from `main`, localhost-only per standing instruction — nothing deployed this session).
+
+### Steps 6–10 of the locked build order (all now done)
+
+Full narrative in [`docs/security-hardening-v1-STATUS.md`](docs/security-hardening-v1-STATUS.md); design in [`docs/security-hardening-v1-design.md`](docs/security-hardening-v1-design.md).
+
+- **Step 6** — Quota + email-OTP re-verification middleware (`src/quota.js`, `src/otp.js`): per-officer rate limiting; breaching it locks the officer out until they verify a 6-digit code emailed to their registered address.
+- **Step 7** — Admin group actions: admin/super_admin posts in the Telegram group bypass normal request friction (`isAdminTelegramSender`); moderation commands (`/ban`, `/mute`, `/unmute`, `/unban`) added with authorization checks before any Telegram API call.
+- **Step 8** — Shared admin key scoping (**partial by design** — Android Gateway/Admin apps have no session-login of their own, so key auth stays wherever they depend on it). Split into `requireAdmin`/`requireSuperAdmin` (key OR session), `requireAdminSessionOnly`/`requireSuperAdminSessionOnly` (session only), `requireMachine` (key only, Telegram-bridge endpoints).
+- **Step 9** — Behavioral anomaly tripwire (`src/anomalyDetector.js`): non-blocking flags for off-hours activity, request bursts, Telegram identity drift, request-type pattern shifts.
+- **Step 10** — Local end-to-end simulation of the whole system, run live (not just the automated suite): registration → email → login/MFA → quota breach → OTP recovery → admin bypass → moderation auth → anomaly flags. Two real findings:
+  - **Live production bridge detected** — starting the Telegram bridge locally hit a `409 Conflict`, proving a production instance is already live on the VPS. Killed the local one within seconds; never touched the real Telegram API for anything destructive. Remaining Telegram-dependent legs of the E2E test were re-scoped to HTTP-only simulation.
+  - **Pre-existing audit-chain bug found and fixed**: `JSON.stringify()` silently drops `undefined`-valued object keys, so `service.js`'s `createRequest()` call (passing `channel`/`chatId`/`sourceMessageId` as `undefined` rather than `null`) caused every persist-and-reload round trip to report false tamper detection — and `verifyAuditChain()` stops at the first mismatch, so this masked any *real* tampering on every row after it. Fixed (normalize to `null`, matching the existing `testDestination` pattern), regression-tested.
+
+Full suite: **316/316**.
+
+### Follow-on: real page separation for Telegram-linked officers
+
+Not part of the original 10 steps — user asked how to stop a Telegram-registered officer from seeing "the original website" at all, rather than just having admin tabs hidden by JS.
+
+- Previously, the "Registered Officer" tier (§4 of the design doc) got the same `index.html`/`app.js` bundle as admins, with admin tabs hidden via `.officer-hide` — the markup/JS still shipped to the officer's browser, just hidden (visible via devtools).
+- Fix: reused existing server-side infrastructure (`HttpOnly` session cookie set at login, `guardPage()` gating `GET /`) — a session with `role === 'officer'` **and** a linked `telegram_id` is now served a new, genuinely separate minimal page (`public/portal.html` / `public/portal.js` — account status + sign-out only, no admin markup, never references `app.js`) instead of `index.html`. Officers without a linked Telegram ID are unaffected.
+- Verified live locally with two temporary officer accounts (linked/unlinked) and real sessions: server branches correctly, `portal.html` renders real account data, `app.js` is never fetched by the linked officer's browser (checked via network log), sign-out works correctly. Test accounts removed afterward. Suite still 316/316.
+
+**Nothing deployed.** Per this branch's standing instruction, no VPS/production discussion happens until the user explicitly reviews and approves.
 
 ---
 

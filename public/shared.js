@@ -39,6 +39,17 @@ function isAdminUnlocked() {
   } catch { return false; }
 }
 
+// Stricter than isAdminUnlocked() — role must specifically be super_admin.
+// The legacy shared admin key still satisfies this too (mirrors the
+// server's requireSuperAdmin, which accepts the same key for now).
+function isSuperAdminUnlocked() {
+  if (localStorage.getItem('adminApiKey')) return true;
+  try {
+    const user = JSON.parse(localStorage.getItem('sessionUser') || '{}');
+    return user.role === 'super_admin';
+  } catch { return false; }
+}
+
 async function sessionLogout() {
   const token = localStorage.getItem('sessionToken');
   if (token) {

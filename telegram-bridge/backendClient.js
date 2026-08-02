@@ -100,6 +100,70 @@ class BackendClient {
       // Best-effort — never let a reporting failure affect the intake loop itself.
     }
   }
+
+  // Mints a registration-link token for an unregistered private-DM sender, so the bot can
+  // reply with a link to the web registration form. Best-effort like the reporting calls
+  // above — if the backend is unreachable, the sender just gets no link this time and can
+  // try again later; the intake loop must never break because of it.
+  async requestRegistrationLink(telegramId) {
+    try {
+      const res = await this.fetch(`${this.base}/api/telegram/registration-link`, {
+        method: 'POST',
+        headers: this.headers({ 'content-type': 'application/json' }),
+        body: JSON.stringify({ telegramId })
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      return data.url || null;
+    } catch {
+      return null;
+    }
+  }
+
+  // Verifies a quota re-verification code (security-hardening v1 §7). Unlike the
+  // best-effort reporting calls above, a network failure here must be visible to the
+  // caller (not silently swallowed as "no active challenge") — the officer is actively
+  // waiting to be unblocked, and a false "incorrect code" would be actively misleading.
+  async verifyOtpCode(telegramId, code) {
+    const res = await this.fetch(`${this.base}/api/telegram/verify-code`, {
+      method: 'POST',
+      headers: this.headers({ 'content-type': 'application/json' }),
+      body: JSON.stringify({ telegramId, code })
+    });
+    return res.json();
+  }
+
+  // Admin group actions (security-hardening v1 §9). Authorization is checked fresh on
+  // every attempt (no caching/polling in the bridge) — a network failure must fail
+  // closed (unauthorized), never silently let a moderation command through.
+  async checkModerationAuthorized(telegramId) {
+    try {
+      const res = await this.fetch(`${this.base}/api/telegram/moderation-check`, {
+        method: 'POST',
+        headers: this.headers({ 'content-type': 'application/json' }),
+        body: JSON.stringify({ telegramId })
+      });
+      if (!res.ok) return { authorized: false };
+      return res.json();
+    } catch {
+      return { authorized: false };
+    }
+  }
+
+  // Reports a completed (or failed) moderation action for audit — best-effort, since
+  // the actual Telegram-side action has already happened by the time this is called;
+  // a reporting failure shouldn't be treated as the moderation action itself failing.
+  async reportModerationAction(detail) {
+    try {
+      await this.fetch(`${this.base}/api/telegram/moderation-action`, {
+        method: 'POST',
+        headers: this.headers({ 'content-type': 'application/json' }),
+        body: JSON.stringify(detail)
+      });
+    } catch {
+      // Best-effort — never let a reporting failure affect the intake loop itself.
+    }
+  }
 }
 
 module.exports = { BackendClient };

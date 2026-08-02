@@ -18,9 +18,14 @@ function mockReq({ method = 'GET', url = '/', headers = {}, body } = {}) {
 function mockRes() {
   return {
     statusCode: null,
+    headers: {},
     body: '',
-    writeHead(code) {
+    writeHead(code, headers) {
       this.statusCode = code;
+      if (headers) Object.assign(this.headers, headers);
+    },
+    setHeader(name, value) {
+      this.headers[name] = value;
     },
     end(b) {
       this.body = b || '';
@@ -43,12 +48,32 @@ async function call(app, opts) {
 function appWith(authConfig, gatewayConfig) {
   return createApp({
     dbPath: '',
+    authDbPath: ':memory:',
     authConfig: { adminApiKey: '', requireGatewayAuth: false, denyUnknownRequesters: false, ...authConfig },
     gatewayConfig: gatewayConfig || { GP: { secret: 'gp-secret', trustedSenders: ['12345'] } },
     // Never let tests read the real config/mail.json (Gmail credentials) or send live email.
     mailConfig: {},
     bootstrapSuperAdmin: false
   });
+}
+
+// A handful of endpoints were retired from the shared legacy adminApiKey
+// (security-hardening v1 §10) and now require a real session — this seeds
+// a Personnel Registry record (required for registration since step 5) and
+// logs a fresh admin in, returning a bearer token.
+async function createAdminSession(app, email = 'security-test-admin@example.com') {
+  const phone = `017${String(Math.floor(Math.random() * 1e8)).padStart(8, '0')}`;
+  app.userAuth.replaceRegistry(
+    [...app.userAuth.listRegistry(), { name: 'Test Admin', phone, email }],
+    'test-seed'
+  );
+  await call(app, { method: 'POST', url: '/api/auth/register', body: { email, password: 'longenough1', name: 'Test Admin', phone } });
+  const user = app.userAuth.getUserByEmail(email);
+  app.userAuth.verifyEmail(user.verify_token, {});
+  app.userAuth.setRole(user.id, 'admin');
+  const login = app.userAuth.startLogin({ email, password: 'longenough1' });
+  const session = app.userAuth.completeLogin({ pendingToken: login.pendingToken, code: login.mfaCode });
+  return session.token;
 }
 
 test('admin endpoints reject without the API key and accept with it', async () => {
@@ -148,14 +173,20 @@ test('/api/ops/activity requires admin auth and, even authenticated, never inclu
     body: { gatewayId: 'GP_PHONE_01', recipient: '+8801833122144', messageSnippet: 'IMEI-MS 359127130347820' }
   });
 
-  // No admin key — must be rejected outright now (the page itself requires login
+  // No auth — must be rejected outright now (the page itself requires login
   // before it ever calls this endpoint).
   const denied = await call(app, { method: 'GET', url: '/api/ops/activity' });
   assert.equal(denied.status, 401);
 
+  // The legacy admin key alone no longer works here — retired for this
+  // endpoint (security-hardening v1 §10), session required.
+  const keyOnly = await call(app, { method: 'GET', url: '/api/ops/activity', headers: { 'x-api-key': 'topsecret' } });
+  assert.equal(keyOnly.status, 401);
+
   // Authenticated call — sanitization is still verified as defense in depth, even
   // though auth is now the primary boundary.
-  const res = await call(app, { method: 'GET', url: '/api/ops/activity', headers: { 'x-api-key': 'topsecret' } });
+  const token = await createAdminSession(app);
+  const res = await call(app, { method: 'GET', url: '/api/ops/activity', headers: { authorization: `Bearer ${token}` } });
   assert.equal(res.status, 200);
 
   const raw = res.raw;
@@ -180,7 +211,9 @@ test('/api/ops/activity requires admin auth and, even authenticated, never inclu
 });
 
 test('deny-by-default rejects unknown requesters and allows provisioned ones', async () => {
-  // adminApiKey empty â†’ admin auth disabled, so we can exercise the deny-unknown flag directly.
+  // adminApiKey empty → /api/requests auth is disabled, so we can exercise the deny-unknown
+  // flag directly there; /api/users was retired from that bypass (security-hardening v1 §10)
+  // and needs a real admin session regardless.
   const app = appWith({ denyUnknownRequesters: true });
 
   const unknown = await call(app, {
@@ -193,10 +226,11 @@ test('deny-by-default rejects unknown requesters and allows provisioned ones', a
   assert.match(unknown.json.replyText, /not an authorized requester/i);
 
   // Admin provisions the user, then the same request succeeds.
+  const token = await createAdminSession(app);
   await call(app, {
     method: 'POST',
     url: '/api/users',
-    headers: { 'content-type': 'application/json' },
+    headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
     body: { telegramId: '999', displayName: 'Now Allowed' }
   });
   const allowed = await call(app, {
@@ -211,10 +245,11 @@ test('deny-by-default rejects unknown requesters and allows provisioned ones', a
 
 test('disabled users are rejected even when deny-unknown is off', async () => {
   const app = appWith({});
+  const token = await createAdminSession(app);
   await call(app, {
     method: 'POST',
     url: '/api/users',
-    headers: { 'content-type': 'application/json' },
+    headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
     body: { telegramId: '555', displayName: 'Bad Actor', status: 'DISABLED' }
   });
   const blocked = await call(app, {
@@ -323,6 +358,47 @@ test('audit chain detects a deleted row', () => {
   assert.equal(store.verifyAuditChain().ok, false);
 });
 
+test('a REQUEST_RECEIVED audit row survives a persist-and-reload round trip with a matching hash, even when channel/chatId/sourceMessageId are omitted', async () => {
+  // Regression test for a bug found via the security-hardening-v1 Step 10
+  // local end-to-end simulation: submitRequest() used to pass channel/chatId/
+  // sourceMessageId straight through as `undefined` when a caller omitted
+  // them (any non-Telegram submission path). That survives in-memory (so the
+  // write-time hash included them), but JSON.stringify() silently drops
+  // undefined-valued keys on persist — so reloading from disk (a real server
+  // restart, or just re-running verifyAuditChain against freshly-loaded
+  // data) recomputed a different hash and falsely reported "tampering" on
+  // every such row. Fixed by normalizing to null instead of leaving undefined.
+  const { mkdtempSync, rmSync } = require('node:fs');
+  const { join } = require('node:path');
+  const { tmpdir } = require('node:os');
+  const { AutomationService } = require('../src/service');
+  const { OperatorQueue } = require('../src/queue');
+  const { SmsGatewayClient } = require('../src/smsGateway');
+
+  const dir = mkdtempSync(join(tmpdir(), 'audit-roundtrip-'));
+  const dbPath = join(dir, 'test.db');
+  try {
+    const gatewayConfig = { GP: { secret: 'gp-secret', trustedSenders: ['12345'] } };
+    let store = new AutomationStore(gatewayConfig, { dbPath });
+    let queue = new OperatorQueue(store);
+    let smsGateway = new SmsGatewayClient(store, queue);
+    let service = new AutomationService({ store, queue, smsGateway });
+
+    // Deliberately omit channel/chatId/sourceMessageId, same as a plain
+    // admin-console test request or a gateway-originated submission.
+    await service.submitRequest({ requesterId: '999', requesterName: 'Officer QA', text: 'LRL 01712345678' });
+    store.close?.();
+
+    // Simulate a server restart: a fresh store instance reloading the same file.
+    const reloaded = new AutomationStore(gatewayConfig, { dbPath });
+    const result = reloaded.verifyAuditChain();
+    reloaded.close?.();
+    assert.equal(result.ok, true, `chain should verify clean after reload, got: ${JSON.stringify(result)}`);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test('audit export returns CSV with the hash columns', async () => {
   const app = appWith({ adminApiKey: 'topsecret' });
   await call(app, {
@@ -331,10 +407,48 @@ test('audit export returns CSV with the hash columns', async () => {
     headers: { 'x-api-key': 'topsecret', 'content-type': 'application/json' },
     body: { requesterId: '880170', requesterName: 'Ofc', text: 'LRL 01712345678' }
   });
-  const res = await call(app, { method: 'GET', url: '/api/audit/export', headers: { 'x-api-key': 'topsecret' } });
+  // /api/audit/export was retired from the legacy admin key (security-hardening
+  // v1 §10) — a real session is required now.
+  const token = await createAdminSession(app);
+  const res = await call(app, { method: 'GET', url: '/api/audit/export', headers: { authorization: `Bearer ${token}` } });
   assert.equal(res.status, 200);
   assert.match(res.raw.split('\r\n')[0], /id,timestamp,actor,action,requestId,details,prevHash,hash/);
   assert.ok(res.raw.split('\r\n').length > 1);
+});
+
+test('change-password requires a session, rejects a wrong current password, and applies a correct one', async () => {
+  const app = appWith({ adminApiKey: 'topsecret' });
+  const token = await createAdminSession(app, 'change-pw-test@example.com');
+
+  const noSession = await call(app, {
+    method: 'POST',
+    url: '/api/auth/change-password',
+    headers: { 'content-type': 'application/json' },
+    body: { currentPassword: 'longenough1', newPassword: 'brandnewpass1' }
+  });
+  assert.equal(noSession.status, 401);
+
+  const wrongCurrent = await call(app, {
+    method: 'POST',
+    url: '/api/auth/change-password',
+    headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
+    body: { currentPassword: 'wrongcurrent1', newPassword: 'brandnewpass1' }
+  });
+  assert.equal(wrongCurrent.status, 400);
+
+  const ok = await call(app, {
+    method: 'POST',
+    url: '/api/auth/change-password',
+    headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
+    body: { currentPassword: 'longenough1', newPassword: 'brandnewpass1' }
+  });
+  assert.equal(ok.status, 200);
+
+  assert.throws(
+    () => app.userAuth.startLogin({ email: 'change-pw-test@example.com', password: 'longenough1' }),
+    /Invalid email or password/
+  );
+  assert.doesNotThrow(() => app.userAuth.startLogin({ email: 'change-pw-test@example.com', password: 'brandnewpass1' }));
 });
 
 function withTempSettingsConfig(fn) {
