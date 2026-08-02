@@ -1061,5 +1061,11 @@ module.exports = {
   DEFAULT_REPLY_WINDOW_MS,
   DEFAULT_SEND_CONFIRMATION_GRACE_MS,
   DEFAULT_DUPLICATE_REQUEST_WINDOW_MS,
-  formatCombinedReply
+  formatCombinedReply,
+  // Exported so offline/bulk tooling (e.g. scripts/reprocess-unmatched-*)
+  // can reuse the exact same scoring the live matcher and
+  // rankReplyCandidates() use, instead of re-implementing it and risking
+  // drift.
+  confidenceRank,
+  replyTypeScore
 };
