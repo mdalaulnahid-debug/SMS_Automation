@@ -69,6 +69,19 @@ function analyzeOperatorReply({ request, messageBody }) {
   const trainingMatch = matchTrainingPattern(request, body);
   const payloadMatch = payloadInReply(request.payload, body);
   const inferredReplyFamilies = inferReplyFamilies(body, request.operator);
+  // STRONG_REPLY_FAMILY_PATTERNS (used by inferReplyFamilies) is a much more
+  // complete catalog of real operator reply templates than REPLY_PATTERNS
+  // above (e.g. "no rl info found", "lastactivedatetime", "moc/mtc/smsmt")
+  // — inferredReplyFamilies was already being computed here but its result
+  // never fed back into patternMatched/confidence, so a reply the system
+  // had *already correctly classified* as this request's type could still
+  // score as patternMatched=false and fall to UNKNOWN confidence. Real-world
+  // impact: on a gateway with multiple simultaneous open requests, the
+  // auto-matcher requires confidence > 0 to ever pick a candidate — this
+  // silently orphaned a large share of genuine replies into the unmatched
+  // queue instead of matching them (2026-08-02 investigation).
+  const strongTypeMatch = inferredReplyFamilies.strongTypes.includes(request.requestType);
+  const patternMatched = matchedPatterns.length > 0 || trainingMatch.matched || strongTypeMatch;
 
   return {
     requestType: request.requestType,
@@ -77,14 +90,14 @@ function analyzeOperatorReply({ request, messageBody }) {
     payloadMatched: payloadMatch.matched,
     payloadMatchCount: payloadMatch.count,
     payloadMatches: payloadMatch.identifiers,
-    patternMatched: matchedPatterns.length > 0 || trainingMatch.matched,
+    patternMatched,
     matchedPatterns,
     trainingMatch,
     inferredReplyFamilies,
     confidence: confidenceScore({
       referenceMatched: Boolean(foundReference && foundReference === request.silentReference),
       payloadMatched: payloadMatch.matched,
-      patternMatched: matchedPatterns.length > 0 || trainingMatch.matched
+      patternMatched
     })
   };
 }

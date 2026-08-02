@@ -1,16 +1,16 @@
 # Graph Report - SMS_Automation  (2026-08-02)
 
 ## Corpus Check
-- 198 files · ~417,467 words
+- 202 files · ~419,518 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2152 nodes · 3508 edges · 134 communities (122 shown, 12 thin omitted)
-- Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 149 edges (avg confidence: 0.62)
+- 2184 nodes · 3608 edges · 147 communities (133 shown, 14 thin omitted)
+- Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 177 edges (avg confidence: 0.65)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `34ebb396`
+- Built from commit: `a07b4402`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -83,20 +83,33 @@
 - [[_COMMUNITY_domain.js|domain.js]]
 - [[_COMMUNITY_components.json|components.json]]
 - [[_COMMUNITY_adminGroupActions.test.js|adminGroupActions.test.js]]
+- [[_COMMUNITY_shared.js|shared.js]]
 - [[_COMMUNITY_Product|Product]]
+- [[_COMMUNITY_AdminDesignSystem|AdminDesignSystem]]
 - [[_COMMUNITY_compilerOptions|compilerOptions]]
 - [[_COMMUNITY_security.test.js|security.test.js]]
 - [[_COMMUNITY_behavioralAnomaly.test.js|behavioralAnomaly.test.js]]
 - [[_COMMUNITY_compilerOptions|compilerOptions]]
+- [[_COMMUNITY_3. Color System|3. Color System]]
+- [[_COMMUNITY_requestPhoneInbox|requestPhoneInbox]]
 - [[_COMMUNITY_LogAdapter|LogAdapter]]
 - [[_COMMUNITY_React + TypeScript Migration — Vision, Architecture, and Phase Plan|React + TypeScript Migration — Vision, Architecture, and Phase Plan]]
 - [[_COMMUNITY_registrationGate.test.js|registrationGate.test.js]]
 - [[_COMMUNITY_adminPromotion.test.js|adminPromotion.test.js]]
 - [[_COMMUNITY_AppDatabase|AppDatabase]]
 - [[_COMMUNITY_QrScanActivity|QrScanActivity]]
+- [[_COMMUNITY_correlate-unmatched.js|correlate-unmatched.js]]
+- [[_COMMUNITY_classify-unmatched.js|classify-unmatched.js]]
+- [[_COMMUNITY_OperatorQueue|OperatorQueue]]
 - [[_COMMUNITY_.oxlintrc.json|.oxlintrc.json]]
 - [[_COMMUNITY_tsconfig.json|tsconfig.json]]
+- [[_COMMUNITY_replyMatching.test.js|replyMatching.test.js]]
+- [[_COMMUNITY_diagnose-unmatched.js|diagnose-unmatched.js]]
 - [[_COMMUNITY_React + TypeScript + Vite|React + TypeScript + Vite]]
+- [[_COMMUNITY_.onCreateOptionsMenu|.onCreateOptionsMenu]]
+- [[_COMMUNITY_.todayPrefix|.todayPrefix]]
+- [[_COMMUNITY_.uploadApk|.uploadApk]]
+- [[_COMMUNITY_deploy-and-reveal-gate.sh|deploy-and-reveal-gate.sh]]
 - [[_COMMUNITY_Progress Tracker|Progress Tracker]]
 - [[_COMMUNITY_Cybernetic Command Design System|Cybernetic Command Design System]]
 - [[_COMMUNITY_Todo|Todo]]
@@ -138,45 +151,45 @@
 - [[_COMMUNITY_README|README.md]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `AutomationStore` - 56 edges
+1. `AutomationStore` - 57 edges
 2. `AdminMainActivity` - 51 edges
 3. `UserAuthStore` - 43 edges
 4. `Prefs` - 41 edges
 5. `cn()` - 41 edges
 6. `Todo` - 41 edges
-7. `createApp()` - 28 edges
+7. `createApp()` - 32 edges
 8. `GatewayForegroundService` - 26 edges
 9. `AdminActivity` - 24 edges
 10. `MainActivity` - 24 edges
 
 ## Surprising Connections (you probably didn't know these)
+- `renderAuditList()` --indirect_call--> `log()`  [INFERRED]
+  public/admin.js → telegram-bridge/start.js
 - `appWith()` --calls--> `createApp()`  [EXTRACTED]
   test/adminGroupActions.test.js → src/app.js
+- `appWith()` --calls--> `createApp()`  [EXTRACTED]
+  test/adminPromotion.test.js → src/app.js
 - `appWith()` --calls--> `createApp()`  [EXTRACTED]
   test/behavioralAnomaly.test.js → src/app.js
 - `appWith()` --calls--> `createApp()`  [EXTRACTED]
   test/pageGating.test.js → src/app.js
-- `appWith()` --calls--> `createApp()`  [EXTRACTED]
-  test/personnelRegistryEndpoint.test.js → src/app.js
-- `appWith()` --calls--> `createApp()`  [EXTRACTED]
-  test/quotaOtpMiddleware.test.js → src/app.js
 
 ## Import Cycles
 - None detected.
 
-## Communities (134 total, 12 thin omitted)
+## Communities (147 total, 14 thin omitted)
 
 ### Community 0 - "Web Frontend (ops+admin)"
-Cohesion: 0.07
-Nodes (51): activeFilterCount(), auditChipClass(), auditChipLabel(), auditLogs, boot(), currentSessionUserId(), facetCount(), fetchPhoneDump() (+43 more)
+Cohesion: 0.10
+Nodes (24): auditChipClass(), auditChipLabel(), auditLogs, currentSessionUserId(), fetchPhoneDump(), filteredAuditLogs(), loadTeam(), QUEUE_TAB_STATUSES (+16 more)
 
 ### Community 1 - "Android Admin App UI"
 Cohesion: 0.21
 Nodes (4): AnomalyDetector, { AnomalyDetector }, assert, test
 
 ### Community 2 - "Automation Store & Audit"
-Cohesion: 0.06
-Nodes (14): assertTransition(), createRequestId(), normalizePhoneNumber(), normalizeSenderId(), AutomationStore, canonicalize(), { createHash }, DUPLICATE_BLOCKING_STATUSES (+6 more)
+Cohesion: 0.07
+Nodes (7): AutomationStore, canonicalize(), DUPLICATE_BLOCKING_STATUSES, extractSilentReference(), hashAuditRow(), nowIso(), randomId()
 
 ### Community 3 - "Android Gateway Log/DB"
 Cohesion: 0.16
@@ -199,11 +212,11 @@ Cohesion: 0.08
 Nodes (40): { join }, main(), { rebuildTrainingCache }, { basename, dirname, extname, join }, buildPatterns(), buildSignature(), buildSummary(), emptyCatalog() (+32 more)
 
 ### Community 8 - "Android Admin Dashboard"
-Cohesion: 0.11
-Nodes (15): ActivityAdminBinding, AdminActivity, BackendClient, Boolean, Bundle, Int, LinearLayout, List (+7 more)
+Cohesion: 0.17
+Nodes (10): ActivityAdminBinding, AdminActivity, BackendClient, Bundle, Int, LinearLayout, List, String (+2 more)
 
 ### Community 9 - "User Auth & Sessions"
-Cohesion: 0.06
+Cohesion: 0.05
 Nodes (20): { DatabaseSync }, generateMfaCode(), generateToken(), hashPassword(), hashToken(), isValidEmail(), isWithinRegistrationWindow(), ROLES (+12 more)
 
 ### Community 10 - "Android Backend Client"
@@ -216,23 +229,23 @@ Nodes (9): ActivityMainBinding, Boolean, Bundle, Int, Menu, MenuItem, MainActivi
 
 ### Community 12 - "Ops/Admin Data Builder"
 Cohesion: 0.06
-Nodes (28): { AnomalyDetector }, {
+Nodes (32): { AnomalyDetector }, {
   AutomationService,
   DEFAULT_SEND_CONFIRMATION_GRACE_MS,
   DEFAULT_DUPLICATE_REQUEST_WINDOW_MS
-}, { AutomationStore }, buildActivityFeed(), buildAdminData(), buildOpsData(), decorateGatewayHealth(), { getBackendUrls, getLanAddresses, getPreferredLanIp } (+20 more)
+}, { AutomationStore }, buildActivityFeed(), buildAdminData(), buildOpsData(), decorateGatewayHealth(), { getBackendUrls, getLanAddresses, getPreferredLanIp } (+24 more)
 
 ### Community 13 - "Reply Analysis & Webhook"
-Cohesion: 0.11
-Nodes (24): REQUEST_TYPES, TERMINAL_DISPATCH_STATUSES, analyzeOperatorReply(), confidenceScore(), { extractSilentReference }, inferReplyFamilies(), { matchReplyAgainstTraining, scoreReplyFamiliesFromTraining }, matchTrainingPattern() (+16 more)
+Cohesion: 0.13
+Nodes (22): analyzeOperatorReply(), confidenceScore(), { extractSilentReference }, inferReplyFamilies(), { matchReplyAgainstTraining, scoreReplyFamiliesFromTraining }, matchTrainingPattern(), payloadInReply(), REPLY_IDENTIFIER_EXTRACTORS (+14 more)
 
 ### Community 14 - "Android SMS Receivers"
 Cohesion: 0.10
 Nodes (14): BootReceiver, Context, Intent, Context, Intent, String, SmsReceiver, Context (+6 more)
 
 ### Community 15 - "Request Parser"
-Cohesion: 0.15
-Nodes (21): operatorForMsisdn(), targetOperatorsForRequest(), diagnoseIdentifierError(), ERROR_DEFINITIONS, HYPHENATED_COMMANDS, identifierMatchesType(), invalidResult(), invalidResultWithText() (+13 more)
+Cohesion: 0.14
+Nodes (23): operatorForMsisdn(), REQUEST_DEFINITIONS, REQUEST_TYPES, targetOperatorsForRequest(), diagnoseIdentifierError(), ERROR_DEFINITIONS, HYPHENATED_COMMANDS, identifierMatchesType() (+15 more)
 
 ### Community 16 - "Android Settings Screen"
 Cohesion: 0.18
@@ -247,11 +260,11 @@ Cohesion: 0.22
 Nodes (8): appWith(), assert, call(), { createApp }, mockReq(), mockRes(), { Readable }, test
 
 ### Community 19 - "Domain Model & Queue"
-Cohesion: 0.06
-Nodes (44): AdminDesignSystem, Context, String, TextView, View, Palette, GradientDrawable, applyRoleView() (+36 more)
+Cohesion: 0.15
+Nodes (22): applyRoleView(), boot(), currentRole(), gatewayState(), isOperationalRole(), opsActivity, refreshOps(), renderActivityFeed() (+14 more)
 
 ### Community 20 - "Android Admin Design System"
-Cohesion: 0.05
+Cohesion: 0.06
 Nodes (79): RequireAuth(), RequireOfficerRole(), AppShell(), NavItem, FormResult(), SettingsPage(), Hero(), HowItWorks() (+71 more)
 
 ### Community 21 - "Android Update Checker"
@@ -264,7 +277,11 @@ Nodes (6): ActivityPermissionsBinding, Boolean, Bundle, String, PermissionsActiv
 
 ### Community 23 - "SMS Gateway Dispatch"
 Cohesion: 0.29
-Nodes (4): { existsSync, readFileSync }, { join }, loadGatewayConfig(), trimTrailingSlash()
+Nodes (9): createApp(), json(), { existsSync, readFileSync }, { join }, loadAuthConfig(), loadGatewayConfig(), loadMailConfig(), loadTelegramConfig() (+1 more)
+
+### Community 24 - "Manual Review Store"
+Cohesion: 0.19
+Nodes (10): AdminDesignSystem, Context, String, TextView, View, Palette, GradientDrawable, renderAccountStatus() (+2 more)
 
 ### Community 25 - "Settings/Config Store"
 Cohesion: 0.30
@@ -322,6 +339,10 @@ Nodes (3): DispatchTracker, Boolean, String
 Cohesion: 0.33
 Nodes (4): Result, String, RetryWorker, CoroutineWorker
 
+### Community 39 - "auth.js"
+Cohesion: 0.15
+Nodes (9): SmsGatewayClient, assert, { AutomationService }, { AutomationStore }, { OperatorQueue }, { parseRequestText }, { SmsGatewayClient }, { STATUSES } (+1 more)
+
 ### Community 40 - "settingsStore.test.js"
 Cohesion: 0.29
 Nodes (5): assert, { join }, { mkdtempSync, rmSync, writeFileSync, readFileSync }, test, { tmpdir }
@@ -347,12 +368,12 @@ Cohesion: 0.29
 Nodes (3): getTransport(), nodemailer, sendMail()
 
 ### Community 46 - "network.js"
-Cohesion: 0.20
-Nodes (8): assert, { AutomationService }, { AutomationStore }, { inferReplyFamilies, replyContradictsPayload }, { OperatorQueue }, { SmsGatewayClient }, { STATUSES }, test
+Cohesion: 0.19
+Nodes (12): exportAuditCsv(), applyTheme(), auditLogsToCsv(), downloadCsv(), esc(), generateProvisionQr(), postJson(), renderDispatches() (+4 more)
 
 ### Community 48 - "app.js"
-Cohesion: 0.07
-Nodes (21): generateCode(), OtpStore, { randomInt }, QuotaTracker, assert, { OtpStore, generateCode }, test, assert (+13 more)
+Cohesion: 0.19
+Nodes (6): generateCode(), OtpStore, { randomInt }, assert, { OtpStore, generateCode }, test
 
 ### Community 64 - "BackendClient"
 Cohesion: 0.24
@@ -363,8 +384,8 @@ Cohesion: 0.50
 Nodes (4): 1a. Per-Officer Session Binding (Medium Difficulty), 1b. Request Signature (High Security, Friction), 1c. Rate Limiting by Officer (Medium Difficulty), Layer 1: Technical Barriers
 
 ### Community 67 - "replyMatching.test.js"
-Cohesion: 0.60
-Nodes (4): getBackendUrls(), getLanAddresses(), getPreferredLanIp(), os
+Cohesion: 0.19
+Nodes (11): appWith(), assert, call(), { createApp }, mockReq(), mockRes(), { OtpStore }, { QuotaTracker } (+3 more)
 
 ### Community 68 - "SmsGatewayClient"
 Cohesion: 0.33
@@ -392,12 +413,16 @@ Cohesion: 0.24
 Nodes (8): appWith(), assert, call(), { createApp }, mockReq(), mockRes(), { Readable }, test
 
 ### Community 73 - "workflow.test.js"
-Cohesion: 0.12
-Nodes (18): DISPATCH_STATUSES, formatOperatorSms(), isTrustedSenderForGateway(), operatorForGateway(), OPERATORS, REQUEST_DEFINITIONS, STATUS_TRANSITIONS, STATUSES (+10 more)
+Cohesion: 0.14
+Nodes (17): assertTransition(), createRequestId(), DISPATCH_STATUSES, formatOperatorSms(), isTrustedSenderForGateway(), normalizePhoneNumber(), normalizeSenderId(), operatorForGateway() (+9 more)
 
 ### Community 75 - "dependencies"
 Cohesion: 0.06
 Nodes (35): dependencies, @base-ui/react, class-variance-authority, clsx, @fontsource-variable/geist, @hookform/resolvers, input-otp, lucide-react (+27 more)
+
+### Community 76 - "domain.js"
+Cohesion: 0.20
+Nodes (4): QuotaTracker, assert, { QuotaTracker }, test
 
 ### Community 77 - "components.json"
 Cohesion: 0.09
@@ -407,9 +432,17 @@ Nodes (21): aliases, components, hooks, lib, ui, utils, iconLibrary, menuAccent 
 Cohesion: 0.24
 Nodes (8): appWith(), assert, call(), { createApp }, mockReq(), mockRes(), { Readable }, test
 
+### Community 79 - "shared.js"
+Cohesion: 0.31
+Nodes (11): activeFilterCount(), facetCount(), fmtElapsed(), mergedRequestRows(), renderFilterDrawer(), renderFilterOptionList(), renderRequestDetail(), renderRequestList() (+3 more)
+
 ### Community 80 - "Product"
 Cohesion: 0.22
 Nodes (8): Accessibility & Inclusion, Anti-references, Brand Personality, Design Principles, Product, Product Purpose, Register, Users
+
+### Community 81 - "AdminDesignSystem"
+Cohesion: 0.24
+Nodes (11): boot(), loadGateUrl(), loadInvites(), loadPersonnelRegistry(), loadSettings(), renderAuthorizedUsers(), renderInvites(), renderRegistryList() (+3 more)
 
 ### Community 82 - "compilerOptions"
 Cohesion: 0.09
@@ -427,9 +460,13 @@ Nodes (9): { AnomalyDetector }, appWith(), assert, call(), { createApp }, mockRe
 Cohesion: 0.12
 Nodes (16): compilerOptions, allowImportingTsExtensions, erasableSyntaxOnly, lib, module, moduleDetection, noEmit, noFallthroughCasesInSwitch (+8 more)
 
+### Community 86 - "3. Color System"
+Cohesion: 0.24
+Nodes (10): populatePhoneInboxGateways(), refreshAdmin(), renderAuditSummary(), renderOverview(), renderRejectedDetail(), renderRejectedList(), renderUnmatchedDetail(), renderUnmatchedList() (+2 more)
+
 ### Community 88 - "LogAdapter"
-Cohesion: 0.17
-Nodes (10): ActivityLogBinding, Boolean, Bundle, Int, List, LogActivity, LogAdapter, VH (+2 more)
+Cohesion: 0.16
+Nodes (11): ActivityLogBinding, Boolean, Bundle, Int, List, LogActivity, LogAdapter, VH (+3 more)
 
 ### Community 89 - "React + TypeScript Migration — Vision, Architecture, and Phase Plan"
 Cohesion: 0.12
@@ -440,16 +477,24 @@ Cohesion: 0.24
 Nodes (9): appWith(), assert, call(), { createApp }, mockReq(), mockRes(), { Readable }, submitAs() (+1 more)
 
 ### Community 91 - "adminPromotion.test.js"
-Cohesion: 0.21
-Nodes (10): createApp(), json(), appWith(), assert, call(), { createApp }, mockReq(), mockRes() (+2 more)
+Cohesion: 0.24
+Nodes (8): appWith(), assert, call(), { createApp }, mockReq(), mockRes(), { Readable }, test
 
 ### Community 92 - "AppDatabase"
 Cohesion: 0.29
 Nodes (6): AppDatabase, get(), Context, migrate(), RoomDatabase, SupportSQLiteDatabase
 
 ### Community 94 - "QrScanActivity"
-Cohesion: 0.29
-Nodes (4): Bundle, String, QrScanActivity, AppCompatActivity
+Cohesion: 0.33
+Nodes (3): Bundle, String, QrScanActivity
+
+### Community 95 - "correlate-unmatched.js"
+Cohesion: 0.17
+Nodes (10): buckets, { DatabaseSync }, db, dispatchesByGateway, examples, genuineLooking, { inferReplyFamilies }, latenciesMs (+2 more)
+
+### Community 96 - "classify-unmatched.js"
+Cohesion: 0.20
+Nodes (8): buckets, byType, { DatabaseSync }, db, { inferReplyFamilies }, JUNK_MARKERS, path, rows
 
 ### Community 98 - ".oxlintrc.json"
 Cohesion: 0.33
@@ -459,9 +504,21 @@ Nodes (5): plugins, rules, react/only-export-components, react/rules-of-hooks, $
 Cohesion: 0.33
 Nodes (5): compilerOptions, paths, files, @/*, references
 
+### Community 100 - "replyMatching.test.js"
+Cohesion: 0.20
+Nodes (8): assert, { AutomationService }, { AutomationStore }, { inferReplyFamilies, replyContradictsPayload, analyzeOperatorReply }, { OperatorQueue }, { SmsGatewayClient }, { STATUSES }, test
+
+### Community 101 - "diagnose-unmatched.js"
+Cohesion: 0.25
+Nodes (7): byGateway, byMonth, { DatabaseSync }, db, path, range, sample
+
 ### Community 102 - "React + TypeScript + Vite"
 Cohesion: 0.50
 Nodes (3): Expanding the Oxlint configuration, React Compiler, React + TypeScript + Vite
+
+### Community 104 - ".onCreateOptionsMenu"
+Cohesion: 0.33
+Nodes (3): Boolean, Menu, MenuItem
 
 ### Community 194 - "Progress Tracker"
 Cohesion: 0.05
@@ -612,24 +669,24 @@ Cohesion: 0.50
 Nodes (4): Phase 1: Add Encrypted Block Storage (Vultr) — RECOMMENDED, Phase 2: Application-Level Encryption (Optional, High Security), Phase 3: Key Rotation & Backup (If Implementing Phase 2), Todo — 2026-06-24: Data Encryption at Rest (Optional, Recommended)
 
 ## Knowledge Gaps
-- **794 isolated node(s):** `requestsData`, `repliesData`, `unmatchedData`, `rejectedData`, `auditLogs` (+789 more)
+- **821 isolated node(s):** `{ DatabaseSync }`, `path`, `{ inferReplyFamilies }`, `db`, `rows` (+816 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **12 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **14 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Hero()` connect `Android Admin Design System` to `Persistence Layer`?**
-  _High betweenness centrality (0.156) - this node is a cross-community bridge._
-- **Why does `p()` connect `Persistence Layer` to `Android Admin Design System`?**
-  _High betweenness centrality (0.153) - this node is a cross-community bridge._
 - **Why does `UserAuthStore` connect `User Auth & Sessions` to `Ops/Admin Data Builder`, `Android Admin Design System`?**
-  _High betweenness centrality (0.117) - this node is a cross-community bridge._
-- **What connects `requestsData`, `repliesData`, `unmatchedData` to the rest of the system?**
-  _794 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _High betweenness centrality (0.169) - this node is a cross-community bridge._
+- **Why does `SettingsActivity` connect `Android Settings Screen` to `LogAdapter`?**
+  _High betweenness centrality (0.074) - this node is a cross-community bridge._
+- **What connects `{ DatabaseSync }`, `path`, `{ inferReplyFamilies }` to the rest of the system?**
+  _821 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Web Frontend (ops+admin)` be split into smaller, more focused modules?**
-  _Cohesion score 0.06818181818181818 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.10317460317460317 - nodes in this community are weakly interconnected._
 - **Should `Automation Store & Audit` be split into smaller, more focused modules?**
-  _Cohesion score 0.06060606060606061 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06654567453115548 - nodes in this community are weakly interconnected._
 - **Should `Android Prefs Storage` be split into smaller, more focused modules?**
   _Cohesion score 0.14285714285714285 - nodes in this community are weakly interconnected._
+- **Should `Telegram Bridge` be split into smaller, more focused modules?**
+  _Cohesion score 0.0625 - nodes in this community are weakly interconnected._

@@ -7,7 +7,7 @@ const { OperatorQueue } = require('../src/queue');
 const { SmsGatewayClient } = require('../src/smsGateway');
 const { AutomationService } = require('../src/service');
 const { STATUSES } = require('../src/domain');
-const { inferReplyFamilies, replyContradictsPayload } = require('../src/replyAnalyzer');
+const { inferReplyFamilies, replyContradictsPayload, analyzeOperatorReply } = require('../src/replyAnalyzer');
 
 function createHarness(gatewayConfig = {}, serviceOptions = {}) {
   const store = new AutomationStore(gatewayConfig);
@@ -98,6 +98,76 @@ test('an unrelated IMEI "no records" reply does not steal an open LRL request', 
   assert.equal(realReply.request.requestId, submitted.request.requestId);
   assert.equal(realReply.request.status, STATUSES.NEEDS_MANUAL_REVIEW);
   assert.match(realReply.replyDraft.replyText, /Latitude: 23\.7529/);
+});
+
+// --- patternMatched/confidence drift regression (2026-08-02 investigation) ---
+// inferReplyFamilies (STRONG_REPLY_FAMILY_PATTERNS) recognized real operator
+// templates like "no rl info found" that analyzeOperatorReply's own
+// patternMatched check (REPLY_PATTERNS, a much smaller set) did not — so a
+// reply the system had already correctly classified could still score
+// confidence UNKNOWN and get silently dropped by the auto-matcher whenever
+// more than one request was open on the same gateway. Live investigation
+// found this explained the large majority of a growing production backlog.
+
+test('analyzeOperatorReply treats a STRONG_REPLY_FAMILY_PATTERNS match as patternMatched, even when REPLY_PATTERNS misses it and payload does not match', () => {
+  const request = { requestType: 'LRL', payload: '01712345678', operator: 'GP', silentReference: 'REF-UNRELATED' };
+  // Generic negative LRL reply for a DIFFERENT number than this request's own —
+  // payload can't help here, this only resolves via type-pattern recognition.
+  const result = analyzeOperatorReply({ request, messageBody: 'No RL Info Found of 1798765432 [GP]' });
+  assert.equal(result.payloadMatched, false, 'sanity check — this case must not be rescued by payload matching');
+  assert.equal(result.patternMatched, true, '"no rl info found" is a real LRL template the strong classifier already recognizes');
+  assert.notEqual(result.confidence, 'UNKNOWN');
+});
+
+test('a generic negative reply now auto-matches the correct request among multiple open on the same gateway (real bug reproduction)', async () => {
+  const { store, service } = createHarness();
+  const lrl = await service.submitRequest({
+    chatId: 'operations', requesterName: 'Officer Rahim', requesterId: '8801700000000',
+    text: 'LRL 01712345678'
+  });
+  // A second, differently-typed request open on the SAME gateway at the same time —
+  // this is what previously produced the "ambiguous" fork in service.js.
+  await service.submitRequest({
+    chatId: 'operations', requesterName: 'Officer Karim', requesterId: '8801800000000',
+    text: 'NID-MS 1234567890123'
+  });
+
+  // Negative LRL reply that doesn't echo any specific number — before the
+  // patternMatched fix, this fell to manual review/unmatched because
+  // confidence was UNKNOWN and the auto-pick gate requires score > 0.
+  const reply = service.receiveSmsWebhook({
+    gatewayId: 'GP_PHONE_01',
+    from: '12345',
+    body: 'No RL Info Found of 1798765432 [GP]'
+  });
+
+  assert.equal(reply.ok, true, 'must auto-match now instead of falling to manual review');
+  assert.equal(reply.request.requestId, lrl.request.requestId);
+});
+
+test('genuine ambiguity (same type, no distinguishing signal) still correctly falls to manual review — the fix does not introduce guessing', async () => {
+  const { store, service } = createHarness();
+  const first = await service.submitRequest({
+    chatId: 'operations', requesterName: 'Officer Rahim', requesterId: '8801700000000',
+    text: 'LRL 01712345678'
+  });
+  const second = await service.submitRequest({
+    chatId: 'operations', requesterName: 'Officer Karim', requesterId: '8801800000000',
+    text: 'LRL 01798765432'
+  });
+
+  // Same request type as BOTH open requests, echoes neither number — nothing
+  // should be able to disambiguate this, and it must not coin-flip a pick.
+  const reply = service.receiveSmsWebhook({
+    gatewayId: 'GP_PHONE_01',
+    from: '12345',
+    body: 'No RL Info Found of 1911111111 [GP]'
+  });
+
+  assert.equal(reply.ok, false);
+  assert.equal(reply.needsManualReview, true);
+  assert.equal(store.getRequest(first.request.requestId).status, STATUSES.WAITING_OPERATOR_REPLY);
+  assert.equal(store.getRequest(second.request.requestId).status, STATUSES.WAITING_OPERATOR_REPLY);
 });
 
 test('rankReplyCandidates surfaces a completed request as the top-scored candidate for an orphaned reply', async () => {
