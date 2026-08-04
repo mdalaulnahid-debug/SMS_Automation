@@ -13,6 +13,28 @@ let cachedCatalog = null;
 let cachedSignature = '';
 let cachedCacheDir = '';
 
+// matchReplyAgainstTraining scans the full examples/patterns arrays on every call.
+// Live traffic calls it a few times per inbound reply, which is fine — but bulk
+// tooling (e.g. scripts/reprocess-unmatched-dryrun.js) calls it, indirectly via
+// inferReplyFamilies, once per (requestType) for EVERY candidate request considered
+// for EVERY unmatched row. Within one row, messageBody and operator are constant
+// (same gateway -> same operator), so only requestType actually varies across those
+// calls — caching collapses what would be thousands of redundant full-catalog scans
+// per row down to at most 5 (one per REQUEST_TYPES). Keyed off the catalog object
+// identity so a workbook reload (new catalog reference) invalidates it automatically;
+// capped so long-running server memory can't grow unbounded from years of unique replies.
+const MATCH_CACHE_MAX_ENTRIES = 5000;
+let matchCache = new Map();
+let matchCacheCatalogRef = null;
+
+function getMatchCache(catalog) {
+  if (matchCacheCatalogRef !== catalog) {
+    matchCache = new Map();
+    matchCacheCatalogRef = catalog;
+  }
+  return matchCache;
+}
+
 function loadTrainingCatalog({
   rootDir = DEFAULT_TRAINING_ROOT,
   cacheDir = DEFAULT_CACHE_DIR
@@ -70,6 +92,11 @@ function matchReplyAgainstTraining({
   if (!bodyTokens.length) return emptyMatch();
 
   const catalog = loadTrainingCatalog({ rootDir, cacheDir });
+  const cache = getMatchCache(catalog);
+  const cacheKey = `${requestType}|${operator || ''}|${messageBody}`;
+  const cached = cache.get(cacheKey);
+  if (cached) return cached;
+
   const patterns = catalog.patterns.filter((pattern) => {
     return pattern.requestType === requestType && (!pattern.operator || pattern.operator === operator);
   });
@@ -94,12 +121,19 @@ function matchReplyAgainstTraining({
   const score = keywordHits.reduce((sum, hit) => sum + Math.min(hit.count, 3), 0)
     + exampleHits.reduce((sum, hit) => sum + hit.score, 0);
 
-  return {
+  const result = {
     matched: keywordHits.length >= 2 || exampleHits.some((entry) => entry.score >= 2),
     score,
     keywordHits: keywordHits.slice(0, 10),
     exampleHits
   };
+
+  if (cache.size >= MATCH_CACHE_MAX_ENTRIES) {
+    const oldestKey = cache.keys().next().value;
+    cache.delete(oldestKey);
+  }
+  cache.set(cacheKey, result);
+  return result;
 }
 
 function scoreReplyFamiliesFromTraining(
