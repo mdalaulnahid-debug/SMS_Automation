@@ -47,6 +47,7 @@ export function AppShell({
             <NavLink
               key={to}
               to={to}
+              end
               className={({ isActive }) =>
                 cn(
                   "flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-[13px] font-semibold transition-colors",
