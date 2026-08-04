@@ -19,6 +19,7 @@ const { loadGatewayConfig, loadAuthConfig, loadTelegramConfig, loadMailConfig } 
 const { isAdmin, isValidGateway } = require('./auth');
 const { getBackendUrls, getLanAddresses, getPreferredLanIp } = require('./network');
 const { UserAuthStore, SESSION_TTL_MS, isWithinRegistrationWindow } = require('./userAuth');
+const { verifyTelegramAuthPayload, PortalSessionStore } = require('./telegramLoginAuth');
 const { serializeSessionCookie, clearSessionCookie, sessionTokenFromRequest } = require('./cookies');
 const { parseRegistryWorkbook } = require('./personnelRegistry');
 const { QuotaTracker } = require('./quota');
@@ -540,6 +541,7 @@ function createApp(options = {}) {
     ? options.authDbPath
     : (process.env.AUTH_DB_PATH || join(__dirname, '..', 'data', 'auth.db'));
   const userAuth = options.userAuth || new UserAuthStore(authDbPath);
+  const portalSessions = options.portalSessions || new PortalSessionStore();
   const mailConfig = options.mailConfig || loadMailConfig();
 
   // Bridge file-based mail config into process.env so mailer.js's transport (which reads
@@ -1739,13 +1741,54 @@ function createApp(options = {}) {
         }
         return json(res, 200, { ok: true, message: 'Password updated. You can sign in now.' });
       }
+      if (req.method === 'POST' && req.url === '/api/auth/telegram-login') {
+        // Officer Portal access (2026-08-04): identity comes from the Telegram
+        // Login Widget itself, authorization is simply membership in the
+        // existing authorizedUsers DM allowlist -- no officer account/
+        // registration involved. See src/telegramLoginAuth.js.
+        const body = await readJson(req);
+        const botToken = settingsStore.readBotToken();
+        if (!botToken || !verifyTelegramAuthPayload(body, botToken)) {
+          return json(res, 401, { error: 'Could not verify Telegram sign-in. Please try again.' });
+        }
+        const telegramUserId = String(body.id || '');
+        const authorized = settingsStore.readAuthorizedUsers().find((entry) => entry.telegramUserId === telegramUserId);
+        if (!authorized) {
+          return json(res, 403, {
+            error: 'not_authorized',
+            message: 'Your Telegram account is not authorized for portal access. Contact administration to be added.'
+          });
+        }
+        const user = {
+          telegramUserId,
+          name: authorized.name,
+          username: body.username || '',
+          firstName: body.first_name || '',
+          lastName: body.last_name || '',
+          photoUrl: body.photo_url || ''
+        };
+        const token = portalSessions.create(user);
+        return json(res, 200, { token, user });
+      }
+      if (req.method === 'GET' && req.url === '/api/auth/portal-me') {
+        const token = require('./auth').presentedToken(req);
+        const session = portalSessions.get(token);
+        if (!session) return json(res, 401, { error: 'Portal session expired. Please sign in again.' });
+        const { expiresAt, ...user } = session;
+        return json(res, 200, { user });
+      }
+      if (req.method === 'POST' && req.url === '/api/auth/portal-logout') {
+        const token = require('./auth').presentedToken(req);
+        portalSessions.delete(token);
+        return json(res, 200, { ok: true });
+      }
       return json(res, 404, { error: 'Not found' });
     } catch (error) {
       return json(res, 500, { error: error.message });
     }
   }
 
-  return { handle, store, queue, smsGateway, service, recover, userAuth };
+  return { handle, store, queue, smsGateway, service, recover, userAuth, portalSessions };
 }
 
 // APK download: accept any registered gateway's secret (not tied to a specific gatewayId).

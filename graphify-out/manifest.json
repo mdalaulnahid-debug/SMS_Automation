@@ -265,8 +265,8 @@
     "semantic_hash": "691542780e01dd0058fe9c6c54455530"
   },
   "src/app.js": {
-    "mtime": 1785657859.2774105,
-    "ast_hash": "d4fae7cc9e29c881ab2c609a9ea05c6b",
+    "mtime": 1785839790.844349,
+    "ast_hash": "dd75429dfe4792bb213907d5c1ab2c4c",
     "semantic_hash": ""
   },
   "src/auth.js": {
@@ -335,8 +335,8 @@
     "semantic_hash": ""
   },
   "src/settingsStore.js": {
-    "mtime": 1785651560.1421676,
-    "ast_hash": "ad6a2c012aff083cd79ec0b5eb6e9b0d",
+    "mtime": 1785839740.816264,
+    "ast_hash": "4a8c9e80d2491f92e22cdb9a909becff",
     "semantic_hash": ""
   },
   "src/smsGateway.js": {
@@ -350,7 +350,7 @@
     "semantic_hash": ""
   },
   "src/trainingData.js": {
-    "mtime": 1785835796.6886034,
+    "mtime": 1785836079.0456014,
     "ast_hash": "e7f9257582173eb7f64659b936df0297",
     "semantic_hash": ""
   },
@@ -2130,8 +2130,8 @@
     "semantic_hash": ""
   },
   ".impeccable/hook.cache.json": {
-    "mtime": 1785835796.821894,
-    "ast_hash": "30121c654246d4b59b10d05dbc0ebdd4",
+    "mtime": 1785839959.9103382,
+    "ast_hash": "ea48a415b7fa9cb0159816ae3f050e77",
     "semantic_hash": ""
   },
   "config/auth.example.json": {
@@ -3430,8 +3430,8 @@
     "semantic_hash": ""
   },
   "web/src/App.tsx": {
-    "mtime": 1785651560.1587722,
-    "ast_hash": "2309c8a697c480e7207fbb6d644a3ce8",
+    "mtime": 1785839959.7927277,
+    "ast_hash": "a48211a50992203a4d92c074d09d8d70",
     "semantic_hash": ""
   },
   "web/src/components/auth/RequireAuth.tsx": {
@@ -3687,6 +3687,26 @@
   "scripts/reprocess-unmatched-dryrun.js": {
     "mtime": 1785825669.5658638,
     "ast_hash": "e54d855579602c895e1f790b5f1c5008",
+    "semantic_hash": ""
+  },
+  "src/telegramLoginAuth.js": {
+    "mtime": 1785839756.5730813,
+    "ast_hash": "8acceded46cf8c1692adf698792475ff",
+    "semantic_hash": ""
+  },
+  "test/officerPortalAuth.test.js": {
+    "mtime": 1785839849.4320862,
+    "ast_hash": "8874232b160aafbe93cf30f428733c07",
+    "semantic_hash": ""
+  },
+  "test/telegramLoginAuth.test.js": {
+    "mtime": 1785839819.1938536,
+    "ast_hash": "ddd49bee123892e40bc5f8faf8ee8a42",
+    "semantic_hash": ""
+  },
+  "web/src/pages/portal/Portal.tsx": {
+    "mtime": 1785839953.1646018,
+    "ast_hash": "e3587764f6d4334e23356f785b568f90",
     "semantic_hash": ""
   }
 }

@@ -9,6 +9,7 @@ import { Register } from "@/pages/auth/Register";
 import { ForgotPassword } from "@/pages/auth/ForgotPassword";
 import { ResetPassword } from "@/pages/auth/ResetPassword";
 import { Welcome } from "@/pages/Welcome";
+import { Portal } from "@/pages/portal/Portal";
 import { Profile } from "@/pages/settings/Profile";
 import { TelegramBridge } from "@/pages/settings/TelegramBridge";
 import { PersonnelRegistry } from "@/pages/settings/PersonnelRegistry";
@@ -26,6 +27,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
+            <Route path="/portal" element={<Portal />} />
 
             <Route
               path="/"
