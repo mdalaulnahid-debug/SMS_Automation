@@ -10,6 +10,12 @@ import { ForgotPassword } from "@/pages/auth/ForgotPassword";
 import { ResetPassword } from "@/pages/auth/ResetPassword";
 import { Welcome } from "@/pages/Welcome";
 import { Portal } from "@/pages/portal/Portal";
+import { opsNav } from "@/pages/ops/opsNav";
+import { OpsHome } from "@/pages/ops/OpsHome";
+import { OpsActivity } from "@/pages/ops/OpsActivity";
+import { About } from "@/pages/ops/About";
+import { Contact } from "@/pages/ops/Contact";
+import { Help } from "@/pages/ops/Help";
 import { Profile } from "@/pages/settings/Profile";
 import { TelegramBridge } from "@/pages/settings/TelegramBridge";
 import { PersonnelRegistry } from "@/pages/settings/PersonnelRegistry";
@@ -45,6 +51,14 @@ function App() {
                 </RequireAuth>
               }
             />
+
+            <Route path="/ops" element={<AppShell navItems={opsNav} />}>
+              <Route index element={<OpsHome />} />
+              <Route path="activity" element={<OpsActivity />} />
+              <Route path="about" element={<About />} />
+              <Route path="contact" element={<Contact />} />
+              <Route path="help" element={<Help />} />
+            </Route>
 
             <Route path="/settings" element={<AppShell navItems={settingsNav} />}>
               <Route index element={<Navigate to="profile" replace />} />
