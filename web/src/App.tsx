@@ -16,6 +16,14 @@ import { OpsActivity } from "@/pages/ops/OpsActivity";
 import { About } from "@/pages/ops/About";
 import { Contact } from "@/pages/ops/Contact";
 import { Help } from "@/pages/ops/Help";
+import { adminNav } from "@/pages/admin/adminNav";
+import { Overview } from "@/pages/admin/Overview";
+import { Approvals } from "@/pages/admin/Approvals";
+import { Unmatched } from "@/pages/admin/Unmatched";
+import { Rejected } from "@/pages/admin/Rejected";
+import { Audit } from "@/pages/admin/Audit";
+import { PhoneInbox } from "@/pages/admin/PhoneInbox";
+import { Team } from "@/pages/admin/Team";
 import { Profile } from "@/pages/settings/Profile";
 import { TelegramBridge } from "@/pages/settings/TelegramBridge";
 import { PersonnelRegistry } from "@/pages/settings/PersonnelRegistry";
@@ -58,6 +66,16 @@ function App() {
               <Route path="about" element={<About />} />
               <Route path="contact" element={<Contact />} />
               <Route path="help" element={<Help />} />
+            </Route>
+
+            <Route path="/admin" element={<AppShell navItems={adminNav} />}>
+              <Route index element={<Overview />} />
+              <Route path="approvals" element={<Approvals />} />
+              <Route path="unmatched" element={<Unmatched />} />
+              <Route path="rejected" element={<Rejected />} />
+              <Route path="audit" element={<Audit />} />
+              <Route path="phone-inbox" element={<PhoneInbox />} />
+              <Route path="team" element={<Team />} />
             </Route>
 
             <Route path="/settings" element={<AppShell navItems={settingsNav} />}>
