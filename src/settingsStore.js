@@ -83,6 +83,11 @@ function writeOperatorShortcode(operatorKey, shortcode) {
   return trimmed;
 }
 
+function readBotToken() {
+  const file = readJsonFile(telegramConfigPath());
+  return file.botToken || '';
+}
+
 function readAuthorizedUsers() {
   const file = readJsonFile(telegramConfigPath());
   const authorizedUsers = file.authorizedUsers || {};
@@ -147,6 +152,7 @@ module.exports = {
   writeTelegramGroupChatId,
   readOperatorContacts,
   writeOperatorShortcode,
+  readBotToken,
   readAuthorizedUsers,
   writeAuthorizedUser,
   removeAuthorizedUser,
