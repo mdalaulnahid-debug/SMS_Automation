@@ -265,8 +265,8 @@
     "semantic_hash": "691542780e01dd0058fe9c6c54455530"
   },
   "src/app.js": {
-    "mtime": 1785840310.8773906,
-    "ast_hash": "dd75429dfe4792bb213907d5c1ab2c4c",
+    "mtime": 1786254882.7322807,
+    "ast_hash": "8c7e3f6b00294e82627dd2961f585084",
     "semantic_hash": ""
   },
   "src/auth.js": {
@@ -360,18 +360,18 @@
     "semantic_hash": ""
   },
   "telegram-bridge/backendClient.js": {
-    "mtime": 1785651560.1421676,
-    "ast_hash": "196a62590654822eba0ec1594a65291d",
+    "mtime": 1786254909.1341484,
+    "ast_hash": "891d8c6ac6077d3d17dcf5a2a3a54c15",
     "semantic_hash": ""
   },
   "telegram-bridge/bridge.js": {
-    "mtime": 1785651560.1421676,
-    "ast_hash": "22d78acd927acf3043e400b9c8c946a6",
+    "mtime": 1786254987.6538234,
+    "ast_hash": "2c399b09cf4e2aabb9265c0b45615938",
     "semantic_hash": ""
   },
   "telegram-bridge/start.js": {
-    "mtime": 1785651560.1421676,
-    "ast_hash": "306522ce62bd72852057f199a0321dc6",
+    "mtime": 1786255004.066374,
+    "ast_hash": "b53d8ab336a9f0ed92ba79c83b201526",
     "semantic_hash": ""
   },
   "telegram-bridge/telegramClient.js": {
@@ -405,8 +405,8 @@
     "semantic_hash": ""
   },
   "test/telegramBridge.test.js": {
-    "mtime": 1785651560.1476748,
-    "ast_hash": "1d8a72b116f8e4a4a841567d67cb0e0d",
+    "mtime": 1786255041.8477035,
+    "ast_hash": "ce53a2dc0ac163481eca120dd59136fe",
     "semantic_hash": ""
   },
   "test/trainingData.test.js": {
@@ -2130,8 +2130,8 @@
     "semantic_hash": ""
   },
   ".impeccable/hook.cache.json": {
-    "mtime": 1785841627.1890085,
-    "ast_hash": "b3aad6842268e33ccfc23fe97adc6a69",
+    "mtime": 1786255107.7519755,
+    "ast_hash": "59240e8a224c028769fef63e11b7126d",
     "semantic_hash": ""
   },
   "config/auth.example.json": {
@@ -3345,8 +3345,8 @@
     "semantic_hash": ""
   },
   "test/registrationFlow.test.js": {
-    "mtime": 1785657859.2788708,
-    "ast_hash": "2b5e3ab0cd50a9f7e98941cebf489c42",
+    "mtime": 1786254940.517905,
+    "ast_hash": "83440e8d29671ce1dfa1acdba05f458f",
     "semantic_hash": ""
   },
   "data/personnel-registry/README.md": {
@@ -3404,11 +3404,6 @@
     "ast_hash": "35f9bde756f6af59ea6c615d21d8f176",
     "semantic_hash": ""
   },
-  "test/registrationGate.test.js": {
-    "mtime": 1785651560.1476748,
-    "ast_hash": "f86c3300bbae5ef39052d85ccdcfe35d",
-    "semantic_hash": ""
-  },
   "web/.impeccable/hook.cache.json": {
     "mtime": 1784114566.4595728,
     "ast_hash": "8628e56000d211445f4d52ce8171706b",
@@ -3430,7 +3425,7 @@
     "semantic_hash": ""
   },
   "web/src/App.tsx": {
-    "mtime": 1785841627.0504775,
+    "mtime": 1785843686.6034913,
     "ast_hash": "476e9178a9efc47f13ed5080471088da",
     "semantic_hash": ""
   },
@@ -3755,58 +3750,63 @@
     "semantic_hash": ""
   },
   "web/src/pages/admin/Approvals.tsx": {
-    "mtime": 1785841614.3737383,
-    "ast_hash": "82ce6d8122bba4098a89421b27087304",
+    "mtime": 1785843686.6055806,
+    "ast_hash": "6510c46500fa3f367e0f4c795e4dcdaf",
     "semantic_hash": ""
   },
   "web/src/pages/admin/Audit.tsx": {
-    "mtime": 1785841536.0184612,
-    "ast_hash": "6534da1d19f56981d2fcb5b2d188ef68",
+    "mtime": 1785843686.605924,
+    "ast_hash": "0daff3ad359ab3fbbba6c8a87e793d33",
     "semantic_hash": ""
   },
   "web/src/pages/admin/Overview.tsx": {
-    "mtime": 1785841395.313032,
-    "ast_hash": "a3c7e8305d5b9e1d4f2769875ab069fe",
+    "mtime": 1785843686.605924,
+    "ast_hash": "8ddda2d3d61ff63e38d529fa6477b119",
     "semantic_hash": ""
   },
   "web/src/pages/admin/PhoneInbox.tsx": {
-    "mtime": 1785841553.604427,
-    "ast_hash": "67a0d6baa1945e67474f266618a2b7c1",
+    "mtime": 1785843686.6065168,
+    "ast_hash": "4bf8e36c8b928423520012e7f11e87c3",
     "semantic_hash": ""
   },
   "web/src/pages/admin/Rejected.tsx": {
-    "mtime": 1785841508.7002993,
-    "ast_hash": "21eed9c7f77f0596b40d77917f786414",
+    "mtime": 1785843686.6065168,
+    "ast_hash": "edd8a3808f12f82dd139d47264324c3f",
     "semantic_hash": ""
   },
   "web/src/pages/admin/Team.tsx": {
-    "mtime": 1785841602.3899798,
-    "ast_hash": "996781d4932243eb67623cf775a4bbf4",
+    "mtime": 1785843686.6065168,
+    "ast_hash": "d378a4586da8a185910410a0ae129f2c",
     "semantic_hash": ""
   },
   "web/src/pages/admin/Unmatched.tsx": {
-    "mtime": 1785841494.996841,
-    "ast_hash": "c9c5387c9284535ea32457d5dbe456a9",
+    "mtime": 1785843686.6065168,
+    "ast_hash": "ab7194807a86e2b2b7fe7a1557c90b6b",
     "semantic_hash": ""
   },
   "web/src/pages/admin/adminNav.ts": {
-    "mtime": 1785841366.0919986,
-    "ast_hash": "ec9f857f0b50380e04642c46ef63ecff",
+    "mtime": 1785843686.6065168,
+    "ast_hash": "91b4d9e4e3e8478a83bc15042a4dc7a4",
     "semantic_hash": ""
   },
   "web/src/pages/admin/format.ts": {
-    "mtime": 1785841466.320719,
-    "ast_hash": "4cd87d56575742e52e4450de594e9a7e",
+    "mtime": 1785843686.6065168,
+    "ast_hash": "9eb55a992d96585c18b01afadb052c69",
     "semantic_hash": ""
   },
   "web/src/pages/admin/types.ts": {
-    "mtime": 1785841327.225039,
-    "ast_hash": "a64a77b3b72734dccf14de262358026b",
+    "mtime": 1785843686.6065168,
+    "ast_hash": "b21f37832662f31106ec9e72a3d5192a",
     "semantic_hash": ""
   },
   "web/src/pages/admin/useAdminData.ts": {
-    "mtime": 1785841353.0199304,
-    "ast_hash": "9bac27f0373584c92ea1cba927052325",
+    "mtime": 1785843686.6065168,
+    "ast_hash": "b683a49805863ab0d2654f3a66e29a27",
+    "semantic_hash": ""
+  },
+  "scripts/match-registry-to-telegram-users.js": {
+    "mtime": 1786255107.622039,
+    "ast_hash": "a0edefe5814f5726c946a3bb7e95a796",
     "semantic_hash": ""
   }
 }
