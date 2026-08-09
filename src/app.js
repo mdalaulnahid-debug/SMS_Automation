@@ -618,40 +618,6 @@ function createApp(options = {}) {
     };
   }
 
-  // Shared by /api/telegram/registration-link and checkRegistration below —
-  // one place that knows how a registration token becomes a URL.
-  function buildRegistrationLink(req, telegramId) {
-    const { token } = userAuth.createRegistrationToken(telegramId);
-    const baseUrl = process.env.PUBLIC_BASE_URL || `http://${req.headers.host}`;
-    return `${baseUrl}/register.html?token=${encodeURIComponent(token)}`;
-  }
-
-  // Group-registration gate (security-hardening v1 follow-on) — closes the
-  // one piece of step 5 left open: the Telegram group was fully open
-  // regardless of registration. Scoped to channel:'telegram' only; gateway
-  // webhooks, admin-console test submissions, and any other channel are
-  // untouched. Reuses the same registrationWindowEndsAt field step 5 already
-  // uses for auto-activate-vs-approval-gate — one grace period, one source
-  // of truth, no new config. Returns:
-  //   null                         — registered, or not a Telegram request; proceed untouched.
-  //   { registrationNote }         — grace window open; proceed, but nudge in the reply.
-  //   { ok:false, errorCode, ... } — grace window closed; block, same shape checkOfficerQuota uses.
-  function checkRegistration(req, requesterId, channel) {
-    if (channel !== 'telegram') return null;
-    const officer = requesterId && userAuth.getUserByTelegramId(requesterId);
-    if (officer) return null;
-
-    const link = buildRegistrationLink(req, requesterId);
-    if (isWithinRegistrationWindow(authConfig.registrationWindowEndsAt)) {
-      return { registrationNote: `You're not registered yet. Complete registration here to keep using this:\n${link}` };
-    }
-    return {
-      ok: false,
-      errorCode: 'REGISTRATION_REQUIRED',
-      replyText: `You're not registered yet. Complete registration here to get access:\n${link}`
-    };
-  }
-
   // Behavioral anomaly tripwire (security-hardening v1 §11) — same
   // linked-officer-only scoping as checkOfficerQuota, but never blocks:
   // every flag is audit-logged for admin review, the response to the
@@ -1233,11 +1199,6 @@ function createApp(options = {}) {
         if (!requestRateLimiter.check(rateLimitId)) {
           return json(res, 429, { error: 'Too many requests. Please wait a moment before submitting again.' });
         }
-        const registrationCheck = checkRegistration(req, body.requesterId, body.channel);
-        if (registrationCheck && registrationCheck.ok === false) {
-          checkBehavioralAnomaly(body, { ok: false });
-          return json(res, 400, registrationCheck);
-        }
         const quotaRejection = await checkOfficerQuota(body.requesterId);
         if (quotaRejection) {
           // Still fed to the tripwire — a quota-blocked burst is itself a
@@ -1246,9 +1207,6 @@ function createApp(options = {}) {
           return json(res, 400, quotaRejection);
         }
         const result = await service.submitRequest(body);
-        if (registrationCheck && registrationCheck.registrationNote && result.ok) {
-          result.registrationNote = registrationCheck.registrationNote;
-        }
         checkBehavioralAnomaly(body, result);
         return json(res, result.ok ? 201 : 400, result);
       }
@@ -1565,16 +1523,6 @@ function createApp(options = {}) {
           email: user.email, role: user.role
         });
         return json(res, 200, { ok: true, userId: user.id, email: user.email });
-      }
-      if (req.method === 'POST' && req.url === '/api/telegram/registration-link') {
-        // Called by the Telegram bridge (authenticated the same way as its other
-        // reporting endpoints — the shared adminApiKey) when an unregistered
-        // sender DMs the bot, so it can reply with a link to the web
-        // registration form pre-bound to that Telegram identity.
-        if (!requireMachine(req, res)) return undefined;
-        const body = await readJson(req);
-        if (!body.telegramId) return json(res, 400, { error: 'telegramId required' });
-        return json(res, 200, { url: buildRegistrationLink(req, body.telegramId) });
       }
       if (req.method === 'POST' && req.url === '/api/telegram/verify-code') {
         // Called by the Telegram bridge when a private-DM sender replies with

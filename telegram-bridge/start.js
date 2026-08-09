@@ -70,7 +70,6 @@ async function intakeLoop(config, telegram, backend) {
   // sender, is reported to admin/web audit once rather than on every single message.
   const reportedMismatchChatIds = new Set();
   const reportedUnauthorizedSenders = new Set();
-  const reportedRegistrationNudges = new Set();
 
   for (;;) {
     let updates;
@@ -87,7 +86,7 @@ async function intakeLoop(config, telegram, backend) {
       if (!update.message) continue;
       try {
         const result = await handleIntake(update.message, {
-          config, backend, telegram, log, reportedMismatchChatIds, reportedUnauthorizedSenders, reportedRegistrationNudges
+          config, backend, telegram, log, reportedMismatchChatIds, reportedUnauthorizedSenders
         });
         if (result.action === 'ignore' && result.reason === 'wrong chat') {
           log(`message from non-target chat ${result.chatId} (${result.chatTitle || 'n/a'}) — ignored`);

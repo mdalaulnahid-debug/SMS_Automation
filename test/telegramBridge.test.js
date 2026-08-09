@@ -207,7 +207,8 @@ test('bridge-level unauthorized private DM is reported once, group members are n
   const dmMsg = { text: 'LRL 01712345678', chat: { id: '555', type: 'private' }, from: { id: 555, first_name: 'Nazmul' }, message_id: 6 };
   const dmRes = await handleIntake(dmMsg, { config: CONFIG, backend, telegram, reportedUnauthorizedSenders });
   assert.equal(dmRes.action, 'unauthorized');
-  assert.equal(telegram.sent.length, 0);
+  assert.equal(telegram.sent.length, 1);
+  assert.match(telegram.sent[0].text, /not authorized/i);
   assert.equal(reported.length, 1);
   assert.equal(reported[0].chatType, 'private');
 
@@ -215,45 +216,26 @@ test('bridge-level unauthorized private DM is reported once, group members are n
   assert.equal(reported.length, 1, 'should not report the same chat+sender twice');
 });
 
-test('handleIntake replies with a registration link on a first-time unauthorized private DM', async () => {
+test('handleIntake sends a plain not-authorized notice (no registration link) on a first-time unauthorized private DM', async () => {
   const telegram = fakeTelegram();
-  const backend = {
-    reportUnauthorizedAttempt: async () => {},
-    requestRegistrationLink: async (telegramId) => `https://example.com/register.html?token=tok-${telegramId}`
-  };
+  const backend = { reportUnauthorizedAttempt: async () => {} };
   const dmMsg = { text: 'hello', chat: { id: '555', type: 'private' }, from: { id: 555, first_name: 'Nazmul' }, message_id: 1 };
   const res = await handleIntake(dmMsg, { config: CONFIG, backend, telegram });
   assert.equal(res.action, 'unauthorized');
   assert.equal(telegram.sent.length, 1);
   assert.equal(telegram.sent[0].chatId, '555');
-  assert.match(telegram.sent[0].text, /tok-555/);
+  assert.match(telegram.sent[0].text, /not authorized/i);
+  assert.doesNotMatch(telegram.sent[0].text, /register/i);
 });
 
-test('handleIntake does not re-send the registration link on a repeat DM from the same unauthorized sender', async () => {
+test('handleIntake does not re-send the not-authorized notice on a repeat DM from the same unauthorized sender', async () => {
   const telegram = fakeTelegram();
-  let calls = 0;
-  const backend = {
-    reportUnauthorizedAttempt: async () => {},
-    requestRegistrationLink: async () => { calls += 1; return 'https://example.com/register.html?token=tok'; }
-  };
+  const backend = { reportUnauthorizedAttempt: async () => {} };
   const reportedUnauthorizedSenders = new Set();
   const dmMsg = { text: 'hello', chat: { id: '555', type: 'private' }, from: { id: 555 }, message_id: 1 };
   await handleIntake(dmMsg, { config: CONFIG, backend, telegram, reportedUnauthorizedSenders });
   await handleIntake(dmMsg, { config: CONFIG, backend, telegram, reportedUnauthorizedSenders });
-  assert.equal(calls, 1);
   assert.equal(telegram.sent.length, 1);
-});
-
-test('handleIntake stays silent if requestRegistrationLink returns no url (backend unreachable)', async () => {
-  const telegram = fakeTelegram();
-  const backend = {
-    reportUnauthorizedAttempt: async () => {},
-    requestRegistrationLink: async () => null
-  };
-  const dmMsg = { text: 'hello', chat: { id: '555', type: 'private' }, from: { id: 555 }, message_id: 1 };
-  const res = await handleIntake(dmMsg, { config: CONFIG, backend, telegram });
-  assert.equal(res.action, 'unauthorized');
-  assert.equal(telegram.sent.length, 0);
 });
 
 test('planIntake treats a bare 6-digit private DM from an authorized sender as an OTP verify attempt, not a request', () => {
@@ -489,26 +471,7 @@ test('handleIntake routes an authorized private DM submission and ack back to th
   assert.equal(telegram.sent[0].chatId, '777888999', 'ack must go to the private chat, never the group');
 });
 
-test('handleIntake appends a registrationNote to the ack once, deduped per sender', async () => {
-  const telegram = fakeTelegram();
-  const backend = {
-    submitRequest: async () => ({
-      ok: true,
-      request: { requestId: 'REQ-1', targetOperators: ['GP'] },
-      registrationNote: "You're not registered yet. Complete registration here to keep using this:\nhttp://x/register.html?token=abc"
-    })
-  };
-  const reportedRegistrationNudges = new Set();
-  const msg = { text: 'LRL 01712345678', chat: { id: '777888999', type: 'private' }, from: { id: 777888999 }, message_id: 5 };
-
-  await handleIntake(msg, { config: { ...CONFIG, ackOnIntake: true }, backend, telegram, reportedRegistrationNudges });
-  assert.match(telegram.sent[0].text, /register\.html\?token=abc/);
-
-  await handleIntake({ ...msg, message_id: 6 }, { config: { ...CONFIG, ackOnIntake: true }, backend, telegram, reportedRegistrationNudges });
-  assert.doesNotMatch(telegram.sent[1].text, /register\.html/, 'the second ack for the same sender must not repeat the nudge');
-});
-
-test('handleIntake never adds a registrationNote to the ack when the backend did not send one', async () => {
+test('handleIntake never mentions registration in the ack — no such concept exists anymore', async () => {
   const telegram = fakeTelegram();
   const backend = {
     submitRequest: async () => ({ ok: true, request: { requestId: 'REQ-1', targetOperators: ['GP'] } })
@@ -517,7 +480,7 @@ test('handleIntake never adds a registrationNote to the ack when the backend did
     { text: 'LRL 01712345678', chat: { id: '777888999', type: 'private' }, from: { id: 777888999 }, message_id: 7 },
     { config: { ...CONFIG, ackOnIntake: true }, backend, telegram }
   );
-  assert.doesNotMatch(telegram.sent[0].text, /register\.html/);
+  assert.doesNotMatch(telegram.sent[0].text, /register/i);
 });
 
 test('handleIntake routes a rejected private DM reply back to the private chat, not the group', async () => {

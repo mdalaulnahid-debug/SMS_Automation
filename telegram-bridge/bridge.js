@@ -162,8 +162,7 @@ async function handleIntake(message, {
   telegram,
   log = () => {},
   reportedMismatchChatIds = new Set(),
-  reportedUnauthorizedSenders = new Set(),
-  reportedRegistrationNudges = new Set()
+  reportedUnauthorizedSenders = new Set()
 }) {
   const plan = planIntake(message, config);
 
@@ -193,20 +192,20 @@ async function handleIntake(message, {
         fromId: plan.fromId,
         fromName: plan.fromName
       });
-      // A first-time unregistered private DM gets a registration link, per
-      // the design doc's "whenever a new user requests, the bot provides a
-      // link" flow — group-chat unauthorized senders (not a concept today,
-      // since the group is still open) stay silent, as does a repeat DM from
-      // this sender in the same run (reuses the audit-report dedupe so the
-      // link isn't re-sent on every retry message).
-      if (plan.chatType === 'private' && backend.requestRegistrationLink) {
-        const url = await backend.requestRegistrationLink(plan.fromId);
-        if (url) {
-          await telegram.sendMessage({
-            chatId: plan.chatId,
-            text: `You're not registered yet. Complete registration here to get access:\n${url}`
-          });
-        }
+      // A first-time unauthorized private DM gets a plain notice -- no
+      // registration flow exists for this anymore (access-model correction,
+      // 2026-08-04): DM access is granted purely by an admin adding the
+      // sender's Telegram id to authorizedUsers (Admin Console > Telegram
+      // Bridge), not by the sender registering anywhere themselves.
+      // Group-chat unauthorized senders (not a concept today, since the
+      // group is still open) stay silent, as does a repeat DM from this
+      // sender in the same run (reuses the audit-report dedupe so the
+      // notice isn't re-sent on every retry message).
+      if (plan.chatType === 'private') {
+        await telegram.sendMessage({
+          chatId: plan.chatId,
+          text: "You're not authorized to message this bot directly. Contact an administrator to be added."
+        });
       }
     }
     return plan;
@@ -313,15 +312,7 @@ async function handleIntake(message, {
   log(`intake: accepted ${result.request.requestId} (${plan.request.text})${fwdNote}`);
   if (config.ackOnIntake) {
     const operators = (result.request.targetOperators || []).join(', ') || 'operator';
-    let ackText = `✅ Request received — sending to ${operators}. Reply will be posted here when received.`;
-    // Group-registration gate soft-nag (security-hardening v1 follow-on): the
-    // sender isn't registered yet but the grace window is still open, so the
-    // request went through — nudge once per sender per bridge run rather than
-    // on every message, same dedupe shape as reportedUnauthorizedSenders.
-    if (result.registrationNote && !reportedRegistrationNudges.has(plan.request.requesterId)) {
-      reportedRegistrationNudges.add(plan.request.requesterId);
-      ackText += `\n\n${result.registrationNote}`;
-    }
+    const ackText = `✅ Request received — sending to ${operators}. Reply will be posted here when received.`;
     await telegram.sendMessage({
       chatId: plan.request.chatId,
       text: ackText,
