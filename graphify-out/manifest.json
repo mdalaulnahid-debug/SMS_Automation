@@ -265,8 +265,8 @@
     "semantic_hash": "691542780e01dd0058fe9c6c54455530"
   },
   "src/app.js": {
-    "mtime": 1786254882.7322807,
-    "ast_hash": "8c7e3f6b00294e82627dd2961f585084",
+    "mtime": 1786258710.5858994,
+    "ast_hash": "2059cc3312cfa495b95bd216ac4bc37e",
     "semantic_hash": ""
   },
   "src/auth.js": {
@@ -2130,8 +2130,8 @@
     "semantic_hash": ""
   },
   ".impeccable/hook.cache.json": {
-    "mtime": 1786255107.7519755,
-    "ast_hash": "59240e8a224c028769fef63e11b7126d",
+    "mtime": 1786258730.7182374,
+    "ast_hash": "44fcb183a2ddc832ca01afe4a4d78bd3",
     "semantic_hash": ""
   },
   "config/auth.example.json": {
@@ -3405,8 +3405,8 @@
     "semantic_hash": ""
   },
   "web/.impeccable/hook.cache.json": {
-    "mtime": 1784114566.4595728,
-    "ast_hash": "8628e56000d211445f4d52ce8171706b",
+    "mtime": 1786258564.3138726,
+    "ast_hash": "3ad5b8a402f921181e050479cf28453d",
     "semantic_hash": ""
   },
   "web/.oxlintrc.json": {
@@ -3807,6 +3807,11 @@
   "scripts/match-registry-to-telegram-users.js": {
     "mtime": 1786255107.622039,
     "ast_hash": "a0edefe5814f5726c946a3bb7e95a796",
+    "semantic_hash": ""
+  },
+  "test/webDist.test.js": {
+    "mtime": 1786258730.5977025,
+    "ast_hash": "37f974f1e809435a62618211bd82e0bf",
     "semantic_hash": ""
   }
 }
