@@ -205,9 +205,9 @@
     "semantic_hash": "86efbb569b3649b579776cea453a9d15"
   },
   "scripts/deploy.sh": {
-    "mtime": 1782825470.9638553,
-    "ast_hash": "eb448a79d452f164add9fb896c4604fc",
-    "semantic_hash": "eb448a79d452f164add9fb896c4604fc"
+    "mtime": 1786259383.5391042,
+    "ast_hash": "3886b40b099156a688230331e0703c04",
+    "semantic_hash": ""
   },
   "scripts/ensure-firewall-3000.ps1": {
     "mtime": 1781159558.2219267,
@@ -265,7 +265,7 @@
     "semantic_hash": "691542780e01dd0058fe9c6c54455530"
   },
   "src/app.js": {
-    "mtime": 1786258710.5858994,
+    "mtime": 1786259223.6624517,
     "ast_hash": "2059cc3312cfa495b95bd216ac4bc37e",
     "semantic_hash": ""
   },
@@ -360,17 +360,17 @@
     "semantic_hash": ""
   },
   "telegram-bridge/backendClient.js": {
-    "mtime": 1786254909.1341484,
+    "mtime": 1786259223.6624517,
     "ast_hash": "891d8c6ac6077d3d17dcf5a2a3a54c15",
     "semantic_hash": ""
   },
   "telegram-bridge/bridge.js": {
-    "mtime": 1786254987.6538234,
+    "mtime": 1786259223.6624517,
     "ast_hash": "2c399b09cf4e2aabb9265c0b45615938",
     "semantic_hash": ""
   },
   "telegram-bridge/start.js": {
-    "mtime": 1786255004.066374,
+    "mtime": 1786259223.6624517,
     "ast_hash": "b53d8ab336a9f0ed92ba79c83b201526",
     "semantic_hash": ""
   },
@@ -405,7 +405,7 @@
     "semantic_hash": ""
   },
   "test/telegramBridge.test.js": {
-    "mtime": 1786255041.8477035,
+    "mtime": 1786259223.6624517,
     "ast_hash": "ce53a2dc0ac163481eca120dd59136fe",
     "semantic_hash": ""
   },
@@ -2130,7 +2130,7 @@
     "semantic_hash": ""
   },
   ".impeccable/hook.cache.json": {
-    "mtime": 1786258730.7182374,
+    "mtime": 1786259383.6651912,
     "ast_hash": "44fcb183a2ddc832ca01afe4a4d78bd3",
     "semantic_hash": ""
   },
@@ -3345,7 +3345,7 @@
     "semantic_hash": ""
   },
   "test/registrationFlow.test.js": {
-    "mtime": 1786254940.517905,
+    "mtime": 1786259223.6624517,
     "ast_hash": "83440e8d29671ce1dfa1acdba05f458f",
     "semantic_hash": ""
   },
@@ -3805,13 +3805,13 @@
     "semantic_hash": ""
   },
   "scripts/match-registry-to-telegram-users.js": {
-    "mtime": 1786255107.622039,
-    "ast_hash": "a0edefe5814f5726c946a3bb7e95a796",
+    "mtime": 1786259223.6624517,
+    "ast_hash": "8704d482ab3728f1ac8d3afc641e6f61",
     "semantic_hash": ""
   },
   "test/webDist.test.js": {
-    "mtime": 1786258730.5977025,
-    "ast_hash": "37f974f1e809435a62618211bd82e0bf",
+    "mtime": 1786259223.6624517,
+    "ast_hash": "bdca0ce84404b3b01cbccc8d91f790ac",
     "semantic_hash": ""
   }
 }
