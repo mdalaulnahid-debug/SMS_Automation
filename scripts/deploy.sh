@@ -7,10 +7,17 @@ REMOTE="/opt/sms-backend"
 
 echo "==> Deploying to $VPS..."
 
+echo "==> Building React app (web/)..."
+# web/dist is gitignored build output -- built fresh from source on every
+# deploy, same as how npm install (below) always runs against the current
+# package.json rather than trusting whatever's already on the VPS.
+(cd web && npm install --no-audit --no-fund && npm run build)
+
 echo "==> Ensuring remote directories..."
 ssh "$VPS" "mkdir -p \
   $REMOTE/src \
   $REMOTE/public/assets \
+  $REMOTE/web/dist \
   $REMOTE/telegram-bridge \
   $REMOTE/scripts \
   $REMOTE/nginx \
@@ -26,6 +33,14 @@ scp src/*.js "$VPS:$REMOTE/src/"
 echo "==> Copying dashboard and setup pages..."
 find public -maxdepth 1 -type f -exec scp {} "$VPS:$REMOTE/public/" \;
 scp public/assets/* "$VPS:$REMOTE/public/assets/"
+
+echo "==> Copying built React app (web/dist)..."
+# Wiped and recreated first: vite content-hashes every filename it emits, so
+# without this, every old JS/CSS chunk from every previous deploy would just
+# keep accumulating on the VPS forever -- this keeps it an exact mirror of
+# the build that was just produced above, nothing stale left behind.
+ssh "$VPS" "rm -rf $REMOTE/web/dist && mkdir -p $REMOTE/web/dist"
+scp -r web/dist/* "$VPS:$REMOTE/web/dist/"
 
 echo "==> Copying Telegram bridge..."
 scp telegram-bridge/*.js "$VPS:$REMOTE/telegram-bridge/"
