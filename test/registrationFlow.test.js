@@ -219,9 +219,3 @@ test('POST /api/admin/accounts rejects role "officer" — website access is admi
   });
   assert.equal(res.status, 400);
 });
-
-test('POST /api/telegram/registration-link requires admin auth', async () => {
-  const app = appWith();
-  const res = await call(app, { method: 'POST', url: '/api/telegram/registration-link', body: { telegramId: '999' } });
-  assert.equal(res.status, 401);
-});

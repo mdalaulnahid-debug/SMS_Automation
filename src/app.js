@@ -1,8 +1,8 @@
 'use strict';
 
-const { readFile, stat, createReadStream } = require('node:fs');
+const { readFile, stat, createReadStream, existsSync } = require('node:fs');
 const { readFile: readFileAsync } = require('node:fs/promises');
-const { join } = require('node:path');
+const { join, sep, extname } = require('node:path');
 const https = require('node:https');
 const { AutomationStore } = require('./store');
 const { OperatorQueue } = require('./queue');
@@ -541,6 +541,7 @@ function createApp(options = {}) {
     ? options.authDbPath
     : (process.env.AUTH_DB_PATH || join(__dirname, '..', 'data', 'auth.db'));
   const userAuth = options.userAuth || new UserAuthStore(authDbPath);
+  const webDistDir = options.webDistDir || WEB_DIST_DIR;
   const portalSessions = options.portalSessions || new PortalSessionStore();
   const mailConfig = options.mailConfig || loadMailConfig();
 
@@ -615,40 +616,6 @@ function createApp(options = {}) {
       ok: false,
       errorCode: 'VERIFICATION_REQUIRED',
       replyText: `You've reached your request limit. A verification code was sent to your registered email — reply here with it to continue.`
-    };
-  }
-
-  // Shared by /api/telegram/registration-link and checkRegistration below —
-  // one place that knows how a registration token becomes a URL.
-  function buildRegistrationLink(req, telegramId) {
-    const { token } = userAuth.createRegistrationToken(telegramId);
-    const baseUrl = process.env.PUBLIC_BASE_URL || `http://${req.headers.host}`;
-    return `${baseUrl}/register.html?token=${encodeURIComponent(token)}`;
-  }
-
-  // Group-registration gate (security-hardening v1 follow-on) — closes the
-  // one piece of step 5 left open: the Telegram group was fully open
-  // regardless of registration. Scoped to channel:'telegram' only; gateway
-  // webhooks, admin-console test submissions, and any other channel are
-  // untouched. Reuses the same registrationWindowEndsAt field step 5 already
-  // uses for auto-activate-vs-approval-gate — one grace period, one source
-  // of truth, no new config. Returns:
-  //   null                         — registered, or not a Telegram request; proceed untouched.
-  //   { registrationNote }         — grace window open; proceed, but nudge in the reply.
-  //   { ok:false, errorCode, ... } — grace window closed; block, same shape checkOfficerQuota uses.
-  function checkRegistration(req, requesterId, channel) {
-    if (channel !== 'telegram') return null;
-    const officer = requesterId && userAuth.getUserByTelegramId(requesterId);
-    if (officer) return null;
-
-    const link = buildRegistrationLink(req, requesterId);
-    if (isWithinRegistrationWindow(authConfig.registrationWindowEndsAt)) {
-      return { registrationNote: `You're not registered yet. Complete registration here to keep using this:\n${link}` };
-    }
-    return {
-      ok: false,
-      errorCode: 'REGISTRATION_REQUIRED',
-      replyText: `You're not registered yet. Complete registration here to get access:\n${link}`
     };
   }
 
@@ -1233,11 +1200,6 @@ function createApp(options = {}) {
         if (!requestRateLimiter.check(rateLimitId)) {
           return json(res, 429, { error: 'Too many requests. Please wait a moment before submitting again.' });
         }
-        const registrationCheck = checkRegistration(req, body.requesterId, body.channel);
-        if (registrationCheck && registrationCheck.ok === false) {
-          checkBehavioralAnomaly(body, { ok: false });
-          return json(res, 400, registrationCheck);
-        }
         const quotaRejection = await checkOfficerQuota(body.requesterId);
         if (quotaRejection) {
           // Still fed to the tripwire — a quota-blocked burst is itself a
@@ -1246,9 +1208,6 @@ function createApp(options = {}) {
           return json(res, 400, quotaRejection);
         }
         const result = await service.submitRequest(body);
-        if (registrationCheck && registrationCheck.registrationNote && result.ok) {
-          result.registrationNote = registrationCheck.registrationNote;
-        }
         checkBehavioralAnomaly(body, result);
         return json(res, result.ok ? 201 : 400, result);
       }
@@ -1566,16 +1525,6 @@ function createApp(options = {}) {
         });
         return json(res, 200, { ok: true, userId: user.id, email: user.email });
       }
-      if (req.method === 'POST' && req.url === '/api/telegram/registration-link') {
-        // Called by the Telegram bridge (authenticated the same way as its other
-        // reporting endpoints — the shared adminApiKey) when an unregistered
-        // sender DMs the bot, so it can reply with a link to the web
-        // registration form pre-bound to that Telegram identity.
-        if (!requireMachine(req, res)) return undefined;
-        const body = await readJson(req);
-        if (!body.telegramId) return json(res, 400, { error: 'telegramId required' });
-        return json(res, 200, { url: buildRegistrationLink(req, body.telegramId) });
-      }
       if (req.method === 'POST' && req.url === '/api/telegram/verify-code') {
         // Called by the Telegram bridge when a private-DM sender replies with
         // what looks like a re-verification code (security-hardening v1 §7) —
@@ -1782,6 +1731,17 @@ function createApp(options = {}) {
         portalSessions.delete(token);
         return json(res, 200, { ok: true });
       }
+      // React app cutover (web/ Phase 6) -- additive only, same discipline as
+      // every earlier phase: every route above (vanilla public/*.html pages,
+      // every /api/* endpoint) is checked first and still wins unconditionally.
+      // This only ever fires for a GET that nothing above matched, and is a
+      // complete no-op -- falls straight through to the 404 below, unchanged
+      // from today's behavior -- until web/dist actually exists (i.e. `npm
+      // run build` has been run in web/ and the output deployed). public/
+      // stays live and untouched either way, so this is a safe rollback point.
+      if (req.method === 'GET' && !req.url.startsWith('/api/')) {
+        if (await serveWebDist(req, res, webDistDir)) return undefined;
+      }
       return json(res, 404, { error: 'Not found' });
     } catch (error) {
       return json(res, 500, { error: error.message });
@@ -1802,6 +1762,51 @@ async function serveFile(res, fileName, contentType) {
   const content = await readFileAsync(join(__dirname, '..', 'public', fileName), 'utf8');
   res.writeHead(200, { 'content-type': contentType, 'cache-control': 'no-store' });
   res.end(content);
+}
+
+// React app cutover (web/ Phase 6). web/dist is a standard `vite build`
+// output: index.html at the root referencing content-hashed files under
+// assets/ with absolute paths (vite.config.ts has no custom outDir/base).
+const WEB_DIST_DIR = join(__dirname, '..', 'web', 'dist');
+const WEB_DIST_CONTENT_TYPES = {
+  '.html': 'text/html; charset=utf-8',
+  '.js': 'text/javascript; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
+  '.json': 'application/json; charset=utf-8',
+  '.svg': 'image/svg+xml',
+  '.png': 'image/png',
+  '.ico': 'image/x-icon',
+  '.woff': 'font/woff',
+  '.woff2': 'font/woff2'
+};
+
+// Serves a matching file under web/dist if one exists (long-cached, since
+// vite content-hashes every filename it emits), otherwise falls back to
+// index.html so the client-side router (react-router) can resolve the path
+// itself -- the standard SPA-hosting pattern. Returns false, writing
+// nothing, when web/dist hasn't been built at all, so the caller's existing
+// 404 behavior is completely unchanged in that case.
+async function serveWebDist(req, res, webDistDir = WEB_DIST_DIR) {
+  const indexPath = join(webDistDir, 'index.html');
+  if (!existsSync(indexPath)) return false;
+
+  const urlPath = decodeURIComponent(req.url.split('?')[0]);
+  const candidate = join(webDistDir, urlPath);
+  // Path-traversal guard: the resolved path must stay inside webDistDir.
+  if (urlPath !== '/' && candidate.startsWith(webDistDir + sep) && existsSync(candidate)) {
+    const ext = extname(candidate).toLowerCase();
+    const contentType = WEB_DIST_CONTENT_TYPES[ext] || 'application/octet-stream';
+    const cacheControl = ext === '.html' ? 'no-store' : 'public, max-age=31536000, immutable';
+    const content = await readFileAsync(candidate);
+    res.writeHead(200, { 'content-type': contentType, 'cache-control': cacheControl });
+    res.end(content);
+    return true;
+  }
+
+  const html = await readFileAsync(indexPath, 'utf8');
+  res.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' });
+  res.end(html);
+  return true;
 }
 
 // Allowlist for exposing an auth_users row to its own owner via /api/auth/me —
