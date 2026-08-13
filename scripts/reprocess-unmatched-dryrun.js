@@ -51,9 +51,14 @@ const dbPath = process.env.SMS_DB_PATH || process.env.DB_PATH || path.join(__dir
 const db = new DatabaseSync(dbPath);
 db.exec('PRAGMA busy_timeout = 5000;'); // wait briefly instead of erroring if the live server holds the lock
 
+// Excludes rows the system itself already flagged as ignored (untrusted
+// sender for that gateway -- see service.js's SMS_IGNORED_UNTRUSTED_SENDER).
+// Matches buildAdminData's real Unmatched SMS filter in src/app.js.
 const unmatched = db.prepare(`
   SELECT id, gateway_id, message_body, received_at
-  FROM sms_inbox WHERE matched_request_id IS NULL
+  FROM sms_inbox
+  WHERE matched_request_id IS NULL
+    AND (analysis IS NULL OR analysis NOT LIKE '%"ignored":true%')
 `).all();
 
 const genuineLooking = unmatched.filter(

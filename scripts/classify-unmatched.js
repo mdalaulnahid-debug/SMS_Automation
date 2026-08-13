@@ -21,9 +21,19 @@ const dbPath = process.env.SMS_DB_PATH || path.join(__dirname, '..', 'data', 'au
 const db = new DatabaseSync(dbPath);
 db.exec('PRAGMA busy_timeout = 5000;'); // wait briefly instead of erroring if the live server holds the lock
 
+// Excludes rows the system itself already flagged as ignored -- an
+// inbound SMS from a sender not in that gateway's trustedSenders list
+// (config/gateways.json) is stored with analysis.ignored=true and never
+// was a real operator reply to begin with (see service.js's
+// receiveSmsWebhook / SMS_IGNORED_UNTRUSTED_SENDER). The real admin
+// console's Unmatched SMS view already excludes these
+// (buildAdminData's `!row.analysis?.ignored` filter in src/app.js); this
+// script now matches that.
 const rows = db.prepare(`
   SELECT id, gateway_id, sender_number, message_body, received_at
-  FROM sms_inbox WHERE matched_request_id IS NULL
+  FROM sms_inbox
+  WHERE matched_request_id IS NULL
+    AND (analysis IS NULL OR analysis NOT LIKE '%"ignored":true%')
 `).all();
 
 const JUNK_MARKERS = [/whatsapp/i, /verification code/i, /otp\b/i, /one-time password/i, /don't share this code/i];
