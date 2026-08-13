@@ -4,96 +4,6 @@
   "graph": {},
   "nodes": [
     {
-      "label": "check-sms-truncation.js",
-      "file_type": "code",
-      "source_file": "scripts/check-sms-truncation.js",
-      "source_location": "L1",
-      "_origin": "ast",
-      "id": "scripts_check_sms_truncation",
-      "community": 100,
-      "norm_label": "check-sms-truncation.js"
-    },
-    {
-      "label": "{ DatabaseSync }",
-      "file_type": "code",
-      "source_file": "scripts/check-sms-truncation.js",
-      "source_location": "L30",
-      "_origin": "ast",
-      "id": "scripts_check_sms_truncation_databasesync",
-      "community": 100,
-      "norm_label": "{ databasesync }"
-    },
-    {
-      "label": "path",
-      "file_type": "code",
-      "source_file": "scripts/check-sms-truncation.js",
-      "source_location": "L31",
-      "_origin": "ast",
-      "id": "scripts_check_sms_truncation_path",
-      "community": 100,
-      "norm_label": "path"
-    },
-    {
-      "label": "db",
-      "file_type": "code",
-      "source_file": "scripts/check-sms-truncation.js",
-      "source_location": "L34",
-      "_origin": "ast",
-      "id": "scripts_check_sms_truncation_db",
-      "community": 100,
-      "norm_label": "db"
-    },
-    {
-      "label": "all",
-      "file_type": "code",
-      "source_file": "scripts/check-sms-truncation.js",
-      "source_location": "L42",
-      "_origin": "ast",
-      "id": "scripts_check_sms_truncation_all",
-      "community": 100,
-      "norm_label": "all"
-    },
-    {
-      "label": "candidates",
-      "file_type": "code",
-      "source_file": "scripts/check-sms-truncation.js",
-      "source_location": "L48",
-      "_origin": "ast",
-      "id": "scripts_check_sms_truncation_candidates",
-      "community": 100,
-      "norm_label": "candidates"
-    },
-    {
-      "label": "bySenderGateway",
-      "file_type": "code",
-      "source_file": "scripts/check-sms-truncation.js",
-      "source_location": "L62",
-      "_origin": "ast",
-      "id": "scripts_check_sms_truncation_bysendergateway",
-      "community": 100,
-      "norm_label": "bysendergateway"
-    },
-    {
-      "label": "followupExamples",
-      "file_type": "code",
-      "source_file": "scripts/check-sms-truncation.js",
-      "source_location": "L73",
-      "_origin": "ast",
-      "id": "scripts_check_sms_truncation_followupexamples",
-      "community": 100,
-      "norm_label": "followupexamples"
-    },
-    {
-      "label": "noFollowupExamples",
-      "file_type": "code",
-      "source_file": "scripts/check-sms-truncation.js",
-      "source_location": "L74",
-      "_origin": "ast",
-      "id": "scripts_check_sms_truncation_nofollowupexamples",
-      "community": 100,
-      "norm_label": "nofollowupexamples"
-    },
-    {
       "label": "apply-historical-corrections.js",
       "file_type": "code",
       "source_file": "scripts/apply-historical-corrections.js",
@@ -1829,7 +1739,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 94,
+      "community": 100,
       "norm_label": "appcompatactivity",
       "id": "appcompatactivity"
     },
@@ -3339,7 +3249,7 @@
       "source_file": "android-gateway/app/src/main/java/com/smsgateway/LogActivity.kt",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 88,
+      "community": 100,
       "norm_label": "logactivity.kt",
       "id": "android_gateway_app_src_main_java_com_smsgateway_logactivity"
     },
@@ -3349,7 +3259,7 @@
       "source_file": "android-gateway/app/src/main/java/com/smsgateway/LogActivity.kt",
       "source_location": "L21",
       "_origin": "ast",
-      "community": 88,
+      "community": 100,
       "norm_label": "logactivity",
       "id": "android_gateway_app_src_main_java_com_smsgateway_logactivity_logactivity"
     },
@@ -3359,7 +3269,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 88,
+      "community": 100,
       "norm_label": "activitylogbinding",
       "id": "activitylogbinding"
     },
@@ -3389,7 +3299,7 @@
       "source_file": "android-gateway/app/src/main/java/com/smsgateway/LogActivity.kt",
       "source_location": "L46",
       "_origin": "ast",
-      "community": 88,
+      "community": 100,
       "norm_label": ".onsupportnavigateup()",
       "id": "android_gateway_app_src_main_java_com_smsgateway_logactivity_logactivity_onsupportnavigateup"
     },
@@ -3399,7 +3309,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 88,
+      "community": 100,
       "norm_label": "boolean",
       "id": "android_gateway_app_src_main_java_com_smsgateway_logactivity_kt_boolean"
     },
@@ -19339,7 +19249,7 @@
       "source_file": "architecture.md",
       "source_location": "L37",
       "_origin": "ast",
-      "community": 271,
+      "community": 117,
       "norm_label": "3. components",
       "id": "architecture_3_components"
     },
@@ -19349,7 +19259,7 @@
       "source_file": "architecture.md",
       "source_location": "L39",
       "_origin": "ast",
-      "community": 271,
+      "community": 117,
       "norm_label": "3.1 backend (`src/`)",
       "id": "architecture_3_1_backend_src"
     },
@@ -19359,7 +19269,7 @@
       "source_file": "architecture.md",
       "source_location": "L55",
       "_origin": "ast",
-      "community": 271,
+      "community": 117,
       "norm_label": "3.2 android gateway (`android-gateway/`)",
       "id": "architecture_3_2_android_gateway_android_gateway"
     },
@@ -19369,7 +19279,7 @@
       "source_file": "architecture.md",
       "source_location": "L69",
       "_origin": "ast",
-      "community": 271,
+      "community": 117,
       "norm_label": "3.3 dashboard (`public/`)",
       "id": "architecture_3_3_dashboard_public"
     },
@@ -20439,7 +20349,7 @@
       "source_file": "docs/claude-design-brief.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 93,
+      "community": 115,
       "norm_label": "claude-design-brief.md",
       "id": "docs_claude_design_brief"
     },
@@ -20539,7 +20449,7 @@
       "source_file": "docs/design-system.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 93,
+      "community": 115,
       "norm_label": "design-system.md",
       "id": "docs_design_system"
     },
@@ -21359,7 +21269,7 @@
       "source_file": "docs/redesign.md",
       "source_location": "L145",
       "_origin": "ast",
-      "community": 89,
+      "community": 104,
       "norm_label": "phase 3: officer portal port",
       "id": "docs_redesign_phase_3_officer_portal_port"
     },
@@ -21369,7 +21279,7 @@
       "source_file": "docs/redesign.md",
       "source_location": "L147",
       "_origin": "ast",
-      "community": 89,
+      "community": 104,
       "norm_label": "what's being ported",
       "id": "docs_redesign_what_s_being_ported_147"
     },
@@ -21379,7 +21289,7 @@
       "source_file": "docs/redesign.md",
       "source_location": "L156",
       "_origin": "ast",
-      "community": 89,
+      "community": 104,
       "norm_label": "why this phase, right after auth (not ops ui or admin)",
       "id": "docs_redesign_why_this_phase_right_after_auth_not_ops_ui_or_admin"
     },
@@ -21389,7 +21299,7 @@
       "source_file": "docs/redesign.md",
       "source_location": "L168",
       "_origin": "ast",
-      "community": 89,
+      "community": 104,
       "norm_label": "architecture",
       "id": "docs_redesign_architecture_168"
     },
@@ -21399,7 +21309,7 @@
       "source_file": "docs/redesign.md",
       "source_location": "L190",
       "_origin": "ast",
-      "community": 89,
+      "community": 104,
       "norm_label": "files (when built)",
       "id": "docs_redesign_files_when_built_190"
     },
@@ -21409,7 +21319,7 @@
       "source_file": "docs/redesign.md",
       "source_location": "L197",
       "_origin": "ast",
-      "community": 89,
+      "community": 104,
       "norm_label": "verification (when built)",
       "id": "docs_redesign_verification_when_built_197"
     },
@@ -21659,7 +21569,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 93,
+      "community": 115,
       "norm_label": "system-design-v2.md",
       "id": "docs_system_design_v2"
     },
@@ -21749,7 +21659,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L159",
       "_origin": "ast",
-      "community": 276,
+      "community": 114,
       "norm_label": "5. api boundary plan",
       "id": "docs_system_design_v2_5_api_boundary_plan"
     },
@@ -21759,7 +21669,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L164",
       "_origin": "ast",
-      "community": 276,
+      "community": 114,
       "norm_label": "public health and bootstrap",
       "id": "docs_system_design_v2_public_health_and_bootstrap"
     },
@@ -21769,7 +21679,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L170",
       "_origin": "ast",
-      "community": 276,
+      "community": 114,
       "norm_label": "gateway device api",
       "id": "docs_system_design_v2_gateway_device_api"
     },
@@ -21779,7 +21689,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L179",
       "_origin": "ast",
-      "community": 276,
+      "community": 114,
       "norm_label": "operations api",
       "id": "docs_system_design_v2_operations_api"
     },
@@ -21789,7 +21699,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L188",
       "_origin": "ast",
-      "community": 276,
+      "community": 114,
       "norm_label": "admin api",
       "id": "docs_system_design_v2_admin_api"
     },
@@ -21799,7 +21709,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L202",
       "_origin": "ast",
-      "community": 276,
+      "community": 114,
       "norm_label": "integration api",
       "id": "docs_system_design_v2_integration_api"
     },
@@ -21859,7 +21769,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L284",
       "_origin": "ast",
-      "community": 276,
+      "community": 118,
       "norm_label": "7. deployment model",
       "id": "docs_system_design_v2_7_deployment_model"
     },
@@ -21869,7 +21779,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L286",
       "_origin": "ast",
-      "community": 276,
+      "community": 118,
       "norm_label": "current acceptable deployment",
       "id": "docs_system_design_v2_current_acceptable_deployment"
     },
@@ -21879,7 +21789,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L292",
       "_origin": "ast",
-      "community": 276,
+      "community": 118,
       "norm_label": "target enterprise deployment",
       "id": "docs_system_design_v2_target_enterprise_deployment"
     },
@@ -21889,7 +21799,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L302",
       "_origin": "ast",
-      "community": 276,
+      "community": 118,
       "norm_label": "environments",
       "id": "docs_system_design_v2_environments"
     },
@@ -21899,7 +21809,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L318",
       "_origin": "ast",
-      "community": 276,
+      "community": 116,
       "norm_label": "8. security model",
       "id": "docs_system_design_v2_8_security_model"
     },
@@ -21909,7 +21819,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L320",
       "_origin": "ast",
-      "community": 276,
+      "community": 116,
       "norm_label": "identity and auth",
       "id": "docs_system_design_v2_identity_and_auth"
     },
@@ -21919,7 +21829,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L326",
       "_origin": "ast",
-      "community": 276,
+      "community": 116,
       "norm_label": "recommended security upgrades",
       "id": "docs_system_design_v2_recommended_security_upgrades"
     },
@@ -21929,7 +21839,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L335",
       "_origin": "ast",
-      "community": 276,
+      "community": 116,
       "norm_label": "secret handling",
       "id": "docs_system_design_v2_secret_handling"
     },
@@ -21939,7 +21849,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L342",
       "_origin": "ast",
-      "community": 276,
+      "community": 116,
       "norm_label": "audit model",
       "id": "docs_system_design_v2_audit_model"
     },
@@ -21989,7 +21899,7 @@
       "source_file": "docs/telegram-bridge.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 93,
+      "community": 115,
       "norm_label": "telegram-bridge.md",
       "id": "docs_telegram_bridge"
     },
@@ -22239,7 +22149,7 @@
       "source_file": "docs/ui-design-guide-v2.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 93,
+      "community": 115,
       "norm_label": "ui-design-guide-v2.md",
       "id": "docs_ui_design_guide_v2"
     },
@@ -23935,86 +23845,6 @@
     }
   ],
   "links": [
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/check-sms-truncation.js",
-      "source_location": "L42",
-      "weight": 1.0,
-      "source": "scripts_check_sms_truncation",
-      "target": "scripts_check_sms_truncation_all",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/check-sms-truncation.js",
-      "source_location": "L62",
-      "weight": 1.0,
-      "source": "scripts_check_sms_truncation",
-      "target": "scripts_check_sms_truncation_bysendergateway",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/check-sms-truncation.js",
-      "source_location": "L48",
-      "weight": 1.0,
-      "source": "scripts_check_sms_truncation",
-      "target": "scripts_check_sms_truncation_candidates",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/check-sms-truncation.js",
-      "source_location": "L30",
-      "weight": 1.0,
-      "source": "scripts_check_sms_truncation",
-      "target": "scripts_check_sms_truncation_databasesync",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/check-sms-truncation.js",
-      "source_location": "L34",
-      "weight": 1.0,
-      "source": "scripts_check_sms_truncation",
-      "target": "scripts_check_sms_truncation_db",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/check-sms-truncation.js",
-      "source_location": "L73",
-      "weight": 1.0,
-      "source": "scripts_check_sms_truncation",
-      "target": "scripts_check_sms_truncation_followupexamples",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/check-sms-truncation.js",
-      "source_location": "L74",
-      "weight": 1.0,
-      "source": "scripts_check_sms_truncation",
-      "target": "scripts_check_sms_truncation_nofollowupexamples",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "scripts/check-sms-truncation.js",
-      "source_location": "L31",
-      "weight": 1.0,
-      "source": "scripts_check_sms_truncation",
-      "target": "scripts_check_sms_truncation_path",
-      "confidence_score": 1.0
-    },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
@@ -67128,5 +66958,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "cdf2846a7396292ac00f724df153af73e6986b0c"
+  "built_at_commit": "673df1d53aa991e277376a66ef18f597cef9a90a"
 }

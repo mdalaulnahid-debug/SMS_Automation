@@ -3818,10 +3818,5 @@
     "mtime": 1786628562.0114007,
     "ast_hash": "e1444537c7feb1bb5147db83334f5612",
     "semantic_hash": ""
-  },
-  "scripts/check-sms-truncation.js": {
-    "mtime": 1786629337.1627214,
-    "ast_hash": "4e3e6b388e250ebb027a221d0e50778c",
-    "semantic_hash": ""
   }
 }
