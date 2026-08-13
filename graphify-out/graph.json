@@ -144,10 +144,20 @@
       "norm_label": "toapply"
     },
     {
+      "label": "identifyStartedAt",
+      "file_type": "code",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L64",
+      "_origin": "ast",
+      "id": "scripts_apply_historical_corrections_identifystartedat",
+      "community": 27,
+      "norm_label": "identifystartedat"
+    },
+    {
       "label": "byStatus",
       "file_type": "code",
       "source_file": "scripts/apply-historical-corrections.js",
-      "source_location": "L107",
+      "source_location": "L112",
       "_origin": "ast",
       "id": "scripts_apply_historical_corrections_bystatus",
       "community": 27,
@@ -157,11 +167,31 @@
       "label": "store",
       "file_type": "code",
       "source_file": "scripts/apply-historical-corrections.js",
-      "source_location": "L125",
+      "source_location": "L130",
       "_origin": "ast",
       "id": "scripts_apply_historical_corrections_store",
       "community": 27,
       "norm_label": "store"
+    },
+    {
+      "label": "inboxById",
+      "file_type": "code",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L131",
+      "_origin": "ast",
+      "id": "scripts_apply_historical_corrections_inboxbyid",
+      "community": 27,
+      "norm_label": "inboxbyid"
+    },
+    {
+      "label": "applyStartedAt",
+      "file_type": "code",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L134",
+      "_origin": "ast",
+      "id": "scripts_apply_historical_corrections_applystartedat",
+      "community": 27,
+      "norm_label": "applystartedat"
     },
     {
       "label": "reprocess-unmatched-dryrun.js",
@@ -3499,7 +3529,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 309,
+      "community": 4,
       "norm_label": "sharedpreferences",
       "id": "sharedpreferences"
     },
@@ -6597,7 +6627,7 @@
       "source_file": "scripts/classify-unmatched.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 13,
+      "community": 87,
       "norm_label": "classify-unmatched.js",
       "id": "scripts_classify_unmatched"
     },
@@ -6607,7 +6637,7 @@
       "source_file": "scripts/classify-unmatched.js",
       "source_location": "L16",
       "_origin": "ast",
-      "community": 13,
+      "community": 87,
       "norm_label": "{ databasesync }",
       "id": "scripts_classify_unmatched_databasesync"
     },
@@ -6617,7 +6647,7 @@
       "source_file": "scripts/classify-unmatched.js",
       "source_location": "L17",
       "_origin": "ast",
-      "community": 13,
+      "community": 87,
       "norm_label": "path",
       "id": "scripts_classify_unmatched_path"
     },
@@ -6627,7 +6657,7 @@
       "source_file": "scripts/classify-unmatched.js",
       "source_location": "L18",
       "_origin": "ast",
-      "community": 13,
+      "community": 87,
       "norm_label": "{ inferreplyfamilies }",
       "id": "scripts_classify_unmatched_inferreplyfamilies"
     },
@@ -6637,7 +6667,7 @@
       "source_file": "scripts/classify-unmatched.js",
       "source_location": "L21",
       "_origin": "ast",
-      "community": 13,
+      "community": 87,
       "norm_label": "db",
       "id": "scripts_classify_unmatched_db"
     },
@@ -6647,7 +6677,7 @@
       "source_file": "scripts/classify-unmatched.js",
       "source_location": "L23",
       "_origin": "ast",
-      "community": 13,
+      "community": 87,
       "norm_label": "rows",
       "id": "scripts_classify_unmatched_rows"
     },
@@ -6657,7 +6687,7 @@
       "source_file": "scripts/classify-unmatched.js",
       "source_location": "L28",
       "_origin": "ast",
-      "community": 13,
+      "community": 87,
       "norm_label": "junk_markers",
       "id": "scripts_classify_unmatched_junk_markers"
     },
@@ -6667,7 +6697,7 @@
       "source_file": "scripts/classify-unmatched.js",
       "source_location": "L30",
       "_origin": "ast",
-      "community": 13,
+      "community": 87,
       "norm_label": "buckets",
       "id": "scripts_classify_unmatched_buckets"
     },
@@ -6677,7 +6707,7 @@
       "source_file": "scripts/classify-unmatched.js",
       "source_location": "L47",
       "_origin": "ast",
-      "community": 13,
+      "community": 87,
       "norm_label": "pct()",
       "id": "scripts_classify_unmatched_pct"
     },
@@ -6687,7 +6717,7 @@
       "source_file": "scripts/classify-unmatched.js",
       "source_location": "L57",
       "_origin": "ast",
-      "community": 13,
+      "community": 87,
       "norm_label": "bytype",
       "id": "scripts_classify_unmatched_bytype"
     },
@@ -6797,7 +6827,7 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 95,
+      "community": 13,
       "norm_label": "correlate-unmatched.js",
       "id": "scripts_correlate_unmatched"
     },
@@ -6807,7 +6837,7 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L18",
       "_origin": "ast",
-      "community": 95,
+      "community": 13,
       "norm_label": "{ databasesync }",
       "id": "scripts_correlate_unmatched_databasesync"
     },
@@ -6817,7 +6847,7 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L19",
       "_origin": "ast",
-      "community": 95,
+      "community": 13,
       "norm_label": "path",
       "id": "scripts_correlate_unmatched_path"
     },
@@ -6827,7 +6857,7 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L20",
       "_origin": "ast",
-      "community": 95,
+      "community": 13,
       "norm_label": "{ inferreplyfamilies }",
       "id": "scripts_correlate_unmatched_inferreplyfamilies"
     },
@@ -6837,7 +6867,7 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L23",
       "_origin": "ast",
-      "community": 95,
+      "community": 13,
       "norm_label": "db",
       "id": "scripts_correlate_unmatched_db"
     },
@@ -6847,7 +6877,7 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L25",
       "_origin": "ast",
-      "community": 95,
+      "community": 13,
       "norm_label": "unmatched",
       "id": "scripts_correlate_unmatched_unmatched"
     },
@@ -6857,7 +6887,7 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L30",
       "_origin": "ast",
-      "community": 95,
+      "community": 13,
       "norm_label": "genuinelooking",
       "id": "scripts_correlate_unmatched_genuinelooking"
     },
@@ -6867,7 +6897,7 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L34",
       "_origin": "ast",
-      "community": 95,
+      "community": 13,
       "norm_label": "dispatchesbygateway",
       "id": "scripts_correlate_unmatched_dispatchesbygateway"
     },
@@ -6877,7 +6907,7 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L35",
       "_origin": "ast",
-      "community": 95,
+      "community": 13,
       "norm_label": "dispatchesfor()",
       "id": "scripts_correlate_unmatched_dispatchesfor"
     },
@@ -6887,7 +6917,7 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L49",
       "_origin": "ast",
-      "community": 95,
+      "community": 13,
       "norm_label": "buckets",
       "id": "scripts_correlate_unmatched_buckets"
     },
@@ -6897,7 +6927,7 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L50",
       "_origin": "ast",
-      "community": 95,
+      "community": 13,
       "norm_label": "examples",
       "id": "scripts_correlate_unmatched_examples"
     },
@@ -6907,7 +6937,7 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L51",
       "_origin": "ast",
-      "community": 95,
+      "community": 13,
       "norm_label": "latenciesms",
       "id": "scripts_correlate_unmatched_latenciesms"
     },
@@ -7969,7 +7999,7 @@
       "source_file": "src/app.js",
       "source_location": "L365",
       "_origin": "ast",
-      "community": 91,
+      "community": 72,
       "norm_label": "createapp()",
       "id": "src_app_createapp"
     },
@@ -8039,7 +8069,7 @@
       "source_file": "src/app.js",
       "source_location": "L1830",
       "_origin": "ast",
-      "community": 91,
+      "community": 72,
       "norm_label": "json()",
       "id": "src_app_json"
     },
@@ -8159,7 +8189,7 @@
       "source_file": "src/config.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 91,
+      "community": 72,
       "norm_label": "config.js",
       "id": "src_config"
     },
@@ -8169,7 +8199,7 @@
       "source_file": "src/config.js",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 91,
+      "community": 72,
       "norm_label": "{ existssync, readfilesync }",
       "id": "src_config_existssync_readfilesync"
     },
@@ -8179,7 +8209,7 @@
       "source_file": "src/config.js",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 91,
+      "community": 72,
       "norm_label": "{ join }",
       "id": "src_config_join"
     },
@@ -8189,7 +8219,7 @@
       "source_file": "src/config.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 91,
+      "community": 72,
       "norm_label": "loadgatewayconfig()",
       "id": "src_config_loadgatewayconfig"
     },
@@ -8199,7 +8229,7 @@
       "source_file": "src/config.js",
       "source_location": "L36",
       "_origin": "ast",
-      "community": 91,
+      "community": 72,
       "norm_label": "loadauthconfig()",
       "id": "src_config_loadauthconfig"
     },
@@ -8209,7 +8239,7 @@
       "source_file": "src/config.js",
       "source_location": "L68",
       "_origin": "ast",
-      "community": 91,
+      "community": 72,
       "norm_label": "loadtelegramconfig()",
       "id": "src_config_loadtelegramconfig"
     },
@@ -8219,7 +8249,7 @@
       "source_file": "src/config.js",
       "source_location": "L80",
       "_origin": "ast",
-      "community": 91,
+      "community": 72,
       "norm_label": "loadmailconfig()",
       "id": "src_config_loadmailconfig"
     },
@@ -8229,7 +8259,7 @@
       "source_file": "src/config.js",
       "source_location": "L98",
       "_origin": "ast",
-      "community": 91,
+      "community": 72,
       "norm_label": "trimtrailingslash()",
       "id": "src_config_trimtrailingslash"
     },
@@ -8319,7 +8349,7 @@
       "source_file": "src/domain.js",
       "source_location": "L35",
       "_origin": "ast",
-      "community": 15,
+      "community": 64,
       "norm_label": "request_definitions",
       "id": "src_domain_request_definitions"
     },
@@ -9589,7 +9619,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L162",
       "_origin": "ast",
-      "community": 87,
+      "community": 13,
       "norm_label": "stripmsisdnprefix()",
       "id": "src_replyanalyzer_stripmsisdnprefix"
     },
@@ -9599,7 +9629,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L171",
       "_origin": "ast",
-      "community": 87,
+      "community": 13,
       "norm_label": "replycontradictspayload()",
       "id": "src_replyanalyzer_replycontradictspayload"
     },
@@ -9609,7 +9639,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L191",
       "_origin": "ast",
-      "community": 13,
+      "community": 7,
       "norm_label": "matchtrainingpattern()",
       "id": "src_replyanalyzer_matchtrainingpattern"
     },
@@ -10399,7 +10429,7 @@
       "source_file": "src/store.js",
       "source_location": "L154",
       "_origin": "ast",
-      "community": 2,
+      "community": 64,
       "norm_label": ".nextrequestid()",
       "id": "src_store_automationstore_nextrequestid"
     },
@@ -10699,7 +10729,7 @@
       "source_file": "src/store.js",
       "source_location": "L487",
       "_origin": "ast",
-      "community": 13,
+      "community": 2,
       "norm_label": ".istrustedsenderforgateway()",
       "id": "src_store_automationstore_istrustedsenderforgateway"
     },
@@ -10709,7 +10739,7 @@
       "source_file": "src/store.js",
       "source_location": "L496",
       "_origin": "ast",
-      "community": 13,
+      "community": 2,
       "norm_label": ".getoutboxforgateway()",
       "id": "src_store_automationstore_getoutboxforgateway"
     },
@@ -10749,7 +10779,7 @@
       "source_file": "src/store.js",
       "source_location": "L537",
       "_origin": "ast",
-      "community": 13,
+      "community": 2,
       "norm_label": ".findactiverequestforgateway()",
       "id": "src_store_automationstore_findactiverequestforgateway"
     },
@@ -13099,7 +13129,7 @@
       "source_file": "test/persistence.test.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 64,
+      "community": 96,
       "norm_label": "persistence.test.js",
       "id": "test_persistence_test"
     },
@@ -13109,7 +13139,7 @@
       "source_file": "test/persistence.test.js",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 64,
+      "community": 96,
       "norm_label": "test",
       "id": "test_persistence_test_test"
     },
@@ -13119,7 +13149,7 @@
       "source_file": "test/persistence.test.js",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 64,
+      "community": 96,
       "norm_label": "assert",
       "id": "test_persistence_test_assert"
     },
@@ -13129,7 +13159,7 @@
       "source_file": "test/persistence.test.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 64,
+      "community": 96,
       "norm_label": "{ tmpdir }",
       "id": "test_persistence_test_tmpdir"
     },
@@ -13139,7 +13169,7 @@
       "source_file": "test/persistence.test.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 64,
+      "community": 96,
       "norm_label": "{ join }",
       "id": "test_persistence_test_join"
     },
@@ -13149,7 +13179,7 @@
       "source_file": "test/persistence.test.js",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 64,
+      "community": 96,
       "norm_label": "{ mkdtempsync, rmsync }",
       "id": "test_persistence_test_mkdtempsync_rmsync"
     },
@@ -13159,7 +13189,7 @@
       "source_file": "test/persistence.test.js",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 64,
+      "community": 96,
       "norm_label": "{ automationstore }",
       "id": "test_persistence_test_automationstore"
     },
@@ -13169,7 +13199,7 @@
       "source_file": "test/persistence.test.js",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 64,
+      "community": 96,
       "norm_label": "{ operatorqueue }",
       "id": "test_persistence_test_operatorqueue"
     },
@@ -13179,7 +13209,7 @@
       "source_file": "test/persistence.test.js",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 64,
+      "community": 96,
       "norm_label": "{ smsgatewayclient }",
       "id": "test_persistence_test_smsgatewayclient"
     },
@@ -13189,7 +13219,7 @@
       "source_file": "test/persistence.test.js",
       "source_location": "L11",
       "_origin": "ast",
-      "community": 64,
+      "community": 96,
       "norm_label": "{ automationservice }",
       "id": "test_persistence_test_automationservice"
     },
@@ -13199,7 +13229,7 @@
       "source_file": "test/persistence.test.js",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 64,
+      "community": 96,
       "norm_label": "{ statuses }",
       "id": "test_persistence_test_statuses"
     },
@@ -13209,7 +13239,7 @@
       "source_file": "test/persistence.test.js",
       "source_location": "L14",
       "_origin": "ast",
-      "community": 64,
+      "community": 96,
       "norm_label": "harness()",
       "id": "test_persistence_test_harness"
     },
@@ -13219,7 +13249,7 @@
       "source_file": "test/persistence.test.js",
       "source_location": "L22",
       "_origin": "ast",
-      "community": 64,
+      "community": 96,
       "norm_label": "tempdb()",
       "id": "test_persistence_test_tempdb"
     },
@@ -13849,7 +13879,7 @@
       "source_file": "test/replyMatching.test.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 96,
+      "community": 64,
       "norm_label": "replymatching.test.js",
       "id": "test_replymatching_test"
     },
@@ -13859,7 +13889,7 @@
       "source_file": "test/replyMatching.test.js",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 96,
+      "community": 64,
       "norm_label": "test",
       "id": "test_replymatching_test_test"
     },
@@ -13869,7 +13899,7 @@
       "source_file": "test/replyMatching.test.js",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 96,
+      "community": 64,
       "norm_label": "assert",
       "id": "test_replymatching_test_assert"
     },
@@ -13879,7 +13909,7 @@
       "source_file": "test/replyMatching.test.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 96,
+      "community": 64,
       "norm_label": "{ automationstore }",
       "id": "test_replymatching_test_automationstore"
     },
@@ -13889,7 +13919,7 @@
       "source_file": "test/replyMatching.test.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 96,
+      "community": 64,
       "norm_label": "{ operatorqueue }",
       "id": "test_replymatching_test_operatorqueue"
     },
@@ -13899,7 +13929,7 @@
       "source_file": "test/replyMatching.test.js",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 96,
+      "community": 64,
       "norm_label": "{ smsgatewayclient }",
       "id": "test_replymatching_test_smsgatewayclient"
     },
@@ -13909,7 +13939,7 @@
       "source_file": "test/replyMatching.test.js",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 96,
+      "community": 64,
       "norm_label": "{ automationservice }",
       "id": "test_replymatching_test_automationservice"
     },
@@ -13919,7 +13949,7 @@
       "source_file": "test/replyMatching.test.js",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 96,
+      "community": 64,
       "norm_label": "{ statuses }",
       "id": "test_replymatching_test_statuses"
     },
@@ -13929,7 +13959,7 @@
       "source_file": "test/replyMatching.test.js",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 96,
+      "community": 64,
       "norm_label": "{ inferreplyfamilies, replycontradictspayload, analyzeoperatorreply }",
       "id": "test_replymatching_test_inferreplyfamilies_replycontradictspayload_analyzeoperatorreply"
     },
@@ -13939,7 +13969,7 @@
       "source_file": "test/replyMatching.test.js",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 96,
+      "community": 64,
       "norm_label": "createharness()",
       "id": "test_replymatching_test_createharness"
     },
@@ -18489,7 +18519,7 @@
       "source_file": "README.md",
       "source_location": "L71",
       "_origin": "ast",
-      "community": 100,
+      "community": 255,
       "norm_label": "quick start (testing)",
       "id": "readme_quick_start_testing"
     },
@@ -18499,7 +18529,7 @@
       "source_file": "README.md",
       "source_location": "L73",
       "_origin": "ast",
-      "community": 100,
+      "community": 255,
       "norm_label": "1. start the backend (pc)",
       "id": "readme_1_start_the_backend_pc"
     },
@@ -18509,7 +18539,7 @@
       "source_file": "README.md",
       "source_location": "L99",
       "_origin": "ast",
-      "community": 100,
+      "community": 255,
       "norm_label": "2. configure gateways",
       "id": "readme_2_configure_gateways"
     },
@@ -18519,7 +18549,7 @@
       "source_file": "README.md",
       "source_location": "L126",
       "_origin": "ast",
-      "community": 100,
+      "community": 255,
       "norm_label": "3. install android app",
       "id": "readme_3_install_android_app"
     },
@@ -18529,7 +18559,7 @@
       "source_file": "README.md",
       "source_location": "L145",
       "_origin": "ast",
-      "community": 100,
+      "community": 255,
       "norm_label": "3b. build the separate android admin app",
       "id": "readme_3b_build_the_separate_android_admin_app"
     },
@@ -18539,7 +18569,7 @@
       "source_file": "README.md",
       "source_location": "L165",
       "_origin": "ast",
-      "community": 100,
+      "community": 255,
       "norm_label": "4. phone app setup",
       "id": "readme_4_phone_app_setup"
     },
@@ -20319,7 +20349,7 @@
       "source_file": "docs/claude-design-brief.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 104,
+      "community": 93,
       "norm_label": "claude-design-brief.md",
       "id": "docs_claude_design_brief"
     },
@@ -20419,7 +20449,7 @@
       "source_file": "docs/design-system.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 104,
+      "community": 93,
       "norm_label": "design-system.md",
       "id": "docs_design_system"
     },
@@ -21539,7 +21569,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 104,
+      "community": 93,
       "norm_label": "system-design-v2.md",
       "id": "docs_system_design_v2"
     },
@@ -21629,7 +21659,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L159",
       "_origin": "ast",
-      "community": 90,
+      "community": 276,
       "norm_label": "5. api boundary plan",
       "id": "docs_system_design_v2_5_api_boundary_plan"
     },
@@ -21639,7 +21669,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L164",
       "_origin": "ast",
-      "community": 90,
+      "community": 276,
       "norm_label": "public health and bootstrap",
       "id": "docs_system_design_v2_public_health_and_bootstrap"
     },
@@ -21649,7 +21679,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L170",
       "_origin": "ast",
-      "community": 90,
+      "community": 276,
       "norm_label": "gateway device api",
       "id": "docs_system_design_v2_gateway_device_api"
     },
@@ -21659,7 +21689,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L179",
       "_origin": "ast",
-      "community": 90,
+      "community": 276,
       "norm_label": "operations api",
       "id": "docs_system_design_v2_operations_api"
     },
@@ -21669,7 +21699,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L188",
       "_origin": "ast",
-      "community": 90,
+      "community": 276,
       "norm_label": "admin api",
       "id": "docs_system_design_v2_admin_api"
     },
@@ -21679,7 +21709,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L202",
       "_origin": "ast",
-      "community": 90,
+      "community": 276,
       "norm_label": "integration api",
       "id": "docs_system_design_v2_integration_api"
     },
@@ -21739,7 +21769,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L284",
       "_origin": "ast",
-      "community": 116,
+      "community": 276,
       "norm_label": "7. deployment model",
       "id": "docs_system_design_v2_7_deployment_model"
     },
@@ -21749,7 +21779,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L286",
       "_origin": "ast",
-      "community": 116,
+      "community": 276,
       "norm_label": "current acceptable deployment",
       "id": "docs_system_design_v2_current_acceptable_deployment"
     },
@@ -21759,7 +21789,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L292",
       "_origin": "ast",
-      "community": 116,
+      "community": 276,
       "norm_label": "target enterprise deployment",
       "id": "docs_system_design_v2_target_enterprise_deployment"
     },
@@ -21769,7 +21799,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L302",
       "_origin": "ast",
-      "community": 116,
+      "community": 276,
       "norm_label": "environments",
       "id": "docs_system_design_v2_environments"
     },
@@ -21779,7 +21809,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L318",
       "_origin": "ast",
-      "community": 115,
+      "community": 276,
       "norm_label": "8. security model",
       "id": "docs_system_design_v2_8_security_model"
     },
@@ -21789,7 +21819,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L320",
       "_origin": "ast",
-      "community": 115,
+      "community": 276,
       "norm_label": "identity and auth",
       "id": "docs_system_design_v2_identity_and_auth"
     },
@@ -21799,7 +21829,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L326",
       "_origin": "ast",
-      "community": 115,
+      "community": 276,
       "norm_label": "recommended security upgrades",
       "id": "docs_system_design_v2_recommended_security_upgrades"
     },
@@ -21809,7 +21839,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L335",
       "_origin": "ast",
-      "community": 115,
+      "community": 276,
       "norm_label": "secret handling",
       "id": "docs_system_design_v2_secret_handling"
     },
@@ -21819,7 +21849,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L342",
       "_origin": "ast",
-      "community": 115,
+      "community": 276,
       "norm_label": "audit model",
       "id": "docs_system_design_v2_audit_model"
     },
@@ -21869,7 +21899,7 @@
       "source_file": "docs/telegram-bridge.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 104,
+      "community": 93,
       "norm_label": "telegram-bridge.md",
       "id": "docs_telegram_bridge"
     },
@@ -22119,7 +22149,7 @@
       "source_file": "docs/ui-design-guide-v2.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 104,
+      "community": 93,
       "norm_label": "ui-design-guide-v2.md",
       "id": "docs_ui_design_guide_v2"
     },
@@ -23829,6 +23859,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L134",
+      "weight": 1.0,
+      "source": "scripts_apply_historical_corrections",
+      "target": "scripts_apply_historical_corrections_applystartedat",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L30",
       "weight": 1.0,
       "source": "scripts_apply_historical_corrections",
@@ -23839,7 +23879,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "scripts/apply-historical-corrections.js",
-      "source_location": "L107",
+      "source_location": "L112",
       "weight": 1.0,
       "source": "scripts_apply_historical_corrections",
       "target": "scripts_apply_historical_corrections_bystatus",
@@ -23909,6 +23949,26 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L64",
+      "weight": 1.0,
+      "source": "scripts_apply_historical_corrections",
+      "target": "scripts_apply_historical_corrections_identifystartedat",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L131",
+      "weight": 1.0,
+      "source": "scripts_apply_historical_corrections",
+      "target": "scripts_apply_historical_corrections_inboxbyid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L31",
       "weight": 1.0,
       "source": "scripts_apply_historical_corrections",
@@ -23939,7 +23999,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "scripts/apply-historical-corrections.js",
-      "source_location": "L125",
+      "source_location": "L130",
       "weight": 1.0,
       "source": "scripts_apply_historical_corrections",
       "target": "scripts_apply_historical_corrections_store",
@@ -66964,5 +67024,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "ef8d9616564745564e65f9795803b686f5399bd7"
+  "built_at_commit": "5bdbc76f966adc61f06586ca68d16ae339627aca"
 }
