@@ -4,14 +4,174 @@
   "graph": {},
   "nodes": [
     {
+      "label": "apply-historical-corrections.js",
+      "file_type": "code",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "scripts_apply_historical_corrections",
+      "community": 27,
+      "norm_label": "apply-historical-corrections.js"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L28",
+      "_origin": "ast",
+      "id": "scripts_apply_historical_corrections_path",
+      "community": 27,
+      "norm_label": "path"
+    },
+    {
+      "label": "{ DatabaseSync }",
+      "file_type": "code",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L29",
+      "_origin": "ast",
+      "id": "scripts_apply_historical_corrections_databasesync",
+      "community": 27,
+      "norm_label": "{ databasesync }"
+    },
+    {
+      "label": "{ AutomationStore }",
+      "file_type": "code",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L30",
+      "_origin": "ast",
+      "id": "scripts_apply_historical_corrections_automationstore",
+      "community": 27,
+      "norm_label": "{ automationstore }"
+    },
+    {
+      "label": "{ inferReplyFamilies, analyzeOperatorReply }",
+      "file_type": "code",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L31",
+      "_origin": "ast",
+      "id": "scripts_apply_historical_corrections_inferreplyfamilies_analyzeoperatorreply",
+      "community": 27,
+      "norm_label": "{ inferreplyfamilies, analyzeoperatorreply }"
+    },
+    {
+      "label": "{ confidenceRank, replyTypeScore }",
+      "file_type": "code",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L32",
+      "_origin": "ast",
+      "id": "scripts_apply_historical_corrections_confidencerank_replytypescore",
+      "community": 27,
+      "norm_label": "{ confidencerank, replytypescore }"
+    },
+    {
+      "label": "apply",
+      "file_type": "code",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L35",
+      "_origin": "ast",
+      "id": "scripts_apply_historical_corrections_apply",
+      "community": 27,
+      "norm_label": "apply"
+    },
+    {
+      "label": "db",
+      "file_type": "code",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L38",
+      "_origin": "ast",
+      "id": "scripts_apply_historical_corrections_db",
+      "community": 27,
+      "norm_label": "db"
+    },
+    {
+      "label": "unmatched",
+      "file_type": "code",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L39",
+      "_origin": "ast",
+      "id": "scripts_apply_historical_corrections_unmatched",
+      "community": 27,
+      "norm_label": "unmatched"
+    },
+    {
+      "label": "genuineLooking",
+      "file_type": "code",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L40",
+      "_origin": "ast",
+      "id": "scripts_apply_historical_corrections_genuinelooking",
+      "community": 27,
+      "norm_label": "genuinelooking"
+    },
+    {
+      "label": "dispatchesByGateway",
+      "file_type": "code",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L42",
+      "_origin": "ast",
+      "id": "scripts_apply_historical_corrections_dispatchesbygateway",
+      "community": 27,
+      "norm_label": "dispatchesbygateway"
+    },
+    {
+      "label": "dispatchesFor()",
+      "file_type": "code",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L43",
+      "_origin": "ast",
+      "id": "scripts_apply_historical_corrections_dispatchesfor",
+      "community": 27,
+      "norm_label": "dispatchesfor()"
+    },
+    {
+      "label": "LIVE_STATUSES",
+      "file_type": "code",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L57",
+      "_origin": "ast",
+      "id": "scripts_apply_historical_corrections_live_statuses",
+      "community": 27,
+      "norm_label": "live_statuses"
+    },
+    {
+      "label": "toApply",
+      "file_type": "code",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L58",
+      "_origin": "ast",
+      "id": "scripts_apply_historical_corrections_toapply",
+      "community": 27,
+      "norm_label": "toapply"
+    },
+    {
+      "label": "byStatus",
+      "file_type": "code",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L107",
+      "_origin": "ast",
+      "id": "scripts_apply_historical_corrections_bystatus",
+      "community": 27,
+      "norm_label": "bystatus"
+    },
+    {
+      "label": "store",
+      "file_type": "code",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L125",
+      "_origin": "ast",
+      "id": "scripts_apply_historical_corrections_store",
+      "community": 27,
+      "norm_label": "store"
+    },
+    {
       "label": "reprocess-unmatched-dryrun.js",
       "file_type": "code",
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "scripts_reprocess_unmatched_dryrun",
       "community": 25,
-      "norm_label": "reprocess-unmatched-dryrun.js"
+      "norm_label": "reprocess-unmatched-dryrun.js",
+      "id": "scripts_reprocess_unmatched_dryrun"
     },
     {
       "label": "{ DatabaseSync }",
@@ -19,9 +179,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L45",
       "_origin": "ast",
-      "id": "scripts_reprocess_unmatched_dryrun_databasesync",
       "community": 25,
-      "norm_label": "{ databasesync }"
+      "norm_label": "{ databasesync }",
+      "id": "scripts_reprocess_unmatched_dryrun_databasesync"
     },
     {
       "label": "path",
@@ -29,9 +189,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L46",
       "_origin": "ast",
-      "id": "scripts_reprocess_unmatched_dryrun_path",
       "community": 25,
-      "norm_label": "path"
+      "norm_label": "path",
+      "id": "scripts_reprocess_unmatched_dryrun_path"
     },
     {
       "label": "{ inferReplyFamilies, analyzeOperatorReply }",
@@ -39,9 +199,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L47",
       "_origin": "ast",
-      "id": "scripts_reprocess_unmatched_dryrun_inferreplyfamilies_analyzeoperatorreply",
       "community": 25,
-      "norm_label": "{ inferreplyfamilies, analyzeoperatorreply }"
+      "norm_label": "{ inferreplyfamilies, analyzeoperatorreply }",
+      "id": "scripts_reprocess_unmatched_dryrun_inferreplyfamilies_analyzeoperatorreply"
     },
     {
       "label": "{ confidenceRank, replyTypeScore }",
@@ -49,9 +209,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L48",
       "_origin": "ast",
-      "id": "scripts_reprocess_unmatched_dryrun_confidencerank_replytypescore",
       "community": 25,
-      "norm_label": "{ confidencerank, replytypescore }"
+      "norm_label": "{ confidencerank, replytypescore }",
+      "id": "scripts_reprocess_unmatched_dryrun_confidencerank_replytypescore"
     },
     {
       "label": "db",
@@ -59,9 +219,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L51",
       "_origin": "ast",
-      "id": "scripts_reprocess_unmatched_dryrun_db",
       "community": 25,
-      "norm_label": "db"
+      "norm_label": "db",
+      "id": "scripts_reprocess_unmatched_dryrun_db"
     },
     {
       "label": "unmatched",
@@ -69,9 +229,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L53",
       "_origin": "ast",
-      "id": "scripts_reprocess_unmatched_dryrun_unmatched",
       "community": 25,
-      "norm_label": "unmatched"
+      "norm_label": "unmatched",
+      "id": "scripts_reprocess_unmatched_dryrun_unmatched"
     },
     {
       "label": "genuineLooking",
@@ -79,9 +239,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L58",
       "_origin": "ast",
-      "id": "scripts_reprocess_unmatched_dryrun_genuinelooking",
       "community": 25,
-      "norm_label": "genuinelooking"
+      "norm_label": "genuinelooking",
+      "id": "scripts_reprocess_unmatched_dryrun_genuinelooking"
     },
     {
       "label": "dispatchesByGateway",
@@ -89,9 +249,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L68",
       "_origin": "ast",
-      "id": "scripts_reprocess_unmatched_dryrun_dispatchesbygateway",
       "community": 25,
-      "norm_label": "dispatchesbygateway"
+      "norm_label": "dispatchesbygateway",
+      "id": "scripts_reprocess_unmatched_dryrun_dispatchesbygateway"
     },
     {
       "label": "dispatchesFor()",
@@ -99,9 +259,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L69",
       "_origin": "ast",
-      "id": "scripts_reprocess_unmatched_dryrun_dispatchesfor",
       "community": 25,
-      "norm_label": "dispatchesfor()"
+      "norm_label": "dispatchesfor()",
+      "id": "scripts_reprocess_unmatched_dryrun_dispatchesfor"
     },
     {
       "label": "resolvable",
@@ -109,9 +269,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L84",
       "_origin": "ast",
-      "id": "scripts_reprocess_unmatched_dryrun_resolvable",
       "community": 25,
-      "norm_label": "resolvable"
+      "norm_label": "resolvable",
+      "id": "scripts_reprocess_unmatched_dryrun_resolvable"
     },
     {
       "label": "noCandidate",
@@ -119,9 +279,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L85",
       "_origin": "ast",
-      "id": "scripts_reprocess_unmatched_dryrun_nocandidate",
       "community": 25,
-      "norm_label": "nocandidate"
+      "norm_label": "nocandidate",
+      "id": "scripts_reprocess_unmatched_dryrun_nocandidate"
     },
     {
       "label": "stillAmbiguous",
@@ -129,9 +289,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L86",
       "_origin": "ast",
-      "id": "scripts_reprocess_unmatched_dryrun_stillambiguous",
       "community": 25,
-      "norm_label": "stillambiguous"
+      "norm_label": "stillambiguous",
+      "id": "scripts_reprocess_unmatched_dryrun_stillambiguous"
     },
     {
       "label": "startedAt",
@@ -139,9 +299,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L88",
       "_origin": "ast",
-      "id": "scripts_reprocess_unmatched_dryrun_startedat",
       "community": 25,
-      "norm_label": "startedat"
+      "norm_label": "startedat",
+      "id": "scripts_reprocess_unmatched_dryrun_startedat"
     },
     {
       "label": "byStatus",
@@ -149,9 +309,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L153",
       "_origin": "ast",
-      "id": "scripts_reprocess_unmatched_dryrun_bystatus",
       "community": 25,
-      "norm_label": "bystatus"
+      "norm_label": "bystatus",
+      "id": "scripts_reprocess_unmatched_dryrun_bystatus"
     },
     {
       "label": "build.gradle.kts",
@@ -3339,7 +3499,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 4,
+      "community": 309,
       "norm_label": "sharedpreferences",
       "id": "sharedpreferences"
     },
@@ -18329,7 +18489,7 @@
       "source_file": "README.md",
       "source_location": "L71",
       "_origin": "ast",
-      "community": 255,
+      "community": 100,
       "norm_label": "quick start (testing)",
       "id": "readme_quick_start_testing"
     },
@@ -18339,7 +18499,7 @@
       "source_file": "README.md",
       "source_location": "L73",
       "_origin": "ast",
-      "community": 255,
+      "community": 100,
       "norm_label": "1. start the backend (pc)",
       "id": "readme_1_start_the_backend_pc"
     },
@@ -18349,7 +18509,7 @@
       "source_file": "README.md",
       "source_location": "L99",
       "_origin": "ast",
-      "community": 255,
+      "community": 100,
       "norm_label": "2. configure gateways",
       "id": "readme_2_configure_gateways"
     },
@@ -18359,7 +18519,7 @@
       "source_file": "README.md",
       "source_location": "L126",
       "_origin": "ast",
-      "community": 255,
+      "community": 100,
       "norm_label": "3. install android app",
       "id": "readme_3_install_android_app"
     },
@@ -18369,7 +18529,7 @@
       "source_file": "README.md",
       "source_location": "L145",
       "_origin": "ast",
-      "community": 255,
+      "community": 100,
       "norm_label": "3b. build the separate android admin app",
       "id": "readme_3b_build_the_separate_android_admin_app"
     },
@@ -18379,7 +18539,7 @@
       "source_file": "README.md",
       "source_location": "L165",
       "_origin": "ast",
-      "community": 255,
+      "community": 100,
       "norm_label": "4. phone app setup",
       "id": "readme_4_phone_app_setup"
     },
@@ -20159,7 +20319,7 @@
       "source_file": "docs/claude-design-brief.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 93,
+      "community": 104,
       "norm_label": "claude-design-brief.md",
       "id": "docs_claude_design_brief"
     },
@@ -20259,7 +20419,7 @@
       "source_file": "docs/design-system.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 93,
+      "community": 104,
       "norm_label": "design-system.md",
       "id": "docs_design_system"
     },
@@ -21379,7 +21539,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 93,
+      "community": 104,
       "norm_label": "system-design-v2.md",
       "id": "docs_system_design_v2"
     },
@@ -21469,7 +21629,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L159",
       "_origin": "ast",
-      "community": 276,
+      "community": 90,
       "norm_label": "5. api boundary plan",
       "id": "docs_system_design_v2_5_api_boundary_plan"
     },
@@ -21479,7 +21639,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L164",
       "_origin": "ast",
-      "community": 276,
+      "community": 90,
       "norm_label": "public health and bootstrap",
       "id": "docs_system_design_v2_public_health_and_bootstrap"
     },
@@ -21489,7 +21649,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L170",
       "_origin": "ast",
-      "community": 276,
+      "community": 90,
       "norm_label": "gateway device api",
       "id": "docs_system_design_v2_gateway_device_api"
     },
@@ -21499,7 +21659,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L179",
       "_origin": "ast",
-      "community": 276,
+      "community": 90,
       "norm_label": "operations api",
       "id": "docs_system_design_v2_operations_api"
     },
@@ -21509,7 +21669,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L188",
       "_origin": "ast",
-      "community": 276,
+      "community": 90,
       "norm_label": "admin api",
       "id": "docs_system_design_v2_admin_api"
     },
@@ -21519,7 +21679,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L202",
       "_origin": "ast",
-      "community": 276,
+      "community": 90,
       "norm_label": "integration api",
       "id": "docs_system_design_v2_integration_api"
     },
@@ -21579,7 +21739,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L284",
       "_origin": "ast",
-      "community": 276,
+      "community": 116,
       "norm_label": "7. deployment model",
       "id": "docs_system_design_v2_7_deployment_model"
     },
@@ -21589,7 +21749,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L286",
       "_origin": "ast",
-      "community": 276,
+      "community": 116,
       "norm_label": "current acceptable deployment",
       "id": "docs_system_design_v2_current_acceptable_deployment"
     },
@@ -21599,7 +21759,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L292",
       "_origin": "ast",
-      "community": 276,
+      "community": 116,
       "norm_label": "target enterprise deployment",
       "id": "docs_system_design_v2_target_enterprise_deployment"
     },
@@ -21609,7 +21769,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L302",
       "_origin": "ast",
-      "community": 276,
+      "community": 116,
       "norm_label": "environments",
       "id": "docs_system_design_v2_environments"
     },
@@ -21619,7 +21779,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L318",
       "_origin": "ast",
-      "community": 276,
+      "community": 115,
       "norm_label": "8. security model",
       "id": "docs_system_design_v2_8_security_model"
     },
@@ -21629,7 +21789,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L320",
       "_origin": "ast",
-      "community": 276,
+      "community": 115,
       "norm_label": "identity and auth",
       "id": "docs_system_design_v2_identity_and_auth"
     },
@@ -21639,7 +21799,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L326",
       "_origin": "ast",
-      "community": 276,
+      "community": 115,
       "norm_label": "recommended security upgrades",
       "id": "docs_system_design_v2_recommended_security_upgrades"
     },
@@ -21649,7 +21809,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L335",
       "_origin": "ast",
-      "community": 276,
+      "community": 115,
       "norm_label": "secret handling",
       "id": "docs_system_design_v2_secret_handling"
     },
@@ -21659,7 +21819,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L342",
       "_origin": "ast",
-      "community": 276,
+      "community": 115,
       "norm_label": "audit model",
       "id": "docs_system_design_v2_audit_model"
     },
@@ -21709,7 +21869,7 @@
       "source_file": "docs/telegram-bridge.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 93,
+      "community": 104,
       "norm_label": "telegram-bridge.md",
       "id": "docs_telegram_bridge"
     },
@@ -21959,7 +22119,7 @@
       "source_file": "docs/ui-design-guide-v2.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 93,
+      "community": 104,
       "norm_label": "ui-design-guide-v2.md",
       "id": "docs_ui_design_guide_v2"
     },
@@ -23658,12 +23818,173 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L35",
+      "weight": 1.0,
+      "source": "scripts_apply_historical_corrections",
+      "target": "scripts_apply_historical_corrections_apply",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "scripts_apply_historical_corrections",
+      "target": "scripts_apply_historical_corrections_automationstore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L107",
+      "weight": 1.0,
+      "source": "scripts_apply_historical_corrections",
+      "target": "scripts_apply_historical_corrections_bystatus",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "scripts_apply_historical_corrections",
+      "target": "scripts_apply_historical_corrections_confidencerank_replytypescore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "scripts_apply_historical_corrections",
+      "target": "scripts_apply_historical_corrections_databasesync",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "scripts_apply_historical_corrections",
+      "target": "scripts_apply_historical_corrections_db",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L42",
+      "weight": 1.0,
+      "source": "scripts_apply_historical_corrections",
+      "target": "scripts_apply_historical_corrections_dispatchesbygateway",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L43",
+      "weight": 1.0,
+      "source": "scripts_apply_historical_corrections",
+      "target": "scripts_apply_historical_corrections_dispatchesfor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L40",
+      "weight": 1.0,
+      "source": "scripts_apply_historical_corrections",
+      "target": "scripts_apply_historical_corrections_genuinelooking",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "scripts_apply_historical_corrections",
+      "target": "scripts_apply_historical_corrections_inferreplyfamilies_analyzeoperatorreply",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L57",
+      "weight": 1.0,
+      "source": "scripts_apply_historical_corrections",
+      "target": "scripts_apply_historical_corrections_live_statuses",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "scripts_apply_historical_corrections",
+      "target": "scripts_apply_historical_corrections_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L125",
+      "weight": 1.0,
+      "source": "scripts_apply_historical_corrections",
+      "target": "scripts_apply_historical_corrections_store",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L58",
+      "weight": 1.0,
+      "source": "scripts_apply_historical_corrections",
+      "target": "scripts_apply_historical_corrections_toapply",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L39",
+      "weight": 1.0,
+      "source": "scripts_apply_historical_corrections",
+      "target": "scripts_apply_historical_corrections_unmatched",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/apply-historical-corrections.js",
+      "source_location": "L45",
+      "weight": 1.0,
+      "source": "scripts_apply_historical_corrections_dispatchesfor",
+      "target": "scripts_apply_historical_corrections_databasesync"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L153",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_reprocess_unmatched_dryrun",
-      "target": "scripts_reprocess_unmatched_dryrun_bystatus",
-      "confidence_score": 1.0
+      "target": "scripts_reprocess_unmatched_dryrun_bystatus"
     },
     {
       "relation": "contains",
@@ -23671,9 +23992,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L48",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_reprocess_unmatched_dryrun",
-      "target": "scripts_reprocess_unmatched_dryrun_confidencerank_replytypescore",
-      "confidence_score": 1.0
+      "target": "scripts_reprocess_unmatched_dryrun_confidencerank_replytypescore"
     },
     {
       "relation": "contains",
@@ -23681,9 +24002,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L45",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_reprocess_unmatched_dryrun",
-      "target": "scripts_reprocess_unmatched_dryrun_databasesync",
-      "confidence_score": 1.0
+      "target": "scripts_reprocess_unmatched_dryrun_databasesync"
     },
     {
       "relation": "contains",
@@ -23691,9 +24012,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L51",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_reprocess_unmatched_dryrun",
-      "target": "scripts_reprocess_unmatched_dryrun_db",
-      "confidence_score": 1.0
+      "target": "scripts_reprocess_unmatched_dryrun_db"
     },
     {
       "relation": "contains",
@@ -23701,9 +24022,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L68",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_reprocess_unmatched_dryrun",
-      "target": "scripts_reprocess_unmatched_dryrun_dispatchesbygateway",
-      "confidence_score": 1.0
+      "target": "scripts_reprocess_unmatched_dryrun_dispatchesbygateway"
     },
     {
       "relation": "contains",
@@ -23711,9 +24032,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L69",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_reprocess_unmatched_dryrun",
-      "target": "scripts_reprocess_unmatched_dryrun_dispatchesfor",
-      "confidence_score": 1.0
+      "target": "scripts_reprocess_unmatched_dryrun_dispatchesfor"
     },
     {
       "relation": "contains",
@@ -23721,9 +24042,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L58",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_reprocess_unmatched_dryrun",
-      "target": "scripts_reprocess_unmatched_dryrun_genuinelooking",
-      "confidence_score": 1.0
+      "target": "scripts_reprocess_unmatched_dryrun_genuinelooking"
     },
     {
       "relation": "contains",
@@ -23731,9 +24052,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L47",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_reprocess_unmatched_dryrun",
-      "target": "scripts_reprocess_unmatched_dryrun_inferreplyfamilies_analyzeoperatorreply",
-      "confidence_score": 1.0
+      "target": "scripts_reprocess_unmatched_dryrun_inferreplyfamilies_analyzeoperatorreply"
     },
     {
       "relation": "contains",
@@ -23741,9 +24062,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L85",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_reprocess_unmatched_dryrun",
-      "target": "scripts_reprocess_unmatched_dryrun_nocandidate",
-      "confidence_score": 1.0
+      "target": "scripts_reprocess_unmatched_dryrun_nocandidate"
     },
     {
       "relation": "contains",
@@ -23751,9 +24072,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L46",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_reprocess_unmatched_dryrun",
-      "target": "scripts_reprocess_unmatched_dryrun_path",
-      "confidence_score": 1.0
+      "target": "scripts_reprocess_unmatched_dryrun_path"
     },
     {
       "relation": "contains",
@@ -23761,9 +24082,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L84",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_reprocess_unmatched_dryrun",
-      "target": "scripts_reprocess_unmatched_dryrun_resolvable",
-      "confidence_score": 1.0
+      "target": "scripts_reprocess_unmatched_dryrun_resolvable"
     },
     {
       "relation": "contains",
@@ -23771,9 +24092,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L88",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_reprocess_unmatched_dryrun",
-      "target": "scripts_reprocess_unmatched_dryrun_startedat",
-      "confidence_score": 1.0
+      "target": "scripts_reprocess_unmatched_dryrun_startedat"
     },
     {
       "relation": "contains",
@@ -23781,9 +24102,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L86",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_reprocess_unmatched_dryrun",
-      "target": "scripts_reprocess_unmatched_dryrun_stillambiguous",
-      "confidence_score": 1.0
+      "target": "scripts_reprocess_unmatched_dryrun_stillambiguous"
     },
     {
       "relation": "contains",
@@ -23791,9 +24112,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L53",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_reprocess_unmatched_dryrun",
-      "target": "scripts_reprocess_unmatched_dryrun_unmatched",
-      "confidence_score": 1.0
+      "target": "scripts_reprocess_unmatched_dryrun_unmatched"
     },
     {
       "relation": "references",
@@ -66643,5 +66964,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "a9f68dc03c828a2f238c2041df777d6b1bddfd3d"
+  "built_at_commit": "ef8d9616564745564e65f9795803b686f5399bd7"
 }
