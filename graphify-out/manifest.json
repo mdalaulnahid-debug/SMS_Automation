@@ -2130,8 +2130,8 @@
     "semantic_hash": ""
   },
   ".impeccable/hook.cache.json": {
-    "mtime": 1786630922.354484,
-    "ast_hash": "dc57df1f35838548ab0624193b462b0c",
+    "mtime": 1786631661.0692902,
+    "ast_hash": "5edf9ada4a8a8d29415414501cd2ff3c",
     "semantic_hash": ""
   },
   "config/auth.example.json": {
@@ -3665,8 +3665,8 @@
     "semantic_hash": ""
   },
   "scripts/correlate-unmatched.js": {
-    "mtime": 1786628540.8800056,
-    "ast_hash": "11badacf42506c4024b3dbb5e1ca9392",
+    "mtime": 1786631557.8524785,
+    "ast_hash": "03915137b2da516e23ec2f1da78119b6",
     "semantic_hash": ""
   },
   "scripts/deploy-and-reveal-gate.sh": {
@@ -3680,8 +3680,8 @@
     "semantic_hash": ""
   },
   "scripts/reprocess-unmatched-dryrun.js": {
-    "mtime": 1786628551.1669776,
-    "ast_hash": "b8b19c169b53ee90d465b8aed3fae615",
+    "mtime": 1786631579.233085,
+    "ast_hash": "c53c80f0bcb77c4f8a73bbcefdbc0d0c",
     "semantic_hash": ""
   },
   "src/telegramLoginAuth.js": {
@@ -3815,13 +3815,18 @@
     "semantic_hash": ""
   },
   "scripts/apply-historical-corrections.js": {
-    "mtime": 1786628562.0114007,
-    "ast_hash": "e1444537c7feb1bb5147db83334f5612",
+    "mtime": 1786631615.8111742,
+    "ast_hash": "f5b565475e6d1fcce88dc11d0ccb1b1a",
     "semantic_hash": ""
   },
   "scripts/explain-recent-unmatched.js": {
-    "mtime": 1786630922.2579877,
-    "ast_hash": "de781c61042d78daaf2b1d5d1bc80217",
+    "mtime": 1786631634.932855,
+    "ast_hash": "d7f4869b154195a68e7992d8bfa4f3b6",
+    "semantic_hash": ""
+  },
+  "scripts/verify-applied-corrections.js": {
+    "mtime": 1786631660.9726956,
+    "ast_hash": "d71289cbdbc25bdef78fc5699431c859",
     "semantic_hash": ""
   }
 }
