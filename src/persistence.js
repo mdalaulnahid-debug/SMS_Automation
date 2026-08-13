@@ -134,6 +134,13 @@ class Persistence {
   constructor(dbPath) {
     this.db = new DatabaseSync(dbPath);
     this.db.exec('PRAGMA journal_mode = WAL;');
+    // Without this, busy_timeout defaults to 0 -- any write that collides with
+    // another process's open transaction on the same file (e.g. a one-off
+    // script running while the live server is also writing) fails instantly
+    // with "database is locked" instead of waiting briefly for the lock to
+    // clear. 5s is enough slack for a normal write to finish without masking
+    // a genuinely stuck lock.
+    this.db.exec('PRAGMA busy_timeout = 5000;');
     this.db.exec(SCHEMA);
     // Idempotent migrations — each wrapped in try/catch so they silently skip if already applied.
     try { this.db.exec('ALTER TABLE sms_outbox ADD COLUMN claimed_at TEXT'); } catch (_) {}

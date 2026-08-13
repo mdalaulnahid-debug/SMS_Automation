@@ -12,6 +12,7 @@ const path = require('node:path');
 
 const dbPath = process.env.SMS_DB_PATH || path.join(__dirname, '..', 'data', 'automation.db');
 const db = new DatabaseSync(dbPath);
+db.exec('PRAGMA busy_timeout = 5000;'); // wait briefly instead of erroring if the live server holds the lock
 
 const total = db.prepare('SELECT COUNT(*) AS n FROM sms_inbox WHERE matched_request_id IS NULL').get().n;
 const totalAll = db.prepare('SELECT COUNT(*) AS n FROM sms_inbox').get().n;

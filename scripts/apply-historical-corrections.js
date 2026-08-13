@@ -36,6 +36,7 @@ const apply = process.argv.includes('--apply');
 
 // --- Identification pass (read-only, raw SQL) ---
 const db = new DatabaseSync(dbPath);
+db.exec('PRAGMA busy_timeout = 5000;'); // wait briefly instead of erroring if the live server holds the lock
 const unmatched = db.prepare(`SELECT id, gateway_id, message_body, received_at FROM sms_inbox WHERE matched_request_id IS NULL`).all();
 const genuineLooking = unmatched.filter((row) => inferReplyFamilies(row.message_body || '', '').strongTypes.length > 0);
 

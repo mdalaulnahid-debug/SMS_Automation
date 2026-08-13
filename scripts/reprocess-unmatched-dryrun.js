@@ -49,6 +49,7 @@ const { confidenceRank, replyTypeScore } = require('../src/service');
 
 const dbPath = process.env.SMS_DB_PATH || process.env.DB_PATH || path.join(__dirname, '..', 'data', 'automation.db');
 const db = new DatabaseSync(dbPath);
+db.exec('PRAGMA busy_timeout = 5000;'); // wait briefly instead of erroring if the live server holds the lock
 
 const unmatched = db.prepare(`
   SELECT id, gateway_id, message_body, received_at
