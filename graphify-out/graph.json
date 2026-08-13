@@ -4,6 +4,86 @@
   "graph": {},
   "nodes": [
     {
+      "label": "explain-recent-unmatched.js",
+      "file_type": "code",
+      "source_file": "scripts/explain-recent-unmatched.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "scripts_explain_recent_unmatched",
+      "community": 104,
+      "norm_label": "explain-recent-unmatched.js"
+    },
+    {
+      "label": "{ DatabaseSync }",
+      "file_type": "code",
+      "source_file": "scripts/explain-recent-unmatched.js",
+      "source_location": "L17",
+      "_origin": "ast",
+      "id": "scripts_explain_recent_unmatched_databasesync",
+      "community": 104,
+      "norm_label": "{ databasesync }"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "scripts/explain-recent-unmatched.js",
+      "source_location": "L18",
+      "_origin": "ast",
+      "id": "scripts_explain_recent_unmatched_path",
+      "community": 104,
+      "norm_label": "path"
+    },
+    {
+      "label": "db",
+      "file_type": "code",
+      "source_file": "scripts/explain-recent-unmatched.js",
+      "source_location": "L21",
+      "_origin": "ast",
+      "id": "scripts_explain_recent_unmatched_db",
+      "community": 104,
+      "norm_label": "db"
+    },
+    {
+      "label": "rows",
+      "file_type": "code",
+      "source_file": "scripts/explain-recent-unmatched.js",
+      "source_location": "L26",
+      "_origin": "ast",
+      "id": "scripts_explain_recent_unmatched_rows",
+      "community": 104,
+      "norm_label": "rows"
+    },
+    {
+      "label": "dispatchesByGateway",
+      "file_type": "code",
+      "source_file": "scripts/explain-recent-unmatched.js",
+      "source_location": "L37",
+      "_origin": "ast",
+      "id": "scripts_explain_recent_unmatched_dispatchesbygateway",
+      "community": 104,
+      "norm_label": "dispatchesbygateway"
+    },
+    {
+      "label": "dispatchesFor()",
+      "file_type": "code",
+      "source_file": "scripts/explain-recent-unmatched.js",
+      "source_location": "L38",
+      "_origin": "ast",
+      "id": "scripts_explain_recent_unmatched_dispatchesfor",
+      "community": 104,
+      "norm_label": "dispatchesfor()"
+    },
+    {
+      "label": "now",
+      "file_type": "code",
+      "source_file": "scripts/explain-recent-unmatched.js",
+      "source_location": "L52",
+      "_origin": "ast",
+      "id": "scripts_explain_recent_unmatched_now",
+      "community": 104,
+      "norm_label": "now"
+    },
+    {
       "label": "apply-historical-corrections.js",
       "file_type": "code",
       "source_file": "scripts/apply-historical-corrections.js",
@@ -19249,7 +19329,7 @@
       "source_file": "architecture.md",
       "source_location": "L37",
       "_origin": "ast",
-      "community": 117,
+      "community": 271,
       "norm_label": "3. components",
       "id": "architecture_3_components"
     },
@@ -19259,7 +19339,7 @@
       "source_file": "architecture.md",
       "source_location": "L39",
       "_origin": "ast",
-      "community": 117,
+      "community": 271,
       "norm_label": "3.1 backend (`src/`)",
       "id": "architecture_3_1_backend_src"
     },
@@ -19269,7 +19349,7 @@
       "source_file": "architecture.md",
       "source_location": "L55",
       "_origin": "ast",
-      "community": 117,
+      "community": 271,
       "norm_label": "3.2 android gateway (`android-gateway/`)",
       "id": "architecture_3_2_android_gateway_android_gateway"
     },
@@ -19279,7 +19359,7 @@
       "source_file": "architecture.md",
       "source_location": "L69",
       "_origin": "ast",
-      "community": 117,
+      "community": 271,
       "norm_label": "3.3 dashboard (`public/`)",
       "id": "architecture_3_3_dashboard_public"
     },
@@ -20349,7 +20429,7 @@
       "source_file": "docs/claude-design-brief.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 115,
+      "community": 93,
       "norm_label": "claude-design-brief.md",
       "id": "docs_claude_design_brief"
     },
@@ -20449,7 +20529,7 @@
       "source_file": "docs/design-system.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 115,
+      "community": 93,
       "norm_label": "design-system.md",
       "id": "docs_design_system"
     },
@@ -21269,7 +21349,7 @@
       "source_file": "docs/redesign.md",
       "source_location": "L145",
       "_origin": "ast",
-      "community": 104,
+      "community": 89,
       "norm_label": "phase 3: officer portal port",
       "id": "docs_redesign_phase_3_officer_portal_port"
     },
@@ -21279,7 +21359,7 @@
       "source_file": "docs/redesign.md",
       "source_location": "L147",
       "_origin": "ast",
-      "community": 104,
+      "community": 89,
       "norm_label": "what's being ported",
       "id": "docs_redesign_what_s_being_ported_147"
     },
@@ -21289,7 +21369,7 @@
       "source_file": "docs/redesign.md",
       "source_location": "L156",
       "_origin": "ast",
-      "community": 104,
+      "community": 89,
       "norm_label": "why this phase, right after auth (not ops ui or admin)",
       "id": "docs_redesign_why_this_phase_right_after_auth_not_ops_ui_or_admin"
     },
@@ -21299,7 +21379,7 @@
       "source_file": "docs/redesign.md",
       "source_location": "L168",
       "_origin": "ast",
-      "community": 104,
+      "community": 89,
       "norm_label": "architecture",
       "id": "docs_redesign_architecture_168"
     },
@@ -21309,7 +21389,7 @@
       "source_file": "docs/redesign.md",
       "source_location": "L190",
       "_origin": "ast",
-      "community": 104,
+      "community": 89,
       "norm_label": "files (when built)",
       "id": "docs_redesign_files_when_built_190"
     },
@@ -21319,7 +21399,7 @@
       "source_file": "docs/redesign.md",
       "source_location": "L197",
       "_origin": "ast",
-      "community": 104,
+      "community": 89,
       "norm_label": "verification (when built)",
       "id": "docs_redesign_verification_when_built_197"
     },
@@ -21569,7 +21649,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 115,
+      "community": 93,
       "norm_label": "system-design-v2.md",
       "id": "docs_system_design_v2"
     },
@@ -21659,7 +21739,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L159",
       "_origin": "ast",
-      "community": 114,
+      "community": 276,
       "norm_label": "5. api boundary plan",
       "id": "docs_system_design_v2_5_api_boundary_plan"
     },
@@ -21669,7 +21749,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L164",
       "_origin": "ast",
-      "community": 114,
+      "community": 276,
       "norm_label": "public health and bootstrap",
       "id": "docs_system_design_v2_public_health_and_bootstrap"
     },
@@ -21679,7 +21759,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L170",
       "_origin": "ast",
-      "community": 114,
+      "community": 276,
       "norm_label": "gateway device api",
       "id": "docs_system_design_v2_gateway_device_api"
     },
@@ -21689,7 +21769,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L179",
       "_origin": "ast",
-      "community": 114,
+      "community": 276,
       "norm_label": "operations api",
       "id": "docs_system_design_v2_operations_api"
     },
@@ -21699,7 +21779,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L188",
       "_origin": "ast",
-      "community": 114,
+      "community": 276,
       "norm_label": "admin api",
       "id": "docs_system_design_v2_admin_api"
     },
@@ -21709,7 +21789,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L202",
       "_origin": "ast",
-      "community": 114,
+      "community": 276,
       "norm_label": "integration api",
       "id": "docs_system_design_v2_integration_api"
     },
@@ -21769,7 +21849,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L284",
       "_origin": "ast",
-      "community": 118,
+      "community": 276,
       "norm_label": "7. deployment model",
       "id": "docs_system_design_v2_7_deployment_model"
     },
@@ -21779,7 +21859,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L286",
       "_origin": "ast",
-      "community": 118,
+      "community": 276,
       "norm_label": "current acceptable deployment",
       "id": "docs_system_design_v2_current_acceptable_deployment"
     },
@@ -21789,7 +21869,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L292",
       "_origin": "ast",
-      "community": 118,
+      "community": 276,
       "norm_label": "target enterprise deployment",
       "id": "docs_system_design_v2_target_enterprise_deployment"
     },
@@ -21799,7 +21879,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L302",
       "_origin": "ast",
-      "community": 118,
+      "community": 276,
       "norm_label": "environments",
       "id": "docs_system_design_v2_environments"
     },
@@ -21809,7 +21889,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L318",
       "_origin": "ast",
-      "community": 116,
+      "community": 276,
       "norm_label": "8. security model",
       "id": "docs_system_design_v2_8_security_model"
     },
@@ -21819,7 +21899,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L320",
       "_origin": "ast",
-      "community": 116,
+      "community": 276,
       "norm_label": "identity and auth",
       "id": "docs_system_design_v2_identity_and_auth"
     },
@@ -21829,7 +21909,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L326",
       "_origin": "ast",
-      "community": 116,
+      "community": 276,
       "norm_label": "recommended security upgrades",
       "id": "docs_system_design_v2_recommended_security_upgrades"
     },
@@ -21839,7 +21919,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L335",
       "_origin": "ast",
-      "community": 116,
+      "community": 276,
       "norm_label": "secret handling",
       "id": "docs_system_design_v2_secret_handling"
     },
@@ -21849,7 +21929,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L342",
       "_origin": "ast",
-      "community": 116,
+      "community": 276,
       "norm_label": "audit model",
       "id": "docs_system_design_v2_audit_model"
     },
@@ -21899,7 +21979,7 @@
       "source_file": "docs/telegram-bridge.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 115,
+      "community": 93,
       "norm_label": "telegram-bridge.md",
       "id": "docs_telegram_bridge"
     },
@@ -22149,7 +22229,7 @@
       "source_file": "docs/ui-design-guide-v2.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 115,
+      "community": 93,
       "norm_label": "ui-design-guide-v2.md",
       "id": "docs_ui_design_guide_v2"
     },
@@ -23845,6 +23925,87 @@
     }
   ],
   "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/explain-recent-unmatched.js",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "scripts_explain_recent_unmatched",
+      "target": "scripts_explain_recent_unmatched_databasesync",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/explain-recent-unmatched.js",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "scripts_explain_recent_unmatched",
+      "target": "scripts_explain_recent_unmatched_db",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/explain-recent-unmatched.js",
+      "source_location": "L37",
+      "weight": 1.0,
+      "source": "scripts_explain_recent_unmatched",
+      "target": "scripts_explain_recent_unmatched_dispatchesbygateway",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/explain-recent-unmatched.js",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "scripts_explain_recent_unmatched",
+      "target": "scripts_explain_recent_unmatched_dispatchesfor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/explain-recent-unmatched.js",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "scripts_explain_recent_unmatched",
+      "target": "scripts_explain_recent_unmatched_now",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/explain-recent-unmatched.js",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "scripts_explain_recent_unmatched",
+      "target": "scripts_explain_recent_unmatched_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/explain-recent-unmatched.js",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "scripts_explain_recent_unmatched",
+      "target": "scripts_explain_recent_unmatched_rows",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "scripts/explain-recent-unmatched.js",
+      "source_location": "L40",
+      "weight": 1.0,
+      "source": "scripts_explain_recent_unmatched_dispatchesfor",
+      "target": "scripts_explain_recent_unmatched_databasesync"
+    },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
@@ -66958,5 +67119,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "673df1d53aa991e277376a66ef18f597cef9a90a"
+  "built_at_commit": "072203d6bdda15f547c8859d62e35d8eefefb6e1"
 }
