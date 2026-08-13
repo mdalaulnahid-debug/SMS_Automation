@@ -45,7 +45,7 @@
 const { DatabaseSync } = require('node:sqlite');
 const path = require('node:path');
 const { inferReplyFamilies, analyzeOperatorReply } = require('../src/replyAnalyzer');
-const { confidenceRank, replyTypeScore } = require('../src/service');
+const { confidenceRank, replyTypeScore, DEFAULT_REPLY_WINDOW_MS } = require('../src/service');
 
 const dbPath = process.env.SMS_DB_PATH || process.env.DB_PATH || path.join(__dirname, '..', 'data', 'automation.db');
 const db = new DatabaseSync(dbPath);
@@ -97,11 +97,15 @@ for (let i = 0; i < genuineLooking.length; i++) {
   const replyTime = new Date(row.received_at).getTime();
 
   // Cheap filter: only dispatches to this gateway sent before the reply
-  // arrived, AND still open (no reply recorded yet) at that moment. Plain
-  // date comparisons -- no regex, no training-data lookups.
+  // arrived, still within their reply window (DEFAULT_REPLY_WINDOW_MS --
+  // a request that already timed out is not a real candidate just
+  // because nothing ever set replied_at on it), AND not yet replied to
+  // at that moment. Plain date comparisons -- no regex, no training-data
+  // lookups.
   const openCandidates = dispatchesFor(row.gateway_id).filter((d) => {
     const sentAt = new Date(d.sent_at).getTime();
     if (sentAt > replyTime) return false;
+    if (sentAt + DEFAULT_REPLY_WINDOW_MS < replyTime) return false;
     if (!d.replied_at) return true;
     return new Date(d.replied_at).getTime() > replyTime;
   });

@@ -16,6 +16,7 @@
 
 const { DatabaseSync } = require('node:sqlite');
 const path = require('node:path');
+const { DEFAULT_REPLY_WINDOW_MS } = require('../src/service');
 
 const dbPath = process.env.SMS_DB_PATH || process.env.DB_PATH || path.join(__dirname, '..', 'data', 'automation.db');
 const db = new DatabaseSync(dbPath);
@@ -72,7 +73,12 @@ for (const row of rows) {
   }
 
   const nearest = candidates[candidates.length - 1];
+  // "Open" bounded by the real reply window (DEFAULT_REPLY_WINDOW_MS) --
+  // a dispatch that already timed out is not a real candidate just
+  // because nothing ever set replied_at on it.
   const openAtReplyTime = candidates.filter((d) => {
+    const sentAt = new Date(d.sent_at).getTime();
+    if (sentAt + DEFAULT_REPLY_WINDOW_MS < replyTime) return false;
     if (!d.replied_at) return true;
     return new Date(d.replied_at).getTime() > replyTime;
   });

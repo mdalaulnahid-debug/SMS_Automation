@@ -29,7 +29,7 @@ const path = require('node:path');
 const { DatabaseSync } = require('node:sqlite');
 const { AutomationStore } = require('../src/store');
 const { inferReplyFamilies, analyzeOperatorReply } = require('../src/replyAnalyzer');
-const { confidenceRank, replyTypeScore } = require('../src/service');
+const { confidenceRank, replyTypeScore, DEFAULT_REPLY_WINDOW_MS } = require('../src/service');
 
 const dbPath = process.env.DB_PATH || path.join(__dirname, '..', 'data', 'automation.db');
 const apply = process.argv.includes('--apply');
@@ -75,9 +75,13 @@ const identifyStartedAt = Date.now();
 for (let i = 0; i < genuineLooking.length; i++) {
   const row = genuineLooking[i];
   const replyTime = new Date(row.received_at).getTime();
+  // "Open" bounded by the real reply window (DEFAULT_REPLY_WINDOW_MS) --
+  // a dispatch that already timed out is not a real candidate just
+  // because nothing ever set replied_at on it.
   const openCandidates = dispatchesFor(row.gateway_id).filter((d) => {
     const sentAt = new Date(d.sent_at).getTime();
     if (sentAt > replyTime) return false;
+    if (sentAt + DEFAULT_REPLY_WINDOW_MS < replyTime) return false;
     if (!d.replied_at) return true;
     return new Date(d.replied_at).getTime() > replyTime;
   });

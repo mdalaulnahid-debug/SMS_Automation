@@ -18,6 +18,7 @@
 const { DatabaseSync } = require('node:sqlite');
 const path = require('node:path');
 const { inferReplyFamilies } = require('../src/replyAnalyzer');
+const { DEFAULT_REPLY_WINDOW_MS } = require('../src/service');
 
 const dbPath = process.env.SMS_DB_PATH || path.join(__dirname, '..', 'data', 'automation.db');
 const db = new DatabaseSync(dbPath);
@@ -70,7 +71,16 @@ for (const row of genuineLooking) {
   const latency = replyTime - new Date(nearest.sent_at).getTime();
   latenciesMs.push(latency);
 
+  // "Open" means: dispatched, not yet replied to, AND still within its
+  // reply window (a request that timed out days ago is not a real
+  // candidate just because nothing ever set replied_at on it -- the live
+  // matcher only ever considers a request "open" while its actual
+  // WAITING_OPERATOR_REPLY window (DEFAULT_REPLY_WINDOW_MS) is still
+  // running; this mirrors that instead of treating "never replied" as
+  // "open forever").
   const openAtReplyTime = candidates.filter((d) => {
+    const sentAt = new Date(d.sent_at).getTime();
+    if (sentAt + DEFAULT_REPLY_WINDOW_MS < replyTime) return false;
     if (!d.replied_at) return true;
     return new Date(d.replied_at).getTime() > replyTime;
   });
