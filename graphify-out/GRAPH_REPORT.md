@@ -1,7 +1,7 @@
 # Graph Report - SMS_Automation  (2026-08-13)
 
 ## Corpus Check
-- 229 files · ~434,544 words
+- 229 files · ~434,804 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `31d51752`
+- Built from commit: `67109db5`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
