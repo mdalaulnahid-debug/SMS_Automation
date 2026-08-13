@@ -4,10 +4,10 @@
 // DRY RUN ONLY — reports what the now-fixed matching logic (2026-08-02
 // patternMatched fix) would resolve against the existing unmatched backlog.
 // Writes NOTHING to the database. Reuses the exact same scoring the live
-// auto-matcher/rankReplyCandidates() uses (analyzeOperatorReply +
-// replyTypeScore + confidenceRank, imported from src/service.js) — so this
-// can't drift from what the live system actually considers a match; it's
-// just applying that same signal in bulk instead of one row at a time.
+// auto-matcher uses (analyzeOperatorReply + replyTypeScore + confidenceRank,
+// imported straight from src/) — so this can't drift from what the live
+// system actually considers a match; it's just applying that same signal in
+// bulk instead of one row at a time by hand.
 //
 // Deliberately does NOT auto-apply anything: many of these requests are
 // long since COMPLETED/TIMEOUT/FAILED, and blindly re-attaching a reply
@@ -16,101 +16,69 @@
 // real-world decision, not something to automate. This script's only job
 // is to tell you how big that decision actually is.
 //
-// PERFORMANCE HISTORY (2026-08-02):
-//   v1 called AutomationService.rankReplyCandidates() in a loop, once per
-//   unmatched row. That method re-sorts the ENTIRE request table
-//   (O(R log R)) and does an O(S) linear scan of the full outbox for every
-//   candidate it considers — crashed the VPS (1 vCPU/1GB) on ~8,500 rows.
-//   v2 indexed requests by gateway once up front, but still re-parsed each
-//   candidate's createdAt timestamp with `new Date(...).getTime()` on every
-//   single row x candidate comparison, and scanned a gateway's ENTIRE
-//   history for every row instead of stopping once past the lookback
-//   window — with months of accumulated data this was still tens/hundreds
-//   of millions of Date parses and likely still resource-heavy enough to
-//   hang or crash the box.
-//   v3 (this version): precomputes each request's createdAt as a plain
-//   number ONCE, and sorts each gateway's candidate list once by that
-//   number (descending, matching store.listRequests() order) so the
-//   per-row scan can BREAK as soon as it passes the lookback cutoff
-//   instead of scanning the gateway's full history every time. Also logs
-//   progress every 500 rows so a slow run is visible instead of silent.
+// PERFORMANCE HISTORY:
+//   v1-v3 all scored EVERY candidate request within a fixed lookback
+//   window (e.g. 30 days before the reply) using the full, expensive
+//   analyzeOperatorReply() -- regex pattern matching plus a training-data
+//   scan per candidate. That's fine for *current* traffic, where most of a
+//   gateway's history sits outside the window and gets skipped cheaply.
+//   It's catastrophic for OLD backlog rows: this system's data only goes
+//   back to when it launched, so "30 days before a June row" covers almost
+//   the entire dataset -- nearly every request ever dispatched to that
+//   gateway got the full expensive scoring treatment, for every one of
+//   thousands of unmatched rows. Confirmed live: 83% CPU for 29+ minutes
+//   with zero progress on the very first 500-row checkpoint.
+//
+//   v4 (this version) takes the same approach correlate-unmatched.js
+//   already uses successfully against this exact dataset: first cheaply
+//   narrow candidates down to only requests actually still OPEN (dispatched
+//   before the reply arrived, not yet replied to) at the moment the reply
+//   showed up -- plain date comparisons against request_dispatches, no
+//   regex or training-data work at all. Only THAT small set (typically 1-3
+//   requests, never a gateway's entire history) gets the expensive real
+//   scoring. This mirrors what correlate-unmatched.js already found: 86%
+//   of the backlog has 2 open candidates at once, not hundreds.
 //
 // Run on the server:
 //   node scripts/reprocess-unmatched-dryrun.js
 
+const { DatabaseSync } = require('node:sqlite');
 const path = require('node:path');
-const { AutomationStore } = require('../src/store');
 const { inferReplyFamilies, analyzeOperatorReply } = require('../src/replyAnalyzer');
 const { confidenceRank, replyTypeScore } = require('../src/service');
 
-const dbPath = process.env.DB_PATH || path.join(__dirname, '..', 'data', 'automation.db');
-const store = new AutomationStore({}, { dbPath });
+const dbPath = process.env.SMS_DB_PATH || process.env.DB_PATH || path.join(__dirname, '..', 'data', 'automation.db');
+const db = new DatabaseSync(dbPath);
 
-const unmatched = store.smsInbox.filter((row) => !row.matchedRequestId);
+const unmatched = db.prepare(`
+  SELECT id, gateway_id, message_body, received_at
+  FROM sms_inbox WHERE matched_request_id IS NULL
+`).all();
+
 const genuineLooking = unmatched.filter(
-  (row) => inferReplyFamilies(row.messageBody || '', store.operatorForGateway(row.gatewayId) || '').strongTypes.length > 0
+  (row) => inferReplyFamilies(row.message_body || '', '').strongTypes.length > 0
 );
 
 console.log(`Unmatched total: ${unmatched.length}`);
 console.log(`Looks like a genuine reply (worth checking): ${genuineLooking.length}\n`);
 
-// Build once: requestId -> request, requestId -> createdAt as a plain
-// number (parsed exactly once, never re-parsed per comparison), and
-// gatewayId -> requestIds sorted newest-first so per-row scans can break
-// early instead of walking a gateway's entire history every time.
-const requestsById = new Map();
-const createdAtMsById = new Map();
-for (const request of store.listRequests()) {
-  requestsById.set(request.requestId, request);
-  createdAtMsById.set(request.requestId, new Date(request.createdAt).getTime());
-}
-
-const gatewayToRequestIds = new Map();
-for (const row of store.smsOutbox) {
-  if (row.sentStatus === 'FAILED') continue;
-  if (!requestsById.has(row.requestId)) continue;
-  if (!gatewayToRequestIds.has(row.gatewayId)) gatewayToRequestIds.set(row.gatewayId, new Set());
-  gatewayToRequestIds.get(row.gatewayId).add(row.requestId);
-}
-for (const [gatewayId, idSet] of gatewayToRequestIds) {
-  const sorted = [...idSet].sort((a, b) => createdAtMsById.get(b) - createdAtMsById.get(a));
-  gatewayToRequestIds.set(gatewayId, sorted);
-}
-
-const LOOKBACK_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
-
-function rankCandidates(row) {
-  const operatorKey = store.operatorForGateway(row.gatewayId);
-  const inferredReplyFamilies = inferReplyFamilies(row.messageBody, operatorKey || '');
-  const cutoff = new Date(row.receivedAt).getTime() - LOOKBACK_MS;
-  const requestIds = gatewayToRequestIds.get(row.gatewayId);
-  if (!requestIds || requestIds.length === 0) return [];
-
-  const ranked = [];
-  for (const requestId of requestIds) {
-    const createdAtMs = createdAtMsById.get(requestId);
-    if (createdAtMs < cutoff) break; // sorted newest-first: nothing further can qualify
-
-    const request = requestsById.get(requestId);
-    const analysis = analyzeOperatorReply({ request, messageBody: row.messageBody });
-    const typeScore = replyTypeScore(request, inferredReplyFamilies);
-    const score = (typeScore * 100)
-      + (confidenceRank(analysis.confidence) * 10)
-      + (analysis.payloadMatchCount || 0) * 5
-      + (analysis.trainingMatch?.score || 0);
-    ranked.push({
-      requestId: request.requestId,
-      requestType: request.requestType,
-      status: request.status,
-      createdAt: request.createdAt,
-      score,
-      typeScore,
-      confidence: analysis.confidence
-    });
+// One SQL fetch per gateway (there are only ever a handful of gateways
+// total), same dispatchesFor() pattern already proven fast by
+// correlate-unmatched.js against this exact dataset.
+const dispatchesByGateway = new Map();
+function dispatchesFor(gatewayId) {
+  if (!dispatchesByGateway.has(gatewayId)) {
+    const rows = db.prepare(`
+      SELECT rd.request_id, rd.sent_at, rd.replied_at,
+             r.status, r.request_type, r.payload, r.operator, r.created_at
+      FROM request_dispatches rd
+      JOIN requests r ON r.request_id = rd.request_id
+      WHERE rd.gateway_id = ? AND rd.sent_at IS NOT NULL
+      ORDER BY rd.sent_at
+    `).all(gatewayId);
+    dispatchesByGateway.set(gatewayId, rows);
   }
-
-  ranked.sort((a, b) => b.score - a.score || createdAtMsById.get(b.requestId) - createdAtMsById.get(a.requestId));
-  return ranked;
+  return dispatchesByGateway.get(gatewayId);
 }
 
 const resolvable = [];
@@ -120,27 +88,65 @@ const stillAmbiguous = [];
 const startedAt = Date.now();
 for (let i = 0; i < genuineLooking.length; i++) {
   const row = genuineLooking[i];
-  const ranked = rankCandidates(row);
-  if (!ranked.length) {
+  const replyTime = new Date(row.received_at).getTime();
+
+  // Cheap filter: only dispatches to this gateway sent before the reply
+  // arrived, AND still open (no reply recorded yet) at that moment. Plain
+  // date comparisons -- no regex, no training-data lookups.
+  const openCandidates = dispatchesFor(row.gateway_id).filter((d) => {
+    const sentAt = new Date(d.sent_at).getTime();
+    if (sentAt > replyTime) return false;
+    if (!d.replied_at) return true;
+    return new Date(d.replied_at).getTime() > replyTime;
+  });
+
+  if (!openCandidates.length) {
     noCandidate.push(row);
-  } else {
-    const [top, second] = ranked;
-    const confident = top.score > 0 && top.typeScore >= 0 && top.confidence !== 'UNKNOWN' && (!second || top.score > second.score);
-    if (confident) {
-      resolvable.push({ row, top });
-    } else {
-      stillAmbiguous.push(row);
+    if ((i + 1) % 500 === 0 || i === genuineLooking.length - 1) {
+      console.log(`  ...processed ${i + 1}/${genuineLooking.length} (${((Date.now() - startedAt) / 1000).toFixed(1)}s elapsed)`);
     }
+    continue;
+  }
+
+  // Only now run the real, expensive scoring -- and only on this small
+  // pre-filtered set, never the gateway's entire request history.
+  const operatorKey = openCandidates[0].operator;
+  const inferredReplyFamilies = inferReplyFamilies(row.message_body, operatorKey);
+  const ranked = openCandidates
+    .map((d) => {
+      const request = {
+        requestId: d.request_id,
+        requestType: d.request_type,
+        payload: d.payload,
+        operator: d.operator,
+        status: d.status,
+        createdAt: d.created_at
+      };
+      const analysis = analyzeOperatorReply({ request, messageBody: row.message_body });
+      const typeScore = replyTypeScore(request, inferredReplyFamilies);
+      const score = (typeScore * 100)
+        + (confidenceRank(analysis.confidence) * 10)
+        + (analysis.payloadMatchCount || 0) * 5
+        + (analysis.trainingMatch?.score || 0);
+      return { requestId: d.request_id, requestType: d.request_type, status: d.status, createdAt: d.created_at, score, typeScore, confidence: analysis.confidence };
+    })
+    .sort((a, b) => b.score - a.score || new Date(b.createdAt) - new Date(a.createdAt));
+
+  const [top, second] = ranked;
+  const confident = top.score > 0 && top.typeScore >= 0 && top.confidence !== 'UNKNOWN' && (!second || top.score > second.score);
+  if (confident) {
+    resolvable.push({ row, top });
+  } else {
+    stillAmbiguous.push(row);
   }
 
   if ((i + 1) % 500 === 0 || i === genuineLooking.length - 1) {
-    const elapsedSec = ((Date.now() - startedAt) / 1000).toFixed(1);
-    console.log(`  ...processed ${i + 1}/${genuineLooking.length} (${elapsedSec}s elapsed)`);
+    console.log(`  ...processed ${i + 1}/${genuineLooking.length} (${((Date.now() - startedAt) / 1000).toFixed(1)}s elapsed)`);
   }
 }
 
 console.log(`\nWould now resolve to a single confident candidate: ${resolvable.length}`);
-console.log(`No candidate request found at all (even with 30-day lookback): ${noCandidate.length}`);
+console.log(`No candidate request found at all (nothing open on that gateway when the reply arrived): ${noCandidate.length}`);
 console.log(`Still ambiguous / not confident even with the fix: ${stillAmbiguous.length}\n`);
 
 console.log('--- Resolvable, by target request\'s CURRENT status ---');
@@ -155,6 +161,6 @@ console.log('   WAITING_OPERATOR_REPLY / NEEDS_MANUAL_REVIEW means it may still 
 
 console.log('\n--- 8 samples of resolvable matches ---');
 for (const { row, top } of resolvable.slice(0, 8)) {
-  console.log(`  inbox ${row.id} [${row.gatewayId}] ${row.receivedAt} -> request ${top.requestId} (${top.requestType}, ${top.status}, confidence=${top.confidence}, score=${top.score})`);
-  console.log(`    ${(row.messageBody || '').slice(0, 80).replace(/\n/g, ' \\n ')}`);
+  console.log(`  inbox ${row.id} [${row.gateway_id}] ${row.received_at} -> request ${top.requestId} (${top.requestType}, ${top.status}, confidence=${top.confidence}, score=${top.score})`);
+  console.log(`    ${(row.message_body || '').slice(0, 80).replace(/\n/g, ' \\n ')}`);
 }
