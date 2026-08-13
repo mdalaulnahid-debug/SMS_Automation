@@ -4,14 +4,104 @@
   "graph": {},
   "nodes": [
     {
+      "label": "check-sms-truncation.js",
+      "file_type": "code",
+      "source_file": "scripts/check-sms-truncation.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "scripts_check_sms_truncation",
+      "community": 100,
+      "norm_label": "check-sms-truncation.js"
+    },
+    {
+      "label": "{ DatabaseSync }",
+      "file_type": "code",
+      "source_file": "scripts/check-sms-truncation.js",
+      "source_location": "L30",
+      "_origin": "ast",
+      "id": "scripts_check_sms_truncation_databasesync",
+      "community": 100,
+      "norm_label": "{ databasesync }"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "scripts/check-sms-truncation.js",
+      "source_location": "L31",
+      "_origin": "ast",
+      "id": "scripts_check_sms_truncation_path",
+      "community": 100,
+      "norm_label": "path"
+    },
+    {
+      "label": "db",
+      "file_type": "code",
+      "source_file": "scripts/check-sms-truncation.js",
+      "source_location": "L34",
+      "_origin": "ast",
+      "id": "scripts_check_sms_truncation_db",
+      "community": 100,
+      "norm_label": "db"
+    },
+    {
+      "label": "all",
+      "file_type": "code",
+      "source_file": "scripts/check-sms-truncation.js",
+      "source_location": "L42",
+      "_origin": "ast",
+      "id": "scripts_check_sms_truncation_all",
+      "community": 100,
+      "norm_label": "all"
+    },
+    {
+      "label": "candidates",
+      "file_type": "code",
+      "source_file": "scripts/check-sms-truncation.js",
+      "source_location": "L48",
+      "_origin": "ast",
+      "id": "scripts_check_sms_truncation_candidates",
+      "community": 100,
+      "norm_label": "candidates"
+    },
+    {
+      "label": "bySenderGateway",
+      "file_type": "code",
+      "source_file": "scripts/check-sms-truncation.js",
+      "source_location": "L62",
+      "_origin": "ast",
+      "id": "scripts_check_sms_truncation_bysendergateway",
+      "community": 100,
+      "norm_label": "bysendergateway"
+    },
+    {
+      "label": "followupExamples",
+      "file_type": "code",
+      "source_file": "scripts/check-sms-truncation.js",
+      "source_location": "L73",
+      "_origin": "ast",
+      "id": "scripts_check_sms_truncation_followupexamples",
+      "community": 100,
+      "norm_label": "followupexamples"
+    },
+    {
+      "label": "noFollowupExamples",
+      "file_type": "code",
+      "source_file": "scripts/check-sms-truncation.js",
+      "source_location": "L74",
+      "_origin": "ast",
+      "id": "scripts_check_sms_truncation_nofollowupexamples",
+      "community": 100,
+      "norm_label": "nofollowupexamples"
+    },
+    {
       "label": "apply-historical-corrections.js",
       "file_type": "code",
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "scripts_apply_historical_corrections",
       "community": 27,
-      "norm_label": "apply-historical-corrections.js"
+      "norm_label": "apply-historical-corrections.js",
+      "id": "scripts_apply_historical_corrections"
     },
     {
       "label": "path",
@@ -19,9 +109,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L28",
       "_origin": "ast",
-      "id": "scripts_apply_historical_corrections_path",
       "community": 27,
-      "norm_label": "path"
+      "norm_label": "path",
+      "id": "scripts_apply_historical_corrections_path"
     },
     {
       "label": "{ DatabaseSync }",
@@ -29,9 +119,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L29",
       "_origin": "ast",
-      "id": "scripts_apply_historical_corrections_databasesync",
       "community": 27,
-      "norm_label": "{ databasesync }"
+      "norm_label": "{ databasesync }",
+      "id": "scripts_apply_historical_corrections_databasesync"
     },
     {
       "label": "{ AutomationStore }",
@@ -39,9 +129,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L30",
       "_origin": "ast",
-      "id": "scripts_apply_historical_corrections_automationstore",
       "community": 27,
-      "norm_label": "{ automationstore }"
+      "norm_label": "{ automationstore }",
+      "id": "scripts_apply_historical_corrections_automationstore"
     },
     {
       "label": "{ inferReplyFamilies, analyzeOperatorReply }",
@@ -49,9 +139,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L31",
       "_origin": "ast",
-      "id": "scripts_apply_historical_corrections_inferreplyfamilies_analyzeoperatorreply",
       "community": 27,
-      "norm_label": "{ inferreplyfamilies, analyzeoperatorreply }"
+      "norm_label": "{ inferreplyfamilies, analyzeoperatorreply }",
+      "id": "scripts_apply_historical_corrections_inferreplyfamilies_analyzeoperatorreply"
     },
     {
       "label": "{ confidenceRank, replyTypeScore }",
@@ -59,9 +149,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L32",
       "_origin": "ast",
-      "id": "scripts_apply_historical_corrections_confidencerank_replytypescore",
       "community": 27,
-      "norm_label": "{ confidencerank, replytypescore }"
+      "norm_label": "{ confidencerank, replytypescore }",
+      "id": "scripts_apply_historical_corrections_confidencerank_replytypescore"
     },
     {
       "label": "apply",
@@ -69,9 +159,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L35",
       "_origin": "ast",
-      "id": "scripts_apply_historical_corrections_apply",
       "community": 27,
-      "norm_label": "apply"
+      "norm_label": "apply",
+      "id": "scripts_apply_historical_corrections_apply"
     },
     {
       "label": "db",
@@ -79,9 +169,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L38",
       "_origin": "ast",
-      "id": "scripts_apply_historical_corrections_db",
       "community": 27,
-      "norm_label": "db"
+      "norm_label": "db",
+      "id": "scripts_apply_historical_corrections_db"
     },
     {
       "label": "unmatched",
@@ -89,9 +179,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L43",
       "_origin": "ast",
-      "id": "scripts_apply_historical_corrections_unmatched",
       "community": 27,
-      "norm_label": "unmatched"
+      "norm_label": "unmatched",
+      "id": "scripts_apply_historical_corrections_unmatched"
     },
     {
       "label": "genuineLooking",
@@ -99,9 +189,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L49",
       "_origin": "ast",
-      "id": "scripts_apply_historical_corrections_genuinelooking",
       "community": 27,
-      "norm_label": "genuinelooking"
+      "norm_label": "genuinelooking",
+      "id": "scripts_apply_historical_corrections_genuinelooking"
     },
     {
       "label": "dispatchesByGateway",
@@ -109,9 +199,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L51",
       "_origin": "ast",
-      "id": "scripts_apply_historical_corrections_dispatchesbygateway",
       "community": 27,
-      "norm_label": "dispatchesbygateway"
+      "norm_label": "dispatchesbygateway",
+      "id": "scripts_apply_historical_corrections_dispatchesbygateway"
     },
     {
       "label": "dispatchesFor()",
@@ -119,9 +209,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L52",
       "_origin": "ast",
-      "id": "scripts_apply_historical_corrections_dispatchesfor",
       "community": 27,
-      "norm_label": "dispatchesfor()"
+      "norm_label": "dispatchesfor()",
+      "id": "scripts_apply_historical_corrections_dispatchesfor"
     },
     {
       "label": "LIVE_STATUSES",
@@ -129,9 +219,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L66",
       "_origin": "ast",
-      "id": "scripts_apply_historical_corrections_live_statuses",
       "community": 27,
-      "norm_label": "live_statuses"
+      "norm_label": "live_statuses",
+      "id": "scripts_apply_historical_corrections_live_statuses"
     },
     {
       "label": "toApply",
@@ -139,9 +229,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L67",
       "_origin": "ast",
-      "id": "scripts_apply_historical_corrections_toapply",
       "community": 27,
-      "norm_label": "toapply"
+      "norm_label": "toapply",
+      "id": "scripts_apply_historical_corrections_toapply"
     },
     {
       "label": "identifyStartedAt",
@@ -149,9 +239,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L73",
       "_origin": "ast",
-      "id": "scripts_apply_historical_corrections_identifystartedat",
       "community": 27,
-      "norm_label": "identifystartedat"
+      "norm_label": "identifystartedat",
+      "id": "scripts_apply_historical_corrections_identifystartedat"
     },
     {
       "label": "byStatus",
@@ -159,9 +249,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L121",
       "_origin": "ast",
-      "id": "scripts_apply_historical_corrections_bystatus",
       "community": 27,
-      "norm_label": "bystatus"
+      "norm_label": "bystatus",
+      "id": "scripts_apply_historical_corrections_bystatus"
     },
     {
       "label": "store",
@@ -169,9 +259,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L139",
       "_origin": "ast",
-      "id": "scripts_apply_historical_corrections_store",
       "community": 27,
-      "norm_label": "store"
+      "norm_label": "store",
+      "id": "scripts_apply_historical_corrections_store"
     },
     {
       "label": "inboxById",
@@ -179,9 +269,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L140",
       "_origin": "ast",
-      "id": "scripts_apply_historical_corrections_inboxbyid",
       "community": 27,
-      "norm_label": "inboxbyid"
+      "norm_label": "inboxbyid",
+      "id": "scripts_apply_historical_corrections_inboxbyid"
     },
     {
       "label": "applyStartedAt",
@@ -189,9 +279,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L143",
       "_origin": "ast",
-      "id": "scripts_apply_historical_corrections_applystartedat",
       "community": 27,
-      "norm_label": "applystartedat"
+      "norm_label": "applystartedat",
+      "id": "scripts_apply_historical_corrections_applystartedat"
     },
     {
       "label": "classify-unmatched.js",
@@ -199,9 +289,9 @@
       "source_file": "scripts/classify-unmatched.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "scripts_classify_unmatched",
       "community": 90,
-      "norm_label": "classify-unmatched.js"
+      "norm_label": "classify-unmatched.js",
+      "id": "scripts_classify_unmatched"
     },
     {
       "label": "{ DatabaseSync }",
@@ -209,9 +299,9 @@
       "source_file": "scripts/classify-unmatched.js",
       "source_location": "L16",
       "_origin": "ast",
-      "id": "scripts_classify_unmatched_databasesync",
       "community": 90,
-      "norm_label": "{ databasesync }"
+      "norm_label": "{ databasesync }",
+      "id": "scripts_classify_unmatched_databasesync"
     },
     {
       "label": "path",
@@ -219,9 +309,9 @@
       "source_file": "scripts/classify-unmatched.js",
       "source_location": "L17",
       "_origin": "ast",
-      "id": "scripts_classify_unmatched_path",
       "community": 90,
-      "norm_label": "path"
+      "norm_label": "path",
+      "id": "scripts_classify_unmatched_path"
     },
     {
       "label": "{ inferReplyFamilies }",
@@ -229,9 +319,9 @@
       "source_file": "scripts/classify-unmatched.js",
       "source_location": "L18",
       "_origin": "ast",
-      "id": "scripts_classify_unmatched_inferreplyfamilies",
       "community": 90,
-      "norm_label": "{ inferreplyfamilies }"
+      "norm_label": "{ inferreplyfamilies }",
+      "id": "scripts_classify_unmatched_inferreplyfamilies"
     },
     {
       "label": "db",
@@ -239,9 +329,9 @@
       "source_file": "scripts/classify-unmatched.js",
       "source_location": "L21",
       "_origin": "ast",
-      "id": "scripts_classify_unmatched_db",
       "community": 90,
-      "norm_label": "db"
+      "norm_label": "db",
+      "id": "scripts_classify_unmatched_db"
     },
     {
       "label": "rows",
@@ -249,9 +339,9 @@
       "source_file": "scripts/classify-unmatched.js",
       "source_location": "L32",
       "_origin": "ast",
-      "id": "scripts_classify_unmatched_rows",
       "community": 90,
-      "norm_label": "rows"
+      "norm_label": "rows",
+      "id": "scripts_classify_unmatched_rows"
     },
     {
       "label": "JUNK_MARKERS",
@@ -259,9 +349,9 @@
       "source_file": "scripts/classify-unmatched.js",
       "source_location": "L39",
       "_origin": "ast",
-      "id": "scripts_classify_unmatched_junk_markers",
       "community": 90,
-      "norm_label": "junk_markers"
+      "norm_label": "junk_markers",
+      "id": "scripts_classify_unmatched_junk_markers"
     },
     {
       "label": "buckets",
@@ -269,9 +359,9 @@
       "source_file": "scripts/classify-unmatched.js",
       "source_location": "L41",
       "_origin": "ast",
-      "id": "scripts_classify_unmatched_buckets",
       "community": 90,
-      "norm_label": "buckets"
+      "norm_label": "buckets",
+      "id": "scripts_classify_unmatched_buckets"
     },
     {
       "label": "pct()",
@@ -279,9 +369,9 @@
       "source_file": "scripts/classify-unmatched.js",
       "source_location": "L58",
       "_origin": "ast",
-      "id": "scripts_classify_unmatched_pct",
       "community": 90,
-      "norm_label": "pct()"
+      "norm_label": "pct()",
+      "id": "scripts_classify_unmatched_pct"
     },
     {
       "label": "byType",
@@ -289,9 +379,9 @@
       "source_file": "scripts/classify-unmatched.js",
       "source_location": "L68",
       "_origin": "ast",
-      "id": "scripts_classify_unmatched_bytype",
       "community": 90,
-      "norm_label": "bytype"
+      "norm_label": "bytype",
+      "id": "scripts_classify_unmatched_bytype"
     },
     {
       "label": "correlate-unmatched.js",
@@ -299,9 +389,9 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "scripts_correlate_unmatched",
       "community": 78,
-      "norm_label": "correlate-unmatched.js"
+      "norm_label": "correlate-unmatched.js",
+      "id": "scripts_correlate_unmatched"
     },
     {
       "label": "{ DatabaseSync }",
@@ -309,9 +399,9 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L18",
       "_origin": "ast",
-      "id": "scripts_correlate_unmatched_databasesync",
       "community": 78,
-      "norm_label": "{ databasesync }"
+      "norm_label": "{ databasesync }",
+      "id": "scripts_correlate_unmatched_databasesync"
     },
     {
       "label": "path",
@@ -319,9 +409,9 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L19",
       "_origin": "ast",
-      "id": "scripts_correlate_unmatched_path",
       "community": 78,
-      "norm_label": "path"
+      "norm_label": "path",
+      "id": "scripts_correlate_unmatched_path"
     },
     {
       "label": "{ inferReplyFamilies }",
@@ -329,9 +419,9 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L20",
       "_origin": "ast",
-      "id": "scripts_correlate_unmatched_inferreplyfamilies",
       "community": 78,
-      "norm_label": "{ inferreplyfamilies }"
+      "norm_label": "{ inferreplyfamilies }",
+      "id": "scripts_correlate_unmatched_inferreplyfamilies"
     },
     {
       "label": "db",
@@ -339,9 +429,9 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L23",
       "_origin": "ast",
-      "id": "scripts_correlate_unmatched_db",
       "community": 78,
-      "norm_label": "db"
+      "norm_label": "db",
+      "id": "scripts_correlate_unmatched_db"
     },
     {
       "label": "unmatched",
@@ -349,9 +439,9 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L29",
       "_origin": "ast",
-      "id": "scripts_correlate_unmatched_unmatched",
       "community": 78,
-      "norm_label": "unmatched"
+      "norm_label": "unmatched",
+      "id": "scripts_correlate_unmatched_unmatched"
     },
     {
       "label": "genuineLooking",
@@ -359,9 +449,9 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L36",
       "_origin": "ast",
-      "id": "scripts_correlate_unmatched_genuinelooking",
       "community": 78,
-      "norm_label": "genuinelooking"
+      "norm_label": "genuinelooking",
+      "id": "scripts_correlate_unmatched_genuinelooking"
     },
     {
       "label": "dispatchesByGateway",
@@ -369,9 +459,9 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L40",
       "_origin": "ast",
-      "id": "scripts_correlate_unmatched_dispatchesbygateway",
       "community": 78,
-      "norm_label": "dispatchesbygateway"
+      "norm_label": "dispatchesbygateway",
+      "id": "scripts_correlate_unmatched_dispatchesbygateway"
     },
     {
       "label": "dispatchesFor()",
@@ -379,9 +469,9 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L41",
       "_origin": "ast",
-      "id": "scripts_correlate_unmatched_dispatchesfor",
       "community": 78,
-      "norm_label": "dispatchesfor()"
+      "norm_label": "dispatchesfor()",
+      "id": "scripts_correlate_unmatched_dispatchesfor"
     },
     {
       "label": "buckets",
@@ -389,9 +479,9 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L55",
       "_origin": "ast",
-      "id": "scripts_correlate_unmatched_buckets",
       "community": 78,
-      "norm_label": "buckets"
+      "norm_label": "buckets",
+      "id": "scripts_correlate_unmatched_buckets"
     },
     {
       "label": "examples",
@@ -399,9 +489,9 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L56",
       "_origin": "ast",
-      "id": "scripts_correlate_unmatched_examples",
       "community": 78,
-      "norm_label": "examples"
+      "norm_label": "examples",
+      "id": "scripts_correlate_unmatched_examples"
     },
     {
       "label": "latenciesMs",
@@ -409,9 +499,9 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L57",
       "_origin": "ast",
-      "id": "scripts_correlate_unmatched_latenciesms",
       "community": 78,
-      "norm_label": "latenciesms"
+      "norm_label": "latenciesms",
+      "id": "scripts_correlate_unmatched_latenciesms"
     },
     {
       "label": "diagnose-unmatched.js",
@@ -419,9 +509,9 @@
       "source_file": "scripts/diagnose-unmatched.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "scripts_diagnose_unmatched",
       "community": 101,
-      "norm_label": "diagnose-unmatched.js"
+      "norm_label": "diagnose-unmatched.js",
+      "id": "scripts_diagnose_unmatched"
     },
     {
       "label": "{ DatabaseSync }",
@@ -429,9 +519,9 @@
       "source_file": "scripts/diagnose-unmatched.js",
       "source_location": "L10",
       "_origin": "ast",
-      "id": "scripts_diagnose_unmatched_databasesync",
       "community": 101,
-      "norm_label": "{ databasesync }"
+      "norm_label": "{ databasesync }",
+      "id": "scripts_diagnose_unmatched_databasesync"
     },
     {
       "label": "path",
@@ -439,9 +529,9 @@
       "source_file": "scripts/diagnose-unmatched.js",
       "source_location": "L11",
       "_origin": "ast",
-      "id": "scripts_diagnose_unmatched_path",
       "community": 101,
-      "norm_label": "path"
+      "norm_label": "path",
+      "id": "scripts_diagnose_unmatched_path"
     },
     {
       "label": "db",
@@ -449,9 +539,9 @@
       "source_file": "scripts/diagnose-unmatched.js",
       "source_location": "L14",
       "_origin": "ast",
-      "id": "scripts_diagnose_unmatched_db",
       "community": 101,
-      "norm_label": "db"
+      "norm_label": "db",
+      "id": "scripts_diagnose_unmatched_db"
     },
     {
       "label": "range",
@@ -459,9 +549,9 @@
       "source_file": "scripts/diagnose-unmatched.js",
       "source_location": "L25",
       "_origin": "ast",
-      "id": "scripts_diagnose_unmatched_range",
       "community": 101,
-      "norm_label": "range"
+      "norm_label": "range",
+      "id": "scripts_diagnose_unmatched_range"
     },
     {
       "label": "byGateway",
@@ -469,9 +559,9 @@
       "source_file": "scripts/diagnose-unmatched.js",
       "source_location": "L32",
       "_origin": "ast",
-      "id": "scripts_diagnose_unmatched_bygateway",
       "community": 101,
-      "norm_label": "bygateway"
+      "norm_label": "bygateway",
+      "id": "scripts_diagnose_unmatched_bygateway"
     },
     {
       "label": "byMonth",
@@ -479,9 +569,9 @@
       "source_file": "scripts/diagnose-unmatched.js",
       "source_location": "L40",
       "_origin": "ast",
-      "id": "scripts_diagnose_unmatched_bymonth",
       "community": 101,
-      "norm_label": "bymonth"
+      "norm_label": "bymonth",
+      "id": "scripts_diagnose_unmatched_bymonth"
     },
     {
       "label": "sample",
@@ -489,9 +579,9 @@
       "source_file": "scripts/diagnose-unmatched.js",
       "source_location": "L59",
       "_origin": "ast",
-      "id": "scripts_diagnose_unmatched_sample",
       "community": 101,
-      "norm_label": "sample"
+      "norm_label": "sample",
+      "id": "scripts_diagnose_unmatched_sample"
     },
     {
       "label": "reprocess-unmatched-dryrun.js",
@@ -499,9 +589,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "scripts_reprocess_unmatched_dryrun",
       "community": 25,
-      "norm_label": "reprocess-unmatched-dryrun.js"
+      "norm_label": "reprocess-unmatched-dryrun.js",
+      "id": "scripts_reprocess_unmatched_dryrun"
     },
     {
       "label": "{ DatabaseSync }",
@@ -509,9 +599,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L45",
       "_origin": "ast",
-      "id": "scripts_reprocess_unmatched_dryrun_databasesync",
       "community": 25,
-      "norm_label": "{ databasesync }"
+      "norm_label": "{ databasesync }",
+      "id": "scripts_reprocess_unmatched_dryrun_databasesync"
     },
     {
       "label": "path",
@@ -519,9 +609,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L46",
       "_origin": "ast",
-      "id": "scripts_reprocess_unmatched_dryrun_path",
       "community": 25,
-      "norm_label": "path"
+      "norm_label": "path",
+      "id": "scripts_reprocess_unmatched_dryrun_path"
     },
     {
       "label": "{ inferReplyFamilies, analyzeOperatorReply }",
@@ -529,9 +619,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L47",
       "_origin": "ast",
-      "id": "scripts_reprocess_unmatched_dryrun_inferreplyfamilies_analyzeoperatorreply",
       "community": 25,
-      "norm_label": "{ inferreplyfamilies, analyzeoperatorreply }"
+      "norm_label": "{ inferreplyfamilies, analyzeoperatorreply }",
+      "id": "scripts_reprocess_unmatched_dryrun_inferreplyfamilies_analyzeoperatorreply"
     },
     {
       "label": "{ confidenceRank, replyTypeScore }",
@@ -539,9 +629,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L48",
       "_origin": "ast",
-      "id": "scripts_reprocess_unmatched_dryrun_confidencerank_replytypescore",
       "community": 25,
-      "norm_label": "{ confidencerank, replytypescore }"
+      "norm_label": "{ confidencerank, replytypescore }",
+      "id": "scripts_reprocess_unmatched_dryrun_confidencerank_replytypescore"
     },
     {
       "label": "db",
@@ -549,9 +639,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L51",
       "_origin": "ast",
-      "id": "scripts_reprocess_unmatched_dryrun_db",
       "community": 25,
-      "norm_label": "db"
+      "norm_label": "db",
+      "id": "scripts_reprocess_unmatched_dryrun_db"
     },
     {
       "label": "unmatched",
@@ -559,9 +649,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L57",
       "_origin": "ast",
-      "id": "scripts_reprocess_unmatched_dryrun_unmatched",
       "community": 25,
-      "norm_label": "unmatched"
+      "norm_label": "unmatched",
+      "id": "scripts_reprocess_unmatched_dryrun_unmatched"
     },
     {
       "label": "genuineLooking",
@@ -569,9 +659,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L64",
       "_origin": "ast",
-      "id": "scripts_reprocess_unmatched_dryrun_genuinelooking",
       "community": 25,
-      "norm_label": "genuinelooking"
+      "norm_label": "genuinelooking",
+      "id": "scripts_reprocess_unmatched_dryrun_genuinelooking"
     },
     {
       "label": "dispatchesByGateway",
@@ -579,9 +669,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L74",
       "_origin": "ast",
-      "id": "scripts_reprocess_unmatched_dryrun_dispatchesbygateway",
       "community": 25,
-      "norm_label": "dispatchesbygateway"
+      "norm_label": "dispatchesbygateway",
+      "id": "scripts_reprocess_unmatched_dryrun_dispatchesbygateway"
     },
     {
       "label": "dispatchesFor()",
@@ -589,9 +679,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L75",
       "_origin": "ast",
-      "id": "scripts_reprocess_unmatched_dryrun_dispatchesfor",
       "community": 25,
-      "norm_label": "dispatchesfor()"
+      "norm_label": "dispatchesfor()",
+      "id": "scripts_reprocess_unmatched_dryrun_dispatchesfor"
     },
     {
       "label": "resolvable",
@@ -599,9 +689,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L90",
       "_origin": "ast",
-      "id": "scripts_reprocess_unmatched_dryrun_resolvable",
       "community": 25,
-      "norm_label": "resolvable"
+      "norm_label": "resolvable",
+      "id": "scripts_reprocess_unmatched_dryrun_resolvable"
     },
     {
       "label": "noCandidate",
@@ -609,9 +699,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L91",
       "_origin": "ast",
-      "id": "scripts_reprocess_unmatched_dryrun_nocandidate",
       "community": 25,
-      "norm_label": "nocandidate"
+      "norm_label": "nocandidate",
+      "id": "scripts_reprocess_unmatched_dryrun_nocandidate"
     },
     {
       "label": "stillAmbiguous",
@@ -619,9 +709,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L92",
       "_origin": "ast",
-      "id": "scripts_reprocess_unmatched_dryrun_stillambiguous",
       "community": 25,
-      "norm_label": "stillambiguous"
+      "norm_label": "stillambiguous",
+      "id": "scripts_reprocess_unmatched_dryrun_stillambiguous"
     },
     {
       "label": "startedAt",
@@ -629,9 +719,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L94",
       "_origin": "ast",
-      "id": "scripts_reprocess_unmatched_dryrun_startedat",
       "community": 25,
-      "norm_label": "startedat"
+      "norm_label": "startedat",
+      "id": "scripts_reprocess_unmatched_dryrun_startedat"
     },
     {
       "label": "byStatus",
@@ -639,9 +729,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L159",
       "_origin": "ast",
-      "id": "scripts_reprocess_unmatched_dryrun_bystatus",
       "community": 25,
-      "norm_label": "bystatus"
+      "norm_label": "bystatus",
+      "id": "scripts_reprocess_unmatched_dryrun_bystatus"
     },
     {
       "label": "persistence.js",
@@ -1739,7 +1829,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 114,
+      "community": 94,
       "norm_label": "appcompatactivity",
       "id": "appcompatactivity"
     },
@@ -3249,7 +3339,7 @@
       "source_file": "android-gateway/app/src/main/java/com/smsgateway/LogActivity.kt",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 114,
+      "community": 88,
       "norm_label": "logactivity.kt",
       "id": "android_gateway_app_src_main_java_com_smsgateway_logactivity"
     },
@@ -3259,7 +3349,7 @@
       "source_file": "android-gateway/app/src/main/java/com/smsgateway/LogActivity.kt",
       "source_location": "L21",
       "_origin": "ast",
-      "community": 114,
+      "community": 88,
       "norm_label": "logactivity",
       "id": "android_gateway_app_src_main_java_com_smsgateway_logactivity_logactivity"
     },
@@ -3269,7 +3359,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 114,
+      "community": 88,
       "norm_label": "activitylogbinding",
       "id": "activitylogbinding"
     },
@@ -3299,7 +3389,7 @@
       "source_file": "android-gateway/app/src/main/java/com/smsgateway/LogActivity.kt",
       "source_location": "L46",
       "_origin": "ast",
-      "community": 114,
+      "community": 88,
       "norm_label": ".onsupportnavigateup()",
       "id": "android_gateway_app_src_main_java_com_smsgateway_logactivity_logactivity_onsupportnavigateup"
     },
@@ -3309,7 +3399,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "community": 114,
+      "community": 88,
       "norm_label": "boolean",
       "id": "android_gateway_app_src_main_java_com_smsgateway_logactivity_kt_boolean"
     },
@@ -19249,7 +19339,7 @@
       "source_file": "architecture.md",
       "source_location": "L37",
       "_origin": "ast",
-      "community": 117,
+      "community": 271,
       "norm_label": "3. components",
       "id": "architecture_3_components"
     },
@@ -19259,7 +19349,7 @@
       "source_file": "architecture.md",
       "source_location": "L39",
       "_origin": "ast",
-      "community": 117,
+      "community": 271,
       "norm_label": "3.1 backend (`src/`)",
       "id": "architecture_3_1_backend_src"
     },
@@ -19269,7 +19359,7 @@
       "source_file": "architecture.md",
       "source_location": "L55",
       "_origin": "ast",
-      "community": 117,
+      "community": 271,
       "norm_label": "3.2 android gateway (`android-gateway/`)",
       "id": "architecture_3_2_android_gateway_android_gateway"
     },
@@ -19279,7 +19369,7 @@
       "source_file": "architecture.md",
       "source_location": "L69",
       "_origin": "ast",
-      "community": 117,
+      "community": 271,
       "norm_label": "3.3 dashboard (`public/`)",
       "id": "architecture_3_3_dashboard_public"
     },
@@ -20349,7 +20439,7 @@
       "source_file": "docs/claude-design-brief.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 115,
+      "community": 93,
       "norm_label": "claude-design-brief.md",
       "id": "docs_claude_design_brief"
     },
@@ -20449,7 +20539,7 @@
       "source_file": "docs/design-system.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 115,
+      "community": 93,
       "norm_label": "design-system.md",
       "id": "docs_design_system"
     },
@@ -21269,7 +21359,7 @@
       "source_file": "docs/redesign.md",
       "source_location": "L145",
       "_origin": "ast",
-      "community": 100,
+      "community": 89,
       "norm_label": "phase 3: officer portal port",
       "id": "docs_redesign_phase_3_officer_portal_port"
     },
@@ -21279,7 +21369,7 @@
       "source_file": "docs/redesign.md",
       "source_location": "L147",
       "_origin": "ast",
-      "community": 100,
+      "community": 89,
       "norm_label": "what's being ported",
       "id": "docs_redesign_what_s_being_ported_147"
     },
@@ -21289,7 +21379,7 @@
       "source_file": "docs/redesign.md",
       "source_location": "L156",
       "_origin": "ast",
-      "community": 100,
+      "community": 89,
       "norm_label": "why this phase, right after auth (not ops ui or admin)",
       "id": "docs_redesign_why_this_phase_right_after_auth_not_ops_ui_or_admin"
     },
@@ -21299,7 +21389,7 @@
       "source_file": "docs/redesign.md",
       "source_location": "L168",
       "_origin": "ast",
-      "community": 100,
+      "community": 89,
       "norm_label": "architecture",
       "id": "docs_redesign_architecture_168"
     },
@@ -21309,7 +21399,7 @@
       "source_file": "docs/redesign.md",
       "source_location": "L190",
       "_origin": "ast",
-      "community": 100,
+      "community": 89,
       "norm_label": "files (when built)",
       "id": "docs_redesign_files_when_built_190"
     },
@@ -21319,7 +21409,7 @@
       "source_file": "docs/redesign.md",
       "source_location": "L197",
       "_origin": "ast",
-      "community": 100,
+      "community": 89,
       "norm_label": "verification (when built)",
       "id": "docs_redesign_verification_when_built_197"
     },
@@ -21569,7 +21659,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 115,
+      "community": 93,
       "norm_label": "system-design-v2.md",
       "id": "docs_system_design_v2"
     },
@@ -21659,7 +21749,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L159",
       "_origin": "ast",
-      "community": 104,
+      "community": 276,
       "norm_label": "5. api boundary plan",
       "id": "docs_system_design_v2_5_api_boundary_plan"
     },
@@ -21669,7 +21759,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L164",
       "_origin": "ast",
-      "community": 104,
+      "community": 276,
       "norm_label": "public health and bootstrap",
       "id": "docs_system_design_v2_public_health_and_bootstrap"
     },
@@ -21679,7 +21769,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L170",
       "_origin": "ast",
-      "community": 104,
+      "community": 276,
       "norm_label": "gateway device api",
       "id": "docs_system_design_v2_gateway_device_api"
     },
@@ -21689,7 +21779,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L179",
       "_origin": "ast",
-      "community": 104,
+      "community": 276,
       "norm_label": "operations api",
       "id": "docs_system_design_v2_operations_api"
     },
@@ -21699,7 +21789,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L188",
       "_origin": "ast",
-      "community": 104,
+      "community": 276,
       "norm_label": "admin api",
       "id": "docs_system_design_v2_admin_api"
     },
@@ -21709,7 +21799,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L202",
       "_origin": "ast",
-      "community": 104,
+      "community": 276,
       "norm_label": "integration api",
       "id": "docs_system_design_v2_integration_api"
     },
@@ -21769,7 +21859,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L284",
       "_origin": "ast",
-      "community": 118,
+      "community": 276,
       "norm_label": "7. deployment model",
       "id": "docs_system_design_v2_7_deployment_model"
     },
@@ -21779,7 +21869,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L286",
       "_origin": "ast",
-      "community": 118,
+      "community": 276,
       "norm_label": "current acceptable deployment",
       "id": "docs_system_design_v2_current_acceptable_deployment"
     },
@@ -21789,7 +21879,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L292",
       "_origin": "ast",
-      "community": 118,
+      "community": 276,
       "norm_label": "target enterprise deployment",
       "id": "docs_system_design_v2_target_enterprise_deployment"
     },
@@ -21799,7 +21889,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L302",
       "_origin": "ast",
-      "community": 118,
+      "community": 276,
       "norm_label": "environments",
       "id": "docs_system_design_v2_environments"
     },
@@ -21809,7 +21899,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L318",
       "_origin": "ast",
-      "community": 116,
+      "community": 276,
       "norm_label": "8. security model",
       "id": "docs_system_design_v2_8_security_model"
     },
@@ -21819,7 +21909,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L320",
       "_origin": "ast",
-      "community": 116,
+      "community": 276,
       "norm_label": "identity and auth",
       "id": "docs_system_design_v2_identity_and_auth"
     },
@@ -21829,7 +21919,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L326",
       "_origin": "ast",
-      "community": 116,
+      "community": 276,
       "norm_label": "recommended security upgrades",
       "id": "docs_system_design_v2_recommended_security_upgrades"
     },
@@ -21839,7 +21929,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L335",
       "_origin": "ast",
-      "community": 116,
+      "community": 276,
       "norm_label": "secret handling",
       "id": "docs_system_design_v2_secret_handling"
     },
@@ -21849,7 +21939,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L342",
       "_origin": "ast",
-      "community": 116,
+      "community": 276,
       "norm_label": "audit model",
       "id": "docs_system_design_v2_audit_model"
     },
@@ -21899,7 +21989,7 @@
       "source_file": "docs/telegram-bridge.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 115,
+      "community": 93,
       "norm_label": "telegram-bridge.md",
       "id": "docs_telegram_bridge"
     },
@@ -22149,7 +22239,7 @@
       "source_file": "docs/ui-design-guide-v2.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 115,
+      "community": 93,
       "norm_label": "ui-design-guide-v2.md",
       "id": "docs_ui_design_guide_v2"
     },
@@ -23848,12 +23938,92 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "scripts/check-sms-truncation.js",
+      "source_location": "L42",
+      "weight": 1.0,
+      "source": "scripts_check_sms_truncation",
+      "target": "scripts_check_sms_truncation_all",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/check-sms-truncation.js",
+      "source_location": "L62",
+      "weight": 1.0,
+      "source": "scripts_check_sms_truncation",
+      "target": "scripts_check_sms_truncation_bysendergateway",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/check-sms-truncation.js",
+      "source_location": "L48",
+      "weight": 1.0,
+      "source": "scripts_check_sms_truncation",
+      "target": "scripts_check_sms_truncation_candidates",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/check-sms-truncation.js",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "scripts_check_sms_truncation",
+      "target": "scripts_check_sms_truncation_databasesync",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/check-sms-truncation.js",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "scripts_check_sms_truncation",
+      "target": "scripts_check_sms_truncation_db",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/check-sms-truncation.js",
+      "source_location": "L73",
+      "weight": 1.0,
+      "source": "scripts_check_sms_truncation",
+      "target": "scripts_check_sms_truncation_followupexamples",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/check-sms-truncation.js",
+      "source_location": "L74",
+      "weight": 1.0,
+      "source": "scripts_check_sms_truncation",
+      "target": "scripts_check_sms_truncation_nofollowupexamples",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/check-sms-truncation.js",
+      "source_location": "L31",
+      "weight": 1.0,
+      "source": "scripts_check_sms_truncation",
+      "target": "scripts_check_sms_truncation_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L35",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_apply_historical_corrections",
-      "target": "scripts_apply_historical_corrections_apply",
-      "confidence_score": 1.0
+      "target": "scripts_apply_historical_corrections_apply"
     },
     {
       "relation": "contains",
@@ -23861,9 +24031,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L143",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_apply_historical_corrections",
-      "target": "scripts_apply_historical_corrections_applystartedat",
-      "confidence_score": 1.0
+      "target": "scripts_apply_historical_corrections_applystartedat"
     },
     {
       "relation": "contains",
@@ -23871,9 +24041,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L30",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_apply_historical_corrections",
-      "target": "scripts_apply_historical_corrections_automationstore",
-      "confidence_score": 1.0
+      "target": "scripts_apply_historical_corrections_automationstore"
     },
     {
       "relation": "contains",
@@ -23881,9 +24051,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L121",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_apply_historical_corrections",
-      "target": "scripts_apply_historical_corrections_bystatus",
-      "confidence_score": 1.0
+      "target": "scripts_apply_historical_corrections_bystatus"
     },
     {
       "relation": "contains",
@@ -23891,9 +24061,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L32",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_apply_historical_corrections",
-      "target": "scripts_apply_historical_corrections_confidencerank_replytypescore",
-      "confidence_score": 1.0
+      "target": "scripts_apply_historical_corrections_confidencerank_replytypescore"
     },
     {
       "relation": "contains",
@@ -23901,9 +24071,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L29",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_apply_historical_corrections",
-      "target": "scripts_apply_historical_corrections_databasesync",
-      "confidence_score": 1.0
+      "target": "scripts_apply_historical_corrections_databasesync"
     },
     {
       "relation": "contains",
@@ -23911,9 +24081,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L38",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_apply_historical_corrections",
-      "target": "scripts_apply_historical_corrections_db",
-      "confidence_score": 1.0
+      "target": "scripts_apply_historical_corrections_db"
     },
     {
       "relation": "contains",
@@ -23921,9 +24091,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L51",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_apply_historical_corrections",
-      "target": "scripts_apply_historical_corrections_dispatchesbygateway",
-      "confidence_score": 1.0
+      "target": "scripts_apply_historical_corrections_dispatchesbygateway"
     },
     {
       "relation": "contains",
@@ -23931,9 +24101,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L52",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_apply_historical_corrections",
-      "target": "scripts_apply_historical_corrections_dispatchesfor",
-      "confidence_score": 1.0
+      "target": "scripts_apply_historical_corrections_dispatchesfor"
     },
     {
       "relation": "contains",
@@ -23941,9 +24111,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L49",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_apply_historical_corrections",
-      "target": "scripts_apply_historical_corrections_genuinelooking",
-      "confidence_score": 1.0
+      "target": "scripts_apply_historical_corrections_genuinelooking"
     },
     {
       "relation": "contains",
@@ -23951,9 +24121,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L73",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_apply_historical_corrections",
-      "target": "scripts_apply_historical_corrections_identifystartedat",
-      "confidence_score": 1.0
+      "target": "scripts_apply_historical_corrections_identifystartedat"
     },
     {
       "relation": "contains",
@@ -23961,9 +24131,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L140",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_apply_historical_corrections",
-      "target": "scripts_apply_historical_corrections_inboxbyid",
-      "confidence_score": 1.0
+      "target": "scripts_apply_historical_corrections_inboxbyid"
     },
     {
       "relation": "contains",
@@ -23971,9 +24141,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L31",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_apply_historical_corrections",
-      "target": "scripts_apply_historical_corrections_inferreplyfamilies_analyzeoperatorreply",
-      "confidence_score": 1.0
+      "target": "scripts_apply_historical_corrections_inferreplyfamilies_analyzeoperatorreply"
     },
     {
       "relation": "contains",
@@ -23981,9 +24151,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L66",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_apply_historical_corrections",
-      "target": "scripts_apply_historical_corrections_live_statuses",
-      "confidence_score": 1.0
+      "target": "scripts_apply_historical_corrections_live_statuses"
     },
     {
       "relation": "contains",
@@ -23991,9 +24161,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L28",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_apply_historical_corrections",
-      "target": "scripts_apply_historical_corrections_path",
-      "confidence_score": 1.0
+      "target": "scripts_apply_historical_corrections_path"
     },
     {
       "relation": "contains",
@@ -24001,9 +24171,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L139",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_apply_historical_corrections",
-      "target": "scripts_apply_historical_corrections_store",
-      "confidence_score": 1.0
+      "target": "scripts_apply_historical_corrections_store"
     },
     {
       "relation": "contains",
@@ -24011,9 +24181,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L67",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_apply_historical_corrections",
-      "target": "scripts_apply_historical_corrections_toapply",
-      "confidence_score": 1.0
+      "target": "scripts_apply_historical_corrections_toapply"
     },
     {
       "relation": "contains",
@@ -24021,9 +24191,9 @@
       "source_file": "scripts/apply-historical-corrections.js",
       "source_location": "L43",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_apply_historical_corrections",
-      "target": "scripts_apply_historical_corrections_unmatched",
-      "confidence_score": 1.0
+      "target": "scripts_apply_historical_corrections_unmatched"
     },
     {
       "relation": "contains",
@@ -24031,9 +24201,9 @@
       "source_file": "scripts/classify-unmatched.js",
       "source_location": "L41",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_classify_unmatched",
-      "target": "scripts_classify_unmatched_buckets",
-      "confidence_score": 1.0
+      "target": "scripts_classify_unmatched_buckets"
     },
     {
       "relation": "contains",
@@ -24041,9 +24211,9 @@
       "source_file": "scripts/classify-unmatched.js",
       "source_location": "L68",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_classify_unmatched",
-      "target": "scripts_classify_unmatched_bytype",
-      "confidence_score": 1.0
+      "target": "scripts_classify_unmatched_bytype"
     },
     {
       "relation": "contains",
@@ -24051,9 +24221,9 @@
       "source_file": "scripts/classify-unmatched.js",
       "source_location": "L16",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_classify_unmatched",
-      "target": "scripts_classify_unmatched_databasesync",
-      "confidence_score": 1.0
+      "target": "scripts_classify_unmatched_databasesync"
     },
     {
       "relation": "contains",
@@ -24061,9 +24231,9 @@
       "source_file": "scripts/classify-unmatched.js",
       "source_location": "L21",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_classify_unmatched",
-      "target": "scripts_classify_unmatched_db",
-      "confidence_score": 1.0
+      "target": "scripts_classify_unmatched_db"
     },
     {
       "relation": "contains",
@@ -24071,9 +24241,9 @@
       "source_file": "scripts/classify-unmatched.js",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_classify_unmatched",
-      "target": "scripts_classify_unmatched_inferreplyfamilies",
-      "confidence_score": 1.0
+      "target": "scripts_classify_unmatched_inferreplyfamilies"
     },
     {
       "relation": "contains",
@@ -24081,9 +24251,9 @@
       "source_file": "scripts/classify-unmatched.js",
       "source_location": "L39",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_classify_unmatched",
-      "target": "scripts_classify_unmatched_junk_markers",
-      "confidence_score": 1.0
+      "target": "scripts_classify_unmatched_junk_markers"
     },
     {
       "relation": "contains",
@@ -24091,9 +24261,9 @@
       "source_file": "scripts/classify-unmatched.js",
       "source_location": "L17",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_classify_unmatched",
-      "target": "scripts_classify_unmatched_path",
-      "confidence_score": 1.0
+      "target": "scripts_classify_unmatched_path"
     },
     {
       "relation": "contains",
@@ -24101,9 +24271,9 @@
       "source_file": "scripts/classify-unmatched.js",
       "source_location": "L58",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_classify_unmatched",
-      "target": "scripts_classify_unmatched_pct",
-      "confidence_score": 1.0
+      "target": "scripts_classify_unmatched_pct"
     },
     {
       "relation": "contains",
@@ -24111,9 +24281,9 @@
       "source_file": "scripts/classify-unmatched.js",
       "source_location": "L32",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_classify_unmatched",
-      "target": "scripts_classify_unmatched_rows",
-      "confidence_score": 1.0
+      "target": "scripts_classify_unmatched_rows"
     },
     {
       "relation": "contains",
@@ -24121,9 +24291,9 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L55",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_correlate_unmatched",
-      "target": "scripts_correlate_unmatched_buckets",
-      "confidence_score": 1.0
+      "target": "scripts_correlate_unmatched_buckets"
     },
     {
       "relation": "contains",
@@ -24131,9 +24301,9 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_correlate_unmatched",
-      "target": "scripts_correlate_unmatched_databasesync",
-      "confidence_score": 1.0
+      "target": "scripts_correlate_unmatched_databasesync"
     },
     {
       "relation": "contains",
@@ -24141,9 +24311,9 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L23",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_correlate_unmatched",
-      "target": "scripts_correlate_unmatched_db",
-      "confidence_score": 1.0
+      "target": "scripts_correlate_unmatched_db"
     },
     {
       "relation": "contains",
@@ -24151,9 +24321,9 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L40",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_correlate_unmatched",
-      "target": "scripts_correlate_unmatched_dispatchesbygateway",
-      "confidence_score": 1.0
+      "target": "scripts_correlate_unmatched_dispatchesbygateway"
     },
     {
       "relation": "contains",
@@ -24161,9 +24331,9 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L41",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_correlate_unmatched",
-      "target": "scripts_correlate_unmatched_dispatchesfor",
-      "confidence_score": 1.0
+      "target": "scripts_correlate_unmatched_dispatchesfor"
     },
     {
       "relation": "contains",
@@ -24171,9 +24341,9 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L56",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_correlate_unmatched",
-      "target": "scripts_correlate_unmatched_examples",
-      "confidence_score": 1.0
+      "target": "scripts_correlate_unmatched_examples"
     },
     {
       "relation": "contains",
@@ -24181,9 +24351,9 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L36",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_correlate_unmatched",
-      "target": "scripts_correlate_unmatched_genuinelooking",
-      "confidence_score": 1.0
+      "target": "scripts_correlate_unmatched_genuinelooking"
     },
     {
       "relation": "contains",
@@ -24191,9 +24361,9 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L20",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_correlate_unmatched",
-      "target": "scripts_correlate_unmatched_inferreplyfamilies",
-      "confidence_score": 1.0
+      "target": "scripts_correlate_unmatched_inferreplyfamilies"
     },
     {
       "relation": "contains",
@@ -24201,9 +24371,9 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L57",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_correlate_unmatched",
-      "target": "scripts_correlate_unmatched_latenciesms",
-      "confidence_score": 1.0
+      "target": "scripts_correlate_unmatched_latenciesms"
     },
     {
       "relation": "contains",
@@ -24211,9 +24381,9 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L19",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_correlate_unmatched",
-      "target": "scripts_correlate_unmatched_path",
-      "confidence_score": 1.0
+      "target": "scripts_correlate_unmatched_path"
     },
     {
       "relation": "contains",
@@ -24221,9 +24391,9 @@
       "source_file": "scripts/correlate-unmatched.js",
       "source_location": "L29",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_correlate_unmatched",
-      "target": "scripts_correlate_unmatched_unmatched",
-      "confidence_score": 1.0
+      "target": "scripts_correlate_unmatched_unmatched"
     },
     {
       "relation": "contains",
@@ -24231,9 +24401,9 @@
       "source_file": "scripts/diagnose-unmatched.js",
       "source_location": "L32",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_diagnose_unmatched",
-      "target": "scripts_diagnose_unmatched_bygateway",
-      "confidence_score": 1.0
+      "target": "scripts_diagnose_unmatched_bygateway"
     },
     {
       "relation": "contains",
@@ -24241,9 +24411,9 @@
       "source_file": "scripts/diagnose-unmatched.js",
       "source_location": "L40",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_diagnose_unmatched",
-      "target": "scripts_diagnose_unmatched_bymonth",
-      "confidence_score": 1.0
+      "target": "scripts_diagnose_unmatched_bymonth"
     },
     {
       "relation": "contains",
@@ -24251,9 +24421,9 @@
       "source_file": "scripts/diagnose-unmatched.js",
       "source_location": "L10",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_diagnose_unmatched",
-      "target": "scripts_diagnose_unmatched_databasesync",
-      "confidence_score": 1.0
+      "target": "scripts_diagnose_unmatched_databasesync"
     },
     {
       "relation": "contains",
@@ -24261,9 +24431,9 @@
       "source_file": "scripts/diagnose-unmatched.js",
       "source_location": "L14",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_diagnose_unmatched",
-      "target": "scripts_diagnose_unmatched_db",
-      "confidence_score": 1.0
+      "target": "scripts_diagnose_unmatched_db"
     },
     {
       "relation": "contains",
@@ -24271,9 +24441,9 @@
       "source_file": "scripts/diagnose-unmatched.js",
       "source_location": "L11",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_diagnose_unmatched",
-      "target": "scripts_diagnose_unmatched_path",
-      "confidence_score": 1.0
+      "target": "scripts_diagnose_unmatched_path"
     },
     {
       "relation": "contains",
@@ -24281,9 +24451,9 @@
       "source_file": "scripts/diagnose-unmatched.js",
       "source_location": "L25",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_diagnose_unmatched",
-      "target": "scripts_diagnose_unmatched_range",
-      "confidence_score": 1.0
+      "target": "scripts_diagnose_unmatched_range"
     },
     {
       "relation": "contains",
@@ -24291,9 +24461,9 @@
       "source_file": "scripts/diagnose-unmatched.js",
       "source_location": "L59",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_diagnose_unmatched",
-      "target": "scripts_diagnose_unmatched_sample",
-      "confidence_score": 1.0
+      "target": "scripts_diagnose_unmatched_sample"
     },
     {
       "relation": "contains",
@@ -24301,9 +24471,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L159",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_reprocess_unmatched_dryrun",
-      "target": "scripts_reprocess_unmatched_dryrun_bystatus",
-      "confidence_score": 1.0
+      "target": "scripts_reprocess_unmatched_dryrun_bystatus"
     },
     {
       "relation": "contains",
@@ -24311,9 +24481,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L48",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_reprocess_unmatched_dryrun",
-      "target": "scripts_reprocess_unmatched_dryrun_confidencerank_replytypescore",
-      "confidence_score": 1.0
+      "target": "scripts_reprocess_unmatched_dryrun_confidencerank_replytypescore"
     },
     {
       "relation": "contains",
@@ -24321,9 +24491,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L45",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_reprocess_unmatched_dryrun",
-      "target": "scripts_reprocess_unmatched_dryrun_databasesync",
-      "confidence_score": 1.0
+      "target": "scripts_reprocess_unmatched_dryrun_databasesync"
     },
     {
       "relation": "contains",
@@ -24331,9 +24501,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L51",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_reprocess_unmatched_dryrun",
-      "target": "scripts_reprocess_unmatched_dryrun_db",
-      "confidence_score": 1.0
+      "target": "scripts_reprocess_unmatched_dryrun_db"
     },
     {
       "relation": "contains",
@@ -24341,9 +24511,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L74",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_reprocess_unmatched_dryrun",
-      "target": "scripts_reprocess_unmatched_dryrun_dispatchesbygateway",
-      "confidence_score": 1.0
+      "target": "scripts_reprocess_unmatched_dryrun_dispatchesbygateway"
     },
     {
       "relation": "contains",
@@ -24351,9 +24521,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L75",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_reprocess_unmatched_dryrun",
-      "target": "scripts_reprocess_unmatched_dryrun_dispatchesfor",
-      "confidence_score": 1.0
+      "target": "scripts_reprocess_unmatched_dryrun_dispatchesfor"
     },
     {
       "relation": "contains",
@@ -24361,9 +24531,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L64",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_reprocess_unmatched_dryrun",
-      "target": "scripts_reprocess_unmatched_dryrun_genuinelooking",
-      "confidence_score": 1.0
+      "target": "scripts_reprocess_unmatched_dryrun_genuinelooking"
     },
     {
       "relation": "contains",
@@ -24371,9 +24541,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L47",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_reprocess_unmatched_dryrun",
-      "target": "scripts_reprocess_unmatched_dryrun_inferreplyfamilies_analyzeoperatorreply",
-      "confidence_score": 1.0
+      "target": "scripts_reprocess_unmatched_dryrun_inferreplyfamilies_analyzeoperatorreply"
     },
     {
       "relation": "contains",
@@ -24381,9 +24551,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L91",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_reprocess_unmatched_dryrun",
-      "target": "scripts_reprocess_unmatched_dryrun_nocandidate",
-      "confidence_score": 1.0
+      "target": "scripts_reprocess_unmatched_dryrun_nocandidate"
     },
     {
       "relation": "contains",
@@ -24391,9 +24561,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L46",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_reprocess_unmatched_dryrun",
-      "target": "scripts_reprocess_unmatched_dryrun_path",
-      "confidence_score": 1.0
+      "target": "scripts_reprocess_unmatched_dryrun_path"
     },
     {
       "relation": "contains",
@@ -24401,9 +24571,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L90",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_reprocess_unmatched_dryrun",
-      "target": "scripts_reprocess_unmatched_dryrun_resolvable",
-      "confidence_score": 1.0
+      "target": "scripts_reprocess_unmatched_dryrun_resolvable"
     },
     {
       "relation": "contains",
@@ -24411,9 +24581,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L94",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_reprocess_unmatched_dryrun",
-      "target": "scripts_reprocess_unmatched_dryrun_startedat",
-      "confidence_score": 1.0
+      "target": "scripts_reprocess_unmatched_dryrun_startedat"
     },
     {
       "relation": "contains",
@@ -24421,9 +24591,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L92",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_reprocess_unmatched_dryrun",
-      "target": "scripts_reprocess_unmatched_dryrun_stillambiguous",
-      "confidence_score": 1.0
+      "target": "scripts_reprocess_unmatched_dryrun_stillambiguous"
     },
     {
       "relation": "contains",
@@ -24431,9 +24601,9 @@
       "source_file": "scripts/reprocess-unmatched-dryrun.js",
       "source_location": "L57",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_reprocess_unmatched_dryrun",
-      "target": "scripts_reprocess_unmatched_dryrun_unmatched",
-      "confidence_score": 1.0
+      "target": "scripts_reprocess_unmatched_dryrun_unmatched"
     },
     {
       "relation": "contains",
@@ -66958,5 +67128,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "67109db5a233ad097b72ff36844d0c2c713dcecf"
+  "built_at_commit": "cdf2846a7396292ac00f724df153af73e6986b0c"
 }
