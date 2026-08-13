@@ -60,7 +60,11 @@ let skippedLive = 0;
 let stillAmbiguous = 0;
 let noCandidate = 0;
 
-for (const row of genuineLooking) {
+console.log(`Scanning ${genuineLooking.length} genuine-looking unmatched rows (same identification pass as reprocess-unmatched-dryrun.js -- takes a few minutes)...`);
+const identifyStartedAt = Date.now();
+
+for (let i = 0; i < genuineLooking.length; i++) {
+  const row = genuineLooking[i];
   const replyTime = new Date(row.received_at).getTime();
   const openCandidates = dispatchesFor(row.gateway_id).filter((d) => {
     const sentAt = new Date(d.sent_at).getTime();
@@ -68,41 +72,42 @@ for (const row of genuineLooking) {
     if (!d.replied_at) return true;
     return new Date(d.replied_at).getTime() > replyTime;
   });
+
   if (!openCandidates.length) {
     noCandidate++;
-    continue;
+  } else {
+    const operatorKey = openCandidates[0].operator;
+    const inferredReplyFamilies = inferReplyFamilies(row.message_body, operatorKey);
+    const ranked = openCandidates
+      .map((d) => {
+        const request = { requestId: d.request_id, requestType: d.request_type, payload: d.payload, operator: d.operator, status: d.status, createdAt: d.created_at };
+        const analysis = analyzeOperatorReply({ request, messageBody: row.message_body });
+        const typeScore = replyTypeScore(request, inferredReplyFamilies);
+        const score = (typeScore * 100)
+          + (confidenceRank(analysis.confidence) * 10)
+          + (analysis.payloadMatchCount || 0) * 5
+          + (analysis.trainingMatch?.score || 0);
+        return { requestId: d.request_id, status: d.status, score, typeScore, confidence: analysis.confidence };
+      })
+      .sort((a, b) => b.score - a.score);
+
+    const [top, second] = ranked;
+    const confident = top.score > 0 && top.typeScore >= 0 && top.confidence !== 'UNKNOWN' && (!second || top.score > second.score);
+    if (!confident) {
+      stillAmbiguous++;
+    } else if (LIVE_STATUSES.has(top.status)) {
+      skippedLive++;
+    } else {
+      toApply.push({ inboxId: row.id, requestId: top.requestId, status: top.status });
+    }
   }
 
-  const operatorKey = openCandidates[0].operator;
-  const inferredReplyFamilies = inferReplyFamilies(row.message_body, operatorKey);
-  const ranked = openCandidates
-    .map((d) => {
-      const request = { requestId: d.request_id, requestType: d.request_type, payload: d.payload, operator: d.operator, status: d.status, createdAt: d.created_at };
-      const analysis = analyzeOperatorReply({ request, messageBody: row.message_body });
-      const typeScore = replyTypeScore(request, inferredReplyFamilies);
-      const score = (typeScore * 100)
-        + (confidenceRank(analysis.confidence) * 10)
-        + (analysis.payloadMatchCount || 0) * 5
-        + (analysis.trainingMatch?.score || 0);
-      return { requestId: d.request_id, status: d.status, score, typeScore, confidence: analysis.confidence };
-    })
-    .sort((a, b) => b.score - a.score);
-
-  const [top, second] = ranked;
-  const confident = top.score > 0 && top.typeScore >= 0 && top.confidence !== 'UNKNOWN' && (!second || top.score > second.score);
-  if (!confident) {
-    stillAmbiguous++;
-    continue;
+  if ((i + 1) % 500 === 0 || i === genuineLooking.length - 1) {
+    console.log(`  ...scanned ${i + 1}/${genuineLooking.length} (${((Date.now() - identifyStartedAt) / 1000).toFixed(1)}s elapsed)`);
   }
-
-  if (LIVE_STATUSES.has(top.status)) {
-    skippedLive++;
-    continue;
-  }
-
-  toApply.push({ inboxId: row.id, requestId: top.requestId, status: top.status });
 }
 db.close();
+console.log('');
 
 const byStatus = {};
 for (const { status } of toApply) byStatus[status] = (byStatus[status] || 0) + 1;
@@ -123,20 +128,26 @@ if (!apply) {
 
 console.log('--apply passed -- writing database-only corrections (no reply drafts, nothing posted anywhere)...');
 const store = new AutomationStore({}, { dbPath });
+const inboxById = new Map(store.smsInbox.map((r) => [r.id, r])); // avoid an O(n) find() per correction
 let applied = 0;
 let alreadyMatched = 0;
-for (const { inboxId, requestId } of toApply) {
-  const inbox = store.smsInbox.find((r) => r.id === inboxId);
+const applyStartedAt = Date.now();
+for (let i = 0; i < toApply.length; i++) {
+  const { inboxId, requestId } = toApply[i];
+  const inbox = inboxById.get(inboxId);
   if (!inbox || inbox.matchedRequestId) {
     alreadyMatched++;
-    continue;
+  } else {
+    inbox.matchedRequestId = requestId;
+    if (store.persistence) store.persistence.insertInbox(inbox);
+    store.audit('system', 'BACKLOG_MATCH_CORRECTED', requestId, {
+      inboxId,
+      note: 'Database-only correction via scripts/apply-historical-corrections.js -- no reply draft created, nothing posted to Telegram.'
+    });
+    applied++;
   }
-  inbox.matchedRequestId = requestId;
-  if (store.persistence) store.persistence.insertInbox(inbox);
-  store.audit('system', 'BACKLOG_MATCH_CORRECTED', requestId, {
-    inboxId,
-    note: 'Database-only correction via scripts/apply-historical-corrections.js -- no reply draft created, nothing posted to Telegram.'
-  });
-  applied++;
+  if ((i + 1) % 500 === 0 || i === toApply.length - 1) {
+    console.log(`  ...applied ${i + 1}/${toApply.length} (${((Date.now() - applyStartedAt) / 1000).toFixed(1)}s elapsed)`);
+  }
 }
-console.log(`Applied ${applied} corrections. (${alreadyMatched} were already matched by the time this ran, skipped.)`);
+console.log(`\nApplied ${applied} corrections. (${alreadyMatched} were already matched by the time this ran, skipped.)`);
