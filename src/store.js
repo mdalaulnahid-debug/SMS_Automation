@@ -24,7 +24,15 @@ const DUPLICATE_BLOCKING_STATUSES = Object.freeze([
   STATUSES.SMS_SENT,
   STATUSES.WAITING_OPERATOR_REPLY,
   STATUSES.REPLY_RECEIVED,
-  STATUSES.NEEDS_MANUAL_REVIEW
+  STATUSES.NEEDS_MANUAL_REVIEW,
+  // TIMEOUT included (2026-07-06): re-querying a just-timed-out number used to be
+  // allowed, creating a competing duplicate. When the operator's (often only
+  // slightly late) reply then arrived, it could not be attributed between the
+  // timed-out original and the fresh duplicate and was parked unmatched — the
+  // real cause of the 2026-07-05 DM "no reply" cases. Blocking within the window
+  // keeps a single request so the late reply matches it cleanly; the block
+  // response directs the requester to Retry (which re-runs the original).
+  STATUSES.TIMEOUT
 ]);
 
 function randomId(prefix) {
@@ -52,7 +60,7 @@ class AutomationStore {
         id: operator.gatewayId,
         operator: operatorKey,
         operatorName: operator.name,
-        shortcode: operator.shortcode,
+        shortcode: config.shortcode || operator.shortcode,
         gatewayUrl: config.gatewayUrl || '',
         sendPath: config.sendPath || '/send-sms',
         apiKey: config.apiKey || '',
@@ -300,6 +308,15 @@ class AutomationStore {
     return row;
   }
 
+  findInboundDuplicate({ gatewayId, senderNumber, messageBody, receivedAt }) {
+    return this.smsInbox.find((row) => {
+      return row.gatewayId === gatewayId
+        && row.senderNumber === senderNumber
+        && row.messageBody === messageBody
+        && row.receivedAt === receivedAt;
+    }) || null;
+  }
+
   addReplyDraft(entry) {
     const row = {
       id: randomId('reply'),
@@ -436,6 +453,19 @@ class AutomationStore {
     return gateway;
   }
 
+  // Apply a shortcode override live (no restart needed for the backend itself — the bridge
+  // process is separate and unaffected by this). The on-disk write-through that makes this
+  // survive a backend restart is settingsStore.writeOperatorShortcode(), called by the caller
+  // alongside this, not here — this method only updates the in-memory/persisted runtime state.
+  updateGatewayShortcode(operatorKey, shortcode) {
+    const operator = OPERATORS[String(operatorKey || '').toUpperCase()];
+    if (!operator) throw new Error(`Unknown operator: ${operatorKey}`);
+    const gateway = this.gateways.get(operator.gatewayId);
+    gateway.shortcode = String(shortcode).trim();
+    if (this.persistence) this.persistence.upsertGateway(gateway);
+    return gateway;
+  }
+
   getGatewayByOperator(operatorKey) {
     const operator = OPERATORS[operatorKey];
     if (!operator) throw new Error(`Unknown operator: ${operatorKey}`);
@@ -530,8 +560,16 @@ class AutomationStore {
     // a 1-hour window — handles the case where the gateway phone was offline during the
     // reply window (WiFi/mobile transition), WorkManager retried after the timeout fired,
     // and the reply would otherwise be silently dropped as unmatched.
-    const LATE_WINDOW_MS = 6 * 60 * 60 * 1000;   // 6h for WAITING / NEEDS_MANUAL_REVIEW
-    const TIMEOUT_WINDOW_MS = 60 * 60 * 1000;     // 1h for TIMEOUT (offline-phone recovery)
+    // For retried requests, extend the window to 2 hours to account for delayed operator replies.
+    // Windows widened 2026-07-06 after the 2026-07-05 operator/gateway blackout:
+    // replies arrived ~6h late and fell outside the old 1h TIMEOUT window, so 94
+    // legitimate replies landed unmatched. A wider window is only safe because the
+    // content gate in service.js (replyContradictsPayload) now rejects replies
+    // whose identifiers don't match the request — so a stale request in-window
+    // can no longer capture an unrelated reply.
+    const LATE_WINDOW_MS = 12 * 60 * 60 * 1000;   // 12h for WAITING / NEEDS_MANUAL_REVIEW
+    const TIMEOUT_WINDOW_MS = 12 * 60 * 60 * 1000;     // 12h for TIMEOUT (delayed-operator recovery)
+    const RETRY_TIMEOUT_WINDOW_MS = 12 * 60 * 60 * 1000; // 12h for retried requests
     const now = Date.now();
     const lateThreshold = now - LATE_WINDOW_MS;
     const timeoutThreshold = now - TIMEOUT_WINDOW_MS;
@@ -539,7 +577,11 @@ class AutomationStore {
     const pending = this.listRequests()
       .filter((request) => {
         if (request.status === STATUSES.TIMEOUT) {
-          return new Date(request.createdAt).getTime() > timeoutThreshold;
+          const createdTime = new Date(request.createdAt).getTime();
+          // Check if this request has a retried dispatch
+          const isRetried = (request.dispatches || []).some((d) => d.isRetry);
+          const windowThreshold = isRetried ? now - RETRY_TIMEOUT_WINDOW_MS : timeoutThreshold;
+          return createdTime > windowThreshold;
         }
         return [STATUSES.WAITING_OPERATOR_REPLY, STATUSES.NEEDS_MANUAL_REVIEW].includes(request.status)
           && new Date(request.createdAt).getTime() > lateThreshold;
@@ -553,14 +595,8 @@ class AutomationStore {
         return senderMatchesDestination || senderIsTrustedOperator;
       });
 
-    // Priority: WAITING_OPERATOR_REPLY > NEEDS_MANUAL_REVIEW > TIMEOUT
-    const active = pending.filter((r) => r.status === STATUSES.WAITING_OPERATOR_REPLY);
-    const finalized = pending.filter((r) => r.status === STATUSES.NEEDS_MANUAL_REVIEW);
-    const timedOut = pending.filter((r) => r.status === STATUSES.TIMEOUT);
-    const candidates = active.length ? active : finalized.length ? finalized : timedOut;
-
-    if (candidates.length === 1) return candidates[0];
-    if (candidates.length > 1) return { ambiguous: true, candidates };
+    if (pending.length === 1) return pending[0];
+    if (pending.length > 1) return { ambiguous: true, candidates: pending };
     return null;
   }
 
@@ -571,6 +607,41 @@ class AutomationStore {
       if (this.persistence) this.persistence.upsertRequest(request);
     }
     return request;
+  }
+
+  // ── Live phone-inbox commands (in-memory, ephemeral) ──────────────────────
+  // The phones are on a LAN and can only be reached via their own polling, so a
+  // "show me the phone's SMS inbox" request is delivered as a command on the next
+  // /api/gateway/jobs poll; the phone reads content://sms/inbox and POSTs it back.
+  // State is intentionally in-memory (a live-debug convenience, not audited data).
+  requestInboxDump(gatewayId, limit = 50) {
+    this._inboxCommands = this._inboxCommands || new Map();
+    const cmd = { type: 'DUMP_INBOX', id: randomId('cmd'), limit, requestedAt: nowIso() };
+    const queue = this._inboxCommands.get(gatewayId) || [];
+    queue.push(cmd);
+    this._inboxCommands.set(gatewayId, queue);
+    this.audit('admin', 'GATEWAY_INBOX_DUMP_REQUESTED', null, { gatewayId, limit });
+    return cmd;
+  }
+
+  takePendingCommands(gatewayId) {
+    this._inboxCommands = this._inboxCommands || new Map();
+    const queue = this._inboxCommands.get(gatewayId) || [];
+    this._inboxCommands.set(gatewayId, []);
+    return queue;
+  }
+
+  saveInboxDump(gatewayId, messages, meta = {}) {
+    this._inboxDumps = this._inboxDumps || new Map();
+    const dump = { gatewayId, messages: Array.isArray(messages) ? messages : [], receivedAt: nowIso(), ...meta };
+    this._inboxDumps.set(gatewayId, dump);
+    this.audit('system', 'GATEWAY_INBOX_DUMP_RECEIVED', null, { gatewayId, count: dump.messages.length });
+    return dump;
+  }
+
+  getInboxDump(gatewayId) {
+    this._inboxDumps = this._inboxDumps || new Map();
+    return this._inboxDumps.get(gatewayId) || null;
   }
 
   // Append-only, tamper-evident audit log. Each row stores hash = sha256(prevHash + canonical(row)),

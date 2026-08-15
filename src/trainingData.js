@@ -1,0 +1,438 @@
+'use strict';
+
+const { existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } = require('node:fs');
+const { basename, dirname, extname, join } = require('node:path');
+const { REQUEST_TYPES } = require('./domain');
+
+const DEFAULT_TRAINING_ROOT = process.env.TRAINING_ROOT || join(__dirname, '..', 'Training Data', 'Automation');
+const DEFAULT_CACHE_DIR = process.env.TRAINING_CACHE_DIR || join(__dirname, '..', 'data', 'training-cache');
+const TRAINING_EXTENSIONS = new Set(['.xlsx', '.xls', '.xlsm']);
+const INDEX_FILE_NAME = 'index.json';
+
+let cachedCatalog = null;
+let cachedSignature = '';
+let cachedCacheDir = '';
+
+// matchReplyAgainstTraining scans the full examples/patterns arrays on every call.
+// Live traffic calls it a few times per inbound reply, which is fine — but bulk
+// tooling (e.g. scripts/reprocess-unmatched-dryrun.js) calls it, indirectly via
+// inferReplyFamilies, once per (requestType) for EVERY candidate request considered
+// for EVERY unmatched row. Within one row, messageBody and operator are constant
+// (same gateway -> same operator), so only requestType actually varies across those
+// calls — caching collapses what would be thousands of redundant full-catalog scans
+// per row down to at most 5 (one per REQUEST_TYPES). Keyed off the catalog object
+// identity so a workbook reload (new catalog reference) invalidates it automatically;
+// capped so long-running server memory can't grow unbounded from years of unique replies.
+const MATCH_CACHE_MAX_ENTRIES = 5000;
+let matchCache = new Map();
+let matchCacheCatalogRef = null;
+
+function getMatchCache(catalog) {
+  if (matchCacheCatalogRef !== catalog) {
+    matchCache = new Map();
+    matchCacheCatalogRef = catalog;
+  }
+  return matchCache;
+}
+
+function loadTrainingCatalog({
+  rootDir = DEFAULT_TRAINING_ROOT,
+  cacheDir = DEFAULT_CACHE_DIR
+} = {}) {
+  const signature = buildSignature(rootDir);
+  if (cachedCatalog && cachedSignature === signature && cachedCacheDir === cacheDir) {
+    return cachedCatalog;
+  }
+
+  const fromCache = readTrainingCache(cacheDir);
+  if (fromCache && fromCache.signature === signature && fromCache.rootDir === rootDir) {
+    cachedCatalog = fromCache.catalog;
+    cachedSignature = signature;
+    cachedCacheDir = cacheDir;
+    return cachedCatalog;
+  }
+
+  const catalog = rebuildTrainingCache({ rootDir, cacheDir, signature });
+  cachedCatalog = catalog;
+  cachedSignature = signature;
+  cachedCacheDir = cacheDir;
+  return catalog;
+}
+
+function rebuildTrainingCache({
+  rootDir = DEFAULT_TRAINING_ROOT,
+  cacheDir = DEFAULT_CACHE_DIR,
+  signature = buildSignature(rootDir)
+} = {}) {
+  const xlsx = loadXlsx();
+  if (!xlsx) {
+    const empty = emptyCatalog(rootDir, []);
+    writeTrainingCache(cacheDir, { signature, rootDir, catalog: empty });
+    return empty;
+  }
+
+  const files = listWorkbookFiles(rootDir);
+  const examples = files.flatMap((filePath) => readWorkbook(xlsx, filePath));
+  const patterns = buildPatterns(examples);
+  const summary = buildSummary(examples);
+  const catalog = { rootDir, files, examples, patterns, summary };
+
+  writeTrainingCache(cacheDir, { signature, rootDir, catalog });
+  return catalog;
+}
+
+function matchReplyAgainstTraining({
+  requestType,
+  operator,
+  messageBody,
+  rootDir = DEFAULT_TRAINING_ROOT,
+  cacheDir = DEFAULT_CACHE_DIR
+}) {
+  const bodyTokens = tokenizeTrainingText(messageBody);
+  if (!bodyTokens.length) return emptyMatch();
+
+  const catalog = loadTrainingCatalog({ rootDir, cacheDir });
+  const cache = getMatchCache(catalog);
+  const cacheKey = `${requestType}|${operator || ''}|${messageBody}`;
+  const cached = cache.get(cacheKey);
+  if (cached) return cached;
+
+  const patterns = catalog.patterns.filter((pattern) => {
+    return pattern.requestType === requestType && (!pattern.operator || pattern.operator === operator);
+  });
+  const examples = catalog.examples.filter((example) => {
+    return example.requestType === requestType
+      && (!example.operator || example.operator === operator)
+      && example.replyText;
+  });
+
+  const keywordHits = patterns.flatMap((pattern) => {
+    return pattern.keywords
+      .filter(({ token }) => bodyTokens.includes(token))
+      .map(({ token, count }) => ({ token, count, operator: pattern.operator || operator || '' }));
+  }).sort((a, b) => b.count - a.count || a.token.localeCompare(b.token));
+
+  const exampleHits = examples
+    .map((example) => scoreExampleOverlap(example, bodyTokens))
+    .filter((entry) => entry.score > 0)
+    .sort((a, b) => b.score - a.score || b.overlapTokens.length - a.overlapTokens.length)
+    .slice(0, 5);
+
+  const score = keywordHits.reduce((sum, hit) => sum + Math.min(hit.count, 3), 0)
+    + exampleHits.reduce((sum, hit) => sum + hit.score, 0);
+
+  const result = {
+    matched: keywordHits.length >= 2 || exampleHits.some((entry) => entry.score >= 2),
+    score,
+    keywordHits: keywordHits.slice(0, 10),
+    exampleHits
+  };
+
+  if (cache.size >= MATCH_CACHE_MAX_ENTRIES) {
+    const oldestKey = cache.keys().next().value;
+    cache.delete(oldestKey);
+  }
+  cache.set(cacheKey, result);
+  return result;
+}
+
+function scoreReplyFamiliesFromTraining(
+  messageBody,
+  operator,
+  rootDir = DEFAULT_TRAINING_ROOT,
+  cacheDir = DEFAULT_CACHE_DIR
+) {
+  const bodyTokens = tokenizeTrainingText(messageBody);
+  if (!bodyTokens.length) return [];
+
+  loadTrainingCatalog({ rootDir, cacheDir });
+  const scores = Object.values(REQUEST_TYPES).map((requestType) => {
+    const result = matchReplyAgainstTraining({ requestType, operator, messageBody, rootDir, cacheDir });
+    return {
+      requestType,
+      score: result.score,
+      matched: result.matched
+    };
+  }).filter((entry) => entry.score > 0 || entry.matched);
+
+  return scores.sort((a, b) => b.score - a.score || a.requestType.localeCompare(b.requestType));
+}
+
+const REQUEST_HEADER_ALIASES = ['request', 'request text', 'sms request', 'query', 'input'];
+const REPLY_HEADER_ALIASES = ['reply', 'response', 'operator reply', 'sms reply', 'output'];
+const HEADER_SCAN_LIMIT = 10;
+
+function readWorkbook(xlsx, filePath) {
+  const workbook = xlsx.readFile(filePath, { cellDates: false });
+  return workbook.SheetNames.flatMap((sheetName) => {
+    // Read as a raw array-of-arrays first so the real header row can be found even when
+    // a title/blank row sits above it (sheet_to_json would otherwise synthesize __EMPTY
+    // column names from that first row and silently drop every data row).
+    const sheet = workbook.Sheets[sheetName];
+    const aoa = xlsx.utils.sheet_to_json(sheet, { header: 1, defval: '', raw: false });
+    const headerIndex = findHeaderRowIndex(aoa);
+    const headerRow = aoa[headerIndex] || [];
+
+    const rows = aoa.slice(headerIndex + 1).map((dataRow) => {
+      const obj = {};
+      headerRow.forEach((key, col) => {
+        if (key) obj[String(key)] = dataRow[col] ?? '';
+      });
+      return obj;
+    });
+
+    return rows
+      .map((row, index) => normalizeRow(filePath, sheetName, row, headerIndex + index + 2))
+      .filter(Boolean);
+  });
+}
+
+// Find the row that actually contains the column labels (Request/Reply/etc.), scanning
+// the first few rows instead of assuming row 1 — a title or blank row above the real
+// header is common in hand-maintained workbooks.
+function findHeaderRowIndex(aoa) {
+  const limit = Math.min(aoa.length, HEADER_SCAN_LIMIT);
+  for (let i = 0; i < limit; i++) {
+    const cells = (aoa[i] || []).map((cell) => normalizeHeader(cell));
+    const hasRequest = REQUEST_HEADER_ALIASES.some((alias) => cells.includes(alias));
+    const hasReply = REPLY_HEADER_ALIASES.some((alias) => cells.includes(alias));
+    if (hasRequest || hasReply) return i;
+  }
+  return 0;
+}
+
+function normalizeRow(filePath, sheetName, row, rowNumber) {
+  const requestType = inferRequestType(filePath, row);
+  const operator = inferOperator(filePath, row);
+  const requestText = pick(row, REQUEST_HEADER_ALIASES);
+  const replyText = pick(row, REPLY_HEADER_ALIASES);
+
+  if (!requestText && !replyText) return null;
+
+  return {
+    sourceFile: filePath,
+    sourceSheet: sheetName,
+    sourceRow: rowNumber,
+    fileName: basename(filePath),
+    requestType,
+    operator,
+    requestText,
+    replyText,
+    tokens: tokenizeTrainingText(replyText)
+  };
+}
+
+function buildPatterns(examples) {
+  const grouped = new Map();
+  for (const example of examples) {
+    if (!example.requestType || !example.replyText) continue;
+    const key = `${example.requestType}:${example.operator || ''}`;
+    if (!grouped.has(key)) {
+      grouped.set(key, {
+        requestType: example.requestType,
+        operator: example.operator || '',
+        keywords: new Map()
+      });
+    }
+    const group = grouped.get(key);
+    for (const token of example.tokens) {
+      group.keywords.set(token, (group.keywords.get(token) || 0) + 1);
+    }
+  }
+
+  return [...grouped.values()].map((group) => ({
+    requestType: group.requestType,
+    operator: group.operator,
+    keywords: [...group.keywords.entries()]
+      .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+      .slice(0, 50)
+      .map(([token, count]) => ({ token, count }))
+  }));
+}
+
+function buildSummary(examples) {
+  const summary = {
+    totalExamples: examples.length,
+    blankReplies: examples.filter((example) => !example.replyText).length,
+    byRequestType: {},
+    byOperator: {},
+    byRequestTypeAndOperator: {}
+  };
+
+  for (const example of examples) {
+    increment(summary.byRequestType, example.requestType || 'UNKNOWN');
+    increment(summary.byOperator, example.operator || 'UNKNOWN');
+    increment(summary.byRequestTypeAndOperator, `${example.requestType || 'UNKNOWN'}:${example.operator || 'UNKNOWN'}`);
+  }
+
+  return summary;
+}
+
+function scoreExampleOverlap(example, bodyTokens) {
+  const overlapTokens = [...new Set(example.tokens.filter((token) => bodyTokens.includes(token)))];
+  return {
+    sourceFile: example.sourceFile,
+    sourceSheet: example.sourceSheet,
+    sourceRow: example.sourceRow,
+    score: overlapTokens.length,
+    overlapTokens
+  };
+}
+
+function tokenizeTrainingText(text) {
+  const tokens = String(text || '').toLowerCase().match(/[a-z0-9]{3,}|[\u0980-\u09FF]{2,}/g) || [];
+  return tokens.filter((token) => !isVolatileToken(token));
+}
+
+function isVolatileToken(token) {
+  return /^\d{3,}$/.test(token) || /^\d{4}-?\d{2}-?\d{2}/.test(token);
+}
+
+function pick(row, names) {
+  const entries = Object.entries(row);
+  for (const name of names) {
+    const found = entries.find(([key]) => normalizeHeader(key) === normalizeHeader(name));
+    if (found && String(found[1]).trim()) return String(found[1]).trim();
+  }
+  return '';
+}
+
+function inferRequestType(filePath, row) {
+  const joined = `${filePath} ${Object.values(row).join(' ')}`.toUpperCase();
+  return Object.values(REQUEST_TYPES).find((type) => joined.includes(type)) || '';
+}
+
+function inferOperator(filePath, row) {
+  const joined = `${filePath} ${Object.values(row).join(' ')}`.toUpperCase();
+  if (joined.includes('BANGLALINK')) return 'BANGLALINK';
+  if (joined.includes('ROBI')) return 'ROBI';
+  if (joined.includes('GRAMEENPHONE') || joined.includes(' GP') || joined.includes('[GP]')) return 'GP';
+  return '';
+}
+
+function normalizeHeader(value) {
+  return String(value).trim().toLowerCase().replace(/[_-]+/g, ' ').replace(/\s+/g, ' ');
+}
+
+function listWorkbookFiles(rootDir) {
+  if (!existsSync(rootDir)) return [];
+  return readdirSync(rootDir, { withFileTypes: true })
+    .filter((entry) => entry.isFile())
+    .map((entry) => join(rootDir, entry.name))
+    .filter((filePath) => {
+      const name = basename(filePath);
+      const ext = extname(filePath).toLowerCase();
+      return TRAINING_EXTENSIONS.has(ext)
+        && !name.startsWith('~$')
+        && !name.endsWith('.tmp');
+    })
+    .filter((filePath) => Object.values(REQUEST_TYPES).some((type) => basename(filePath).toUpperCase().includes(type)));
+}
+
+function buildSignature(rootDir) {
+  const files = listWorkbookFiles(rootDir);
+  const parts = [rootDir];
+  for (const filePath of files) {
+    const stats = statSync(filePath);
+    parts.push(`${filePath}:${stats.mtimeMs}:${stats.size}`);
+  }
+  return parts.join('|');
+}
+
+function readTrainingCache(cacheDir) {
+  const indexFile = join(cacheDir, INDEX_FILE_NAME);
+  if (!existsSync(indexFile)) return null;
+  try {
+    const index = JSON.parse(readFileSync(indexFile, 'utf8'));
+    const examples = [];
+    const patterns = [];
+    for (const requestType of Object.values(REQUEST_TYPES)) {
+      const typeFile = join(cacheDir, `${requestType}.json`);
+      if (!existsSync(typeFile)) continue;
+      const payload = JSON.parse(readFileSync(typeFile, 'utf8'));
+      examples.push(...(payload.examples || []));
+      patterns.push(...(payload.patterns || []));
+    }
+    return {
+      signature: index.signature,
+      rootDir: index.rootDir,
+      catalog: {
+        rootDir: index.rootDir,
+        files: index.files || [],
+        examples,
+        patterns,
+        summary: index.summary || buildSummary([])
+      }
+    };
+  } catch {
+    return null;
+  }
+}
+
+function writeTrainingCache(cacheDir, payload) {
+  mkdirSync(cacheDir, { recursive: true });
+  const byType = new Map(Object.values(REQUEST_TYPES).map((requestType) => [requestType, { examples: [], patterns: [] }]));
+
+  for (const example of payload.catalog.examples || []) {
+    if (!byType.has(example.requestType)) continue;
+    byType.get(example.requestType).examples.push(example);
+  }
+  for (const pattern of payload.catalog.patterns || []) {
+    if (!byType.has(pattern.requestType)) continue;
+    byType.get(pattern.requestType).patterns.push(pattern);
+  }
+
+  for (const requestType of Object.values(REQUEST_TYPES)) {
+    const typeFile = join(cacheDir, `${requestType}.json`);
+    writeFileSync(typeFile, JSON.stringify({
+      generatedAt: new Date().toISOString(),
+      requestType,
+      examples: byType.get(requestType).examples,
+      patterns: byType.get(requestType).patterns
+    }, null, 2), 'utf8');
+  }
+
+  const indexFile = join(cacheDir, INDEX_FILE_NAME);
+  writeFileSync(indexFile, JSON.stringify({
+    generatedAt: new Date().toISOString(),
+    signature: payload.signature,
+    rootDir: payload.rootDir,
+    files: payload.catalog.files,
+    summary: payload.catalog.summary
+  }, null, 2), 'utf8');
+}
+
+function loadXlsx() {
+  try {
+    return require('xlsx');
+  } catch {
+    return null;
+  }
+}
+
+function emptyCatalog(rootDir, files = []) {
+  return { rootDir, files, examples: [], patterns: [], summary: buildSummary([]) };
+}
+
+function emptyMatch() {
+  return {
+    matched: false,
+    score: 0,
+    keywordHits: [],
+    exampleHits: []
+  };
+}
+
+function increment(target, key) {
+  target[key] = (target[key] || 0) + 1;
+}
+
+module.exports = {
+  DEFAULT_TRAINING_ROOT,
+  DEFAULT_CACHE_DIR,
+  loadTrainingCatalog,
+  rebuildTrainingCache,
+  matchReplyAgainstTraining,
+  scoreReplyFamiliesFromTraining,
+  tokenizeTrainingText
+};

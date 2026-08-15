@@ -1,0 +1,1145 @@
+{
+  "generatedAt": "2026-06-20T05:25:00.884Z",
+  "requestType": "LRL",
+  "examples": [
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 2,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "GP",
+      "requestText": "LRL 01724034442",
+      "replyText": "No RL Info Found of 1724034442 [GP]",
+      "tokens": [
+        "info",
+        "found"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 3,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "ROBI",
+      "requestText": "LRL 01868577041",
+      "replyText": "MSISDN: 8801868577041, RADIO LOCATION: Kashipur, Barisal Sadar (kotwali), Barisal, Barisal, LAC ID: 8006, CELL ID: 28105, LAT, LONG: 22.73461111, 90.33791667, MS STATUS: Attached, LAST ACTION TIME: 2026-06-08 07:50:46 [Robi]",
+      "tokens": [
+        "msisdn",
+        "radio",
+        "location",
+        "kashipur",
+        "barisal",
+        "sadar",
+        "kotwali",
+        "barisal",
+        "barisal",
+        "lac",
+        "cell",
+        "lat",
+        "long",
+        "status",
+        "attached",
+        "last",
+        "action",
+        "time",
+        "robi"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 4,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "GP",
+      "requestText": "LRL 01322350825",
+      "replyText": "MSISDN: 8801322350825, LastActiveDateTime: 2026-06-08 13:34:43, LACID: 56382, CellID: 25739297, Latitude: 23.725278, Longitude: 90.411111, Address: 5, BANGABANDHU AVENUE, DHAKA-100, CS Status: Idle, Volte Status: not in VoLTE network [GP]",
+      "tokens": [
+        "msisdn",
+        "lastactivedatetime",
+        "lacid",
+        "cellid",
+        "latitude",
+        "longitude",
+        "address",
+        "bangabandhu",
+        "avenue",
+        "dhaka",
+        "status",
+        "idle",
+        "volte",
+        "status",
+        "not",
+        "volte",
+        "network"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 5,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "ROBI",
+      "requestText": "LRL 01612196151",
+      "replyText": "MSISDN: 8801612196151, RADIO LOCATION: (no specific location), MS STATUS: Attached, LAST ACTION TIME: 2026-06-08 15:15:55 [Robi]",
+      "tokens": [
+        "msisdn",
+        "radio",
+        "location",
+        "specific",
+        "location",
+        "status",
+        "attached",
+        "last",
+        "action",
+        "time",
+        "robi"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 6,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "ROBI",
+      "requestText": "LRL 01816906726",
+      "replyText": "MSISDN: 8801816906726, RADIO LOCATION: Number is out of network. LAST ATTACHED DATE & TIME: 2026-06-08 15:30:01 [Robi]",
+      "tokens": [
+        "msisdn",
+        "radio",
+        "location",
+        "number",
+        "out",
+        "network",
+        "last",
+        "attached",
+        "date",
+        "time",
+        "robi"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 7,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "GP",
+      "requestText": "LRL 01302981818",
+      "replyText": "MSISDN: 8801302981818, LastActiveDateTime: 2026-06-08 18:47:30, LACID: 23102, CellID: 41905, Latitude: 22.752528, Longitude: 89.686667, Address: LAL CHONDROPUR, GABKHALI, FAKIRHAT, BAGERHAT, CS Status: Idle, Volte Status: N/A [GP]",
+      "tokens": [
+        "msisdn",
+        "lastactivedatetime",
+        "lacid",
+        "cellid",
+        "latitude",
+        "longitude",
+        "address",
+        "lal",
+        "chondropur",
+        "gabkhali",
+        "fakirhat",
+        "bagerhat",
+        "status",
+        "idle",
+        "volte",
+        "status"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 8,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "ROBI",
+      "requestText": "LRL 01838880159",
+      "replyText": "MSISDN: 8801838880159, RADIO LOCATION: Number is out of network. LAST ATTACHED DATE & TIME: 2026-06-09 19:08:58 [Robi]",
+      "tokens": [
+        "msisdn",
+        "radio",
+        "location",
+        "number",
+        "out",
+        "network",
+        "last",
+        "attached",
+        "date",
+        "time",
+        "robi"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 9,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "ROBI",
+      "requestText": "LRL 01872664308",
+      "replyText": "MSISDN: 8801872664308, RADIO LOCATION: Number is out of network. LAST ATTACHED DATE & TIME: 2026-06-08 22:38:51 [Robi]",
+      "tokens": [
+        "msisdn",
+        "radio",
+        "location",
+        "number",
+        "out",
+        "network",
+        "last",
+        "attached",
+        "date",
+        "time",
+        "robi"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 10,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "ROBI",
+      "requestText": "LRL 01648051331",
+      "replyText": "MSISDN: 8801648051331, RADIO LOCATION: Ward No-40 (Part), Mohammadpur, Dhaka, Dhaka, LAC ID: 108, CELL ID: 21724, LAT, LONG: 23.754868, 90.381101, MS STATUS: Attached, LAST ACTION TIME: 2026-06-09 22:00:58 [Robi]",
+      "tokens": [
+        "msisdn",
+        "radio",
+        "location",
+        "ward",
+        "part",
+        "mohammadpur",
+        "dhaka",
+        "dhaka",
+        "lac",
+        "cell",
+        "lat",
+        "long",
+        "status",
+        "attached",
+        "last",
+        "action",
+        "time",
+        "robi"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 11,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "ROBI",
+      "requestText": "LRL 01642348522",
+      "replyText": "MSISDN: 8801642348522, RADIO LOCATION: Sarikal, Gaurnadi, Barisal, Barisal, LAC ID: 8004, CELL ID: 28037, LAT, LONG: 22.89985817, 90.30252928, MS STATUS: Attached, LAST ACTION TIME: 2026-06-09 22:59:24 [Robi]",
+      "tokens": [
+        "msisdn",
+        "radio",
+        "location",
+        "sarikal",
+        "gaurnadi",
+        "barisal",
+        "barisal",
+        "lac",
+        "cell",
+        "lat",
+        "long",
+        "status",
+        "attached",
+        "last",
+        "action",
+        "time",
+        "robi"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 12,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "ROBI",
+      "requestText": "LRL 01642348522",
+      "replyText": "MSISDN: 8801642348522, RADIO LOCATION: Sarikal, Gaurnadi, Barisal, Barisal, LAC ID: 8004, CELL ID: 28037, LAT, LONG: 22.89985817, 90.30252928, MS STATUS: Attached, LAST ACTION TIME: 2026-06-09 19:36:32 [Robi]",
+      "tokens": [
+        "msisdn",
+        "radio",
+        "location",
+        "sarikal",
+        "gaurnadi",
+        "barisal",
+        "barisal",
+        "lac",
+        "cell",
+        "lat",
+        "long",
+        "status",
+        "attached",
+        "last",
+        "action",
+        "time",
+        "robi"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 13,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "ROBI",
+      "requestText": "LRL 01631371920",
+      "replyText": "MSISDN: 8801631371920, RADIO LOCATION: Number is not in use. [Robi]",
+      "tokens": [
+        "msisdn",
+        "radio",
+        "location",
+        "number",
+        "not",
+        "use",
+        "robi"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 14,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "ROBI",
+      "requestText": "LRL 01881971315",
+      "replyText": "MSISDN: 8801881971315, RADIO LOCATION: Number is not in use. [Robi]",
+      "tokens": [
+        "msisdn",
+        "radio",
+        "location",
+        "number",
+        "not",
+        "use",
+        "robi"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 15,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "BANGLALINK",
+      "requestText": "LRL 01937344944",
+      "replyText": "MN: 01937344944 No Radio Location Found. - Banglalink",
+      "tokens": [
+        "radio",
+        "location",
+        "found",
+        "banglalink"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 16,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "GP",
+      "requestText": "LRL 01327655002",
+      "replyText": "MSISDN: 8801327655002, LastActiveDateTime: 2026-06-10 18:32:49, LACID: 46181, CellID: 29713183, Latitude: 22.45909, Longitude: 89.83815, Address: SARALIA, MORRELGANJ, MORRELGANJ, BAGERHAT, CS Status: Idle, Volte Status: not in VoLTE network [GP]",
+      "tokens": [
+        "msisdn",
+        "lastactivedatetime",
+        "lacid",
+        "cellid",
+        "latitude",
+        "longitude",
+        "address",
+        "saralia",
+        "morrelganj",
+        "morrelganj",
+        "bagerhat",
+        "status",
+        "idle",
+        "volte",
+        "status",
+        "not",
+        "volte",
+        "network"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 17,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "BANGLALINK",
+      "requestText": "LRL 01403710124",
+      "replyText": "MN: 8801403710124, LAC/eNodeB_ID: 11619, Cell Name: DHK_L1619_221 (Cell ID: 221), Status: Attached, LRA: 2026-06-10 22:07:04+06:00, Add: Md. Anwar Karim Bhuiya Vill-Bhali P.O-Bhulta P.S-Rupganj Narayanganj, Lat: 23.78632, Long: 90.55426 - Banglalink",
+      "tokens": [
+        "lac",
+        "enodeb",
+        "cell",
+        "name",
+        "dhk",
+        "l1619",
+        "cell",
+        "status",
+        "attached",
+        "lra",
+        "add",
+        "anwar",
+        "karim",
+        "bhuiya",
+        "vill",
+        "bhali",
+        "bhulta",
+        "rupganj",
+        "narayanganj",
+        "lat",
+        "long",
+        "banglalink"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 18,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "BANGLALINK",
+      "requestText": "LRL 01965308627",
+      "replyText": "MN: 8801965308627, LAC/eNodeB_ID: 10209, Cell Name: DHK_L0523 (Cell ID: 135), Status: Attached, LRA: 2026-06-19 17:23:01+06:00, Add: Abdul Jalil Talukdar, Durgapur Bajar, Durgapur, Netrokona,Durgapur_Netrakona,Netrakona, Lat: 25.1246, Long: 90.6777 - Banglalink",
+      "tokens": [
+        "lac",
+        "enodeb",
+        "cell",
+        "name",
+        "dhk",
+        "l0523",
+        "cell",
+        "status",
+        "attached",
+        "lra",
+        "add",
+        "abdul",
+        "jalil",
+        "talukdar",
+        "durgapur",
+        "bajar",
+        "durgapur",
+        "netrokona",
+        "durgapur",
+        "netrakona",
+        "netrakona",
+        "lat",
+        "long",
+        "banglalink"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 19,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "BANGLALINK",
+      "requestText": "LRL 01931388798",
+      "replyText": "MN: 8801931388798, LAC/eNodeB_ID: 173, Cell Name: DHK݃3 (Cell ID: 17423), Status: Attached, LRA: 2026-06-15 00:25:45+06:00, Add: NandoKanon1300North South Road Polaspur East Donia Shyampur Dhaka,Kadamtali,Dhaka, Lat: 23.69967, Long: 90.45347 - Banglalink",
+      "tokens": [
+        "lac",
+        "enodeb",
+        "cell",
+        "name",
+        "dhk",
+        "cell",
+        "status",
+        "attached",
+        "lra",
+        "add",
+        "nandokanon1300north",
+        "south",
+        "road",
+        "polaspur",
+        "east",
+        "donia",
+        "shyampur",
+        "dhaka",
+        "kadamtali",
+        "dhaka",
+        "lat",
+        "long",
+        "banglalink"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 20,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "BANGLALINK",
+      "requestText": "LRL 01921797846",
+      "replyText": "MN: 01921797846 No Radio Location Found. - Banglalink",
+      "tokens": [
+        "radio",
+        "location",
+        "found",
+        "banglalink"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 21,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "GP",
+      "requestText": "LRL 01711568316",
+      "replyText": "MSISDN: 8801711568316\r\nLastActiveDateTime: 2026-06-15 15:47:18 06:00\r\nLACID: 48251\r\nCellID: 35852577\r\nLatitude: 22.700083\r\nLongitude: 90.3645\r\nAddress: NORTH ALEKANDA; NEW ASHRAF RD,BARISAL SADAR,BARISAL,BARISAL\r\nCS Status: Idle\r\nVolte Status: not in VoLTE network [GP]",
+      "tokens": [
+        "msisdn",
+        "lastactivedatetime",
+        "lacid",
+        "cellid",
+        "latitude",
+        "longitude",
+        "address",
+        "north",
+        "alekanda",
+        "new",
+        "ashraf",
+        "barisal",
+        "sadar",
+        "barisal",
+        "barisal",
+        "status",
+        "idle",
+        "volte",
+        "status",
+        "not",
+        "volte",
+        "network"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 22,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "GP",
+      "requestText": "LRL 01744708168",
+      "replyText": "MSISDN: 8801744708168\r\nLastActiveDateTime: 2026-06-15 04:33:18 06:00\r\nLACID: 21025\r\nCellID: 34032\r\nLatitude: 23.77964\r\nLongitude: 90.24752\r\nAddress: JHAUCHAR BAZAR, HEMAYETPUR BAZAR, SAVAR,\r\nCS Status: Idle\r\nVolte Status: N/A [GP]",
+      "tokens": [
+        "msisdn",
+        "lastactivedatetime",
+        "lacid",
+        "cellid",
+        "latitude",
+        "longitude",
+        "address",
+        "jhauchar",
+        "bazar",
+        "hemayetpur",
+        "bazar",
+        "savar",
+        "status",
+        "idle",
+        "volte",
+        "status"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 23,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "GP",
+      "requestText": "LRL 01335578187",
+      "replyText": "MSISDN: 8801335578187\r\nLastActiveDateTime: 2026-06-16 00:06:43 06:00\r\nLACID: 46481\r\nCellID: 29557517\r\nLatitude: 23.08075\r\nLongitude: 90.422333\r\nAddress: VILL: DHIPUR PO: GOSAIRHAT  PS: GOSAIRHAT  DIST:SHARIATPUR\r\nCS Status: Idle\r\nVolte Status: not in VoLTE network [GP]",
+      "tokens": [
+        "msisdn",
+        "lastactivedatetime",
+        "lacid",
+        "cellid",
+        "latitude",
+        "longitude",
+        "address",
+        "vill",
+        "dhipur",
+        "gosairhat",
+        "gosairhat",
+        "dist",
+        "shariatpur",
+        "status",
+        "idle",
+        "volte",
+        "status",
+        "not",
+        "volte",
+        "network"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 24,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "GP",
+      "requestText": "LRL 01343850025",
+      "replyText": "MSISDN: 8801343850025\r\nLastActiveDateTime: 2026-06-16 09:20:20 06:00\r\nLACID: 46331\r\nCellID: 29666059\r\nLatitude: 22.807177\r\nLongitude: 90.332201\r\nAddress: KALIKAPUR,BABUGANJ,BARISAL\r\nCS Status: Idle\r\nVolte Status: not in VoLTE network [GP]",
+      "tokens": [
+        "msisdn",
+        "lastactivedatetime",
+        "lacid",
+        "cellid",
+        "latitude",
+        "longitude",
+        "address",
+        "kalikapur",
+        "babuganj",
+        "barisal",
+        "status",
+        "idle",
+        "volte",
+        "status",
+        "not",
+        "volte",
+        "network"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+      "sourceSheet": "LRL",
+      "sourceRow": 25,
+      "fileName": "LRL.xlsx",
+      "requestType": "LRL",
+      "operator": "GP",
+      "requestText": "LRL 01340484381",
+      "replyText": "MSISDN: 8801340484381\r\nLastActiveDateTime: 2026-06-16 15:53:27 06:00\r\nLACID: 48251\r\nCellID: 35851789\r\nLatitude: 22.715444\r\nLongitude: 90.348778\r\nAddress: SARNA MANSION; NATULLAHBAD BUS STAND; KASHIPUR,BARISAL SADAR,BARISAL SADAR,BARISAL\r\nCS Status: Idle\r\nVolte Status: not in VoLTE network [GP]",
+      "tokens": [
+        "msisdn",
+        "lastactivedatetime",
+        "lacid",
+        "cellid",
+        "latitude",
+        "longitude",
+        "address",
+        "sarna",
+        "mansion",
+        "natullahbad",
+        "bus",
+        "stand",
+        "kashipur",
+        "barisal",
+        "sadar",
+        "barisal",
+        "sadar",
+        "barisal",
+        "status",
+        "idle",
+        "volte",
+        "status",
+        "not",
+        "volte",
+        "network"
+      ]
+    }
+  ],
+  "patterns": [
+    {
+      "requestType": "LRL",
+      "operator": "GP",
+      "keywords": [
+        {
+          "token": "status",
+          "count": 16
+        },
+        {
+          "token": "volte",
+          "count": 14
+        },
+        {
+          "token": "address",
+          "count": 8
+        },
+        {
+          "token": "cellid",
+          "count": 8
+        },
+        {
+          "token": "idle",
+          "count": 8
+        },
+        {
+          "token": "lacid",
+          "count": 8
+        },
+        {
+          "token": "lastactivedatetime",
+          "count": 8
+        },
+        {
+          "token": "latitude",
+          "count": 8
+        },
+        {
+          "token": "longitude",
+          "count": 8
+        },
+        {
+          "token": "msisdn",
+          "count": 8
+        },
+        {
+          "token": "barisal",
+          "count": 7
+        },
+        {
+          "token": "network",
+          "count": 6
+        },
+        {
+          "token": "not",
+          "count": 6
+        },
+        {
+          "token": "sadar",
+          "count": 3
+        },
+        {
+          "token": "bagerhat",
+          "count": 2
+        },
+        {
+          "token": "bazar",
+          "count": 2
+        },
+        {
+          "token": "gosairhat",
+          "count": 2
+        },
+        {
+          "token": "morrelganj",
+          "count": 2
+        },
+        {
+          "token": "alekanda",
+          "count": 1
+        },
+        {
+          "token": "ashraf",
+          "count": 1
+        },
+        {
+          "token": "avenue",
+          "count": 1
+        },
+        {
+          "token": "babuganj",
+          "count": 1
+        },
+        {
+          "token": "bangabandhu",
+          "count": 1
+        },
+        {
+          "token": "bus",
+          "count": 1
+        },
+        {
+          "token": "chondropur",
+          "count": 1
+        },
+        {
+          "token": "dhaka",
+          "count": 1
+        },
+        {
+          "token": "dhipur",
+          "count": 1
+        },
+        {
+          "token": "dist",
+          "count": 1
+        },
+        {
+          "token": "fakirhat",
+          "count": 1
+        },
+        {
+          "token": "found",
+          "count": 1
+        },
+        {
+          "token": "gabkhali",
+          "count": 1
+        },
+        {
+          "token": "hemayetpur",
+          "count": 1
+        },
+        {
+          "token": "info",
+          "count": 1
+        },
+        {
+          "token": "jhauchar",
+          "count": 1
+        },
+        {
+          "token": "kalikapur",
+          "count": 1
+        },
+        {
+          "token": "kashipur",
+          "count": 1
+        },
+        {
+          "token": "lal",
+          "count": 1
+        },
+        {
+          "token": "mansion",
+          "count": 1
+        },
+        {
+          "token": "natullahbad",
+          "count": 1
+        },
+        {
+          "token": "new",
+          "count": 1
+        },
+        {
+          "token": "north",
+          "count": 1
+        },
+        {
+          "token": "saralia",
+          "count": 1
+        },
+        {
+          "token": "sarna",
+          "count": 1
+        },
+        {
+          "token": "savar",
+          "count": 1
+        },
+        {
+          "token": "shariatpur",
+          "count": 1
+        },
+        {
+          "token": "stand",
+          "count": 1
+        },
+        {
+          "token": "vill",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "requestType": "LRL",
+      "operator": "ROBI",
+      "keywords": [
+        {
+          "token": "location",
+          "count": 11
+        },
+        {
+          "token": "msisdn",
+          "count": 10
+        },
+        {
+          "token": "radio",
+          "count": 10
+        },
+        {
+          "token": "robi",
+          "count": 10
+        },
+        {
+          "token": "attached",
+          "count": 8
+        },
+        {
+          "token": "last",
+          "count": 8
+        },
+        {
+          "token": "time",
+          "count": 8
+        },
+        {
+          "token": "barisal",
+          "count": 7
+        },
+        {
+          "token": "action",
+          "count": 5
+        },
+        {
+          "token": "number",
+          "count": 5
+        },
+        {
+          "token": "status",
+          "count": 5
+        },
+        {
+          "token": "cell",
+          "count": 4
+        },
+        {
+          "token": "lac",
+          "count": 4
+        },
+        {
+          "token": "lat",
+          "count": 4
+        },
+        {
+          "token": "long",
+          "count": 4
+        },
+        {
+          "token": "date",
+          "count": 3
+        },
+        {
+          "token": "network",
+          "count": 3
+        },
+        {
+          "token": "out",
+          "count": 3
+        },
+        {
+          "token": "dhaka",
+          "count": 2
+        },
+        {
+          "token": "gaurnadi",
+          "count": 2
+        },
+        {
+          "token": "not",
+          "count": 2
+        },
+        {
+          "token": "sarikal",
+          "count": 2
+        },
+        {
+          "token": "use",
+          "count": 2
+        },
+        {
+          "token": "kashipur",
+          "count": 1
+        },
+        {
+          "token": "kotwali",
+          "count": 1
+        },
+        {
+          "token": "mohammadpur",
+          "count": 1
+        },
+        {
+          "token": "part",
+          "count": 1
+        },
+        {
+          "token": "sadar",
+          "count": 1
+        },
+        {
+          "token": "specific",
+          "count": 1
+        },
+        {
+          "token": "ward",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "requestType": "LRL",
+      "operator": "BANGLALINK",
+      "keywords": [
+        {
+          "token": "cell",
+          "count": 6
+        },
+        {
+          "token": "banglalink",
+          "count": 5
+        },
+        {
+          "token": "add",
+          "count": 3
+        },
+        {
+          "token": "attached",
+          "count": 3
+        },
+        {
+          "token": "dhk",
+          "count": 3
+        },
+        {
+          "token": "durgapur",
+          "count": 3
+        },
+        {
+          "token": "enodeb",
+          "count": 3
+        },
+        {
+          "token": "lac",
+          "count": 3
+        },
+        {
+          "token": "lat",
+          "count": 3
+        },
+        {
+          "token": "long",
+          "count": 3
+        },
+        {
+          "token": "lra",
+          "count": 3
+        },
+        {
+          "token": "name",
+          "count": 3
+        },
+        {
+          "token": "status",
+          "count": 3
+        },
+        {
+          "token": "dhaka",
+          "count": 2
+        },
+        {
+          "token": "found",
+          "count": 2
+        },
+        {
+          "token": "location",
+          "count": 2
+        },
+        {
+          "token": "netrakona",
+          "count": 2
+        },
+        {
+          "token": "radio",
+          "count": 2
+        },
+        {
+          "token": "abdul",
+          "count": 1
+        },
+        {
+          "token": "anwar",
+          "count": 1
+        },
+        {
+          "token": "bajar",
+          "count": 1
+        },
+        {
+          "token": "bhali",
+          "count": 1
+        },
+        {
+          "token": "bhuiya",
+          "count": 1
+        },
+        {
+          "token": "bhulta",
+          "count": 1
+        },
+        {
+          "token": "donia",
+          "count": 1
+        },
+        {
+          "token": "east",
+          "count": 1
+        },
+        {
+          "token": "jalil",
+          "count": 1
+        },
+        {
+          "token": "kadamtali",
+          "count": 1
+        },
+        {
+          "token": "karim",
+          "count": 1
+        },
+        {
+          "token": "l0523",
+          "count": 1
+        },
+        {
+          "token": "l1619",
+          "count": 1
+        },
+        {
+          "token": "nandokanon1300north",
+          "count": 1
+        },
+        {
+          "token": "narayanganj",
+          "count": 1
+        },
+        {
+          "token": "netrokona",
+          "count": 1
+        },
+        {
+          "token": "polaspur",
+          "count": 1
+        },
+        {
+          "token": "road",
+          "count": 1
+        },
+        {
+          "token": "rupganj",
+          "count": 1
+        },
+        {
+          "token": "shyampur",
+          "count": 1
+        },
+        {
+          "token": "south",
+          "count": 1
+        },
+        {
+          "token": "talukdar",
+          "count": 1
+        },
+        {
+          "token": "vill",
+          "count": 1
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,2098 @@
+[
+  {
+    "capturedAt": "2026-07-27T23:07:40.873Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260727-4219-GFQ1",
+    "requestType": "NID-MS",
+    "operator": "GP",
+    "payload": "1994649558065",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for NID: 1994649558065 [GP]",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-07-27T23:07:41.710Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260727-4219-GFQ1",
+    "requestType": "NID-MS",
+    "operator": "ROBI",
+    "payload": "1994649558065",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID: 1994649558065\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-07-27T23:07:51.881Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260727-4219-GFQ1",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "1994649558065",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID 1994649558065 No data found - Banglalink",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-07-27T23:09:17.690Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260727-4220-5KGN",
+    "requestType": "NID-MS",
+    "operator": "ROBI",
+    "payload": "1992522300267",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID: 1992522300267\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-07-27T23:09:17.943Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260727-4220-5KGN",
+    "requestType": "NID-MS",
+    "operator": "GP",
+    "payload": "1992522300267",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for NID: 1992522300267 [GP]",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-07-27T23:09:27.491Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260727-4220-5KGN",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "1992522300267",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID 1992522300267 No data found - Banglalink",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-07-28T06:24:34.872Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260728-4263-2R6S",
+    "requestType": "NID-MS",
+    "operator": "GP",
+    "payload": "19807815519094536",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for NID: 19807815519094536 [GP]",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-07-29T04:51:49.119Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260729-4453-8GHA",
+    "requestType": "NID-MS",
+    "operator": "ROBI",
+    "payload": "1502647579",
+    "requesterName": "ASP Ujirpur Circle",
+    "messageBody": "NID: 1502647579\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-07-29T05:33:56.005Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260729-4476-NSQQ",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "1965057936",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID 1965057936 No data found - Banglalink",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-07-29T06:38:26.937Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260729-4514-H8WH",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "1965057936",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID 1965057936 No data found - Banglalink",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-07-29T07:04:53.035Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260729-4537-0KOF",
+    "requestType": "NID-MS",
+    "operator": "GP",
+    "payload": "0616271037040",
+    "requesterName": "OC Mehendigong Thana",
+    "messageBody": "Sorry No records found for NID: 0616271037040 [GP]",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-07-29T07:04:57.355Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260729-4537-0KOF",
+    "requestType": "NID-MS",
+    "operator": "ROBI",
+    "payload": "0616271037040",
+    "requesterName": "OC Mehendigong Thana",
+    "messageBody": "NID: 0616271037040\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-07-29T07:05:00.872Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260729-4537-0KOF",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "0616271037040",
+    "requesterName": "OC Mehendigong Thana",
+    "messageBody": "NID 0616271037040 No data found - Banglalink",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-07-29T07:28:53.819Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260729-4552-5C3C",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "8702962864",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID 8702962864 No data found - Banglalink",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-07-29T07:29:51.931Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260729-4552-5C3C",
+    "requestType": "NID-MS",
+    "operator": "ROBI",
+    "payload": "8702962864",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID: 8702962864\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-07-29T09:45:43.691Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260729-4577-49B3",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "1021084064",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID 1021084064 No data found - Banglalink",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-07-29T15:07:44.236Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260729-4692-2JNI",
+    "requestType": "NID-MS",
+    "operator": "ROBI",
+    "payload": "9314729251655",
+    "requesterName": "oc Banaripara",
+    "messageBody": "NID: 9314729251655\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-07-29T15:07:53.388Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260729-4692-2JNI",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "9314729251655",
+    "requesterName": "oc Banaripara",
+    "messageBody": "NID 9314729251655 No data found - Banglalink",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-07-29T16:04:41.692Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260729-4699-VTA4",
+    "requestType": "NID-MS",
+    "operator": "ROBI",
+    "payload": "19906113167592757",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID: 19906113167592757\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-07-29T16:04:42.386Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260729-4699-VTA4",
+    "requestType": "NID-MS",
+    "operator": "GP",
+    "payload": "19906113167592757",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for NID: 19906113167592757 [GP]",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-07-29T16:37:36.420Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260729-4705-DMTL",
+    "requestType": "NID-MS",
+    "operator": "ROBI",
+    "payload": "19760619484000015",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID: 19760619484000015\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-07-29T19:00:28.140Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260729-4717-GAXX",
+    "requestType": "NID-MS",
+    "operator": "GP",
+    "payload": "19899314729251655",
+    "requesterName": "oc Banaripara",
+    "messageBody": "Sorry No records found for NID: 19899314729251655 [GP]",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-07-29T19:00:34.485Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260729-4717-GAXX",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "19899314729251655",
+    "requesterName": "oc Banaripara",
+    "messageBody": "NID 19899314729251655 No data found - Banglalink",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-07-29T19:03:41.407Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260729-4717-GAXX",
+    "requestType": "NID-MS",
+    "operator": "ROBI",
+    "payload": "19899314729251655",
+    "requesterName": "oc Banaripara",
+    "messageBody": "NID: 19899314729251655\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-07-30T03:55:52.317Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260730-4729-7HRH",
+    "requestType": "NID-MS",
+    "operator": "ROBI",
+    "payload": "9314729251655",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID: 9314729251655\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-07-30T03:56:08.532Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260730-4729-7HRH",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "9314729251655",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID 9314729251655 No data found - Banglalink",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-07-30T08:03:26.456Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260730-4768-BFLX",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "7330312666",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID 7330312666 No data found - Banglalink",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-07-30T14:35:19.896Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260730-4839-STV5",
+    "requestType": "NID-MS",
+    "operator": "GP",
+    "payload": "19752692619562268",
+    "requesterName": "oc Banaripara",
+    "messageBody": "Sorry No records found for NID: 19752692619562268 [GP]",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-01T15:12:35.982Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260801-5057-93XF",
+    "requestType": "NID-MS",
+    "operator": "ROBI",
+    "payload": "9154634456",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID: 9154634456\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-01T15:12:40.353Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260801-5057-93XF",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "9154634456",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID 9154634456 No data found - Banglalink",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-02T04:11:15.129Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260802-5077-Z94Q",
+    "requestType": "NID-MS",
+    "operator": "ROBI",
+    "payload": "9154634456",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID: 9154634456\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-02T04:11:30.507Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260802-5077-Z94Q",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "9154634456",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID 9154634456 No data found - Banglalink",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-02T07:11:57.112Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260802-5116-FWFK",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "5114111627",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID 5114111627 No data found - Banglalink",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-02T07:14:53.777Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260802-5119-1470",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "1002791448",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID 1002791448 No data found - Banglalink",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-02T08:30:57.314Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260802-5121-T9O7",
+    "requestType": "NID-MS",
+    "operator": "GP",
+    "payload": "6924169284",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Wrong Keyword [GP]",
+    "analysis": {
+      "confidence": "UNKNOWN",
+      "payloadMatched": false,
+      "payloadMatchCount": 0,
+      "matchedPatterns": [],
+      "trainingScore": 0,
+      "inferredReplyFamilies": []
+    }
+  },
+  {
+    "capturedAt": "2026-08-02T11:29:53.303Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260802-5171-A1Y5",
+    "requestType": "NID-MS",
+    "operator": "GP",
+    "payload": "2422692711",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for NID: 2422692711 [GP]",
+    "analysis": {
+      "confidence": "MEDIUM",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-02T12:28:46.771Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260802-5180-WMOI",
+    "requestType": "NID-MS",
+    "operator": "ROBI",
+    "payload": "9563963926",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID: 9563963926\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-02T12:33:31.299Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260802-5183-7ETQ",
+    "requestType": "NID-MS",
+    "operator": "ROBI",
+    "payload": "2617218688642",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID: 2617218688642\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-02T12:33:44.517Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260802-5183-7ETQ",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "2617218688642",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID 2617218688642 No data found - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-02T13:13:09.699Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260802-5186-KKTR",
+    "requestType": "NID-MS",
+    "operator": "GP",
+    "payload": "2422692711",
+    "requesterName": "oc Banaripara",
+    "messageBody": "Sorry No records found for NID: 2422692711 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-02T13:13:09.979Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260802-5186-KKTR",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "2422692711",
+    "requesterName": "oc Banaripara",
+    "messageBody": "NID 2422692711 No data found - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-03T05:33:36.771Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260803-5227-42I4",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "1524806864",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID 1524806864 No data found - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-03T05:52:30.350Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260803-5236-A411",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "0619421000060",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID 0619421000060 No data found - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-03T05:52:31.616Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260803-5236-A411",
+    "requestType": "NID-MS",
+    "operator": "ROBI",
+    "payload": "0619421000060",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID: 0619421000060\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-03T05:52:41.163Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260803-5236-A411",
+    "requestType": "NID-MS",
+    "operator": "GP",
+    "payload": "0619421000060",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for NID: 0619421000060 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-03T15:50:04.150Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260803-5284-6IF6",
+    "requestType": "NID-MS",
+    "operator": "GP",
+    "payload": "5074423681",
+    "requesterName": "oc Banaripara",
+    "messageBody": "Sorry No records found for NID: 5074423681 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-04T18:03:27.611Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260804-5539-CWVG",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "3515139563341",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID 3515139563341 No data found - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-04T18:07:31.604Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260804-5539-CWVG",
+    "requestType": "NID-MS",
+    "operator": "ROBI",
+    "payload": "3515139563341",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID: 3515139563341\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-05T07:48:41.093Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260805-5562-LAQJ",
+    "requestType": "NID-MS",
+    "operator": "GP",
+    "payload": "19740912919475125",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for NID: 19740912919475125 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-05T07:49:05.109Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260805-5563-N5NI",
+    "requestType": "NID-MS",
+    "operator": "GP",
+    "payload": "19826816315183042",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for NID: 19826816315183042 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-05T07:49:15.832Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260805-5563-N5NI",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "19826816315183042",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID 19826816315183042 No data found - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-05T07:49:31.046Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260805-5564-UT22",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "6816315183042",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID 6816315183042 No data found - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-05T07:49:50.101Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260805-5562-LAQJ",
+    "requestType": "NID-MS",
+    "operator": "ROBI",
+    "payload": "19740912919475125",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID: 19740912919475125\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-05T07:49:53.796Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260805-5564-UT22",
+    "requestType": "NID-MS",
+    "operator": "ROBI",
+    "payload": "6816315183042",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID: 6816315183042\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-05T08:41:32.082Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260805-5577-PMOJ",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "4174959470",
+    "requesterName": "OC Bakergonj .",
+    "messageBody": "NID 4174959470 No data found - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-06T06:35:42.998Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260806-5656-UYLY",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "9561320608",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID 9561320608 No data found - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-06T06:36:02.461Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260806-5656-UYLY",
+    "requestType": "NID-MS",
+    "operator": "ROBI",
+    "payload": "9561320608",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID: 9561320608\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-06T08:07:13.975Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260806-5670-8MVK",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "4174959470",
+    "requesterName": "OC Bakergonj .",
+    "messageBody": "NID 4174959470 No data found - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-06T11:21:57.627Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260806-5696-COET",
+    "requestType": "NID-MS",
+    "operator": "GP",
+    "payload": "19976710466900263",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for NID: 19976710466900263 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-06T11:22:05.789Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260806-5696-COET",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "19976710466900263",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID 19976710466900263 No data found - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-06T11:22:28.838Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260806-5696-COET",
+    "requestType": "NID-MS",
+    "operator": "ROBI",
+    "payload": "19976710466900263",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID: 19976710466900263\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-06T16:52:46.913Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260806-5748-MJRL",
+    "requestType": "NID-MS",
+    "operator": "ROBI",
+    "payload": "19826816315183042",
+    "requesterName": "Oc Gournadi Thana",
+    "messageBody": "NID: 19826816315183042\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-08T10:49:33.970Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260808-5920-GCTY",
+    "requestType": "NID-MS",
+    "operator": "GP",
+    "payload": "19801511228119934",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for NID: 19801511228119934 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-08T10:49:46.419Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260808-5920-GCTY",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "19801511228119934",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID 19801511228119934 No data found - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-08T11:04:15.928Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260808-5933-61CT",
+    "requestType": "NID-MS",
+    "operator": "ROBI",
+    "payload": "5624606127678",
+    "requesterName": "OC,DB Barishal",
+    "messageBody": "NID: 5624606127678\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-08T11:04:21.965Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260808-5933-61CT",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "5624606127678",
+    "requesterName": "OC,DB Barishal",
+    "messageBody": "NID 5624606127678 No data found - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-09T06:24:23.195Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260809-6034-VFI1",
+    "requestType": "NID-MS",
+    "operator": "GP",
+    "payload": "19970695122000165",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for NID: 19970695122000165 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-09T06:24:30.598Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260809-6035-Q941",
+    "requestType": "NID-MS",
+    "operator": "GP",
+    "payload": "0695122000165",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for NID: 0695122000165 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-09T06:24:38.805Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260809-6035-Q941",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "0695122000165",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID 0695122000165 No data found - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-09T06:25:55.165Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260809-6035-Q941",
+    "requestType": "NID-MS",
+    "operator": "ROBI",
+    "payload": "0695122000165",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID: 0695122000165\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-09T11:40:17.866Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260809-6079-O1LT",
+    "requestType": "NID-MS",
+    "operator": "GP",
+    "payload": "19801511228119934",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for NID: 19801511228119934 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-09T11:40:23.976Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260809-6079-O1LT",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "19801511228119934",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID 19801511228119934 No data found - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-10T05:56:23.870Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260810-6117-HKCR",
+    "requestType": "NID-MS",
+    "operator": "GP",
+    "payload": "1941849919",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for NID: 1941849919 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-10T06:54:00.769Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260810-6128-X2YI",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "2845903836",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID 2845903836 No data found - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-10T06:54:07.460Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260810-6128-X2YI",
+    "requestType": "NID-MS",
+    "operator": "GP",
+    "payload": "2845903836",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for NID: 2845903836 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-10T10:50:28.745Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260810-6132-QM5H",
+    "requestType": "NID-MS",
+    "operator": "GP",
+    "payload": "1021233604",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for MSISDN(s): 1601120424 [GP]",
+    "analysis": {
+      "confidence": "LOW",
+      "payloadMatched": false,
+      "payloadMatchCount": 0,
+      "matchedPatterns": [
+        "msisdn|mobile|subscriber|number"
+      ],
+      "trainingScore": 0,
+      "inferredReplyFamilies": []
+    }
+  },
+  {
+    "capturedAt": "2026-08-10T16:53:47.007Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260810-6231-Y1TJ",
+    "requestType": "NID-MS",
+    "operator": "ROBI",
+    "payload": "19790912519000025",
+    "requesterName": "OC Mehendigong Thana",
+    "messageBody": "NID: 19790912519000025\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-10T17:17:05.262Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260810-6244-HJGV",
+    "requestType": "NID-MS",
+    "operator": "ROBI",
+    "payload": "19790912519000025",
+    "requesterName": "OC Mehendigong Thana",
+    "messageBody": "NID: 19790912519000025\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-11T08:23:46.389Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260811-6299-FL3C",
+    "requestType": "NID-MS",
+    "operator": "ROBI",
+    "payload": "19847815734000006",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID: 19847815734000006\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-11T08:23:56.931Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260811-6299-FL3C",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "19847815734000006",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID 19847815734000006 No data found - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T06:04:00.112Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6404-SL1S",
+    "requestType": "NID-MS",
+    "operator": "GP",
+    "payload": "19850611042747688",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for NID: 19850611042747688 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T06:04:04.257Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6404-SL1S",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "19850611042747688",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID 19850611042747688 Task failed to execute. No data returned. - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T07:45:34.093Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6435-XHU4",
+    "requestType": "NID-MS",
+    "operator": "GP",
+    "payload": "2809625946",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for NID: 2809625946 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T07:45:42.826Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6435-XHU4",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "2809625946",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID 2809625946 No data found - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T09:15:54.003Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6454-GWPD",
+    "requestType": "NID-MS",
+    "operator": "ROBI",
+    "payload": "2402999102",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID: 2402999102\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T09:16:08.979Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6454-GWPD",
+    "requestType": "NID-MS",
+    "operator": "GP",
+    "payload": "2402999102",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for NID: 2402999102 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T11:00:13.833Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6493-7D70",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "5964388283",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID 5964388283 No data found - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T11:29:47.133Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6504-KSE9",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "7309508682",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID 7309508682 No data found - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T19:24:45.162Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6587-WSMT",
+    "requestType": "NID-MS",
+    "operator": "ROBI",
+    "payload": "4160588531",
+    "requesterName": "OC Bakergonj .",
+    "messageBody": "NID: 4160588531\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T19:26:30.841Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6587-WSMT",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "4160588531",
+    "requesterName": "OC Bakergonj .",
+    "messageBody": "NID 4160588531 No data found - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T12:36:26.368Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6719-N80L",
+    "requestType": "NID-MS",
+    "operator": "ROBI",
+    "payload": "6870226732",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID: 6870226732\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T14:59:30.167Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6742-ORP3",
+    "requestType": "NID-MS",
+    "operator": "GP",
+    "payload": "7343353335",
+    "requesterName": "oc Banaripara",
+    "messageBody": "Sorry No records found for NID: 7343353335 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T14:59:35.117Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6742-ORP3",
+    "requestType": "NID-MS",
+    "operator": "ROBI",
+    "payload": "7343353335",
+    "requesterName": "oc Banaripara",
+    "messageBody": "NID: 7343353335\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T13:08:51.928Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6849-D4KT",
+    "requestType": "NID-MS",
+    "operator": "GP",
+    "payload": "4655803924",
+    "requesterName": "oc Banaripara",
+    "messageBody": "Sorry No records found for NID: 4655803924 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T06:30:14.340Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6944-3GWP",
+    "requestType": "NID-MS",
+    "operator": "ROBI",
+    "payload": "19810616959774827",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID: 19810616959774827\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T06:30:14.415Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6945-BBC8",
+    "requestType": "NID-MS",
+    "operator": "ROBI",
+    "payload": "7777361093",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID: 7777361093\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T06:30:24.229Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6944-3GWP",
+    "requestType": "NID-MS",
+    "operator": "GP",
+    "payload": "19810616959774827",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for NID: 19810616959774827 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T06:30:48.210Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6945-BBC8",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "7777361093",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID 7777361093 No data found - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T06:32:13.370Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6944-3GWP",
+    "requestType": "NID-MS",
+    "operator": "BANGLALINK",
+    "payload": "19810616959774827",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID 19810616959774827 No data found - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T07:52:05.733Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6986-FUMV",
+    "requestType": "NID-MS",
+    "operator": "GP",
+    "payload": "7822211392",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for NID: 7822211392 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  }
+]

@@ -2,7 +2,7 @@
 
 const { OPERATORS, STATUSES, DISPATCH_STATUSES, TERMINAL_DISPATCH_STATUSES } = require('./domain');
 const { parseRequestText } = require('./parser');
-const { analyzeOperatorReply, saveMatchedReplyKeywords } = require('./replyAnalyzer');
+const { analyzeOperatorReply, inferReplyFamilies, replyContradictsPayload } = require('./replyAnalyzer');
 
 const DEFAULT_REPLY_WINDOW_MS = 15 * 60 * 1000;
 const DEFAULT_SEND_CONFIRMATION_GRACE_MS = 15 * 60 * 1000;
@@ -22,7 +22,9 @@ class AutomationService {
     sendConfirmationGraceMs = DEFAULT_SEND_CONFIRMATION_GRACE_MS,
     duplicateRequestWindowMs = DEFAULT_DUPLICATE_REQUEST_WINDOW_MS,
     denyUnknownRequesters = false,
-    autoApproveChannels = []
+    autoApproveChannels = [],
+    manualReviewStore = null,
+    isAdminTelegramSender = null
   }) {
     this.store = store;
     this.queue = queue;
@@ -34,11 +36,28 @@ class AutomationService {
     // Channels whose replies are auto-approved (skips manual review gate).
     // e.g. ['telegram'] — the reply goes straight to APPROVED_FOR_POST.
     this.autoApproveChannels = autoApproveChannels;
+    this.manualReviewStore = manualReviewStore;
+    // Optional predicate (telegramId) => boolean, injected from app.js (which owns
+    // the userAuth identity store — kept out of this module to avoid entangling the
+    // core automation engine with the auth subsystem). See admin-post bypass below.
+    this.isAdminTelegramSender = isAdminTelegramSender;
   }
 
   async submitRequest(input) {
     const parsed = parseRequestText(input.text);
     if (!parsed.ok) {
+      // Admin-post bypass (security-hardening v1 §9): a linked admin/super_admin's
+      // non-command message in the Telegram group is a deliberate announcement, not
+      // a mistake — don't tell them their notice is an "unsupported command". Audited
+      // distinctly from a real validation failure; the bridge suppresses any reply.
+      if (input.channel === 'telegram' && this.isAdminTelegramSender && this.isAdminTelegramSender(input.requesterId)) {
+        this.store.audit(input.requesterName || input.requesterId || 'admin', 'TELEGRAM_ADMIN_POST', null, {
+          requesterId: input.requesterId || null,
+          chatId: input.chatId || null,
+          text: input.text
+        });
+        return { ok: false, errorCode: 'ADMIN_POST_BYPASS', errors: [], replyText: null };
+      }
       this.store.audit('system', 'REQUEST_VALIDATION_FAILED', null, {
         requesterId: input.requesterId || null,
         requesterName: input.requesterName || null,
@@ -66,6 +85,7 @@ class AutomationService {
       });
       return {
         ok: false,
+        errorCode: 'REQUEST_DENIED_DISABLED_USER',
         errors: ['Requester account is disabled.'],
         replyText: 'Your account is disabled. Contact the administrator.'
       };
@@ -76,6 +96,7 @@ class AutomationService {
       });
       return {
         ok: false,
+        errorCode: 'REQUEST_DENIED_UNKNOWN_USER',
         errors: ['Requester is not authorized.'],
         replyText: 'You are not an authorized requester. Contact the administrator to be added.'
       };
@@ -90,8 +111,13 @@ class AutomationService {
       return !requester.allowedOperators.includes(operator);
     });
     if (unauthorizedOperator) {
+      this.store.audit('system', 'REQUEST_DENIED_UNAUTHORIZED_OPERATOR', null, {
+        requesterId: input.requesterId,
+        operator: unauthorizedOperator
+      });
       return {
         ok: false,
+        errorCode: 'REQUEST_DENIED_UNAUTHORIZED_OPERATOR',
         errors: [`Requester is not authorized for ${unauthorizedOperator}.`],
         replyText: 'You are not authorized to submit this operator request.'
       };
@@ -113,11 +139,15 @@ class AutomationService {
         duplicateRequestId: duplicate.requestId,
         duplicateStatus: duplicate.status
       });
+      const timedOut = duplicate.status === STATUSES.TIMEOUT;
+      const guidance = timedOut
+        ? `A recent request for this exists as ${duplicate.requestId} but timed out. Use Retry on that request from the admin console — resending creates a duplicate the operator's late reply can't be attributed to.`
+        : `A similar request is already active as ${duplicate.requestId}. Wait for that result or use retry from admin.`;
       return {
         ok: false,
         errorCode: 'DUPLICATE_ACTIVE_REQUEST',
         errors: [`A similar request is already active as ${duplicate.requestId}.`],
-        replyText: `A similar request is already active as ${duplicate.requestId}. Wait for that result or use retry from admin.`,
+        replyText: guidance,
         duplicateRequestId: duplicate.requestId
       };
     }
@@ -125,9 +155,18 @@ class AutomationService {
     const request = this.store.createRequest({
       requesterId: input.requesterId,
       requesterName: input.requesterName,
-      channel: input.channel,
-      chatId: input.chatId,
-      sourceMessageId: input.sourceMessageId,
+      // Normalized to null (not left undefined) — this object also becomes the
+      // REQUEST_RECEIVED audit row's `details`, hashed as-is at write time. An
+      // explicit undefined-valued key survives in-memory but is silently
+      // dropped by JSON.stringify() on persist, so any reload (server restart,
+      // audit verification) recomputes a different hash than the one written —
+      // a false "tampering detected" report on every request submitted without
+      // these fields (any non-Telegram caller), discovered via the security-
+      // hardening-v1 Step 10 local end-to-end simulation. testDestination
+      // already followed this pattern; channel/chatId/sourceMessageId did not.
+      channel: input.channel || null,
+      chatId: input.chatId || null,
+      sourceMessageId: input.sourceMessageId || null,
       operator: parsed.targetOperators[0],
       targetOperators: parsed.targetOperators,
       requestType: parsed.requestType,
@@ -143,6 +182,27 @@ class AutomationService {
   }
 
   receiveSmsWebhook(input) {
+    const receivedAt = input.receivedAt || new Date().toISOString();
+    const duplicateInbox = this.store.findInboundDuplicate({
+      gatewayId: input.gatewayId,
+      senderNumber: input.from,
+      messageBody: input.body,
+      receivedAt
+    });
+    if (duplicateInbox) {
+      this.store.audit('system', 'SMS_INBOUND_DUPLICATE_IGNORED', duplicateInbox.matchedRequestId, {
+        gatewayId: input.gatewayId,
+        senderNumber: input.from,
+        receivedAt
+      });
+      return {
+        ok: true,
+        duplicate: true,
+        inbox: duplicateInbox,
+        request: duplicateInbox.matchedRequestId ? this.store.getRequest(duplicateInbox.matchedRequestId) : null
+      };
+    }
+
     if (!this.store.isTrustedSenderForGateway(input.gatewayId, input.from)) {
       const inbox = this.store.addSmsInbox({
         gatewayId: input.gatewayId,
@@ -153,7 +213,7 @@ class AutomationService {
           ignored: true,
           reason: 'Sender is not configured as a push-pull, hotline, or network sender for this gateway.'
         },
-        receivedAt: input.receivedAt
+        receivedAt
       });
       this.store.audit('system', 'SMS_IGNORED_UNTRUSTED_SENDER', null, {
         gatewayId: input.gatewayId,
@@ -176,6 +236,7 @@ class AutomationService {
 
     let matchedRequest = null;
     let analysis = null;
+    const inferredReplyFamilies = inferReplyFamilies(input.body, this.store.operatorForGateway(input.gatewayId) || '');
 
     if (matchResult && matchResult.ambiguous) {
       // Multiple pending requests on this gateway — score each with the reply analyzer
@@ -187,35 +248,98 @@ class AutomationService {
           request,
           analysis: a,
           score: confidenceRank(a.confidence),
+          typeScore: replyTypeScore(request, inferredReplyFamilies),
+          trainingScore: a.trainingMatch?.score || 0,
           payloadMatches: a.payloadMatchCount || 0,
+          statusRank: requestStatusRank(request.status),
           createdAt: new Date(request.createdAt).getTime()
         };
       });
-      scored.sort((a, b) => {
+      // Content gate: drop candidates whose payload the reply's echoed identifiers
+      // contradict (reply belongs to a different request). If every candidate is
+      // contradicted, fall through to unmatched below.
+      const contentOk = scored.filter((c) => !replyContradictsPayload(c.request, input.body));
+      const gated = contentOk.length ? contentOk : [];
+      const narrowed = gated.filter((candidate) => candidate.typeScore > -3);
+      const viable = narrowed.length ? narrowed : gated;
+      viable.sort((a, b) => {
+        if (b.typeScore !== a.typeScore) return b.typeScore - a.typeScore;
+        if (b.trainingScore !== a.trainingScore) return b.trainingScore - a.trainingScore;
         if (b.score !== a.score) return b.score - a.score;
         if (b.payloadMatches !== a.payloadMatches) return b.payloadMatches - a.payloadMatches;
+        if (b.statusRank !== a.statusRank) return b.statusRank - a.statusRank;
         return b.createdAt - a.createdAt;
       });
-      const hasUniqueTopScore = scored.length < 2 || scored[0].score > scored[1].score;
-      const hasUniqueTopPayload = scored.length < 2 || scored[0].payloadMatches > scored[1].payloadMatches;
-      if (scored[0].score > 0 && (hasUniqueTopScore || hasUniqueTopPayload)) {
-        matchedRequest = scored[0].request;
-        analysis = scored[0].analysis;
+      const hasUniqueTopType = viable.length < 2 || viable[0].typeScore > viable[1].typeScore;
+      const hasUniqueTopTraining = viable.length < 2 || viable[0].trainingScore > viable[1].trainingScore;
+      const hasUniqueTopScore = viable.length < 2 || viable[0].score > viable[1].score;
+      const hasUniqueTopPayload = viable.length < 2 || viable[0].payloadMatches > viable[1].payloadMatches;
+      if (
+        viable.length > 0 &&
+        viable[0].typeScore >= 0 &&
+        (viable[0].trainingScore > 0 || viable[0].score > 0) &&
+        (hasUniqueTopType || hasUniqueTopTraining || hasUniqueTopScore || hasUniqueTopPayload)
+      ) {
+        matchedRequest = viable[0].request;
+        analysis = viable[0].analysis;
+      } else if (viable.length === 0) {
+        // Every candidate's payload was contradicted by the reply's content.
+        this.store.audit('system', 'SMS_REPLY_PAYLOAD_MISMATCH', null, {
+          gatewayId: input.gatewayId,
+          senderNumber: input.from,
+          inferredReplyFamilies,
+          contradictedCandidates: scored.map((s) => s.request.requestId)
+        });
       } else {
         this.store.audit('system', 'SMS_REPLY_AMBIGUOUS', null, {
           gatewayId: input.gatewayId,
           senderNumber: input.from,
-          candidateCount: scored.length,
-          scores: scored.map((s) => ({
+          candidateCount: viable.length,
+          inferredReplyFamilies,
+          scores: viable.map((s) => ({
             requestId: s.request.requestId,
             confidence: s.analysis.confidence,
-            payloadMatches: s.payloadMatches
+            payloadMatches: s.payloadMatches,
+            trainingScore: s.trainingScore,
+            typeScore: s.typeScore,
+            status: s.request.status
           }))
         });
       }
     } else if (matchResult && !matchResult.ambiguous) {
-      matchedRequest = matchResult;
-      analysis = analyzeOperatorReply({ request: matchedRequest, messageBody: input.body });
+      const typeScore = replyTypeScore(matchResult, inferredReplyFamilies);
+      if (typeScore < 0) {
+        this.store.audit('system', 'SMS_REPLY_TYPE_MISMATCH', null, {
+          gatewayId: input.gatewayId,
+          senderNumber: input.from,
+          requestId: matchResult.requestId,
+          requestType: matchResult.requestType,
+          inferredReplyFamilies
+        });
+      } else if (replyContradictsPayload(matchResult, input.body)) {
+        // Content gate: the reply echoes identifiers (IMEIs/MSISDNs) that are
+        // disjoint from this request's payload — it belongs to a different
+        // request. Route to unmatched rather than cross-attach (root cause of the
+        // 2026-07-05 blackout cross-matching). Left as unmatched for manual match.
+        this.store.audit('system', 'SMS_REPLY_PAYLOAD_MISMATCH', matchResult.requestId, {
+          gatewayId: input.gatewayId,
+          senderNumber: input.from,
+          requestType: matchResult.requestType,
+          payload: matchResult.payload
+        });
+      } else {
+        matchedRequest = matchResult;
+        analysis = analyzeOperatorReply({ request: matchedRequest, messageBody: input.body });
+        // Audit late-matched retried request replies (after timeout, still matched via extended window)
+        const isRetried = (matchedRequest.dispatches || []).some((d) => d.isRetry);
+        if (isRetried && matchedRequest.status === STATUSES.TIMEOUT) {
+          const delayMinutes = Math.round((Date.now() - new Date(matchedRequest.createdAt).getTime()) / 60000);
+          this.store.audit('system', 'RETRIED_REQUEST_LATE_REPLY_MATCHED', matchedRequest.requestId, {
+            delayMinutes,
+            retryCount: (matchedRequest.dispatches || []).filter((d) => d.isRetry).length
+          });
+        }
+      }
     }
 
     const inbox = this.store.addSmsInbox({
@@ -224,7 +348,7 @@ class AutomationService {
       messageBody: input.body,
       matchedRequestId: matchedRequest?.requestId || null,
       analysis,
-      receivedAt: input.receivedAt
+      receivedAt
     });
 
     if (!matchedRequest) {
@@ -241,8 +365,14 @@ class AutomationService {
     if (operatorKey) {
       this.store.markOperatorReplyReceived(matchedRequest.requestId, operatorKey);
       this.store.markDispatchReplied(matchedRequest.requestId, operatorKey, { inboxId: inbox.id });
-      saveMatchedReplyKeywords(matchedRequest.requestType, operatorKey, input.body);
     }
+    this._recordManualReviewCandidate({
+      request: matchedRequest,
+      operatorKey,
+      messageBody: input.body,
+      analysis,
+      source: 'auto_match'
+    });
 
     // Multi-operator live posting (NID-MS, IMEI-MS): post a partial summary immediately when
     // some operators are still pending, then edit the same Telegram message as more come in.
@@ -598,6 +728,7 @@ class AutomationService {
       throw new Error(`Request ${requestId} cannot be retried (current: ${request.status}).`);
     }
     // Reset dispatches to QUEUED so they re-enter the per-operator pipeline.
+    // Mark them as retried so late-arriving replies (after timeout) can still match within 2h window.
     for (const dispatch of request.dispatches || []) {
       if (TERMINAL_DISPATCH_STATUSES.includes(dispatch.status)) {
         dispatch.status = DISPATCH_STATUSES.QUEUED;
@@ -605,6 +736,8 @@ class AutomationService {
         dispatch.inboxId = null;
         dispatch.sentAt = null;
         dispatch.repliedAt = null;
+        dispatch.isRetry = true;
+        dispatch.retryCount = (dispatch.retryCount || 0) + 1;
         if (this.store.persistence) this.store.persistence.upsertDispatch(dispatch);
       }
     }
@@ -612,10 +745,119 @@ class AutomationService {
     request.completedAt = null;
     request.failedReason = null;
     this.store.updateRequestStatus(requestId, STATUSES.QUEUED);
-    this.store.audit('admin', 'REQUEST_RETRIED', requestId);
+    this.store.audit('admin', 'REQUEST_RETRIED', requestId, { retryCount: request.dispatches?.filter((d) => d.isRetry).length || 0 });
     this.queue.enqueueExisting(request);
     await Promise.all(request.targetOperators.map((op) => this.smsGateway.dispatchNext(op)));
     return this.store.getRequest(requestId);
+  }
+
+  // Ranks every plausible request for an inbox reply using the SAME scoring logic the
+  // live auto-matcher uses (analyzeOperatorReply + replyTypeScore + training score) —
+  // so a human picking a candidate sees the same signal the system would have used.
+  // Unlike live matching, this also considers already-finalized requests (COMPLETED,
+  // TIMEOUT) within a lookback window, since the point of this is to catch/correct a
+  // reply that was wrongly auto-matched (or never matched) after the fact.
+  rankReplyCandidates(inboxId, { lookbackMs = 24 * 60 * 60 * 1000 } = {}) {
+    const inbox = this.store.smsInbox.find((row) => row.id === inboxId);
+    if (!inbox) throw new Error(`Inbox entry not found: ${inboxId}`);
+
+    const operatorKey = this.store.operatorForGateway(inbox.gatewayId);
+    const inferredReplyFamilies = inferReplyFamilies(inbox.messageBody, operatorKey || '');
+    const cutoff = new Date(inbox.receivedAt).getTime() - lookbackMs;
+
+    const candidates = this.store.listRequests().filter((request) => {
+      if (new Date(request.createdAt).getTime() < cutoff) return false;
+      return Boolean(this.store.getOutboxForGateway(request.requestId, inbox.gatewayId));
+    });
+
+    const ranked = candidates.map((request) => {
+      const analysis = analyzeOperatorReply({ request, messageBody: inbox.messageBody });
+      const typeScore = replyTypeScore(request, inferredReplyFamilies);
+      const score = (typeScore * 100)
+        + (confidenceRank(analysis.confidence) * 10)
+        + (analysis.payloadMatchCount || 0) * 5
+        + (analysis.trainingMatch?.score || 0);
+      return {
+        requestId: request.requestId,
+        requestType: request.requestType,
+        payload: request.payload,
+        status: request.status,
+        createdAt: request.createdAt,
+        currentlyMatchedInboxId: inbox.matchedRequestId === request.requestId ? inbox.id : null,
+        score,
+        typeScore,
+        confidence: analysis.confidence,
+        payloadMatched: analysis.payloadMatched,
+        referenceMatched: analysis.referenceMatched
+      };
+    });
+
+    ranked.sort((a, b) => b.score - a.score || new Date(b.createdAt) - new Date(a.createdAt));
+    return ranked;
+  }
+
+  // Attaches (or re-attaches) an inbox reply to a request, regardless of the request's
+  // current status — including COMPLETED, so a reply that was wrongly auto-matched
+  // elsewhere (and already finalized) can be corrected after the fact. If another inbox
+  // row is currently attached to this request for the same gateway, it's detached first
+  // so the combined reply text doesn't show both the wrong and the correct reply.
+  correctMatch(inboxId, requestId) {
+    const inbox = this.store.smsInbox.find((row) => row.id === inboxId);
+    if (!inbox) throw new Error(`Inbox entry not found: ${inboxId}`);
+    const request = this.store.getRequest(requestId);
+    const operatorKey = this.store.operatorForGateway(inbox.gatewayId);
+    if (!operatorKey) throw new Error(`No operator mapped for gateway: ${inbox.gatewayId}`);
+
+    const previousInbox = this.store.smsInbox.find((row) => {
+      return row.matchedRequestId === requestId && row.gatewayId === inbox.gatewayId && row.id !== inboxId;
+    });
+    if (previousInbox) {
+      previousInbox.matchedRequestId = null;
+      previousInbox.analysis = { ...(previousInbox.analysis || {}), correctedAway: true, correctedToInboxId: inboxId };
+      if (this.store.persistence) this.store.persistence.insertInbox(previousInbox);
+    }
+
+    const analysis = analyzeOperatorReply({ request, messageBody: inbox.messageBody });
+    inbox.matchedRequestId = requestId;
+    inbox.analysis = analysis;
+    if (this.store.persistence) this.store.persistence.insertInbox(inbox);
+
+    this.store.markOperatorReplyReceived(requestId, operatorKey);
+    this.store.markDispatchReplied(requestId, operatorKey, { inboxId: inbox.id });
+    this._recordManualReviewCandidate({
+      request,
+      operatorKey,
+      messageBody: inbox.messageBody,
+      analysis,
+      source: 'manual_correction'
+    });
+
+    this.store.audit('admin', 'MANUAL_REMATCH_CORRECTION', requestId, {
+      inboxId,
+      previousInboxId: previousInbox?.id || null,
+      operator: operatorKey
+    });
+
+    const refreshedRequest = this.store.getRequest(requestId);
+    const updatedText = formatCombinedReply(refreshedRequest, this.store);
+    const autoApprove = refreshedRequest.channel && this.autoApproveChannels.includes(refreshedRequest.channel);
+    const reply = this.store.addReplyDraft({
+      requestId,
+      replyText: `⚠️ Correction — the previous reply for this request was matched in error.\n\n${updatedText}`,
+      sentStatus: autoApprove ? 'APPROVED_FOR_POST' : 'DRAFT',
+      channel: refreshedRequest.channel,
+      chatId: refreshedRequest.chatId,
+      sourceMessageId: refreshedRequest.sourceMessageId,
+      requesterName: refreshedRequest.requesterName,
+      requesterId: refreshedRequest.requesterId
+    });
+
+    return {
+      ok: true,
+      request: refreshedRequest,
+      replyDraft: reply,
+      correctedFromInboxId: previousInbox?.id || null
+    };
   }
 
   manualMatch(inboxId, requestId) {
@@ -636,6 +878,13 @@ class AutomationService {
       this.store.markOperatorReplyReceived(requestId, operatorKey);
       this.store.markDispatchReplied(requestId, operatorKey, { inboxId: inbox.id });
     }
+    this._recordManualReviewCandidate({
+      request,
+      operatorKey,
+      messageBody: inbox.messageBody,
+      analysis,
+      source: 'manual_match'
+    });
 
     this.store.audit('admin', 'MANUAL_MATCH', requestId, { inboxId, operator: operatorKey });
 
@@ -723,6 +972,17 @@ class AutomationService {
   getDispatchOutbox(requestId, dispatch) {
     return this.store.getOutboxById(dispatch.outboxId) || this.store.getOutboxForGateway(requestId, dispatch.gatewayId);
   }
+
+  _recordManualReviewCandidate({ request, operatorKey, messageBody, analysis, source }) {
+    if (!this.manualReviewStore) return;
+    this.manualReviewStore.record({
+      request,
+      operator: operatorKey,
+      messageBody,
+      analysis,
+      source
+    });
+  }
 }
 
 // Assemble a single review draft for a request. For fan-out, each target operator gets its own
@@ -783,10 +1043,29 @@ function confidenceRank(confidence) {
   return CONFIDENCE_RANKS[confidence] || 0;
 }
 
+function requestStatusRank(status) {
+  if (status === STATUSES.WAITING_OPERATOR_REPLY) return 3;
+  if (status === STATUSES.NEEDS_MANUAL_REVIEW) return 2;
+  if (status === STATUSES.TIMEOUT) return 1;
+  return 0;
+}
+
+function replyTypeScore(request, inferredReplyFamilies) {
+  const strongTypes = inferredReplyFamilies?.strongTypes || [];
+  if (!strongTypes.length) return 0;
+  return strongTypes.includes(request.requestType) ? 3 : -3;
+}
+
 module.exports = {
   AutomationService,
   DEFAULT_REPLY_WINDOW_MS,
   DEFAULT_SEND_CONFIRMATION_GRACE_MS,
   DEFAULT_DUPLICATE_REQUEST_WINDOW_MS,
-  formatCombinedReply
+  formatCombinedReply,
+  // Exported so offline/bulk tooling (e.g. scripts/reprocess-unmatched-*)
+  // can reuse the exact same scoring the live matcher and
+  // rankReplyCandidates() use, instead of re-implementing it and risking
+  // drift.
+  confidenceRank,
+  replyTypeScore
 };

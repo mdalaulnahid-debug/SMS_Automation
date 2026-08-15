@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>SMS Automation · Operations</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/police-insignia.svg" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Manrope:wght@500;700;800&display=swap" rel="stylesheet" />
@@ -11,22 +12,28 @@
     <link rel="stylesheet" href="/theme.css" />
     <style>
       :root { --header-height: 72px; --nav-height: 78px; }
-      body { max-width: 480px; margin: 0 auto; position: relative; }
+      body { max-width: 480px; margin: 0 auto; position: relative; min-height: 100vh; }
+      #opsApp { display: none; }
+      #authOverlay { display: none; }
       #app-header {
         position: fixed; top: 0; left: 50%; transform: translateX(-50%);
         width: 100%; max-width: 480px; height: var(--header-height);
         display: flex; align-items: center; justify-content: space-between;
         padding: 0 16px; z-index: 20;
-        background: rgba(8, 17, 31, 0.86); backdrop-filter: blur(18px);
+        background: var(--bg-chrome-header); backdrop-filter: blur(18px);
         border-bottom: 1px solid var(--divider);
       }
+      .brand-row { display: flex; align-items: center; gap: 10px; }
+      .brand-logo { width: 32px; height: 32px; object-fit: contain; flex-shrink: 0; }
       .brand-block { display: flex; flex-direction: column; gap: 3px; }
       .brand-kicker { color: var(--accent); font-size: 10px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; }
       .brand-title { font-size: 20px; font-weight: 800; letter-spacing: -0.03em; }
       .brand-sub { color: var(--text-muted); font-size: 12px; }
       main { padding: calc(var(--header-height) + 12px) 14px calc(var(--nav-height) + 14px); }
+      [hidden] { display: none !important; }
       .tab-panel { display: none; }
-      .tab-panel.active { display: block; }
+      .tab-panel.active { display: block; animation: panel-fade-in 0.2s ease; }
+      @keyframes panel-fade-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
       .ops-stack { display: grid; gap: 14px; }
       .posture-banner { padding: 18px; border-radius: 20px; }
       .posture-top { display: flex; justify-content: space-between; align-items: start; gap: 12px; }
@@ -62,6 +69,8 @@
       .search-wrap .material-symbols-outlined {
         position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 20px;
       }
+      .filter-chip { transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s ease; }
+      .filter-chip:hover { transform: translateY(-1px); }
       .filter-chip.active { background: var(--accent-bg); border-color: var(--accent-border); color: var(--accent); }
       .summary-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
       .summary-item { padding: 12px; border-radius: 14px; background: var(--bg-panel); border: 1px solid var(--divider); }
@@ -74,7 +83,7 @@
       .setting-note { margin-top: 6px; font-size: 12px; color: var(--text-secondary); line-height: 1.5; }
       .setting-pill { padding: 6px 10px; border-radius: 999px; background: var(--accent-bg); color: var(--accent); font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
       .setting-panel input { margin-top: 12px; }
-      .admin-access { border-left: 3px solid var(--warning); }
+      .admin-access { background: var(--warning-bg); border-color: rgba(255, 191, 95, 0.3); }
       .details-shell { margin-top: 12px; display: grid; gap: 10px; }
       details.command-fold { border: 1px solid var(--divider); border-radius: 14px; background: var(--bg-panel-2); overflow: hidden; }
       details.command-fold summary {
@@ -90,24 +99,243 @@
       .bottom-nav {
         position: fixed; bottom: 0; left: 50%; transform: translateX(-50%);
         width: 100%; max-width: 480px; height: var(--nav-height); padding: 8px 12px 12px;
-        display: flex; gap: 8px; background: rgba(8, 17, 31, 0.92); backdrop-filter: blur(18px);
+        display: flex; gap: 8px; background: var(--bg-chrome-nav); backdrop-filter: blur(18px);
         border-top: 1px solid var(--divider); z-index: 20;
       }
       .nav-item {
         flex: 1; border: 1px solid var(--divider); border-radius: 16px; background: var(--bg-panel);
         color: var(--text-muted); display: flex; flex-direction: column; align-items: center; justify-content: center;
         gap: 4px; cursor: pointer;
+        transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
       }
+      .nav-item:active { transform: scale(0.96); }
       .nav-item.active { color: var(--accent); border-color: var(--accent-border); background: var(--accent-bg); }
       .nav-item span:last-child { font-size: 11px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; }
+
+      /* ── Desktop (≥900px): full-width sidebar dashboard instead of the phone shell ── */
+      .skip-link {
+        position: absolute; left: -9999px; top: 0; z-index: 50;
+        background: var(--accent); color: var(--accent-on); padding: 10px 16px; border-radius: 0 0 10px 0;
+      }
+      .skip-link:focus { left: 0; }
+      .desktop-shell { display: block; }
+      .ops-sidebar { display: none; }
+      .about-content, .help-content, .contact-content { display: grid; gap: 16px; }
+
+      /* ── Activity tab: monitoring console layout ── */
+      .monitor-rail, .monitor-console { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; align-content: start; min-width: 0; }
+      .monitor-rail .kpi-grid { grid-template-columns: minmax(0, 1fr); }
+      .timeline-item {
+        transition: background 0.18s ease, transform 0.18s ease;
+      }
+      .timeline-item:hover { transform: translateY(-1px); background: rgba(255, 255, 255, 0.02); }
+      .timeline-item.timeline-in { animation: timeline-in-anim 0.25s ease both; }
+      @keyframes timeline-in-anim { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+      @media (min-width: 900px) {
+        .monitor-shell { display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 20px; align-items: start; }
+        .monitor-rail { position: sticky; top: calc(var(--header-height) + 28px); }
+        .monitor-rail .operator-strip { grid-template-columns: minmax(0, 1fr); }
+        .monitor-rail .attention-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      }
+
+      /* ── Settings tab: grouped side panel ── */
+      .settings-groups { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; min-width: 0; }
+      .settings-nav { display: none; }
+
+      @media (min-width: 900px) {
+        .settings-shell { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 20px; align-items: start; }
+        .settings-nav {
+          display: flex; flex-direction: column; gap: 6px;
+          position: sticky; top: calc(var(--header-height) + 28px);
+        }
+        .settings-nav-item {
+          display: flex; align-items: center; gap: 12px;
+          padding: 12px 14px; border: 1px solid transparent; border-radius: 14px;
+          background: transparent; color: var(--text-secondary); cursor: pointer; text-align: left;
+          font: inherit; font-weight: 800; font-size: 13px;
+          transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+        }
+        .settings-nav-item:hover { transform: translateX(2px); color: var(--text-primary); }
+        .settings-nav-item.active { background: var(--accent-bg); border-color: var(--accent-border); color: var(--accent); }
+        .settings-group { display: none; }
+        .settings-group.active { display: block; animation: panel-fade-in 0.2s ease; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .tab-panel.active, .settings-group.active, .timeline-item.timeline-in { animation: none !important; }
+        .timeline-item, .ops-sidebar-item, .nav-item, .filter-chip, .settings-nav-item { transition: none !important; }
+      }
+
+      /* ── Minimal Home tab ── */
+      .home-minimal { display: grid; gap: 28px; padding: 20px 4px 4px; }
+      .home-header-line { text-align: center; }
+      .home-eyebrow { color: var(--text-muted); font-size: 11px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; }
+      .home-headline { margin-top: 10px; font-size: 22px; font-weight: 800; letter-spacing: -0.03em; }
+      .home-headline.warning { color: var(--warning); }
+      .home-sub { margin-top: 6px; color: var(--text-muted); font-size: 12.5px; }
+
+      .telegram-cta {
+        display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+        margin: 4px auto 0; padding: 13px 22px; border-radius: 999px;
+        background: var(--accent-bg); border: 1px solid var(--accent-border); color: var(--accent);
+        font-weight: 800; font-size: 13px; text-decoration: none; width: fit-content;
+      }
+      .telegram-cta:active { transform: scale(0.98); }
+
+      .gateway-row { display: grid; grid-template-columns: 1fr; gap: 14px; }
+      .gateway-card {
+        border-radius: 20px; background: var(--bg-panel); border: 1px solid var(--divider);
+        padding: 18px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center;
+      }
+      .gateway-name { font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-secondary); }
+      .gateway-ecg { width: 100%; max-width: 180px; height: 40px; }
+      .gateway-ecg path {
+        fill: none; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round;
+        stroke-dasharray: 300; animation: ecg-travel 2.2s linear infinite;
+      }
+      .gateway-card.state-online .gateway-ecg path { stroke: var(--success); }
+      .gateway-card.state-delayed .gateway-ecg path { stroke: var(--warning); animation-duration: 4s; opacity: 0.85; }
+      .gateway-card.state-offline .gateway-ecg path { stroke: var(--danger); animation: none; stroke-dashoffset: 0; opacity: 0.55; }
+      @keyframes ecg-travel { to { stroke-dashoffset: -300; } }
+      @media (prefers-reduced-motion: reduce) {
+        .gateway-ecg path { animation: none !important; stroke-dashoffset: 0 !important; }
+      }
+      .gateway-status-row { display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 800; }
+      .gateway-status-dot { width: 8px; height: 8px; border-radius: 999px; }
+      .state-online .gateway-status-row { color: var(--success); }
+      .state-online .gateway-status-dot { background: var(--success); }
+      .state-delayed .gateway-status-row { color: var(--warning); }
+      .state-delayed .gateway-status-dot { background: var(--warning); }
+      .state-offline .gateway-status-row { color: var(--danger); }
+      .state-offline .gateway-status-dot { background: var(--danger); }
+      .gateway-meta { color: var(--text-muted); font-size: 11px; }
+
+      .home-summary-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+      .home-ticker {
+        display: flex; align-items: center; gap: 8px; justify-content: center;
+        color: var(--text-muted); font-size: 12px; padding: 4px;
+      }
+      .home-ticker .material-symbols-outlined { font-size: 16px; }
+      .home-footer-link { text-align: center; }
+      .home-footer-link a { color: var(--text-muted); font-size: 12px; font-weight: 700; text-decoration: none; border-bottom: 1px dashed var(--divider); padding-bottom: 2px; }
+
+      @media (min-width: 900px) {
+        .home-minimal { max-width: 720px; margin: 0 auto; padding-top: 24px; }
+        .gateway-row { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      }
+      .account-card { padding: 4px; }
+      .account-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; padding: 16px 18px 18px; }
+      .account-field-label { font-size: 10px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+      .account-field-value { margin-top: 4px; font-size: 14px; font-weight: 700; color: var(--text-primary); }
+      .account-field-value.muted { color: var(--text-muted); font-weight: 500; }
+      .prose-block { line-height: 1.6; color: var(--text-secondary); }
+      .prose-block strong { color: var(--text-primary); }
+      .command-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+      .command-table th { text-align: left; padding: 10px 12px; color: var(--text-muted); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; border-bottom: 1px solid var(--divider); }
+      .command-table td { padding: 10px 12px; border-bottom: 1px solid var(--divider); vertical-align: top; }
+      .command-table code { font-family: var(--font-mono); color: var(--accent); }
+      .contact-row { display: flex; align-items: center; gap: 12px; padding: 4px 0; }
+      .contact-row .material-symbols-outlined { color: var(--accent); }
+
+      @media (min-width: 900px) {
+        body { max-width: none; margin: 0; }
+        #app-header {
+          position: sticky; left: 0; transform: none; max-width: none; width: 100%;
+          padding: 0 28px;
+        }
+        .desktop-shell { display: grid; grid-template-columns: 248px minmax(0, 1fr); }
+        .ops-sidebar {
+          display: block; position: sticky; top: var(--header-height);
+          height: calc(100vh - var(--header-height)); padding: 20px 16px;
+          border-right: 1px solid var(--divider); background: var(--bg-chrome-sidebar);
+        }
+        .ops-sidebar-item {
+          width: 100%; display: flex; align-items: center; gap: 12px;
+          padding: 12px 14px; border: 1px solid transparent; border-radius: 14px;
+          background: transparent; color: var(--text-secondary); cursor: pointer; text-align: left;
+          font: inherit; font-weight: 800; font-size: 13px;
+          transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease, transform 0.18s ease;
+        }
+        .ops-sidebar-item:hover { transform: translateX(2px); color: var(--text-primary); }
+        .ops-sidebar-item + .ops-sidebar-item { margin-top: 6px; }
+        .ops-sidebar-item.active { background: var(--accent-bg); border-color: var(--accent-border); color: var(--accent); }
+        .ops-sidebar-divider { height: 1px; background: var(--divider); margin: 12px 4px; }
+        main { padding: 28px 32px; max-width: 1400px; }
+        .bottom-nav { display: none; }
+        .kpi-grid, .operator-strip, .attention-grid, .summary-strip {
+          grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        }
+      }
+
+      /* ── 1a "Deep Command" refinements ── */
+      /* Posture ribbon: circular status badge + eyebrow + headline + actions */
+      .posture-1a { display: grid; gap: 14px; }
+      .posture-head-row { display: flex; align-items: center; gap: 14px; }
+      .posture-badge {
+        width: 52px; height: 52px; flex: none; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        background: var(--success-bg); border: 1px solid rgba(86, 216, 139, 0.35);
+      }
+      .posture-badge span { width: 12px; height: 12px; border-radius: 50%; background: var(--success); animation: pulse-ring 2.4s ease-in-out infinite; }
+      .posture-1a.warn .posture-badge { background: var(--warning-bg); border-color: rgba(255, 191, 95, 0.35); }
+      .posture-1a.warn .posture-badge span { background: var(--warning); }
+      .posture-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+      .posture-actions .btn-primary, .posture-actions .btn-secondary { padding: 8px 13px; font-size: 12.5px; }
+
+      /* Gateway fleet: horizontal rows with inline ECG */
+      #operatorStrip { display: block; }
+      .fleet-row { position: relative; display: flex; align-items: center; gap: 12px; padding: 13px 14px 13px 17px; border-bottom: 1px solid var(--divider); }
+      .fleet-row:last-child { border-bottom: none; }
+      .fleet-row::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--operator-color, var(--accent)); }
+      .fleet-id { flex: none; }
+      .fleet-name { font-size: 12px; font-weight: 800; letter-spacing: 0.05em; text-transform: uppercase; }
+      .fleet-gw { margin-top: 3px; font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); }
+      .fleet-ecg { flex: 1; height: 30px; min-width: 0; }
+      .fleet-ecg path { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 300; animation: ecg-travel 2.2s linear infinite; }
+      .fleet-row.state-online .fleet-ecg path { stroke: var(--success); }
+      .fleet-row.state-delayed .fleet-ecg path { stroke: var(--warning); animation-duration: 4s; opacity: 0.85; }
+      .fleet-row.state-offline .fleet-ecg path { stroke: var(--danger); animation: none; stroke-dashoffset: 0; opacity: 0.55; }
+      .fleet-state { flex: none; text-align: right; }
+      .fleet-state-label { display: flex; align-items: center; justify-content: flex-end; gap: 6px; font-size: 12px; font-weight: 800; }
+      .fleet-state-dot { width: 7px; height: 7px; border-radius: 50%; }
+      .fleet-row.state-online .fleet-state-label { color: var(--success); } .fleet-row.state-online .fleet-state-dot { background: var(--success); }
+      .fleet-row.state-delayed .fleet-state-label { color: var(--warning); } .fleet-row.state-delayed .fleet-state-dot { background: var(--warning); }
+      .fleet-row.state-offline .fleet-state-label { color: var(--danger); } .fleet-row.state-offline .fleet-state-dot { background: var(--danger); }
+      .fleet-last { margin-top: 3px; font-size: 11px; font-family: var(--font-mono); color: var(--text-muted); }
+
+      /* Needs attention: icon-chip list rows */
+      #attentionGrid { display: block; }
+      .attention-item { display: flex; align-items: center; gap: 12px; padding: 12px; }
+      .attention-item + .attention-item { border-top: 1px solid var(--divider); }
+      .attention-icon { width: 34px; height: 34px; flex: none; border-radius: 9px; display: flex; align-items: center; justify-content: center; }
+      .attention-icon .material-symbols-outlined { font-size: 18px; }
+      .attention-icon.warning { background: var(--warning-bg); color: var(--warning); }
+      .attention-icon.danger { background: var(--danger-bg); color: var(--danger); }
+      .attention-icon.accent { background: var(--accent-bg); color: var(--accent); }
+      .attention-icon.success { background: var(--success-bg); color: var(--success); }
+      .attention-body { flex: 1; min-width: 0; }
+      .attention-item-title { font-size: 12.5px; font-weight: 800; }
+      .attention-item-detail { margin-top: 2px; font-size: 11.5px; color: var(--text-muted); }
+
+      /* Sidebar officer channel card */
+      .sidebar-officer { margin-top: 16px; padding: 13px; border-radius: 12px; border: 1px solid var(--divider); background: var(--bg-panel-soft); }
+      .sidebar-officer .officer-label { font-size: 10px; font-weight: 800; letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-muted); }
+      .sidebar-officer a { display: flex; align-items: center; gap: 8px; margin-top: 8px; font-size: 12px; font-weight: 800; color: var(--accent); text-decoration: none; }
+      .sidebar-officer a .material-symbols-outlined { font-size: 16px; }
     </style>
   </head>
   <body>
+    <div id="opsApp">
+    <a class="skip-link" href="#main-content">Skip to main content</a>
     <header id="app-header">
-      <div class="brand-block">
-        <div class="brand-kicker">Operations Surface</div>
-        <div class="brand-title">SMS Automation</div>
-        <div class="brand-sub">Field monitoring and light-touch action</div>
+      <div class="brand-row">
+        <img class="brand-logo" src="/assets/police-insignia.svg" alt="Bangladesh Police insignia" />
+        <div class="brand-block">
+          <div class="brand-kicker">Bangladesh Police · LIC Barishal</div>
+          <div class="brand-title">SMS Automation</div>
+          <div class="brand-sub">Field monitoring and light-touch action</div>
+        </div>
       </div>
       <div style="display:flex;align-items:center;gap:10px">
         <div class="header-status">
@@ -117,116 +345,212 @@
         <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme">
           <span class="material-symbols-outlined" id="themeIcon">light_mode</span>
         </button>
+        <button class="icon-btn" onclick="sessionLogout()" title="Sign out">
+          <span class="material-symbols-outlined">logout</span>
+        </button>
       </div>
     </header>
 
-    <main>
+    <div class="desktop-shell">
+    <nav class="ops-sidebar" aria-label="Primary">
+      <button class="ops-sidebar-item active" data-tab="home"><span class="material-symbols-outlined">radar</span><span>Home</span></button>
+      <button class="ops-sidebar-item officer-hide" data-tab="activity" hidden><span class="material-symbols-outlined">timeline</span><span>Activity</span></button>
+      <div class="ops-sidebar-divider"></div>
+      <button class="ops-sidebar-item" data-tab="about"><span class="material-symbols-outlined">info</span><span>About</span></button>
+      <button class="ops-sidebar-item" data-tab="contact"><span class="material-symbols-outlined">call</span><span>Contact</span></button>
+      <button class="ops-sidebar-item" data-tab="help"><span class="material-symbols-outlined">help</span><span>Help</span></button>
+      <div class="ops-sidebar-divider"></div>
+      <button class="ops-sidebar-item" data-tab="settings"><span class="material-symbols-outlined">tune</span><span>Access</span></button>
+      <div class="sidebar-officer">
+        <div class="officer-label">Officer channel</div>
+        <a href="https://t.me/sms_automation_bd_bot" target="_blank" rel="noopener">
+          <span class="material-symbols-outlined">send</span>Telegram bot
+        </a>
+      </div>
+    </nav>
+
+    <main id="main-content">
       <section id="panel-home" class="tab-panel active">
-        <div class="ops-stack">
-          <section id="opsPosture" class="posture-banner glass-panel status-strip"></section>
-          <section class="data-surface">
+        <!-- Operational view: admin/super_admin only. Fleet health, KPI counts,
+             and recent-incident ticker are monitoring surfaces the access-tier
+             model (docs/security-hardening-v1-design.md §4) reserves to Admin —
+             a Registered Officer must never see this, and the /api/ops/* calls
+             that feed it are gated server-side too, not just hidden here. -->
+        <div class="home-minimal officer-hide" id="homeOperational" hidden>
+          <div class="home-header-line">
+            <div class="home-eyebrow">Live Status</div>
+            <div class="home-headline" id="homeHeadline">Checking systems…</div>
+            <div class="home-sub" id="homeTimestamp"></div>
+          </div>
+
+          <a class="telegram-cta" href="https://t.me/sms_automation_bd_bot" target="_blank" rel="noopener">
+            <span class="material-symbols-outlined">send</span>
+            Message the bot on Telegram
+          </a>
+
+          <div class="gateway-row" id="homeGateways"></div>
+
+          <div class="home-summary-strip" id="homeSummary"></div>
+
+          <div class="home-ticker" id="homeTicker"></div>
+
+          <div class="home-footer-link">
+            <a href="#" onclick="openActivityTab();return false;">View full activity overview →</a>
+          </div>
+        </div>
+
+        <!-- Informational view: the Public/Registered-Officer tier's entire
+             surface — purpose statement + (when logged in) account status.
+             No operational data, ever. -->
+        <div class="home-minimal" id="homeInfo">
+          <div class="home-header-line">
+            <div class="home-eyebrow">Bangladesh Police · LIC Barishal</div>
+            <div class="home-headline">A lawful, auditable bridge for operator subscriber lookups</div>
+            <div class="home-sub">
+              Authorized officers request subscriber location and identity information from
+              mobile operators through Telegram. Every request is logged, reviewed, and
+              tied to the requesting officer — operational work happens entirely there, not
+              on this page.
+            </div>
+          </div>
+
+          <a class="telegram-cta" href="https://t.me/sms_automation_bd_bot" target="_blank" rel="noopener">
+            <span class="material-symbols-outlined">send</span>
+            Message the bot on Telegram
+          </a>
+
+          <section class="data-surface account-card" id="accountCard" hidden>
             <div class="surface-header">
               <div>
-                <div class="surface-title">Fleet Status</div>
-                <div class="surface-subtitle">Live posture by operator</div>
+                <div class="surface-title">Your account</div>
+                <div class="surface-subtitle" id="accountSubtitle"></div>
               </div>
+              <span class="chip" id="accountStatusChip"></span>
             </div>
-            <div class="operator-strip" id="operatorStrip" style="padding:16px"></div>
+            <div class="account-grid" id="accountGrid"></div>
           </section>
-          <section class="data-surface">
-            <div class="surface-header">
-              <div>
-                <div class="surface-title">Needs Attention</div>
-                <div class="surface-subtitle">Pending approvals, failures, and exception load</div>
-              </div>
-            </div>
-            <div class="attention-grid" id="attentionGrid" style="padding:16px"></div>
-          </section>
-          <section class="data-surface">
-            <div class="surface-header">
-              <div>
-                <div class="surface-title">Recent Activity</div>
-                <div class="surface-subtitle">Operator replies, dispatches, and alerts</div>
-              </div>
-            </div>
-            <div id="opsActivity" class="activity-list" style="padding:16px"></div>
-          </section>
+
+          <div class="home-footer-link">
+            <a href="#" onclick="document.querySelector('[data-tab=about]').click();return false;">Learn more about this system →</a>
+          </div>
         </div>
       </section>
 
       <section id="panel-activity" class="tab-panel">
-        <div class="ops-stack">
-          <section class="data-surface">
-            <div class="surface-header">
-              <div>
-                <div class="surface-title">Activity Console</div>
-                <div class="surface-subtitle">Searchable event stream with severity filters</div>
+        <div class="monitor-shell">
+          <div class="monitor-rail">
+            <section id="opsPosture" class="posture-banner glass-panel status-strip"></section>
+            <section class="data-surface">
+              <div class="surface-header">
+                <div>
+                  <div class="surface-title">Fleet Status</div>
+                  <div class="surface-subtitle">Live posture by operator</div>
+                </div>
               </div>
-            </div>
-            <div class="table-toolbar" style="display:grid;gap:10px">
-              <div class="search-wrap">
-                <span class="material-symbols-outlined">search</span>
-                <input id="activitySearch" type="text" placeholder="Search events, requests, senders, operators…" />
+              <div class="operator-strip" id="operatorStrip"></div>
+            </section>
+            <section class="data-surface">
+              <div class="surface-header">
+                <div>
+                  <div class="surface-title">Needs Attention</div>
+                  <div class="surface-subtitle">Pending approvals, failures, and exception load</div>
+                </div>
               </div>
-              <div class="filter-row" id="activityFilters">
-                <button class="filter-chip active" data-filter="all">All</button>
-                <button class="filter-chip" data-filter="critical">Critical</button>
-                <button class="filter-chip" data-filter="warning">Warnings</button>
-                <button class="filter-chip" data-filter="success">Success</button>
-                <button class="filter-chip" data-filter="info">Info</button>
+              <div class="attention-grid" id="attentionGrid" style="padding:8px"></div>
+            </section>
+          </div>
+          <div class="monitor-console">
+            <section class="data-surface">
+              <div class="surface-header">
+                <div>
+                  <div class="surface-title">Activity Console</div>
+                  <div class="surface-subtitle">Live event stream — searchable and filterable by severity</div>
+                </div>
               </div>
-              <div class="summary-strip" id="activitySummary"></div>
-            </div>
-            <div id="activityFeed" class="timeline" style="padding:16px"></div>
-          </section>
+              <div class="table-toolbar" style="display:grid;gap:10px">
+                <div class="search-wrap">
+                  <span class="material-symbols-outlined">search</span>
+                  <input id="activitySearch" type="text" placeholder="Search events, requests, senders, operators…" />
+                </div>
+                <div class="filter-row" id="activityFilters">
+                  <button class="filter-chip active" data-filter="all">All</button>
+                  <button class="filter-chip" data-filter="critical">Critical</button>
+                  <button class="filter-chip" data-filter="warning">Warnings</button>
+                  <button class="filter-chip" data-filter="success">Success</button>
+                  <button class="filter-chip" data-filter="info">Info</button>
+                </div>
+                <div class="summary-strip" id="activitySummary"></div>
+              </div>
+              <div id="activityFeed" class="timeline" style="padding:16px"></div>
+            </section>
+          </div>
         </div>
       </section>
 
       <section id="panel-settings" class="tab-panel">
-        <div class="settings-cluster">
-          <section class="setting-panel">
-            <div class="setting-row">
-              <div>
-                <div class="setting-title">Session theme</div>
-                <div class="setting-note">Keep this surface readable in vehicles, offices, and field conditions.</div>
-              </div>
-              <label class="setting-pill">
-                <input id="themeToggle" type="checkbox" class="visually-hidden" onchange="toggleThemeCheckbox(this)" />
-                Dark
-              </label>
-            </div>
-          </section>
+        <div class="settings-shell">
+          <nav class="settings-nav" aria-label="Settings sections">
+            <button class="settings-nav-item active" data-group="general" onclick="selectSettingsGroup('general')">
+              <span class="material-symbols-outlined">tune</span><span>General</span>
+            </button>
+            <button class="settings-nav-item" data-group="access" onclick="selectSettingsGroup('access')">
+              <span class="material-symbols-outlined">key</span><span>Access</span>
+            </button>
+            <button class="settings-nav-item admin-only" data-group="provisioning" hidden onclick="selectSettingsGroup('provisioning')">
+              <span class="material-symbols-outlined">qr_code_2</span><span>Provisioning</span>
+            </button>
+          </nav>
 
-          <section class="setting-panel">
-            <div class="setting-row">
-              <div>
-                <div class="setting-title">Backend connection</div>
-                <div class="setting-note" id="backendUrlDisplay"></div>
-              </div>
-              <span class="setting-pill">Ops link</span>
-            </div>
-          </section>
+          <div class="settings-groups">
+            <div class="settings-group active" data-group-panel="general">
+              <div class="settings-cluster">
+                <section class="setting-panel">
+                  <div class="setting-row">
+                    <div>
+                      <div class="setting-title">Session theme</div>
+                      <div class="setting-note">Keep this surface readable in vehicles, offices, and field conditions.</div>
+                    </div>
+                    <label class="setting-pill">
+                      <input id="themeToggle" type="checkbox" class="visually-hidden" onchange="toggleThemeCheckbox(this)" />
+                      Dark
+                    </label>
+                  </div>
+                </section>
 
-          <section class="setting-panel admin-access">
-            <div class="setting-row">
-              <div>
-                <div class="setting-title">Escalation access</div>
-                <div class="setting-note">Supervisor and compliance actions stay in the admin command center.</div>
+                <section class="setting-panel">
+                  <div class="setting-row">
+                    <div>
+                      <div class="setting-title">Backend connection</div>
+                      <div class="setting-note" id="backendUrlDisplay"></div>
+                    </div>
+                    <span class="setting-pill">Ops link</span>
+                  </div>
+                </section>
               </div>
-              <a href="/admin" class="quick-actions primary-link">Open admin</a>
             </div>
-            <input id="settingsApiKey" class="input-field" type="password" placeholder="Paste admin API key to unlock local admin widgets" autocomplete="off" />
-            <div class="setting-note" id="apiKeyStatus">Not set</div>
-          </section>
 
-          <section class="setting-panel admin-only" id="adminToolsPanel" style="display:none">
-            <div class="setting-title">Restricted tools</div>
-            <div class="setting-note">These remain available, but intentionally demoted from the normal operations path.</div>
-            <div class="details-shell">
-              <details class="command-fold">
-                <summary><span>Provision gateway</span><span class="material-symbols-outlined">qr_code_2</span></summary>
-                <div class="fold-body">
-                  <div class="fold-grid">
+            <div class="settings-group" data-group-panel="access">
+              <div class="settings-cluster">
+                <section class="setting-panel admin-access">
+                  <div class="setting-row">
+                    <div>
+                      <div class="setting-title">Escalation access</div>
+                      <div class="setting-note">Supervisor and compliance actions stay in the admin command center.</div>
+                    </div>
+                    <a href="/admin" class="quick-actions primary-link">Open admin</a>
+                  </div>
+                  <input id="settingsApiKey" class="input-field" type="password" placeholder="Paste admin API key to unlock local admin widgets" autocomplete="off" />
+                  <div class="setting-note" id="apiKeyStatus">Not set</div>
+                </section>
+              </div>
+            </div>
+
+            <div class="settings-group admin-only" id="adminToolsPanel" data-group-panel="provisioning" hidden>
+              <div class="settings-cluster">
+                <section class="setting-panel">
+                  <div class="setting-title">Provision gateway</div>
+                  <div class="setting-note">Generate a QR payload to onboard a gateway device. These remain available, but intentionally demoted from the normal operations path.</div>
+                  <div class="fold-grid" style="margin-top:14px">
                     <label>Gateway ID<select id="provGwId" class="select-field"><option>GP_PHONE_01</option><option>ROBI_PHONE_01</option><option>BANGLALINK_PHONE_01</option></select></label>
                     <label>Backend URL<input id="provUrl" class="input-field" type="url" /></label>
                     <label>Admin PIN<input id="provPin" class="input-field" type="password" autocomplete="new-password" /></label>
@@ -238,29 +562,144 @@
                       <button class="btn-secondary" onclick="copyProvPayload('#provResult button')">Copy payload</button>
                     </div>
                   </div>
-                </div>
-              </details>
+                </section>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="panel-about" class="tab-panel">
+        <div class="ops-stack">
+          <section class="data-surface">
+            <div class="surface-header">
+              <div>
+                <div class="surface-title">About</div>
+                <div class="surface-subtitle">What this system does</div>
+              </div>
+            </div>
+            <div class="about-content" style="padding:18px">
+              <p class="prose-block">
+                <strong>SMS Automation</strong> is an auditable bridge between authorized
+                officers and mobile operator lookup services (LRL, LCL, MS-NID, NID-MS,
+                IMEI-MS), built to reduce manual copying, wrong routing, and
+                wrong-recipient risk in lawful operator push-pull requests.
+              </p>
+              <p class="prose-block">
+                An authorized officer submits a formatted request through Telegram. The
+                backend routes it to the correct operator's dedicated gateway phone, sends
+                the SMS exactly as formatted, waits for the operator's reply, and prepares
+                a tagged response — identified by requester — for review before it is
+                posted back.
+              </p>
+              <p class="prose-block">
+                Every step is recorded in a tamper-evident, hash-chained audit log.
+                Operator SMS commands are never modified, and only trusted sender replies
+                from configured operator numbers are processed.
+              </p>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section id="panel-contact" class="tab-panel">
+        <div class="ops-stack">
+          <section class="data-surface">
+            <div class="surface-header">
+              <div>
+                <div class="surface-title">Contact</div>
+                <div class="surface-subtitle">LIC Barishal</div>
+              </div>
+            </div>
+            <div class="contact-content" style="padding:18px">
+              <div class="contact-row">
+                <span class="material-symbols-outlined">apartment</span>
+                <span>LIC Barishal</span>
+              </div>
+              <div class="contact-row">
+                <span class="material-symbols-outlined">call</span>
+                <span>
+                  <a href="tel:+8801320151103">01320-151103</a>,
+                  <a href="tel:+8801320151450">01320-151450</a>
+                </span>
+              </div>
+              <div class="contact-row">
+                <span class="material-symbols-outlined">mail</span>
+                <span><a href="mailto:support@opsbarishal.com">support@opsbarishal.com</a></span>
+              </div>
+              <div class="contact-row">
+                <span class="material-symbols-outlined">send</span>
+                <span>Telegram: 01320-151103, 01320-151450</span>
+              </div>
+              <div class="contact-row">
+                <span class="material-symbols-outlined">chat</span>
+                <span>WhatsApp: 01320-151103, 01320-151450</span>
+              </div>
+              <div class="prose-block">
+                For access requests or technical issues, reach the system administrator
+                through any of the channels above, or use the
+                <a href="/admin">admin console</a> if you already hold credentials.
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section id="panel-help" class="tab-panel">
+        <div class="ops-stack">
+          <section class="data-surface">
+            <div class="surface-header">
+              <div>
+                <div class="surface-title">Help</div>
+                <div class="surface-subtitle">Submitting a request via Telegram</div>
+              </div>
+            </div>
+            <div class="help-content" style="padding:18px">
+              <p class="prose-block">
+                Send a message to the Telegram bot in the operations group (or by DM, if
+                authorized) using one of the commands below, followed by one or more
+                identifiers separated by spaces. Up to 5 identifiers per message.
+              </p>
+              <table class="command-table">
+                <thead>
+                  <tr><th>Command</th><th>Identifier</th><th>Example</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td><code>LRL</code></td><td>Mobile number</td><td><code>LRL 01710000000</code></td></tr>
+                  <tr><td><code>LCL</code></td><td>Mobile number</td><td><code>LCL 01710000000</code></td></tr>
+                  <tr><td><code>MS-NID</code></td><td>National ID (10/13/17 digits)</td><td><code>MS-NID 1234567890123</code></td></tr>
+                  <tr><td><code>NID-MS</code></td><td>Mobile number</td><td><code>NID-MS 01710000000</code></td></tr>
+                  <tr><td><code>IMEI-MS</code></td><td>IMEI (14/15 digits)</td><td><code>IMEI-MS 353097824292150</code></td></tr>
+                </tbody>
+              </table>
+              <p class="prose-block">
+                The bot replies in-thread once the operator responds. If a request is
+                rejected, the reply explains exactly why (wrong format, wrong identifier
+                length, etc.) so it can be corrected and resent.
+              </p>
             </div>
           </section>
         </div>
       </section>
     </main>
+    </div>
 
     <nav class="bottom-nav">
       <button class="nav-item active" data-tab="home"><span class="material-symbols-outlined">radar</span><span>Home</span></button>
-      <button class="nav-item" data-tab="activity"><span class="material-symbols-outlined">timeline</span><span>Activity</span></button>
+      <button class="nav-item officer-hide" data-tab="activity" hidden><span class="material-symbols-outlined">timeline</span><span>Activity</span></button>
       <button class="nav-item" data-tab="settings"><span class="material-symbols-outlined">tune</span><span>Access</span></button>
     </nav>
+    </div>
 
-    <div id="authOverlay" style="display:none;position:fixed;inset:0;background:var(--bg-overlay);z-index:40;align-items:center;justify-content:center;padding:20px">
+    <div id="authOverlay" style="position:fixed;inset:0;background:var(--bg-overlay);z-index:40;align-items:center;justify-content:center;padding:20px">
       <div class="data-surface" style="width:min(360px,100%);padding:22px">
         <div class="section-eyebrow">Restricted Access</div>
         <div style="margin-top:8px;font-size:22px;font-weight:800;letter-spacing:-0.03em">Admin key required</div>
-        <div style="margin-top:8px;color:var(--text-secondary);line-height:1.5">Use the supervisor API key to unlock protected review actions from this device.</div>
+        <div style="margin-top:8px;color:var(--text-secondary);line-height:1.5">Enter the admin API key to view this dashboard.</div>
         <input id="authKeyInput" class="input-field" type="password" style="margin-top:16px" placeholder="Admin API key" autocomplete="off" />
+        <div id="authError" style="display:none;margin-top:10px;color:var(--danger)">Invalid API key.</div>
         <div style="display:flex;gap:10px;margin-top:14px">
-          <button class="btn-primary" onclick="submitAuthKey()">Save key</button>
-          <button class="btn-secondary" onclick="document.getElementById('authOverlay').style.display='none'">Cancel</button>
+          <button class="btn-primary" onclick="submitAuthKey()">Unlock</button>
         </div>
       </div>
     </div>

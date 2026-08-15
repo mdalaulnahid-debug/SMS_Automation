@@ -22,7 +22,10 @@ function loadGatewayConfig() {
         apiKey: config.apiKey || '',
         // Shared secret the phone must present on inbound webhook / registration (machine identity).
         secret: config.secret || '',
-        trustedSenders: config.trustedSenders || []
+        trustedSenders: config.trustedSenders || [],
+        // Optional override of the hardcoded operator hotline number in domain.js — set via
+        // settingsStore.writeOperatorShortcode(), empty means "use the domain.js default".
+        shortcode: config.shortcode || ''
       }
     ])
   );
@@ -50,7 +53,13 @@ function loadAuthConfig() {
     denyUnknownRequesters:
       process.env.DENY_UNKNOWN_REQUESTERS !== undefined
         ? truthy(process.env.DENY_UNKNOWN_REQUESTERS)
-        : Boolean(file.denyUnknownRequesters)
+        : Boolean(file.denyUnknownRequesters),
+    // ISO timestamp: while set and in the future, new registrations auto-activate
+    // on a Personnel Registry match (the 2026-07-07 migration-window decision).
+    // Unset (the default, until an admin explicitly starts the rollout) means
+    // "always auto-activate" — this must never change behavior for a deployment
+    // that hasn't opted into the registration-gating rollout yet.
+    registrationWindowEndsAt: file.registrationWindowEndsAt || null
   };
 }
 
@@ -66,8 +75,28 @@ function loadTelegramConfig() {
   }
 }
 
+// Gmail SMTP sender + super-admin bootstrap credentials. Env vars win over config/mail.json
+// (which is gitignored, same pattern as config/auth.json) — lets the VPS use either.
+function loadMailConfig() {
+  const configPath = process.env.SMS_MAIL_CONFIG || join(__dirname, '..', 'config', 'mail.json');
+  let file = {};
+  if (existsSync(configPath)) {
+    try {
+      file = JSON.parse(readFileSync(configPath, 'utf8'));
+    } catch (error) {
+      throw new Error(`Invalid config/mail.json: ${error.message}`);
+    }
+  }
+  return {
+    gmailUser: process.env.GMAIL_USER || file.gmailUser || '',
+    gmailAppPassword: process.env.GMAIL_APP_PASSWORD || file.gmailAppPassword || '',
+    superAdminEmail: process.env.SUPERADMIN_EMAIL || file.superAdminEmail || '',
+    superAdminPassword: process.env.SUPERADMIN_PASSWORD || file.superAdminPassword || ''
+  };
+}
+
 function trimTrailingSlash(value) {
   return String(value || '').replace(/\/+$/, '');
 }
 
-module.exports = { loadGatewayConfig, loadAuthConfig, loadTelegramConfig };
+module.exports = { loadGatewayConfig, loadAuthConfig, loadTelegramConfig, loadMailConfig };

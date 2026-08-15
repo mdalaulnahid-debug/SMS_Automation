@@ -1,1 +1,5 @@
-{"versionCode":47,"versionName":"2.6.1","releaseNotes":"Fix: dual SIM labels on Samsung A16 (SP fallback → SIM 2)"}
+{
+  "versionCode": 48,
+  "versionName": "2.7.0",
+  "releaseNotes": "v2.7.0 — live phone-inbox viewer (admin can pull a phone’s SMS inbox from the console), teal Material-3 theme synced to web."
+}

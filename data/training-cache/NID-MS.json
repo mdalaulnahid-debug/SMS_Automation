@@ -1,0 +1,237 @@
+{
+  "generatedAt": "2026-06-20T05:25:00.885Z",
+  "requestType": "NID-MS",
+  "examples": [
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\NID-MS.xlsx",
+      "sourceSheet": "NID-MS",
+      "sourceRow": 2,
+      "fileName": "NID-MS.xlsx",
+      "requestType": "NID-MS",
+      "operator": "BANGLALINK",
+      "requestText": "NID-MS 867352054065220",
+      "replyText": "NID: 867352054065220, No data found [Robi] | \r\nNID 867352054065220 No data found - Banglalink | \r\nSorry No records found for NID: 867352054065220 [GP]",
+      "tokens": [
+        "nid",
+        "data",
+        "found",
+        "robi",
+        "nid",
+        "data",
+        "found",
+        "banglalink",
+        "sorry",
+        "records",
+        "found",
+        "for",
+        "nid"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\NID-MS.xlsx",
+      "sourceSheet": "NID-MS",
+      "sourceRow": 3,
+      "fileName": "NID-MS.xlsx",
+      "requestType": "NID-MS",
+      "operator": "BANGLALINK",
+      "requestText": "NID-MS 3323058754",
+      "replyText": "NID 3323058754 MSISDN: 8801947364653 - Banglalink",
+      "tokens": [
+        "nid",
+        "msisdn",
+        "banglalink"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\NID-MS.xlsx",
+      "sourceSheet": "NID-MS",
+      "sourceRow": 4,
+      "fileName": "NID-MS.xlsx",
+      "requestType": "NID-MS",
+      "operator": "BANGLALINK",
+      "requestText": "NID-MS 19907917652000048",
+      "replyText": "NID: 19907917652000048 8801744888421 [GP]\r\nNID 19907917652000048 No data found - Banglalink",
+      "tokens": [
+        "nid",
+        "nid",
+        "data",
+        "found",
+        "banglalink"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\NID-MS.xlsx",
+      "sourceSheet": "NID-MS",
+      "sourceRow": 5,
+      "fileName": "NID-MS.xlsx",
+      "requestType": "NID-MS",
+      "operator": "ROBI",
+      "requestText": "NID-MS 3758355105",
+      "replyText": "NID: 3758355105\r\nMSISDN: 8801610420628\r\n8801610027553 [Robi]",
+      "tokens": [
+        "nid",
+        "msisdn",
+        "robi"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\NID-MS.xlsx",
+      "sourceSheet": "NID-MS",
+      "sourceRow": 6,
+      "fileName": "NID-MS.xlsx",
+      "requestType": "NID-MS",
+      "operator": "GP",
+      "requestText": "NID-MS 19907917652000048",
+      "replyText": "NID: 19907917652000048\r\n8801744888421 [GP]",
+      "tokens": [
+        "nid"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\NID-MS.xlsx",
+      "sourceSheet": "NID-MS",
+      "sourceRow": 7,
+      "fileName": "NID-MS.xlsx",
+      "requestType": "NID-MS",
+      "operator": "GP",
+      "requestText": "NID-MS 19907917652000048",
+      "replyText": "NID: 19907917652000048\r\n8801744888421 [GP]",
+      "tokens": [
+        "nid"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\NID-MS.xlsx",
+      "sourceSheet": "NID-MS",
+      "sourceRow": 8,
+      "fileName": "NID-MS.xlsx",
+      "requestType": "NID-MS",
+      "operator": "BANGLALINK",
+      "requestText": "NID-MS 19907917652000048",
+      "replyText": "NID 19907917652000048 No data found - Banglalink",
+      "tokens": [
+        "nid",
+        "data",
+        "found",
+        "banglalink"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\NID-MS.xlsx",
+      "sourceSheet": "NID-MS",
+      "sourceRow": 9,
+      "fileName": "NID-MS.xlsx",
+      "requestType": "NID-MS",
+      "operator": "ROBI",
+      "requestText": "NID-MS 19787918785632712",
+      "replyText": "NID: 19787918785632712\r\nMSISDN: \r\n8801872664308 [Robi]",
+      "tokens": [
+        "nid",
+        "msisdn",
+        "robi"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\NID-MS.xlsx",
+      "sourceSheet": "NID-MS",
+      "sourceRow": 10,
+      "fileName": "NID-MS.xlsx",
+      "requestType": "NID-MS",
+      "operator": "BANGLALINK",
+      "requestText": "NID-MS 19700619452170146",
+      "replyText": "NID 19700619452170146 MSISDN: 8801904897498 - Banglalink",
+      "tokens": [
+        "nid",
+        "msisdn",
+        "banglalink"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\NID-MS.xlsx",
+      "sourceSheet": "NID-MS",
+      "sourceRow": 11,
+      "fileName": "NID-MS.xlsx",
+      "requestType": "NID-MS",
+      "operator": "BANGLALINK",
+      "requestText": "NID-MS 3323058754",
+      "replyText": "NID 3323058754 MSISDN: 8801947364653 - Banglalink",
+      "tokens": [
+        "nid",
+        "msisdn",
+        "banglalink"
+      ]
+    }
+  ],
+  "patterns": [
+    {
+      "requestType": "NID-MS",
+      "operator": "BANGLALINK",
+      "keywords": [
+        {
+          "token": "nid",
+          "count": 9
+        },
+        {
+          "token": "banglalink",
+          "count": 6
+        },
+        {
+          "token": "found",
+          "count": 5
+        },
+        {
+          "token": "data",
+          "count": 4
+        },
+        {
+          "token": "msisdn",
+          "count": 3
+        },
+        {
+          "token": "for",
+          "count": 1
+        },
+        {
+          "token": "records",
+          "count": 1
+        },
+        {
+          "token": "robi",
+          "count": 1
+        },
+        {
+          "token": "sorry",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "requestType": "NID-MS",
+      "operator": "ROBI",
+      "keywords": [
+        {
+          "token": "msisdn",
+          "count": 2
+        },
+        {
+          "token": "nid",
+          "count": 2
+        },
+        {
+          "token": "robi",
+          "count": 2
+        }
+      ]
+    },
+    {
+      "requestType": "NID-MS",
+      "operator": "GP",
+      "keywords": [
+        {
+          "token": "nid",
+          "count": 2
+        }
+      ]
+    }
+  ]
+}

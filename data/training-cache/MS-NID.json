@@ -1,0 +1,328 @@
+{
+  "generatedAt": "2026-06-20T05:25:00.885Z",
+  "requestType": "MS-NID",
+  "examples": [
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
+      "sourceRow": 2,
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "ROBI",
+      "requestText": "MS-NID 01612196151",
+      "replyText": "MSISDN: 8801612196151, NID: 7305979036, DoB: 02/05/1972 [Robi]",
+      "tokens": [
+        "msisdn",
+        "nid",
+        "dob",
+        "robi"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
+      "sourceRow": 3,
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "GP",
+      "requestText": "MS-NID 01307468725",
+      "replyText": "MSISDN: 8801307468725, 0611073766793, 1958-03-12 [GP]",
+      "tokens": [
+        "msisdn"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
+      "sourceRow": 4,
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "GP",
+      "requestText": "MS-NID 01794702044",
+      "replyText": "MSISDN: 8801794702044, 0619452170146, 1970-11-09 [GP]",
+      "tokens": [
+        "msisdn"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
+      "sourceRow": 5,
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "GP",
+      "requestText": "MS-NID 01304277436",
+      "replyText": "MSISDN: 8801304277436, 0619442156020, 1985-03-02 [GP]",
+      "tokens": [
+        "msisdn"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
+      "sourceRow": 6,
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "",
+      "requestText": "MS-NID 01715679017",
+      "replyText": "MSISDN: 8801715679017 - Sorry No records found",
+      "tokens": [
+        "msisdn",
+        "sorry",
+        "records",
+        "found"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
+      "sourceRow": 7,
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "GP",
+      "requestText": "MS-NID 01743739121",
+      "replyText": "MSISDN: 8801743739121, 0619452170225, 1972-12-21 [GP]",
+      "tokens": [
+        "msisdn"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
+      "sourceRow": 8,
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "GP",
+      "requestText": "MS-NID 01761606344",
+      "replyText": "MSISDN: 8801761606344, 5552667254, 1997-06-15 [GP]",
+      "tokens": [
+        "msisdn"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
+      "sourceRow": 9,
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "GP",
+      "requestText": "MS-NID 01739204760",
+      "replyText": "MSISDN: 8801739204760, 9553747057, 1983-01-01 [GP]",
+      "tokens": [
+        "msisdn"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
+      "sourceRow": 10,
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "",
+      "requestText": "MS -NID 8801994428200",
+      "replyText": "MSISDN?8801994428200 NID ?8248705892?\r\nDate of Birth?1980-01-03",
+      "tokens": [
+        "msisdn",
+        "nid",
+        "date",
+        "birth"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
+      "sourceRow": 11,
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "ROBI",
+      "requestText": "MS-NID 8801842615514",
+      "replyText": "MSISDN: 8801842615514\r\nNID: 6856765273\r\nDoB: 01/01/1989 [Robi]",
+      "tokens": [
+        "msisdn",
+        "nid",
+        "dob",
+        "robi"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
+      "sourceRow": 12,
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "",
+      "requestText": "MS-NID 01990169712",
+      "replyText": "MSISDN?8801990169712 national_id?\r\nDocument Number?19790619431282189?\r\nDate of Birth?1979-01-01",
+      "tokens": [
+        "msisdn",
+        "national",
+        "document",
+        "number",
+        "date",
+        "birth"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
+      "sourceRow": 13,
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "ROBI",
+      "requestText": "MS-NID 01881986611",
+      "replyText": "MSISDN: 8801881986611\r\nNID: 2854786395\r\nDoB: 11/03/1996 [Robi]",
+      "tokens": [
+        "msisdn",
+        "nid",
+        "dob",
+        "robi"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
+      "sourceRow": 14,
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "ROBI",
+      "requestText": "MS-NID 01600204240",
+      "replyText": "MSISDN: 8801600204240\r\nNID: 5561211730\r\nDoB: 01/07/2001 [Robi]",
+      "tokens": [
+        "msisdn",
+        "nid",
+        "dob",
+        "robi"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
+      "sourceRow": 15,
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "ROBI",
+      "requestText": "MS-NID 01603990945",
+      "replyText": "MSISDN: 8801603990945\r\nNID: 3769269055\r\nDoB: 12/20/2003 [Robi]",
+      "tokens": [
+        "msisdn",
+        "nid",
+        "dob",
+        "robi"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
+      "sourceRow": 16,
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "",
+      "requestText": "MS-NID 01603990946",
+      "replyText": "01904809964 NID 19912610457000031  DOB 10.12.1991",
+      "tokens": [
+        "nid",
+        "dob"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+      "sourceSheet": "MS-NID",
+      "sourceRow": 17,
+      "fileName": "MS-NID.xlsx",
+      "requestType": "MS-NID",
+      "operator": "",
+      "requestText": "MS-NID 01938590648",
+      "replyText": "MSISDN?8801938590648 NID 5108405506?\r\nDate of Birth?2001-01-12",
+      "tokens": [
+        "msisdn",
+        "nid",
+        "date",
+        "birth"
+      ]
+    }
+  ],
+  "patterns": [
+    {
+      "requestType": "MS-NID",
+      "operator": "ROBI",
+      "keywords": [
+        {
+          "token": "dob",
+          "count": 5
+        },
+        {
+          "token": "msisdn",
+          "count": 5
+        },
+        {
+          "token": "nid",
+          "count": 5
+        },
+        {
+          "token": "robi",
+          "count": 5
+        }
+      ]
+    },
+    {
+      "requestType": "MS-NID",
+      "operator": "GP",
+      "keywords": [
+        {
+          "token": "msisdn",
+          "count": 6
+        }
+      ]
+    },
+    {
+      "requestType": "MS-NID",
+      "operator": "",
+      "keywords": [
+        {
+          "token": "msisdn",
+          "count": 4
+        },
+        {
+          "token": "birth",
+          "count": 3
+        },
+        {
+          "token": "date",
+          "count": 3
+        },
+        {
+          "token": "nid",
+          "count": 3
+        },
+        {
+          "token": "dob",
+          "count": 1
+        },
+        {
+          "token": "document",
+          "count": 1
+        },
+        {
+          "token": "found",
+          "count": 1
+        },
+        {
+          "token": "national",
+          "count": 1
+        },
+        {
+          "token": "number",
+          "count": 1
+        },
+        {
+          "token": "records",
+          "count": 1
+        },
+        {
+          "token": "sorry",
+          "count": 1
+        }
+      ]
+    }
+  ]
+}

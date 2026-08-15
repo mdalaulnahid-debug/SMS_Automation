@@ -71,6 +71,80 @@ class BackendClient {
     );
     return res.json();
   }
+
+  // Reports a message received from a chat that doesn't match groupChatId — surfaces a config
+  // drift (bridge listening to the wrong group) in admin/web audit instead of only a console
+  // log line that's easy to miss until intake has been silently broken for hours.
+  async reportChatMismatch({ chatId, chatTitle, configuredGroupChatId }) {
+    try {
+      await this.fetch(`${this.base}/api/telegram/chat-mismatch`, {
+        method: 'POST',
+        headers: this.headers({ 'content-type': 'application/json' }),
+        body: JSON.stringify({ chatId, chatTitle, configuredGroupChatId })
+      });
+    } catch {
+      // Best-effort — never let a reporting failure affect the intake loop itself.
+    }
+  }
+
+  // Reports a sender who failed the authorizedUsers check — group allowlist rejection, or
+  // any private DM (always authorized-only). Previously only ever a console log line.
+  async reportUnauthorizedAttempt({ chatId, chatType, fromId, fromName }) {
+    try {
+      await this.fetch(`${this.base}/api/telegram/unauthorized-attempt`, {
+        method: 'POST',
+        headers: this.headers({ 'content-type': 'application/json' }),
+        body: JSON.stringify({ chatId, chatType, fromId, fromName })
+      });
+    } catch {
+      // Best-effort — never let a reporting failure affect the intake loop itself.
+    }
+  }
+
+  // Verifies a quota re-verification code (security-hardening v1 §7). Unlike the
+  // best-effort reporting calls above, a network failure here must be visible to the
+  // caller (not silently swallowed as "no active challenge") — the officer is actively
+  // waiting to be unblocked, and a false "incorrect code" would be actively misleading.
+  async verifyOtpCode(telegramId, code) {
+    const res = await this.fetch(`${this.base}/api/telegram/verify-code`, {
+      method: 'POST',
+      headers: this.headers({ 'content-type': 'application/json' }),
+      body: JSON.stringify({ telegramId, code })
+    });
+    return res.json();
+  }
+
+  // Admin group actions (security-hardening v1 §9). Authorization is checked fresh on
+  // every attempt (no caching/polling in the bridge) — a network failure must fail
+  // closed (unauthorized), never silently let a moderation command through.
+  async checkModerationAuthorized(telegramId) {
+    try {
+      const res = await this.fetch(`${this.base}/api/telegram/moderation-check`, {
+        method: 'POST',
+        headers: this.headers({ 'content-type': 'application/json' }),
+        body: JSON.stringify({ telegramId })
+      });
+      if (!res.ok) return { authorized: false };
+      return res.json();
+    } catch {
+      return { authorized: false };
+    }
+  }
+
+  // Reports a completed (or failed) moderation action for audit — best-effort, since
+  // the actual Telegram-side action has already happened by the time this is called;
+  // a reporting failure shouldn't be treated as the moderation action itself failing.
+  async reportModerationAction(detail) {
+    try {
+      await this.fetch(`${this.base}/api/telegram/moderation-action`, {
+        method: 'POST',
+        headers: this.headers({ 'content-type': 'application/json' }),
+        body: JSON.stringify(detail)
+      });
+    } catch {
+      // Best-effort — never let a reporting failure affect the intake loop itself.
+    }
+  }
 }
 
 module.exports = { BackendClient };

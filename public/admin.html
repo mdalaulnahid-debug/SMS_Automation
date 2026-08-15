@@ -4,6 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>SMS Automation · Admin Command Center</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/police-insignia.svg" />
     <script>
       if (window.innerWidth < 900 && location.search.indexOf('desktop=1') === -1) {
         location.replace('/');
@@ -32,9 +33,11 @@
       #admin-topbar {
         position: sticky; top: 0; z-index: 20;
         height: 72px; display: flex; align-items: center; justify-content: space-between;
-        padding: 0 20px; background: rgba(8, 17, 31, 0.88); backdrop-filter: blur(18px);
+        padding: 0 20px; background: var(--bg-chrome-header); backdrop-filter: blur(18px);
         border-bottom: 1px solid var(--divider);
       }
+      .brand-row { display: flex; align-items: center; gap: 12px; }
+      .brand-logo { width: 40px; height: 40px; object-fit: contain; flex-shrink: 0; }
       .topbar-brand { display: flex; flex-direction: column; gap: 4px; }
       .topbar-brand .kicker { color: var(--warning); font-size: 10px; font-weight: 800; letter-spacing: 0.18em; text-transform: uppercase; }
       .topbar-brand .title { font-size: 22px; font-weight: 800; letter-spacing: -0.04em; }
@@ -45,7 +48,7 @@
       .admin-shell { display: grid; grid-template-columns: 248px minmax(0, 1fr); min-height: calc(100vh - 72px); }
       .admin-sidebar {
         position: sticky; top: 72px; height: calc(100vh - 72px); padding: 18px 14px;
-        border-right: 1px solid var(--divider); background: rgba(8, 17, 31, 0.55);
+        border-right: 1px solid var(--divider); background: var(--bg-chrome-sidebar);
       }
       .sidebar-head { padding: 0 8px 14px; }
       .sidebar-item {
@@ -68,30 +71,86 @@
       .section-heading { display: flex; justify-content: space-between; align-items: end; gap: 12px; }
       .section-title { font-size: 28px; font-weight: 800; letter-spacing: -0.04em; }
       .section-subtitle { margin-top: 6px; color: var(--text-secondary); }
-      .stats-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; }
+      .stats-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
       .overview-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 18px; }
       .overview-stack { display: grid; gap: 18px; }
-      .fleet-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-      .fleet-card { border-radius: 18px; border: 1px solid var(--divider); background: var(--bg-panel); overflow: hidden; }
+      .fleet-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+      .fleet-card { border-radius: 18px; border: 1px solid var(--divider); background: var(--bg-panel); overflow: hidden; min-width: 0; }
       .fleet-rail { height: 4px; background: var(--operator-color, var(--accent)); }
-      .fleet-body { padding: 16px; display: grid; gap: 12px; }
-      .fleet-title { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
-      .fleet-name { font-size: 13px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
-      .fleet-state { font-size: 22px; font-weight: 800; }
-      .fleet-meta { color: var(--text-secondary); font-size: 12px; line-height: 1.5; }
+      .fleet-body { padding: 16px; display: grid; gap: 10px; min-width: 0; }
+      .fleet-title { display: flex; justify-content: space-between; align-items: center; gap: 8px; min-width: 0; }
+      .fleet-name { font-size: 12px; font-weight: 800; letter-spacing: 0.03em; text-transform: uppercase; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+      /* Gateway id can be a long unbreakable token (BANGLALINK_PHONE_01); render it
+         in mono at a readable size and let it wrap rather than clip out of the card. */
+      .fleet-gwid { font-family: var(--font-mono); font-size: 13.5px; font-weight: 700; letter-spacing: 0.02em; color: var(--text-primary); overflow-wrap: anywhere; }
+      .fleet-heartbeat { width: 100%; height: 30px; }
+      .fleet-heartbeat path { fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 300; animation: fleet-ecg 2.4s linear infinite; }
+      .fleet-card.state-online .fleet-heartbeat path { stroke: var(--success); }
+      .fleet-card.state-delayed .fleet-heartbeat path { stroke: var(--warning); animation-duration: 4s; opacity: 0.85; }
+      .fleet-card.state-offline .fleet-heartbeat path { stroke: var(--danger); animation: none; stroke-dashoffset: 0; opacity: 0.5; }
+      @keyframes fleet-ecg { to { stroke-dashoffset: -300; } }
+      @media (prefers-reduced-motion: reduce) { .fleet-heartbeat path { animation: none !important; stroke-dashoffset: 0 !important; } }
+      .fleet-meta { color: var(--text-secondary); font-size: 12px; line-height: 1.5; overflow-wrap: anywhere; }
       .activity-surface { padding: 16px; display: grid; gap: 10px; }
 
       .requests-layout, .exceptions-layout { display: grid; grid-template-columns: 1.35fr 0.95fr; gap: 18px; }
+      .requests-layout.filter-open { grid-template-columns: 232px 1.05fr 0.85fr; }
       .detail-pane { min-height: 620px; }
+
+      .filter-toggle-btn {
+        display: inline-flex; align-items: center; gap: 6px; padding: 8px 14px; border-radius: 10px;
+        border: 1px solid var(--divider); background: var(--bg-panel); color: var(--text-secondary);
+        font-size: 12px; font-weight: 800; cursor: pointer; flex-shrink: 0;
+      }
+      .filter-toggle-btn .material-symbols-outlined { font-size: 18px; }
+      .filter-toggle-btn.active { background: var(--accent-bg); border-color: var(--accent-border); color: var(--accent); }
+      .filter-toggle-btn .filter-badge {
+        min-width: 18px; height: 18px; border-radius: 999px; background: var(--accent); color: #08110c;
+        font-size: 10px; font-weight: 800; display: none; align-items: center; justify-content: center; padding: 0 5px;
+      }
+      .filter-toggle-btn.has-filters .filter-badge { display: inline-flex; }
+
+      .filter-drawer {
+        display: none; border-radius: 18px; border: 1px solid var(--divider); background: var(--bg-panel);
+        padding: 14px; align-self: start; position: sticky; top: 88px; max-height: calc(100vh - 110px); overflow: auto;
+      }
+      .requests-layout.filter-open .filter-drawer { display: block; }
+      .filter-drawer-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 0 4px; }
+      .filter-drawer-title { font-size: 12px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+      .filter-clear-btn { background: none; border: none; color: var(--accent); font-size: 11px; font-weight: 800; cursor: pointer; padding: 4px; }
+      .filter-group { margin-bottom: 6px; border-bottom: 1px solid var(--divider); padding-bottom: 10px; }
+      .filter-group:last-child { border-bottom: none; }
+      .filter-group-header {
+        display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 8px 4px; cursor: pointer;
+        font-size: 11px; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-primary);
+      }
+      .filter-group-header .material-symbols-outlined { font-size: 18px; color: var(--text-muted); transition: transform 0.15s ease; }
+      .filter-group.collapsed .filter-group-header .material-symbols-outlined { transform: rotate(-90deg); }
+      .filter-group-body { display: grid; gap: 2px; }
+      .filter-group.collapsed .filter-group-body, .filter-group.collapsed .filter-mini-search { display: none; }
+      .filter-mini-search {
+        width: 100%; margin: 2px 0 6px; padding: 6px 10px; border-radius: 8px; border: 1px solid var(--divider);
+        background: var(--bg-panel-2); color: var(--text-primary); font-size: 12px; box-sizing: border-box;
+      }
+      .filter-option {
+        display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 7px 10px; border-radius: 10px;
+        background: transparent; border: 1px solid transparent; color: var(--text-secondary); font-size: 12.5px;
+        cursor: pointer; text-align: left; width: 100%;
+      }
+      .filter-option:hover { background: rgba(255,255,255,0.03); }
+      .filter-option.active { background: var(--accent-bg); border-color: var(--accent-border); color: var(--accent); font-weight: 700; }
+      .filter-option .filter-option-count { color: var(--text-muted); font-size: 11px; }
+      .filter-option.active .filter-option-count { color: var(--accent); }
+      .filter-option-empty { padding: 6px 10px; color: var(--text-muted); font-size: 11.5px; }
       .list-shell { max-height: 720px; overflow: auto; }
       .list-item {
-        padding: 14px 16px; border-bottom: 1px solid var(--divider); cursor: pointer; transition: background 0.18s ease;
+        padding: 10px 16px; border-bottom: 1px solid var(--divider); cursor: pointer; transition: background 0.18s ease;
       }
       .list-item:last-child { border-bottom: none; }
       .list-item:hover, .list-item.active { background: rgba(255,255,255,0.03); }
       .item-head { display: flex; justify-content: space-between; align-items: start; gap: 12px; }
       .item-title { font-size: 13px; font-weight: 800; }
-      .item-meta { margin-top: 6px; color: var(--text-secondary); font-size: 12px; line-height: 1.45; }
+      .item-meta { margin-top: 4px; color: var(--text-secondary); font-size: 12px; line-height: 1.4; font-family: var(--font-mono); }
       .detail-card { padding: 18px; display: grid; gap: 14px; }
       .detail-actions { display: flex; flex-wrap: wrap; gap: 10px; }
       .detail-block { border-top: 1px solid var(--divider); padding-top: 14px; }
@@ -99,7 +158,7 @@
       .detail-value { margin-top: 8px; color: var(--text-primary); line-height: 1.55; }
       .raw-reply { white-space: pre-wrap; padding: 14px; border-radius: 14px; background: var(--bg-panel-2); border: 1px solid var(--divider); font-family: var(--font-mono); font-size: 12px; }
       .audit-row-detail { margin-top: 8px; color: var(--text-secondary); font-size: 12px; line-height: 1.5; }
-      .audit-summary-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+      .audit-summary-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
       .audit-kpi { padding: 16px; border-radius: 18px; border: 1px solid var(--divider); background: var(--bg-panel); }
       .audit-kpi-value { font-size: 24px; font-weight: 800; letter-spacing: -0.04em; }
       .audit-kpi-label { margin-top: 6px; font-size: 12px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); }
@@ -111,11 +170,11 @@
         color: var(--text-secondary); font-size: 11px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; cursor:pointer;
       }
       .audit-filter.active { background: var(--accent-bg); border-color: var(--accent-border); color: var(--accent); }
-      .audit-row-detail-grid { margin-top: 10px; display:grid; gap:8px; }
+      .audit-row-detail-grid { margin-top: 8px; display:grid; gap:6px; }
       .audit-detail-line { display:grid; gap:3px; }
       .audit-detail-label { color: var(--text-muted); font-size: 10px; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; }
       .audit-detail-value { color: var(--text-secondary); font-family: var(--font-mono); font-size: 12px; line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
-      .tools-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+      .tools-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
       .tool-panel { padding: 18px; display: grid; gap: 12px; }
       .tool-title { display: flex; align-items: center; gap: 10px; font-size: 15px; font-weight: 800; }
       .tool-note { color: var(--text-secondary); line-height: 1.55; font-size: 12px; }
@@ -125,6 +184,74 @@
       .prov-result img { width: 120px; border-radius: 14px; background: #fff; padding: 8px; }
       .mono-list { font-family: var(--font-mono); font-size: 12px; }
       textarea.text-field { min-height: 104px; resize: vertical; }
+
+      /* ── Approvals Queue: ROMER-style master-detail instrument ── */
+      .approvals-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; }
+      .approvals-head .surface-title { display: inline-flex; align-items: center; gap: 8px; }
+      .approvals-head .surface-title .material-symbols-outlined { color: var(--accent); font-size: 20px; }
+      .queue-tabs { display: inline-flex; gap: 4px; padding: 4px; border-radius: 11px; background: var(--bg-panel-2); border: 1px solid var(--divider); }
+      .queue-tab {
+        padding: 6px 13px; border-radius: 8px; border: none; background: transparent; color: var(--text-muted);
+        font-family: var(--font-mono); font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+        cursor: pointer; transition: background 0.18s ease, color 0.18s ease;
+      }
+      .queue-tab:hover { color: var(--text-secondary); }
+      .queue-tab.active { background: var(--accent-bg); color: var(--accent); }
+
+      .req-card { padding: 14px 16px; border-bottom: 1px solid var(--divider); cursor: pointer; display: grid; gap: 10px; transition: background 0.18s ease; }
+      .req-card:last-child { border-bottom: none; }
+      .req-card:hover { background: rgba(255, 255, 255, 0.02); }
+      .req-card.active { background: var(--accent-bg); }
+      .req-card-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+      .req-id { font-family: var(--font-mono); font-size: 11px; font-weight: 700; letter-spacing: 0.04em; color: var(--text-secondary); background: var(--bg-panel-2); border: 1px solid var(--divider); border-radius: 6px; padding: 3px 8px; }
+      .req-timer { font-family: var(--font-mono); font-size: 12px; font-weight: 600; color: var(--text-muted); display: inline-flex; align-items: center; gap: 5px; }
+      .req-timer .material-symbols-outlined { font-size: 14px; }
+      .req-timer.urgent { color: var(--warning); }
+      .req-title { font-size: 14.5px; font-weight: 800; letter-spacing: -0.01em; }
+      .req-desc { color: var(--text-secondary); font-size: 12.5px; line-height: 1.4; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .req-card-bottom { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+      .req-requester { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--text-secondary); min-width: 0; }
+      .req-requester span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      .req-avatar { width: 22px; height: 22px; border-radius: 50%; background: var(--bg-panel-2); border: 1px solid var(--divider); display: inline-flex; align-items: center; justify-content: center; color: var(--text-muted); flex: none; }
+      .req-avatar .material-symbols-outlined { font-size: 14px; }
+      .impact-badge { font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; border: 1px solid transparent; flex: none; }
+      .impact-badge.warning { color: var(--warning); border-color: rgba(255, 191, 95, 0.28); background: var(--warning-bg); }
+      .impact-badge.danger { color: var(--danger); border-color: rgba(255, 109, 127, 0.28); background: var(--danger-bg); }
+      .impact-badge.success { color: var(--success); border-color: rgba(86, 216, 139, 0.28); background: var(--success-bg); }
+      .impact-badge.info { color: var(--accent); border-color: var(--accent-border); background: var(--accent-bg); }
+
+      /* Detail pane */
+      .rd-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+      .rd-eyebrow { font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; }
+      .rd-created { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+      .rd-title { margin-top: 12px; font-size: 24px; font-weight: 800; letter-spacing: -0.03em; line-height: 1.12; text-wrap: balance; }
+      .rd-actions { display: flex; gap: 8px; flex-shrink: 0; }
+      .rd-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 18px; }
+      .rd-card { padding: 14px; border-radius: 14px; border: 1px solid var(--divider); background: var(--bg-panel-2); display: grid; gap: 10px; align-content: start; min-width: 0; }
+      .rd-card-label { font-family: var(--font-mono); font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+      .rd-card-main { display: flex; align-items: center; gap: 10px; min-width: 0; }
+      .rd-card-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex: none; }
+      .rd-card-icon .material-symbols-outlined { font-size: 18px; }
+      .rd-card-icon.warning { background: var(--warning-bg); color: var(--warning); }
+      .rd-card-icon.danger { background: var(--danger-bg); color: var(--danger); }
+      .rd-card-icon.success { background: var(--success-bg); color: var(--success); }
+      .rd-card-icon.info { background: var(--accent-bg); color: var(--accent); }
+      .rd-card-value { font-size: 14px; font-weight: 800; line-height: 1.2; overflow: hidden; text-overflow: ellipsis; }
+      .rd-card-sub { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+      .rd-sla { font-family: var(--font-mono); font-size: 19px; font-weight: 700; letter-spacing: 0.02em; }
+      .rd-sla.urgent { color: var(--warning); }
+
+      .rd-lower { display: grid; gap: 14px; margin-top: 18px; }
+      .signal-panel { border: 1px solid var(--divider); border-radius: 14px; overflow: hidden; }
+      .signal-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 14px; border-bottom: 1px solid var(--divider); }
+      .signal-head-title { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 800; letter-spacing: 0.04em; }
+      .signal-head-title .material-symbols-outlined { font-size: 16px; color: var(--text-muted); }
+      .signal-count { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); }
+      .signal-row { padding: 11px 14px; border-bottom: 1px solid var(--divider); font-family: var(--font-mono); font-size: 12px; }
+      .signal-row:last-child { border-bottom: none; }
+      .signal-row-title { color: var(--accent); font-weight: 600; }
+      .signal-row-body { margin-top: 4px; color: var(--text-secondary); line-height: 1.5; white-space: pre-wrap; word-break: break-word; }
+      .signal-empty { padding: 14px; color: var(--text-muted); font-size: 12px; }
     </style>
   </head>
   <body>
@@ -144,10 +271,13 @@
 
     <div id="adminApp">
       <header id="admin-topbar">
-        <div class="topbar-brand">
-          <div class="kicker">Supervisor Surface</div>
-          <div class="title">SMS Automation</div>
-          <div class="sub">Desktop command center for review, audit, and exception handling</div>
+        <div class="brand-row">
+          <img class="brand-logo" src="/assets/police-insignia.svg" alt="Bangladesh Police insignia" />
+          <div class="topbar-brand">
+            <div class="kicker">Supervisor Surface</div>
+            <div class="title">SMS Automation</div>
+            <div class="sub">Desktop command center for review, audit, and exception handling</div>
+          </div>
         </div>
         <div class="topbar-right">
           <div class="env-pill" id="environmentLabel">Production</div>
@@ -157,7 +287,7 @@
           </div>
           <div style="color:var(--text-muted);font-size:12px" id="lastRefresh">—</div>
           <button class="icon-btn" onclick="toggleTheme()" title="Toggle theme"><span class="material-symbols-outlined" id="themeIcon">light_mode</span></button>
-          <button class="icon-btn" onclick="lockAdmin()" title="Lock"><span class="material-symbols-outlined">lock</span></button>
+          <button class="icon-btn" onclick="sessionLogout()" title="Sign out"><span class="material-symbols-outlined">logout</span></button>
         </div>
       </header>
 
@@ -167,10 +297,13 @@
             <div class="section-eyebrow">Navigation</div>
           </div>
           <button class="sidebar-item active" data-section="overview"><span class="sidebar-label"><span class="material-symbols-outlined">dashboard</span>Overview</span></button>
-          <button class="sidebar-item" data-section="requests"><span class="sidebar-label"><span class="material-symbols-outlined">fact_check</span>Requests & Replies</span><span class="sidebar-count" id="countRequests">0</span></button>
+          <button class="sidebar-item" data-section="requests"><span class="sidebar-label"><span class="material-symbols-outlined">verified_user</span>Approvals Queue</span><span class="sidebar-count" id="countRequests">0</span></button>
           <button class="sidebar-item" data-section="unmatched"><span class="sidebar-label"><span class="material-symbols-outlined">crisis_alert</span>Unmatched SMS</span><span class="sidebar-count" id="countUnmatched">0</span></button>
+          <button class="sidebar-item" data-section="rejected"><span class="sidebar-label"><span class="material-symbols-outlined">report</span>Rejected Messages</span><span class="sidebar-count" id="countRejected">0</span></button>
           <button class="sidebar-item" data-section="audit"><span class="sidebar-label"><span class="material-symbols-outlined">policy</span>Audit</span><span class="sidebar-count" id="countAudit">0</span></button>
+          <button class="sidebar-item" data-section="phoneinbox"><span class="sidebar-label"><span class="material-symbols-outlined">smartphone</span>Phone Inbox</span></button>
           <button class="sidebar-item" data-section="tools"><span class="sidebar-label"><span class="material-symbols-outlined">construction</span>Tools</span></button>
+          <button class="sidebar-item" id="teamSidebarItem" data-section="team" style="display:none"><span class="sidebar-label"><span class="material-symbols-outlined">group</span>Team</span></button>
         </aside>
 
         <main class="admin-main">
@@ -234,14 +367,65 @@
           <section id="section-requests" class="admin-section">
             <div class="section-heading">
               <div>
-                <div class="section-title">Requests & Replies</div>
-                <div class="section-subtitle">Queue list on the left, review drawer on the right.</div>
+                <div class="section-title">Approvals Queue</div>
+                <div class="section-subtitle">Pending reply drafts on the left, operational approval detail on the right.</div>
               </div>
             </div>
-            <div class="requests-layout">
+            <div class="requests-layout" id="requestsLayout">
+              <aside class="filter-drawer" id="filterDrawer">
+                <div class="filter-drawer-head">
+                  <span class="filter-drawer-title">Filters</span>
+                  <button type="button" class="filter-clear-btn" id="filterClearAll">Clear all</button>
+                </div>
+
+                <div class="filter-group" data-group-name="type">
+                  <div class="filter-group-header" data-toggle-group><span>Request Type</span><span class="material-symbols-outlined">expand_more</span></div>
+                  <div class="filter-group-body" id="filterTypeList"></div>
+                </div>
+
+                <div class="filter-group" data-group-name="user">
+                  <div class="filter-group-header" data-toggle-group><span>Requester</span><span class="material-symbols-outlined">expand_more</span></div>
+                  <input id="filterUserSearch" class="filter-mini-search" type="text" placeholder="Search requesters…" />
+                  <div class="filter-group-body" id="filterUserList"></div>
+                </div>
+
+                <div class="filter-group" data-group-name="status">
+                  <div class="filter-group-header" data-toggle-group><span>Status</span><span class="material-symbols-outlined">expand_more</span></div>
+                  <div class="filter-group-body" id="filterStatusList"></div>
+                </div>
+
+                <div class="filter-group" data-group-name="operator">
+                  <div class="filter-group-header" data-toggle-group><span>Operator</span><span class="material-symbols-outlined">expand_more</span></div>
+                  <div class="filter-group-body" id="filterOperatorList"></div>
+                </div>
+
+                <div class="filter-group" data-group-name="channel">
+                  <div class="filter-group-header" data-toggle-group><span>Channel</span><span class="material-symbols-outlined">expand_more</span></div>
+                  <div class="filter-group-body" id="filterChannelList"></div>
+                </div>
+
+                <div class="filter-group" data-group-name="date">
+                  <div class="filter-group-header" data-toggle-group><span>Date</span><span class="material-symbols-outlined">expand_more</span></div>
+                  <div class="filter-group-body" id="filterDateList"></div>
+                </div>
+              </aside>
               <section class="data-surface">
+                <div class="approvals-head">
+                  <div class="surface-title"><span class="material-symbols-outlined">verified_user</span>Approvals Queue</div>
+                  <div class="queue-tabs" id="queueTabs">
+                    <button type="button" class="queue-tab active" data-queue="pending">Pending</button>
+                    <button type="button" class="queue-tab" data-queue="resolved">Resolved</button>
+                    <button type="button" class="queue-tab" data-queue="archived">Archived</button>
+                  </div>
+                </div>
                 <div class="table-toolbar">
-                  <input id="requestSearch" class="table-search" type="text" placeholder="Search request id, requester, payload, operator…" />
+                  <button type="button" class="filter-toggle-btn" id="filterToggleBtn">
+                    <span class="material-symbols-outlined">tune</span>
+                    Filter
+                    <span class="filter-badge" id="filterBadge">0</span>
+                  </button>
+                  <input id="requestSearch" class="table-search" type="text" placeholder="Search ID, requester, payload…" />
+                  <span id="reqFilterCount" style="font-size:11px;color:var(--text-muted);white-space:nowrap;flex-shrink:0;"></span>
                 </div>
                 <div class="list-shell" id="requestList"></div>
               </section>
@@ -267,6 +451,26 @@
               </section>
               <section class="data-surface detail-pane">
                 <div class="detail-card" id="unmatchedDetail"><div class="empty">Select an unmatched reply to review likely request candidates.</div></div>
+              </section>
+            </div>
+          </section>
+
+          <section id="section-rejected" class="admin-section">
+            <div class="section-heading">
+              <div>
+                <div class="section-title">Rejected Messages</div>
+                <div class="section-subtitle">Every message in the group that wasn't a valid formatted request, with the exact text that was rejected — not subject to the audit feed's row limit.</div>
+              </div>
+            </div>
+            <div class="exceptions-layout">
+              <section class="data-surface">
+                <div class="table-toolbar">
+                  <input id="rejectedSearch" class="table-search" type="text" placeholder="Search requester or rejected text…" />
+                </div>
+                <div class="list-shell" id="rejectedList"></div>
+              </section>
+              <section class="data-surface detail-pane">
+                <div class="detail-card" id="rejectedDetail"><div class="empty">Select a rejected message to see its full original text.</div></div>
               </section>
             </div>
           </section>
@@ -309,6 +513,24 @@
             </section>
           </section>
 
+          <section id="section-phoneinbox" class="admin-section">
+            <div class="section-heading">
+              <div>
+                <div class="section-title">Phone Inbox</div>
+                <div class="section-subtitle">Read a gateway phone's live SMS inbox on demand — check errors without the physical phone. The phone returns its inbox on its next poll (a few seconds).</div>
+              </div>
+            </div>
+            <section class="data-surface" style="padding:16px;display:grid;gap:14px">
+              <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+                <select id="phoneInboxGateway" class="select-field" style="max-width:280px"></select>
+                <button class="btn-primary" onclick="requestPhoneInbox()">Request live inbox</button>
+                <button class="btn-secondary" onclick="refreshPhoneInbox()">Refresh</button>
+                <span id="phoneInboxStatus" style="font-size:12px;color:var(--text-muted)"></span>
+              </div>
+              <div id="phoneInboxList" class="list-shell"></div>
+            </section>
+          </section>
+
           <section id="section-tools" class="admin-section">
             <div class="section-heading">
               <div>
@@ -317,6 +539,16 @@
               </div>
             </div>
             <div class="tools-grid">
+              <section class="data-surface tool-panel">
+                <div class="tool-title"><span class="material-symbols-outlined">password</span>My Account</div>
+                <div class="tool-note">Change your own login password. Requires your current password.</div>
+                <form id="changePasswordForm" class="tool-form">
+                  <label>Current password<input id="currentPassword" class="input-field" type="password" autocomplete="current-password" required /></label>
+                  <label>New password (min 8 characters)<input id="newPassword" class="input-field" type="password" autocomplete="new-password" required minlength="8" /></label>
+                  <button type="submit" class="btn-primary">Change password</button>
+                  <div id="changePasswordResult" class="tool-note" style="display:none"></div>
+                </form>
+              </section>
               <section class="data-surface tool-panel">
                 <div class="tool-title"><span class="material-symbols-outlined">qr_code_2</span>Provision Gateway</div>
                 <div class="tool-note">Generate a constrained setup payload for a device runtime phone.</div>
@@ -351,6 +583,54 @@
                 </form>
               </section>
               <section class="data-surface tool-panel">
+                <div class="tool-title"><span class="material-symbols-outlined">settings</span>Settings</div>
+                <div class="tool-note">Authenticated changes to the Telegram group and operator hotline numbers — previously only editable by SSH-ing into the server and hand-editing JSON.</div>
+                <form id="telegramGroupForm" class="tool-form">
+                  <label>Telegram group chat ID<input id="settingsGroupChatId" class="input-field" name="groupChatId" placeholder="-1004316326579" /></label>
+                  <button type="submit" class="btn-primary">Save group chat ID</button>
+                  <div class="tool-note">Restart the Telegram bridge process after changing this (<code>pm2 restart sms-bridge</code>) — it reads this once at startup.</div>
+                </form>
+                <form id="operatorContactForm" class="tool-form" style="margin-top:8px;padding-top:12px;border-top:1px solid var(--divider)">
+                  <label>Operator<select id="settingsOperator" class="select-field"><option value="GP">GP</option><option value="ROBI">Robi</option><option value="BANGLALINK">Banglalink</option></select></label>
+                  <label>Hotline / shortcode number<input id="settingsShortcode" class="input-field" name="shortcode" placeholder="01714054239" /></label>
+                  <button type="submit" class="btn-secondary">Save operator number</button>
+                  <div class="tool-note">Applies immediately to this backend — no restart needed for this one.</div>
+                </form>
+                <div style="margin-top:8px;padding-top:12px;border-top:1px solid var(--divider)">
+                  <div class="tool-note">Authorized Telegram users — gates the private-DM intake (group membership still gates the group, unless an allowlist is set there too).</div>
+                  <div id="authorizedUsersList" class="mono-list" style="margin-top:8px"></div>
+                  <form id="authorizedUserForm" class="tool-form" style="margin-top:8px">
+                    <label>Telegram user ID<input id="authUserId" class="input-field" name="telegramUserId" placeholder="777888999" /></label>
+                    <label>Display name<input id="authUserName" class="input-field" name="name" placeholder="Officer Rahim" /></label>
+                    <button type="submit" class="btn-secondary">Add authorized user</button>
+                  </form>
+                  <div class="tool-note">Get a user's numeric ID via <code>@userinfobot</code> on Telegram — not their @username. Restart the bridge after adding/removing (<code>pm2 restart sms-bridge</code>).</div>
+                </div>
+                <div id="settingsResult" class="tool-note" style="display:none"></div>
+              </section>
+              <section class="data-surface tool-panel">
+                <div class="tool-title"><span class="material-symbols-outlined">badge</span>Personnel Registry</div>
+                <div class="tool-note">The roster registration is validated against — phone + email must match a record here. Bulk import wholesale-replaces the roster.</div>
+                <form id="registryImportForm" class="tool-form">
+                  <label>Roster spreadsheet (.xlsx)<input id="registryFileInput" class="input-field" type="file" accept=".xlsx" /></label>
+                  <button type="submit" class="btn-primary">Import spreadsheet</button>
+                  <div class="tool-note">Re-importing replaces the entire roster — the file should contain everyone, not just changes.</div>
+                </form>
+                <div id="registrySuperAdminBlock" style="display:none;margin-top:8px;padding-top:12px;border-top:1px solid var(--divider)">
+                  <div class="tool-note">Add one officer without a full re-import (super-admin only).</div>
+                  <form id="registryAddForm" class="tool-form" style="margin-top:8px">
+                    <label>Name<input id="regAddName" class="input-field" required /></label>
+                    <label>Designation<input id="regAddDesignation" class="input-field" /></label>
+                    <label>Unit<input id="regAddUnit" class="input-field" /></label>
+                    <label>Official phone<input id="regAddPhone" class="input-field" required /></label>
+                    <label>Official email<input id="regAddEmail" class="input-field" type="email" required /></label>
+                    <button type="submit" class="btn-secondary">Add to registry</button>
+                  </form>
+                </div>
+                <div id="registryResult" class="tool-note" style="display:none"></div>
+                <div id="registryList" class="mono-list" style="margin-top:8px"></div>
+              </section>
+              <section class="data-surface tool-panel">
                 <div class="tool-title"><span class="material-symbols-outlined">shield_lock</span>Release / Publish</div>
                 <div class="tool-note">Keep high-risk actions visually isolated from daily review work.</div>
                 <div class="banner banner-warn"><span class="material-symbols-outlined">warning</span>APK publishing remains controlled through the existing admin release flow and backend endpoint.</div>
@@ -360,6 +640,69 @@
                 </div>
               </section>
             </div>
+          </section>
+          <section id="section-team" class="admin-section">
+            <div class="section-heading">
+              <div>
+                <div class="section-title">Team</div>
+                <div class="section-subtitle">Website access is admin/super-admin only, invite-only. Create an account directly, or send an invite link for someone to complete themselves. Super-admin only.</div>
+              </div>
+            </div>
+
+            <section class="data-surface tool-panel">
+              <div class="section-title" style="font-size:14px">Super-admin sign-in URL</div>
+              <div class="section-subtitle" style="margin-bottom:12px">Super-admin accounts can only sign in through this hidden URL — never through the normal sign-in page. Keep it private; rotating it invalidates the old link immediately.</div>
+              <div id="gateUrlDisplay" class="mono" style="word-break:break-all;padding:10px 12px;border-radius:10px;background:var(--surface-2);border:1px solid var(--divider)"></div>
+              <div style="display:flex;gap:8px;margin-top:10px">
+                <button id="copyGateUrlBtn" type="button" class="btn-secondary">Copy</button>
+                <button id="regenerateGateUrlBtn" type="button" class="btn-secondary">Rotate URL</button>
+              </div>
+              <div id="gateUrlResult" class="tool-note" style="display:none"></div>
+            </section>
+
+            <section class="data-surface tool-panel">
+              <div class="section-title" style="font-size:14px">Invite a new admin</div>
+              <div class="section-subtitle" style="margin-bottom:12px">Generates a one-time registration link (valid 7 days) — copy it and hand it to them yourself.</div>
+              <form id="inviteForm" class="tool-form">
+                <input id="inviteEmail" class="input-field" type="email" placeholder="Email" required />
+                <input id="inviteName" class="input-field" type="text" placeholder="Full name" required />
+                <input id="invitePhone" class="input-field" type="tel" placeholder="Phone (optional)" />
+                <input id="inviteDesignation" class="input-field" type="text" placeholder="Designation (optional)" />
+                <input id="inviteUnit" class="input-field" type="text" placeholder="Unit (optional)" />
+                <select id="inviteRole" class="input-field">
+                  <option value="admin">admin</option>
+                  <option value="super_admin">super_admin</option>
+                </select>
+                <button class="btn-primary" type="submit">Generate invite link</button>
+              </form>
+              <div id="inviteResult" class="tool-note" style="display:none"></div>
+              <div id="inviteList" class="mono-list" style="margin-top:8px"></div>
+            </section>
+
+            <section class="data-surface tool-panel" style="margin-top:16px">
+              <div class="section-title" style="font-size:14px">Create account directly</div>
+              <div class="section-subtitle" style="margin-bottom:12px">No invite round trip — the account is active immediately with the password you set here. Hand it to them out of band.</div>
+              <form id="directAccountForm" class="tool-form">
+                <input id="directEmail" class="input-field" type="email" placeholder="Email" required />
+                <input id="directName" class="input-field" type="text" placeholder="Full name" required />
+                <input id="directPhone" class="input-field" type="tel" placeholder="Phone (optional)" />
+                <input id="directDesignation" class="input-field" type="text" placeholder="Designation (optional)" />
+                <input id="directUnit" class="input-field" type="text" placeholder="Unit (optional)" />
+                <select id="directRole" class="input-field">
+                  <option value="admin">admin</option>
+                  <option value="super_admin">super_admin</option>
+                </select>
+                <input id="directPassword" class="input-field" type="password" placeholder="Password (min 8 characters)" required minlength="8" />
+                <button class="btn-primary" type="submit">Create account</button>
+              </form>
+              <div id="directAccountResult" class="tool-note" style="display:none"></div>
+            </section>
+
+            <section class="data-surface tool-panel" style="margin-top:16px">
+              <div class="section-title" style="font-size:14px">Existing accounts</div>
+              <div id="teamResult" class="tool-note" style="display:none"></div>
+              <div id="teamList" class="mono-list" style="margin-top:8px"></div>
+            </section>
           </section>
         </main>
       </div>

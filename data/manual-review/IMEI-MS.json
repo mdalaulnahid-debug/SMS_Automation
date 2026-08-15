@@ -1,0 +1,2228 @@
+[
+  {
+    "capturedAt": "2026-08-15T08:00:05.595Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6995-Y2OM",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "355065840999399 355065848078618",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 355065840999399\nMSISDN: 8801618596548_Date: 20260803112334\nMSISDN: 8801805088869_Date: 20260726105617 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei",
+        "msisdn|mobile|subscriber|number"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:00:06.819Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6995-Y2OM",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "355065840999399 355065848078618",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 355065848078618\nMSISDN: 8801618596548_Date: 20260803134100\nMSISDN: 8801805088869_Date: 20260726195216 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei",
+        "msisdn|mobile|subscriber|number"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:00:31.198Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6995-Y2OM",
+    "requestType": "IMEI-MS",
+    "operator": "GP",
+    "payload": "355065840999399 355065848078618",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 355065848078618\n355065848078610, 8801342764888, 20260719\n355065848078610, 8801311850041, 20260727 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:00:39.256Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6995-Y2OM",
+    "requestType": "IMEI-MS",
+    "operator": "GP",
+    "payload": "355065840999399 355065848078618",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 355065840999399\n355065840999390, 8801311850041, 20260815\n355065840999390, 8801793221351, 20260720 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:02:18.845Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6996-R5G3",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "359373430440881 359373430440899",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 359373430440899\nNo data found. [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 10,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:02:18.996Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6996-R5G3",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "359373430440881 359373430440899",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 359373430440881\nNo data found. [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 10,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:02:38.604Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6992-IQ0E",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "356700116587044 35391704327090 356150802132376 356150802200108",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 356150802132376 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:02:38.661Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6992-IQ0E",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "356700116587044 35391704327090 356150802132376 356150802200108",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 35391704327090 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:02:38.717Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6992-IQ0E",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "356700116587044 35391704327090 356150802132376 356150802200108",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 356150802200108 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:02:38.985Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6995-Y2OM",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "355065840999399 355065848078618",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 355065840999399 MSISDN-DATE: 8801401340138 03-Aug-26, 8801932002732 26-Jul-26, 8801961214241 26-Jul-26, 8801917101262 19-Jul-26 - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei",
+        "msisdn|mobile|subscriber|number"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:02:39.064Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6992-IQ0E",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "356700116587044 35391704327090 356150802132376 356150802200108",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 356700116587044 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:02:39.200Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6995-Y2OM",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "355065840999399 355065848078618",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 355065848078618 MSISDN-DATE: 8801917101262 06-Aug-26, 8801921066909 27-Jul-26, 8801932002732 24-Jul-26 - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei",
+        "msisdn|mobile|subscriber|number"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:02:41.070Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6996-R5G3",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "359373430440881 359373430440899",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 359373430440899 MSISDN-DATE: 8801928743774 13-Jul-26, 8801976158410 26-Jun-26 - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei",
+        "msisdn|mobile|subscriber|number"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:02:42.181Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6996-R5G3",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "359373430440881 359373430440899",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 359373430440881 MSISDN-DATE: 8801928743774 25-Jun-26 - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei",
+        "msisdn|mobile|subscriber|number"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:03:12.788Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6996-R5G3",
+    "requestType": "IMEI-MS",
+    "operator": "GP",
+    "payload": "359373430440881 359373430440899",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 359373430440881\n359373430440880, 8801787870732, 20260715\n359373430440880, 8801798897387, 20260317\n359373430440880, 8801758546102, 20260625 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:12:20.753Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6997-UW5D",
+    "requestType": "IMEI-MS",
+    "operator": "GP",
+    "payload": "356032730371693 356197440317695 350666000507438 350973429061918 350973429061917",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for IMEI: 356197440317695 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 16,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:12:23.789Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6997-UW5D",
+    "requestType": "IMEI-MS",
+    "operator": "GP",
+    "payload": "356032730371693 356197440317695 350666000507438 350973429061918 350973429061917",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 350666000507438\n350666000507430, 8801322932428, 20260705\n350666000507430, 8801756175130, 20260627 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:12:29.649Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6997-UW5D",
+    "requestType": "IMEI-MS",
+    "operator": "GP",
+    "payload": "356032730371693 356197440317695 350666000507438 350973429061918 350973429061917",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 356032730371693\n!! Invalid Pattern IMEI !!. Input must be correct IMEI and valid 14, 15 or 16 digits [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:12.005Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6997-UW5D",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "356032730371693 356197440317695 350666000507438 350973429061918 350973429061917",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 356197440317695\nMSISDN: 8801892131758_Date: 20260807162927 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei",
+        "msisdn|mobile|subscriber|number"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:15.813Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6998-U0ET",
+    "requestType": "IMEI-MS",
+    "operator": "GP",
+    "payload": "350973429061918 350973429061917 359889270473810 350414100100394 350837750100399",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for IMEI: 359889270473810 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 16,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:21.375Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6999-2DFK",
+    "requestType": "IMEI-MS",
+    "operator": "GP",
+    "payload": "355082591844286 357417981844280 356973940869397 358812160869398",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for IMEI: 357417981844280 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 16,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:26.725Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6997-UW5D",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "356032730371693 356197440317695 350666000507438 350973429061918 350973429061917",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 350666000507438\nMSISDN: 8801810278431_Date: 20260801210634\nMSISDN: 8801872339863_Date: 20240624222104 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei",
+        "msisdn|mobile|subscriber|number"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:27.417Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6998-U0ET",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "350973429061918 350973429061917 359889270473810 350414100100394 350837750100399",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 359889270473810\nNo data found. [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 10,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:27.474Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6999-2DFK",
+    "requestType": "IMEI-MS",
+    "operator": "GP",
+    "payload": "355082591844286 357417981844280 356973940869397 358812160869398",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for IMEI: 358812160869398 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 16,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:27.994Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6997-UW5D",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "356032730371693 356197440317695 350666000507438 350973429061918 350973429061917",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 356032730371693\nNo data found. [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 10,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:29.866Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6999-2DFK",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "355082591844286 357417981844280 356973940869397 358812160869398",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 356973940869397\nNo data found. [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 10,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:30.852Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6999-2DFK",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "355082591844286 357417981844280 356973940869397 358812160869398",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 355082591844286\nNo data found. [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 10,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:32.193Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7000-L40R",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "353828958037720 359693648037728 350686139411989 351521282422385",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 353828958037720\nNo data found. [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 10,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:33.099Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6999-2DFK",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "355082591844286 357417981844280 356973940869397 358812160869398",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 358812160869398\nNo data found. [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 10,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:33.204Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6999-2DFK",
+    "requestType": "IMEI-MS",
+    "operator": "GP",
+    "payload": "355082591844286 357417981844280 356973940869397 358812160869398",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for IMEI: 356973940869397 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 16,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:35.013Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6999-2DFK",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "355082591844286 357417981844280 356973940869397 358812160869398",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 357417981844280\nNo data found. [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 10,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:36.760Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7000-L40R",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "353828958037720 359693648037728 350686139411989 351521282422385",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 359693648037728\nNo data found. [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 10,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:37.499Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7000-L40R",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "353828958037720 359693648037728 350686139411989 351521282422385",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 351521282422385\nNo data found. [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 10,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:38.237Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7003-EX5F",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "353678100679071 363679100679079 353140540659189 354223560659184",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 363679100679079\nNo data found. [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 10,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:38.772Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6999-2DFK",
+    "requestType": "IMEI-MS",
+    "operator": "GP",
+    "payload": "355082591844286 357417981844280 356973940869397 358812160869398",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for IMEI: 355082591844286 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 16,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:39.090Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7002-2PY1",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "352777662764805 351398412178025 355496842178023 351123969677165 354472239677167",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 351123969677165\nMSISDN: 8801626815699_Date: 20251025111153\nMSISDN: 8801859585590_Date: 20260302183340 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei",
+        "msisdn|mobile|subscriber|number"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:40.089Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7004-ARA7",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "355060410385293 357794730385298 352953550796522 357646470796524",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 352953550796522\nMSISDN: GREY IMEI NUMBER_Date: Invalid Date [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei",
+        "msisdn|mobile|subscriber|number"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:40.869Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7004-ARA7",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "355060410385293 357794730385298 352953550796522 357646470796524",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 357646470796524\nMSISDN: GREY IMEI NUMBER_Date: Invalid Date [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei",
+        "msisdn|mobile|subscriber|number"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:41.817Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7003-EX5F",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "353678100679071 363679100679079 353140540659189 354223560659184",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 353140540659189\nMSISDN: 8801845038954_Date: 20260310155006 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei",
+        "msisdn|mobile|subscriber|number"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:42.470Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7005-HF6A",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "356640590030105 358748950030108 358810640866850 359461655859156 359889275859158",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 358748950030108\nNo data found. [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 10,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:43.150Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7004-ARA7",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "355060410385293 357794730385298 352953550796522 357646470796524",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 357794730385298\nNo data found. [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 10,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:44.357Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7003-EX5F",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "353678100679071 363679100679079 353140540659189 354223560659184",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 353678100679071\nMSISDN: 8801869544678_Date: 20251118165747 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei",
+        "msisdn|mobile|subscriber|number"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:44.456Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7000-L40R",
+    "requestType": "IMEI-MS",
+    "operator": "GP",
+    "payload": "353828958037720 359693648037728 350686139411989 351521282422385",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for IMEI: 359693648037728 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 16,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:45.017Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7002-2PY1",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "352777662764805 351398412178025 355496842178023 351123969677165 354472239677167",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 354472239677167\nNo data found. [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 10,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:45.631Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7004-ARA7",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "355060410385293 357794730385298 352953550796522 357646470796524",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 355060410385293\nMSISDN: 8801825362938_Date: 20251202124317 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei",
+        "msisdn|mobile|subscriber|number"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:46.299Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7005-HF6A",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "356640590030105 358748950030108 358810640866850 359461655859156 359889275859158",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 356640590030105\nMSISDN: 8801810923236_Date: 20251103120010 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei",
+        "msisdn|mobile|subscriber|number"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:46.897Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7005-HF6A",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "356640590030105 358748950030108 358810640866850 359461655859156 359889275859158",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 358810640866850\nNo data found. [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 10,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:48.042Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7005-HF6A",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "356640590030105 358748950030108 358810640866850 359461655859156 359889275859158",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 359461655859156\nNo data found. [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 10,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:48.631Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7003-EX5F",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "353678100679071 363679100679079 353140540659189 354223560659184",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 354223560659184\nNo data found. [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 10,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:51.339Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7000-L40R",
+    "requestType": "IMEI-MS",
+    "operator": "GP",
+    "payload": "353828958037720 359693648037728 350686139411989 351521282422385",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for IMEI: 353828958037720 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 16,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:51.640Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7001-U77H",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "350414100100394 350837750100399 350686139411989 358451328165413 359079868165417",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 359079868165417\nNo data found. [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 10,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:52.504Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7001-U77H",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "350414100100394 350837750100399 350686139411989 358451328165413 359079868165417",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 358451328165413\nNo data found. [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 10,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:53.243Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7002-2PY1",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "352777662764805 351398412178025 355496842178023 351123969677165 354472239677167",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 355496842178023\nNo data found. [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 10,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:54.227Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7002-2PY1",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "352777662764805 351398412178025 355496842178023 351123969677165 354472239677167",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 351398412178025\nNo data found. [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 10,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:54.920Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7006-UPK0",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "350524542833723 352227682833721",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 352227682833721\nNo data found. [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 10,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:56.071Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7006-UPK0",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "350524542833723 352227682833721",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 350524542833723\nNo data found. [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 10,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:56.634Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7005-HF6A",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "356640590030105 358748950030108 358810640866850 359461655859156 359889275859158",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 359889275859158\nNo data found. [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 10,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:13:57.497Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7002-2PY1",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "352777662764805 351398412178025 355496842178023 351123969677165 354472239677167",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 352777662764805\nNo data found. [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 10,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:14:06.492Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6998-U0ET",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "350973429061918 350973429061917 359889270473810 350414100100394 350837750100399",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 359889270473810 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:14:07.412Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7000-L40R",
+    "requestType": "IMEI-MS",
+    "operator": "GP",
+    "payload": "353828958037720 359693648037728 350686139411989 351521282422385",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for IMEI: 351521282422385 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 16,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:14:22.340Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6997-UW5D",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "356032730371693 356197440317695 350666000507438 350973429061918 350973429061917",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 350973429061917 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:14:49.024Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7001-U77H",
+    "requestType": "IMEI-MS",
+    "operator": "GP",
+    "payload": "350414100100394 350837750100399 350686139411989 358451328165413 359079868165417",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for IMEI: 350837750100399 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 16,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:14:49.138Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7001-U77H",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "350414100100394 350837750100399 350686139411989 358451328165413 359079868165417",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 350414100100394 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:16:17.909Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7002-2PY1",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "352777662764805 351398412178025 355496842178023 351123969677165 354472239677167",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 351398412178025 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:16:20.131Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6999-2DFK",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "355082591844286 357417981844280 356973940869397 358812160869398",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 357417981844280 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:16:20.407Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6999-2DFK",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "355082591844286 357417981844280 356973940869397 358812160869398",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 358812160869398 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:16:20.671Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7000-L40R",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "353828958037720 359693648037728 350686139411989 351521282422385",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 353828958037720 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:16:21.254Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6999-2DFK",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "355082591844286 357417981844280 356973940869397 358812160869398",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 355082591844286 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:16:21.488Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6999-2DFK",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "355082591844286 357417981844280 356973940869397 358812160869398",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 356973940869397 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:16:21.908Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7000-L40R",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "353828958037720 359693648037728 350686139411989 351521282422385",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 359693648037728 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:16:22.252Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7000-L40R",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "353828958037720 359693648037728 350686139411989 351521282422385",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 351521282422385 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:16:23.345Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7000-L40R",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "353828958037720 359693648037728 350686139411989 351521282422385",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 350686139411989 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:16:24.401Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7002-2PY1",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "352777662764805 351398412178025 355496842178023 351123969677165 354472239677167",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 352777662764805 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:16:24.682Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7002-2PY1",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "352777662764805 351398412178025 355496842178023 351123969677165 354472239677167",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 355496842178023 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:16:25.496Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7003-EX5F",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "353678100679071 363679100679079 353140540659189 354223560659184",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 353678100679071 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:16:25.596Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7003-EX5F",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "353678100679071 363679100679079 353140540659189 354223560659184",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 354223560659184 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:16:25.754Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7002-2PY1",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "352777662764805 351398412178025 355496842178023 351123969677165 354472239677167",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 354472239677167 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:16:25.946Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7003-EX5F",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "353678100679071 363679100679079 353140540659189 354223560659184",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 363679100679079 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:16:26.222Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7003-EX5F",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "353678100679071 363679100679079 353140540659189 354223560659184",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 353140540659189 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:16:26.513Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7004-ARA7",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "355060410385293 357794730385298 352953550796522 357646470796524",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 355060410385293 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:16:26.692Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7002-2PY1",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "352777662764805 351398412178025 355496842178023 351123969677165 354472239677167",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 351123969677165 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:16:27.046Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7004-ARA7",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "355060410385293 357794730385298 352953550796522 357646470796524",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 357794730385298 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:16:27.233Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7004-ARA7",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "355060410385293 357794730385298 352953550796522 357646470796524",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 357646470796524 Task failed to execute. No data returned. - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:16:27.418Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7005-HF6A",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "356640590030105 358748950030108 358810640866850 359461655859156 359889275859158",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 356640590030105 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:16:27.727Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7005-HF6A",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "356640590030105 358748950030108 358810640866850 359461655859156 359889275859158",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 358810640866850 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:16:27.962Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7005-HF6A",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "356640590030105 358748950030108 358810640866850 359461655859156 359889275859158",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 358748950030108 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:16:28.343Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7005-HF6A",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "356640590030105 358748950030108 358810640866850 359461655859156 359889275859158",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 359889275859158 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:16:28.490Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7006-UPK0",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "350524542833723 352227682833721",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 350524542833723 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:16:28.756Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7005-HF6A",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "356640590030105 358748950030108 358810640866850 359461655859156 359889275859158",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 359461655859156 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:16:28.946Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7006-UPK0",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "350524542833723 352227682833721",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 352227682833721 No Data Available within 90 Days - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:16:29.220Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7004-ARA7",
+    "requestType": "IMEI-MS",
+    "operator": "BANGLALINK",
+    "payload": "355060410385293 357794730385298 352953550796522 357646470796524",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI 352953550796522 Task failed to execute. No data returned. - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:20:16.656Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7002-2PY1",
+    "requestType": "IMEI-MS",
+    "operator": "GP",
+    "payload": "352777662764805 351398412178025 355496842178023 351123969677165 354472239677167",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for IMEI: 351123969677165 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 16,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:20:57.550Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7003-EX5F",
+    "requestType": "IMEI-MS",
+    "operator": "GP",
+    "payload": "353678100679071 363679100679079 353140540659189 354223560659184",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 354223560659184\n!! Invalid Pattern IMEI !!. Input must be correct IMEI and valid 14, 15 or 16 digits [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:22:17.412Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7004-ARA7",
+    "requestType": "IMEI-MS",
+    "operator": "GP",
+    "payload": "355060410385293 357794730385298 352953550796522 357646470796524",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for IMEI: 357794730385298 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 16,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:22:33.065Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7007-T6QV",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "359373430440881 359373430440899",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 359373430440881\nNo data found. [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 10,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:22:33.231Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7007-T6QV",
+    "requestType": "IMEI-MS",
+    "operator": "ROBI",
+    "payload": "359373430440881 359373430440899",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 359373430440899\nNo data found. [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 10,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:24:46.915Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7005-HF6A",
+    "requestType": "IMEI-MS",
+    "operator": "GP",
+    "payload": "356640590030105 358748950030108 358810640866850 359461655859156 359889275859158",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for IMEI: 358748950030108 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 16,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:25:16.014Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7006-UPK0",
+    "requestType": "IMEI-MS",
+    "operator": "GP",
+    "payload": "350524542833723 352227682833721",
+    "requesterName": "LIC Barishal",
+    "messageBody": "Sorry No records found for IMEI: 350524542833723 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 16,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:25:50.695Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7007-T6QV",
+    "requestType": "IMEI-MS",
+    "operator": "GP",
+    "payload": "359373430440881 359373430440899",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 359373430440881\n359373430440880, 8801787870732, 20260715\n359373430440880, 8801798897387, 20260317\n359373430440880, 8801758546102, 20260625 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:25:56.300Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7007-T6QV",
+    "requestType": "IMEI-MS",
+    "operator": "GP",
+    "payload": "359373430440881 359373430440899",
+    "requesterName": "LIC Barishal",
+    "messageBody": "IMEI: 359373430440899\n359373430440890, 8801758546102, 20260712\n359373430440890, 8801787870732, 20260624\n359373430440890, 8801349432743, 20260430 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "imei"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "IMEI-MS"
+      ]
+    }
+  }
+]

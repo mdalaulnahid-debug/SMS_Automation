@@ -1,0 +1,333 @@
+{
+  "generatedAt": "2026-06-20T05:25:00.885Z",
+  "requestType": "IMEI-MS",
+  "examples": [
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS.xlsx",
+      "sourceSheet": "Sheet1",
+      "sourceRow": 2,
+      "fileName": "IMEI-MS.xlsx",
+      "requestType": "IMEI-MS",
+      "operator": "ROBI",
+      "requestText": "IMEI-MS 863351069471236",
+      "replyText": "IMEI: 863351069471236\r\nMSISDN: 8801886775861_Date: 20260408200415 [Robi]",
+      "tokens": [
+        "imei",
+        "msisdn",
+        "date",
+        "robi"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS.xlsx",
+      "sourceSheet": "Sheet1",
+      "sourceRow": 3,
+      "fileName": "IMEI-MS.xlsx",
+      "requestType": "IMEI-MS",
+      "operator": "GP",
+      "requestText": "IMEI-MS 863351069471228",
+      "replyText": "IMEI: 863351069471228\r\n863351069471220, 8801721245400, 20260203\r\n863351069471220, 8801339815496, 20260407 [GP]",
+      "tokens": [
+        "imei"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS.xlsx",
+      "sourceSheet": "Sheet1",
+      "sourceRow": 4,
+      "fileName": "IMEI-MS.xlsx",
+      "requestType": "IMEI-MS",
+      "operator": "ROBI",
+      "requestText": "IMEI-MS 863351069471228",
+      "replyText": "IMEI: 863351069471228\r\nMSISDN: 8801886775861_Date: 20260407122533 [Robi]",
+      "tokens": [
+        "imei",
+        "msisdn",
+        "date",
+        "robi"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS.xlsx",
+      "sourceSheet": "Sheet1",
+      "sourceRow": 5,
+      "fileName": "IMEI-MS.xlsx",
+      "requestType": "IMEI-MS",
+      "operator": "BANGLALINK",
+      "requestText": "IMEI-MS 863351069471228",
+      "replyText": "IMEI 863351069471228 MSISDN-DATE: 8801408085998 08-Apr-26 - Banglalink\r\nIMEI 863351069471236 MSISDN-DATE: 8801408085998 07-Apr-26 - Banglalink",
+      "tokens": [
+        "imei",
+        "msisdn",
+        "date",
+        "apr",
+        "banglalink",
+        "imei",
+        "msisdn",
+        "date",
+        "apr",
+        "banglalink"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS.xlsx",
+      "sourceSheet": "Sheet1",
+      "sourceRow": 6,
+      "fileName": "IMEI-MS.xlsx",
+      "requestType": "IMEI-MS",
+      "operator": "GP",
+      "requestText": "IMEI-MS 357726270741110",
+      "replyText": "357726270741110, 8801319472535, 20260608 [GP]",
+      "tokens": []
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS.xlsx",
+      "sourceSheet": "Sheet1",
+      "sourceRow": 7,
+      "fileName": "IMEI-MS.xlsx",
+      "requestType": "IMEI-MS",
+      "operator": "GP",
+      "requestText": "IMEI-MS 354831731078820",
+      "replyText": "IMEI: 354831731078820\r\n354831731078820, 8801307834008, 20260408 [GP]",
+      "tokens": [
+        "imei"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS.xlsx",
+      "sourceSheet": "Sheet1",
+      "sourceRow": 8,
+      "fileName": "IMEI-MS.xlsx",
+      "requestType": "IMEI-MS",
+      "operator": "ROBI",
+      "requestText": "IMEI-MS 354831731078820",
+      "replyText": "IMEI: 354831731078820\r\nMSISDN: 8801829476479_Date: 20260330081501 [Robi]",
+      "tokens": [
+        "imei",
+        "msisdn",
+        "date",
+        "robi"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS.xlsx",
+      "sourceSheet": "Sheet1",
+      "sourceRow": 9,
+      "fileName": "IMEI-MS.xlsx",
+      "requestType": "IMEI-MS",
+      "operator": "ROBI",
+      "requestText": "IMEI-MS 353548751315426",
+      "replyText": "IMEI: 353548751315426\r\nMSISDN: 971562887098_Date: 20260115174742\r\nMSISDN: 8801806663389_Date: 20250715104325 [Robi]",
+      "tokens": [
+        "imei",
+        "msisdn",
+        "date",
+        "msisdn",
+        "date",
+        "robi"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS.xlsx",
+      "sourceSheet": "Sheet1",
+      "sourceRow": 10,
+      "fileName": "IMEI-MS.xlsx",
+      "requestType": "IMEI-MS",
+      "operator": "ROBI",
+      "requestText": "IMEI-MS 869575065699135",
+      "replyText": "MEI: 869575065699135\r\nNo data found. [Robi]",
+      "tokens": [
+        "mei",
+        "data",
+        "found",
+        "robi"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS.xlsx",
+      "sourceSheet": "Sheet1",
+      "sourceRow": 11,
+      "fileName": "IMEI-MS.xlsx",
+      "requestType": "IMEI-MS",
+      "operator": "GP",
+      "requestText": "IMEI-MS 354465109576212",
+      "replyText": "IMEI: 354465109576212\r\n354465109576210, 8801316107444, 20260121 [GP]",
+      "tokens": [
+        "imei"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS.xlsx",
+      "sourceSheet": "Sheet1",
+      "sourceRow": 12,
+      "fileName": "IMEI-MS.xlsx",
+      "requestType": "IMEI-MS",
+      "operator": "GP",
+      "requestText": "IMEI-MS 354466109576210",
+      "replyText": "IMEI: 354466109576210\r\n354466109576210, 8801320584079, 20260413 [GP]",
+      "tokens": [
+        "imei"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS.xlsx",
+      "sourceSheet": "Sheet1",
+      "sourceRow": 13,
+      "fileName": "IMEI-MS.xlsx",
+      "requestType": "IMEI-MS",
+      "operator": "BANGLALINK",
+      "requestText": "IMEI-MS 353213353376890",
+      "replyText": "IMEI 353213353376890 No Data Available within 90 Days - Banglalink",
+      "tokens": [
+        "imei",
+        "data",
+        "available",
+        "within",
+        "days",
+        "banglalink"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS.xlsx",
+      "sourceSheet": "Sheet1",
+      "sourceRow": 14,
+      "fileName": "IMEI-MS.xlsx",
+      "requestType": "IMEI-MS",
+      "operator": "BANGLALINK",
+      "requestText": "IMEI-MS 869575065699135",
+      "replyText": "IMEI 869575065699135 MSISDN-DATE: 8808695750656991 01-Jun-26 - Banglalink",
+      "tokens": [
+        "imei",
+        "msisdn",
+        "date",
+        "jun",
+        "banglalink"
+      ]
+    },
+    {
+      "sourceFile": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS.xlsx",
+      "sourceSheet": "Sheet1",
+      "sourceRow": 15,
+      "fileName": "IMEI-MS.xlsx",
+      "requestType": "IMEI-MS",
+      "operator": "GP",
+      "requestText": "IMEI-MS 357428961098190",
+      "replyText": "Sorry No records found for IMEI: 357428961098190 [GP]",
+      "tokens": [
+        "sorry",
+        "records",
+        "found",
+        "for",
+        "imei"
+      ]
+    }
+  ],
+  "patterns": [
+    {
+      "requestType": "IMEI-MS",
+      "operator": "ROBI",
+      "keywords": [
+        {
+          "token": "date",
+          "count": 5
+        },
+        {
+          "token": "msisdn",
+          "count": 5
+        },
+        {
+          "token": "robi",
+          "count": 5
+        },
+        {
+          "token": "imei",
+          "count": 4
+        },
+        {
+          "token": "data",
+          "count": 1
+        },
+        {
+          "token": "found",
+          "count": 1
+        },
+        {
+          "token": "mei",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "requestType": "IMEI-MS",
+      "operator": "GP",
+      "keywords": [
+        {
+          "token": "imei",
+          "count": 5
+        },
+        {
+          "token": "for",
+          "count": 1
+        },
+        {
+          "token": "found",
+          "count": 1
+        },
+        {
+          "token": "records",
+          "count": 1
+        },
+        {
+          "token": "sorry",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "requestType": "IMEI-MS",
+      "operator": "BANGLALINK",
+      "keywords": [
+        {
+          "token": "banglalink",
+          "count": 4
+        },
+        {
+          "token": "imei",
+          "count": 4
+        },
+        {
+          "token": "date",
+          "count": 3
+        },
+        {
+          "token": "msisdn",
+          "count": 3
+        },
+        {
+          "token": "apr",
+          "count": 2
+        },
+        {
+          "token": "available",
+          "count": 1
+        },
+        {
+          "token": "data",
+          "count": 1
+        },
+        {
+          "token": "days",
+          "count": 1
+        },
+        {
+          "token": "jun",
+          "count": 1
+        },
+        {
+          "token": "within",
+          "count": 1
+        }
+      ]
+    }
+  ]
+}

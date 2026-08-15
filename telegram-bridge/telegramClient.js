@@ -3,11 +3,22 @@
 // Thin wrapper over the official Telegram Bot API using long polling.
 // Zero dependencies — relies on Node 18+ global fetch.
 
+function defaultSleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 class TelegramClient {
-  constructor({ botToken, fetchImpl = fetch }) {
+  constructor({ botToken, fetchImpl = fetch, minSendSpacingMs = 1100, sleepImpl = defaultSleep }) {
     if (!botToken) throw new Error('botToken is required');
     this.base = `https://api.telegram.org/bot${botToken}`;
     this.fetch = fetchImpl;
+    this.minSendSpacingMs = minSendSpacingMs;
+    this.sleep = sleepImpl;
+    this.lastSendAt = 0;
+    // Serializes outgoing message sends (not getUpdates) so a burst — e.g. many timeouts
+    // discovered at once after a restart — can't fire faster than Telegram's per-chat rate
+    // limit. A Promise chain rather than a mutex dependency, keeping this bridge dependency-free.
+    this._sendQueue = Promise.resolve();
   }
 
   async call(method, params = {}) {
@@ -18,9 +29,43 @@ class TelegramClient {
     });
     const data = await res.json();
     if (!data.ok) {
-      throw new Error(`Telegram ${method} failed: ${data.error_code} ${data.description}`);
+      const err = new Error(`Telegram ${method} failed: ${data.error_code} ${data.description}`);
+      err.errorCode = data.error_code;
+      if (data.error_code === 429 && data.parameters && data.parameters.retry_after) {
+        err.retryAfterMs = data.parameters.retry_after * 1000;
+      }
+      throw err;
     }
     return data.result;
+  }
+
+  // Spaces out and serializes outgoing sends (sendMessage/sendThreadedReply/editMessageText) —
+  // group posts and private DMs alike — so a backlog can't flood a chat past Telegram's
+  // per-chat rate limit. getUpdates (long-poll, up to 30s) is intentionally NOT routed through
+  // this queue so a pending poll can never block an outgoing send behind it.
+  _throttledSend(fn) {
+    const run = async () => {
+      const wait = this.minSendSpacingMs - (Date.now() - this.lastSendAt);
+      if (wait > 0) await this.sleep(wait);
+      try {
+        return await fn();
+      } catch (error) {
+        if (error.retryAfterMs) {
+          // Telegram told us exactly how long to back off — honor it before the next
+          // queued send gets its turn, instead of retrying straight into the same limit.
+          await this.sleep(Math.min(error.retryAfterMs, 60_000));
+        }
+        throw error;
+      } finally {
+        this.lastSendAt = Date.now();
+      }
+    };
+    // Chain onto the queue regardless of whether the previous send succeeded or failed, so
+    // one failure doesn't wedge every later send; swallow the tracking link's own rejection
+    // (the real error still propagates to whoever awaits this call's own return value).
+    const result = this._sendQueue.then(run, run);
+    this._sendQueue = result.catch(() => {});
+    return result;
   }
 
   // Long poll for new updates. timeoutSec keeps the HTTP request open server-side
@@ -52,42 +97,96 @@ class TelegramClient {
         }
       ];
     }
-    return this.call('sendMessage', params);
+    return this._throttledSend(() => this.call('sendMessage', params));
   }
 
   sendMessage({ chatId, text, replyToMessageId }) {
-    return this.call('sendMessage', {
+    return this._throttledSend(() => this.call('sendMessage', {
       chat_id: chatId,
       text,
       reply_to_message_id: replyToMessageId,
       allow_sending_without_reply: true
-    });
+    }));
+  }
+
+  // Moderation (security-hardening v1 §9). Every one of these requires the
+  // bot to have been promoted to group admin with ban/restrict rights —
+  // an operational step outside this codebase; without it Telegram
+  // rejects the call with CHAT_ADMIN_REQUIRED, which the caller surfaces
+  // as a normal error rather than this client swallowing it.
+  banChatMember({ chatId, userId, untilDate }) {
+    return this._throttledSend(() => this.call('banChatMember', {
+      chat_id: chatId,
+      user_id: userId,
+      ...(untilDate ? { until_date: untilDate } : {})
+    }));
+  }
+
+  unbanChatMember({ chatId, userId }) {
+    return this._throttledSend(() => this.call('unbanChatMember', {
+      chat_id: chatId,
+      user_id: userId,
+      only_if_banned: true
+    }));
+  }
+
+  // Mute (until_date omitted or falsy) or unmute (permissions all true).
+  restrictChatMember({ chatId, userId, muted, untilDate }) {
+    const allowed = !muted;
+    return this._throttledSend(() => this.call('restrictChatMember', {
+      chat_id: chatId,
+      user_id: userId,
+      permissions: {
+        can_send_messages: allowed,
+        can_send_audios: allowed,
+        can_send_documents: allowed,
+        can_send_photos: allowed,
+        can_send_videos: allowed,
+        can_send_video_notes: allowed,
+        can_send_voice_notes: allowed,
+        can_send_polls: allowed,
+        can_send_other_messages: allowed,
+        can_add_web_page_previews: allowed
+      },
+      ...(muted && untilDate ? { until_date: untilDate } : {})
+    }));
   }
 
   // Edit an existing Telegram message in-place (live posting updates).
   // Falls back to sendThreadedReply if the message is too old to edit (>48h).
-  async editMessage({ chatId, messageId, text, replyToMessageId, mention }) {
-    const params = { chat_id: chatId, message_id: messageId, text };
-    if (mention && mention.userId && mention.length > 0) {
-      params.entities = [
-        {
-          type: 'text_mention',
-          offset: mention.offset || 0,
-          length: mention.length,
-          user: { id: Number(mention.userId) }
-        }
-      ];
-    }
-    try {
-      return await this.call('editMessageText', params);
-    } catch (err) {
-      // Message too old to edit or already identical — fall back to a new reply
-      if (err.message && (err.message.includes("can't be edited") || err.message.includes('message is not modified'))) {
-        if (err.message.includes('message is not modified')) return null;
-        return this.sendThreadedReply({ chatId, text, replyToMessageId, mention });
+  editMessage({ chatId, messageId, text, replyToMessageId, mention }) {
+    return this._throttledSend(async () => {
+      const params = { chat_id: chatId, message_id: messageId, text };
+      if (mention && mention.userId && mention.length > 0) {
+        params.entities = [
+          {
+            type: 'text_mention',
+            offset: mention.offset || 0,
+            length: mention.length,
+            user: { id: Number(mention.userId) }
+          }
+        ];
       }
-      throw err;
-    }
+      try {
+        return await this.call('editMessageText', params);
+      } catch (err) {
+        // Message too old to edit or already identical — fall back to a new reply. Calls
+        // this.call() directly (not this.sendThreadedReply()) since we're already inside
+        // the throttle wrapper and don't want to double-queue/double-space this send.
+        if (err.message && (err.message.includes("can't be edited") || err.message.includes('message is not modified'))) {
+          if (err.message.includes('message is not modified')) return null;
+          const fallbackParams = {
+            chat_id: chatId,
+            text,
+            reply_to_message_id: replyToMessageId,
+            allow_sending_without_reply: true
+          };
+          if (mention && mention.userId && mention.length > 0) fallbackParams.entities = params.entities;
+          return this.call('sendMessage', fallbackParams);
+        }
+        throw err;
+      }
+    });
   }
 }
 

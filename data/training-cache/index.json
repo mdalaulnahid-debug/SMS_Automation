@@ -1,0 +1,47 @@
+{
+  "generatedAt": "2026-06-20T05:25:00.886Z",
+  "signature": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation|C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS.xlsx:1781930884345.687:9590|C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx:1781930884345.687:16191|C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx:1781930884345.687:13799|C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx:1781932540160.5022:12321|C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\NID-MS.xlsx:1781933058029.668:11856",
+  "rootDir": "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation",
+  "files": [
+    "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\IMEI-MS.xlsx",
+    "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LCL.xlsx",
+    "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\LRL.xlsx",
+    "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\MS-NID.xlsx",
+    "C:\\Users\\Dell\\Documents\\GitHub\\SMS_Automation\\Training Data\\Automation\\NID-MS.xlsx"
+  ],
+  "summary": {
+    "totalExamples": 108,
+    "blankReplies": 0,
+    "byRequestType": {
+      "IMEI-MS": 14,
+      "LCL": 44,
+      "LRL": 24,
+      "MS-NID": 16,
+      "NID-MS": 10
+    },
+    "byOperator": {
+      "ROBI": 30,
+      "GP": 49,
+      "BANGLALINK": 21,
+      "UNKNOWN": 8
+    },
+    "byRequestTypeAndOperator": {
+      "IMEI-MS:ROBI": 5,
+      "IMEI-MS:GP": 6,
+      "IMEI-MS:BANGLALINK": 3,
+      "LCL:ROBI": 8,
+      "LCL:GP": 26,
+      "LCL:UNKNOWN": 3,
+      "LCL:BANGLALINK": 7,
+      "LRL:GP": 9,
+      "LRL:ROBI": 10,
+      "LRL:BANGLALINK": 5,
+      "MS-NID:ROBI": 5,
+      "MS-NID:GP": 6,
+      "MS-NID:UNKNOWN": 5,
+      "NID-MS:BANGLALINK": 6,
+      "NID-MS:ROBI": 2,
+      "NID-MS:GP": 2
+    }
+  }
+}

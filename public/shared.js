@@ -25,12 +25,39 @@ function toggleThemeCheckbox(cb) {
 })();
 
 function authHeaders() {
+  const sessionToken = localStorage.getItem('sessionToken');
+  if (sessionToken) return { Authorization: `Bearer ${sessionToken}` };
   const key = localStorage.getItem('adminApiKey');
   return key ? { 'x-api-key': key } : {};
 }
 
 function isAdminUnlocked() {
-  return !!localStorage.getItem('adminApiKey');
+  if (localStorage.getItem('adminApiKey')) return true;
+  try {
+    const user = JSON.parse(localStorage.getItem('sessionUser') || '{}');
+    return user.role === 'admin' || user.role === 'super_admin';
+  } catch { return false; }
+}
+
+// Stricter than isAdminUnlocked() — role must specifically be super_admin.
+// The legacy shared admin key still satisfies this too (mirrors the
+// server's requireSuperAdmin, which accepts the same key for now).
+function isSuperAdminUnlocked() {
+  if (localStorage.getItem('adminApiKey')) return true;
+  try {
+    const user = JSON.parse(localStorage.getItem('sessionUser') || '{}');
+    return user.role === 'super_admin';
+  } catch { return false; }
+}
+
+async function sessionLogout() {
+  const token = localStorage.getItem('sessionToken');
+  if (token) {
+    try { await fetch('/api/auth/logout', { method: 'POST', headers: { Authorization: `Bearer ${token}` } }); } catch (_) {}
+  }
+  localStorage.removeItem('sessionToken');
+  localStorage.removeItem('sessionUser');
+  location.replace('/login.html');
 }
 
 async function apiFetch(url, options = {}) {

@@ -1,0 +1,2147 @@
+[
+  {
+    "capturedAt": "2026-08-12T07:44:47.215Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6434-CA8K",
+    "requestType": "MS-NID",
+    "operator": "ROBI",
+    "payload": "01624096885",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801624096885\r\nNID: 2809625946\r\nDoB: 05/10/1986 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id",
+        "name|dob|father|mother"
+      ],
+      "trainingScore": 39,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T07:52:16.531Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6437-BM8Q",
+    "requestType": "MS-NID",
+    "operator": "ROBI",
+    "payload": "01885287399 01608206395 01620430658 01842734346",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801608206395\r\nNID: 19940619410000107\r\nDoB: 01/01/1994 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id",
+        "name|dob|father|mother"
+      ],
+      "trainingScore": 39,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T07:52:16.611Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6437-BM8Q",
+    "requestType": "MS-NID",
+    "operator": "ROBI",
+    "payload": "01885287399 01608206395 01620430658 01842734346",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801885287399\r\nNID: 20010629405000031\r\nDoB: 03/19/2001 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id",
+        "name|dob|father|mother"
+      ],
+      "trainingScore": 39,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T07:52:17.014Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6437-BM8Q",
+    "requestType": "MS-NID",
+    "operator": "ROBI",
+    "payload": "01885287399 01608206395 01620430658 01842734346",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801620430658\r\nNID: 19750610215596929\r\nDoB: 03/03/1975 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id",
+        "name|dob|father|mother"
+      ],
+      "trainingScore": 39,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T07:52:17.706Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6437-BM8Q",
+    "requestType": "MS-NID",
+    "operator": "ROBI",
+    "payload": "01885287399 01608206395 01620430658 01842734346",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801842734346\r\nNID: 6007560128\r\nDoB: 09/05/1999 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id",
+        "name|dob|father|mother"
+      ],
+      "trainingScore": 39,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T08:01:55.232Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6442-7QJK",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01752260684 01743824183 01703770364 01776972709",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801752260684\n3513243222157,1976-11-15\n\nMSISDN: 8801743824183\n1914035280973,1970-03-12\n\nMSISDN: 8801703770364\n2351473083,1970-01-01\n\nMSISDN: 8801776972709\n2844124830,1977-06-26 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 4,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T08:05:07.908Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6444-MONN",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01760280207",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801760280207\n2873750661,1996-02-01 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T08:20:36.206Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6447-6HJT",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01780220152",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801780220152\n5521001197,1978-08-18 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T08:38:06.726Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6450-FZ01",
+    "requestType": "MS-NID",
+    "operator": "BANGLALINK",
+    "payload": "01963307067",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN 01963307067 national_id?\nDocument Number?19897215673000078?\nDate of Birth?1989-06-15",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 25,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T09:28:39.330Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6458-LNU2",
+    "requestType": "MS-NID",
+    "operator": "ROBI",
+    "payload": "01828375240",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801828375240\r\nNID: 20010611063000378\r\nDoB: 09/15/2001 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id",
+        "name|dob|father|mother"
+      ],
+      "trainingScore": 39,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T10:09:07.627Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6466-1XVV",
+    "requestType": "MS-NID",
+    "operator": "BANGLALINK",
+    "payload": "01988059412",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN 01988059412 national_id?\nDocument Number?19840615132829198?\nDate of Birth?1984-05-12",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 25,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T10:12:30.671Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6469-URMQ",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01353049626",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801353049626\n5964388283,1963-04-16 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T10:14:42.852Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6470-TLLS",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01304393537",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801304393537\n6007560128,1999-09-05 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T10:24:14.541Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6473-BV67",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01786254767",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801786254767\n0619431300105,1987-03-10 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T10:27:41.555Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6471-BZQ3",
+    "requestType": "MS-NID",
+    "operator": "BANGLALINK",
+    "payload": "01905698616",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN 01905698616 ?national_id?\nDocument Number?19890912919355147?\nDate of Birth?1989-01-02",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 25,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T10:47:11.529Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6484-1KGV",
+    "requestType": "MS-NID",
+    "operator": "ROBI",
+    "payload": "01627433169 01616350009",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801627433169\r\nNID: 7309508682\r\nDoB: 01/17/1989 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id",
+        "name|dob|father|mother"
+      ],
+      "trainingScore": 39,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T10:47:11.672Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6484-1KGV",
+    "requestType": "MS-NID",
+    "operator": "ROBI",
+    "payload": "01627433169 01616350009",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801616350009\r\nNID: 6922913121\r\nDoB: 06/28/2002 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id",
+        "name|dob|father|mother"
+      ],
+      "trainingScore": 39,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T10:59:25.097Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6491-PX43",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01319681260",
+    "requesterName": "Oc Muladi",
+    "messageBody": "MSISDN: 8801319681260\n0616983714030,1988-01-22 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T11:00:20.390Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6492-UMAB",
+    "requestType": "MS-NID",
+    "operator": "ROBI",
+    "payload": "01604378749",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801604378749\r\nNID: 1460119587\r\nDoB: 01/01/1962 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id",
+        "name|dob|father|mother"
+      ],
+      "trainingScore": 39,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T11:00:20.834Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6492-UMAB",
+    "requestType": "MS-NID",
+    "operator": "ROBI",
+    "payload": "01604378749",
+    "requesterName": "LIC Barishal",
+    "messageBody": "NID: 5964388283\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "LOW",
+      "payloadMatched": false,
+      "payloadMatchCount": 0,
+      "matchedPatterns": [
+        "nid|national\\s+id"
+      ],
+      "trainingScore": 20,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T12:01:04.707Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6521-GCKP",
+    "requestType": "MS-NID",
+    "operator": "BANGLALINK",
+    "payload": "01932094794",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN   01932094794 national_id?\nDocument Number?19770615177342825?\nDate of Birth?1977-03-06",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 25,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T12:01:19.781Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6523-O15F",
+    "requestType": "MS-NID",
+    "operator": "BANGLALINK",
+    "payload": "01408285582",
+    "requesterName": "Oc Gournadi Thana",
+    "messageBody": "MSISDN  01408285582 Smart Card with fingerprint : 5957888539 migrated_verified?\nDate Of Birth?19.10.1985",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 19,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T12:04:38.255Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6530-4OMC",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01349803548",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801349803548\n1972942906,2004-05-17 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T12:04:42.897Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6528-8QG4",
+    "requestType": "MS-NID",
+    "operator": "ROBI",
+    "payload": "01834903620 01834904168 01838718048 01868770436 01868770523",
+    "requesterName": "Oc Gournadi Thana",
+    "messageBody": "MSISDN: 8801834903620\r\nNID: 9563180398\r\nDoB: 05/08/1965 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id",
+        "name|dob|father|mother"
+      ],
+      "trainingScore": 39,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T12:04:43.793Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6528-8QG4",
+    "requestType": "MS-NID",
+    "operator": "ROBI",
+    "payload": "01834903620 01834904168 01838718048 01868770436 01868770523",
+    "requesterName": "Oc Gournadi Thana",
+    "messageBody": "MSISDN: 8801834904168\r\nNID: 6426379746\r\nDoB: 04/22/1985 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id",
+        "name|dob|father|mother"
+      ],
+      "trainingScore": 39,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T12:04:44.464Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6528-8QG4",
+    "requestType": "MS-NID",
+    "operator": "ROBI",
+    "payload": "01834903620 01834904168 01838718048 01868770436 01868770523",
+    "requesterName": "Oc Gournadi Thana",
+    "messageBody": "MSISDN: 8801868770436\r\nNID: 8676418877\r\nDoB: 02/15/1980 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id",
+        "name|dob|father|mother"
+      ],
+      "trainingScore": 39,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T12:04:45.530Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6528-8QG4",
+    "requestType": "MS-NID",
+    "operator": "ROBI",
+    "payload": "01834903620 01834904168 01838718048 01868770436 01868770523",
+    "requesterName": "Oc Gournadi Thana",
+    "messageBody": "MSISDN: 8801868770523\r\nNID: 19803213010710013\r\nDoB: 02/15/1980 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id",
+        "name|dob|father|mother"
+      ],
+      "trainingScore": 39,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T12:04:45.804Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6528-8QG4",
+    "requestType": "MS-NID",
+    "operator": "ROBI",
+    "payload": "01834903620 01834904168 01838718048 01868770436 01868770523",
+    "requesterName": "Oc Gournadi Thana",
+    "messageBody": "MSISDN: 8801838718048\r\nNID: 5541341623\r\nDoB: 07/15/1993 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id",
+        "name|dob|father|mother"
+      ],
+      "trainingScore": 39,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T12:11:09.585Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6534-FP7Z",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01315609555",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801315609555\n8671101353,1973-05-09 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T12:45:19.938Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6543-8841",
+    "requestType": "MS-NID",
+    "operator": "ROBI",
+    "payload": "01888581202",
+    "requesterName": "OC Bakergonj .",
+    "messageBody": "MSISDN: 8801888581202\r\nNID: 19884224007126003\r\nDoB: 01/01/1988 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id",
+        "name|dob|father|mother"
+      ],
+      "trainingScore": 39,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T12:45:30.308Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6542-PVO9",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01735813833",
+    "requesterName": "OC Bakergonj .",
+    "messageBody": "MSISDN: 8801735813833\n1514820776,1998-01-03 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T12:45:47.386Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6544-B2QL",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01331339944",
+    "requesterName": "OC Bakergonj .",
+    "messageBody": "MSISDN: 8801331339944\n7800612413,1991-06-18 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T16:09:24.289Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6566-U358",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01782586921",
+    "requesterName": "OC BABUGONG THANA BARISAL",
+    "messageBody": "MSISDN: 8801782586921\n19900616947000103,1990-09-30 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T17:41:01.849Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6574-BIHJ",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01732124652",
+    "requesterName": "Oc Kazirhat PS",
+    "messageBody": "MSISDN: 8801732124652\n19820616947000029,1982-01-01 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T19:34:15.090Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6592-ABJT",
+    "requestType": "MS-NID",
+    "operator": "BANGLALINK",
+    "payload": "01915769726",
+    "requesterName": "Oc Gournadi Thana",
+    "messageBody": "MSISDN 1915769726?National ID?19842690421382873?DOB 07-FEB-1984",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id",
+        "name|dob|father|mother"
+      ],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T20:15:03.920Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6601-0P4G",
+    "requestType": "MS-NID",
+    "operator": "ROBI",
+    "payload": "01862340428",
+    "requesterName": "oc Banaripara",
+    "messageBody": "MSISDN: 8801862340428\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 20,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T05:12:07.003Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6616-82Y2",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01778440017",
+    "requesterName": "oc Banaripara",
+    "messageBody": "MSISDN: 8801778440017\n7813883964075,1988-03-12 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T06:27:56.137Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6628-29HF",
+    "requestType": "MS-NID",
+    "operator": "ROBI",
+    "payload": "01861963690",
+    "requesterName": "OC Bakergonj .",
+    "messageBody": "MSISDN: 8801861963690\r\nNID: 6011612980\r\nDoB: 08/18/1994 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id",
+        "name|dob|father|mother"
+      ],
+      "trainingScore": 39,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T06:56:03.431Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6636-OEP4",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01312318701",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801312318701\n7832399708,2007-07-01 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T06:59:56.694Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6640-HJDN",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01343370220",
+    "requesterName": "Oc Kazirhat PS",
+    "messageBody": "MSISDN: 8801343370220\n4625064821,1988-01-01 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T07:05:29.993Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6641-CSZN",
+    "requestType": "MS-NID",
+    "operator": "ROBI",
+    "payload": "01625808751",
+    "requesterName": "Oc Gournadi Thana",
+    "messageBody": "MSISDN: 8801625808751\r\nNID: 19922694803000093\r\nDoB: 10/18/1992 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id",
+        "name|dob|father|mother"
+      ],
+      "trainingScore": 39,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T07:10:17.717Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6645-R806",
+    "requestType": "MS-NID",
+    "operator": "ROBI",
+    "payload": "01613922001",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801613922001\r\nNID: 9575790960\r\nDoB: 01/01/1994 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id",
+        "name|dob|father|mother"
+      ],
+      "trainingScore": 39,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T07:24:00.817Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6650-FTO7",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01798049142",
+    "requesterName": "Oc Gournadi Thana",
+    "messageBody": "MSISDN: 8801798049142\n19820613294000008,1982-06-05 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T07:24:47.821Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6649-839Z",
+    "requestType": "MS-NID",
+    "operator": "BANGLALINK",
+    "payload": "01402745829",
+    "requesterName": "Oc Gournadi Thana",
+    "messageBody": "MSISDN?8801402745829 NID 8251667096?\nDate of Birth?1996-02-11",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id"
+      ],
+      "trainingScore": 25,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T09:18:33.571Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6660-3KWW",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01785212457",
+    "requesterName": "Oc Gournadi Thana",
+    "messageBody": "MSISDN: 8801785212457\n0613294531940,1982-12-10 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T09:31:13.069Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6665-QNSV",
+    "requestType": "MS-NID",
+    "operator": "BANGLALINK",
+    "payload": "01401846855",
+    "requesterName": "Oc Gournadi Thana",
+    "messageBody": "MSISDN 01401846855\nNID 2829193222 ?\nDate of Birth ?1989-04-05",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id"
+      ],
+      "trainingScore": 25,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T10:01:59.884Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6679-K0TU",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01328454418",
+    "requesterName": "ASP Ujirpur Circle",
+    "messageBody": "MSISDN: 8801328454418\n5573118485,1997-04-06 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T10:02:16.165Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6680-J827",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01712509410",
+    "requesterName": "ASP Ujirpur Circle",
+    "messageBody": "MSISDN: 8801712509410\n8715352194,2003-01-20 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T10:07:13.023Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6682-D7RY",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01711937864",
+    "requesterName": "ASP Ujirpur Circle",
+    "messageBody": "MSISDN: 8801711937864\n19910619484000389,1991-12-01 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T10:07:50.573Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6683-L6EG",
+    "requestType": "MS-NID",
+    "operator": "ROBI",
+    "payload": "01861165737",
+    "requesterName": "ASP Ujirpur Circle",
+    "messageBody": "MSISDN: 8801861165737\r\nNID: 1461153734\r\nDoB: 09/25/1978 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id",
+        "name|dob|father|mother"
+      ],
+      "trainingScore": 39,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T10:08:21.850Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6684-8E3S",
+    "requestType": "MS-NID",
+    "operator": "ROBI",
+    "payload": "01609909576",
+    "requesterName": "ASP Ujirpur Circle",
+    "messageBody": "MSISDN: 8801609909576\r\nNID: 19920619484000345\r\nDoB: 09/17/1992 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id",
+        "name|dob|father|mother"
+      ],
+      "trainingScore": 39,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T10:11:12.528Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6685-CJ7E",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01786543011",
+    "requesterName": "ASP Ujirpur Circle",
+    "messageBody": "MSISDN: 8801786543011\n8715352194,2003-01-20 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T10:11:23.147Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6681-P899",
+    "requestType": "MS-NID",
+    "operator": "BANGLALINK",
+    "payload": "01932324046",
+    "requesterName": "ASP Ujirpur Circle",
+    "messageBody": "MSISDN?8801932324046  NID ?19870619484269495?\nDate of Birth?1987-06-17",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id"
+      ],
+      "trainingScore": 25,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T10:48:13.354Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6692-EGQU",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01325189733",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801325189733\n8235844472,1973-06-01 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T10:52:14.046Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6695-C7VX",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01799495098",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801799495098\n5956561004,1966-05-01 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T10:59:07.698Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6704-JE1N",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01350432350",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801350432350\n0610720316619,1984-03-02 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T11:01:23.617Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6699-A595",
+    "requestType": "MS-NID",
+    "operator": "BANGLALINK",
+    "payload": "01988059412",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN?8801988059412  NID ?19840615132829198?\nDate of Birth?1984-05-12",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id"
+      ],
+      "trainingScore": 25,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T11:02:44.730Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6707-SPPN",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01319830551",
+    "requesterName": "ASP Ujirpur Circle",
+    "messageBody": "MSISDN: 8801319830551\n19900619410000425,1990-06-30 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T11:06:40.660Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6706-R7AB",
+    "requestType": "MS-NID",
+    "operator": "BANGLALINK",
+    "payload": "01912664949",
+    "requesterName": "ASP Ujirpur Circle",
+    "messageBody": "MSISDN 01912664949\nNID 19900619410000058\nDOB 07-MAR-1990",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id",
+        "name|dob|father|mother"
+      ],
+      "trainingScore": 15,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T11:10:00.361Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6709-ZU82",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01736390607",
+    "requesterName": "ASP Ujirpur Circle",
+    "messageBody": "MSISDN: 8801736390607\n0619410258638,1955-01-02 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T12:24:18.466Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6716-72UT",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01727492178",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801727492178\n6870226732,1984-05-12 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T12:44:22.115Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6715-NY0N",
+    "requestType": "MS-NID",
+    "operator": "BANGLALINK",
+    "payload": "01953549586",
+    "requesterName": "oc Banaripara",
+    "messageBody": "01953549586  NID 19782613860142425  DOB 01.01.1978",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id",
+        "name|dob|father|mother"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T12:45:04.734Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6722-D9GF",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01335871650",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801335871650\n2853189823,1997-04-07 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T12:45:17.858Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6701-R4HQ",
+    "requestType": "MS-NID",
+    "operator": "BANGLALINK",
+    "payload": "01918295351",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN?8801918295351  NID ?1512826726?\nDate of Birth?2000-02-01",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id"
+      ],
+      "trainingScore": 25,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T15:15:56.795Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6750-XJ68",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01352106869",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801352106869\n6482172530,2004-12-08 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T15:19:47.736Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6755-UBQ4",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01786422757",
+    "requesterName": "OC Bakergonj .",
+    "messageBody": "MSISDN: 8801786422757\n1493695694,1968-02-23 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T15:19:48.381Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6756-OO58",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01785031658",
+    "requesterName": "OC Bakergonj .",
+    "messageBody": "MSISDN: 8801785031658\n19930695124000056,1993-02-05 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T15:20:46.651Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6754-DVOE",
+    "requestType": "MS-NID",
+    "operator": "ROBI",
+    "payload": "01861532178",
+    "requesterName": "OC Bakergonj .",
+    "messageBody": "MSISDN: 8801861532178\r\nNID: 19820610720313174\r\nDoB: 06/11/1982 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id",
+        "name|dob|father|mother"
+      ],
+      "trainingScore": 39,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T15:21:30.079Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6759-25O0",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01355964398",
+    "requesterName": "OC,DB Barishal",
+    "messageBody": "MSISDN: 8801355964398\n1512659697,2001-01-01 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T15:26:09.399Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6761-T719",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01783995770",
+    "requesterName": "OC,DB Barishal",
+    "messageBody": "MSISDN: 8801783995770\n7328339614,1984-01-01 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T15:43:21.541Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6768-BRMV",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01355964398",
+    "requesterName": "Addl SP Crime & Ops",
+    "messageBody": "MSISDN: 8801355964398\n1512659697,2001-01-01 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T15:57:25.253Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6773-JUW1",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01718254412",
+    "requesterName": "OC Mehendigong Thana",
+    "messageBody": "MSISDN: 8801718254412\n1216350522734,1978-06-03 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T16:35:53.326Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6779-D5RI",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01792835258",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801792835258\n9410852557983,1970-01-05 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T18:37:05.552Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6799-OPZJ",
+    "requestType": "MS-NID",
+    "operator": "ROBI",
+    "payload": "01632011851",
+    "requesterName": "OC Bakergonj .",
+    "messageBody": "MSISDN: 8801632011851\r\nNo data found [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 20,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T18:37:05.707Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6800-X2O7",
+    "requestType": "MS-NID",
+    "operator": "ROBI",
+    "payload": "01827070303",
+    "requesterName": "OC Bakergonj .",
+    "messageBody": "MSISDN: 8801827070303\r\nNID: 19848413657337753\r\nDoB: 10/28/1984 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id",
+        "name|dob|father|mother"
+      ],
+      "trainingScore": 39,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T18:38:27.078Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6803-HEF4",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01774202787",
+    "requesterName": "OC Bakergonj .",
+    "messageBody": "MSISDN: 8801774202787\n20067819531000073,2006-01-01 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T18:40:19.065Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6805-LF02",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01725051641",
+    "requesterName": "OC Bakergonj .",
+    "messageBody": "MSISDN: 8801725051641\n6011612980,1994-08-18 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T18:58:13.816Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6806-WSHC",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01724375353",
+    "requesterName": "OC Bakergonj .",
+    "messageBody": "MSISDN: 8801724375353\n5552180217,1996-09-16 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T18:58:13.901Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6807-H68Q",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01710741988",
+    "requesterName": "OC Bakergonj .",
+    "messageBody": "MSISDN: 8801710741988\n0610788518282,1978-06-14 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T05:55:15.911Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6818-Z3RM",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01710019228",
+    "requesterName": "Oc Kazirhat PS",
+    "messageBody": "MSISDN: 8801710019228\n19890616215000006,1989-01-05 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T06:14:36.488Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6821-BV8G",
+    "requestType": "MS-NID",
+    "operator": "ROBI",
+    "payload": "01862259332",
+    "requesterName": "Oc Muladi",
+    "messageBody": "MSISDN: 8801862259332\r\nNID: 5545858846\r\nDoB: 02/04/1982 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id",
+        "name|dob|father|mother"
+      ],
+      "trainingScore": 39,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T06:27:28.028Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6825-PYKW",
+    "requestType": "MS-NID",
+    "operator": "ROBI",
+    "payload": "01862259332",
+    "requesterName": "Oc Muladi",
+    "messageBody": "MSISDN: 8801862259332\r\nNID: 5545858846\r\nDoB: 02/04/1982 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id",
+        "name|dob|father|mother"
+      ],
+      "trainingScore": 39,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T08:35:00.542Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6820-ZISJ",
+    "requestType": "MS-NID",
+    "operator": "BANGLALINK",
+    "payload": "01410316540",
+    "requesterName": "Bakerganj Circle, Barishal",
+    "messageBody": "NID 5102368429 No data found - Banglalink",
+    "analysis": {
+      "confidence": "LOW",
+      "payloadMatched": false,
+      "payloadMatchCount": 0,
+      "matchedPatterns": [
+        "nid|national\\s+id"
+      ],
+      "trainingScore": 8,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T13:39:34.138Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6851-SQZ5",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01351441729",
+    "requesterName": "OC Bakergonj .",
+    "messageBody": "MSISDN: 8801351441729\n7352615483,1999-06-10 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T13:40:03.136Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6853-6NKA",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01786422757",
+    "requesterName": "OC Bakergonj .",
+    "messageBody": "MSISDN: 8801786422757\n1493695694,1968-02-23 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T13:40:07.121Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6854-A3D9",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01785031658",
+    "requesterName": "OC Bakergonj .",
+    "messageBody": "MSISDN: 8801785031658\n19930695124000056,1993-02-05 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T13:42:13.610Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6852-B7LT",
+    "requestType": "MS-NID",
+    "operator": "ROBI",
+    "payload": "01861532178",
+    "requesterName": "OC Bakergonj .",
+    "messageBody": "MSISDN: 8801861532178\r\nNID: 19820610720313174\r\nDoB: 06/11/1982 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id",
+        "name|dob|father|mother"
+      ],
+      "trainingScore": 39,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T13:59:45.772Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6858-TH1U",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01728597903",
+    "requesterName": "OC Bakergonj .",
+    "messageBody": "MSISDN: 8801728597903\n7819520172771,1986-10-01 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T15:13:36.722Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6871-245Z",
+    "requestType": "MS-NID",
+    "operator": "ROBI",
+    "payload": "01883074130",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801883074130\r\nNID: 9135754605\r\nDoB: 10/05/1989 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id",
+        "name|dob|father|mother"
+      ],
+      "trainingScore": 39,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T15:40:53.099Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6879-LFUD",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01792439196",
+    "requesterName": "OC Bakergonj .",
+    "messageBody": "MSISDN: 8801792439196\n4711773449739,1988-12-17 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T21:25:04.972Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6896-U6YF",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01352106869",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801352106869\n6482172530,2004-12-08 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T05:40:41.438Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6922-VKZU",
+    "requestType": "MS-NID",
+    "operator": "ROBI",
+    "payload": "01845980606",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801845980606\r\nNID: 2381948708\r\nDoB: 02/01/1917 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id",
+        "name|dob|father|mother"
+      ],
+      "trainingScore": 39,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T05:45:21.877Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6923-9G0N",
+    "requestType": "MS-NID",
+    "operator": "ROBI",
+    "payload": "01868887368",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801868887368\r\nNID: 20062214911000575\r\nDoB: 01/01/2006 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id",
+        "name|dob|father|mother"
+      ],
+      "trainingScore": 39,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T06:07:58.948Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6929-D1PC",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01728597903",
+    "requesterName": "OC Bakergonj .",
+    "messageBody": "MSISDN: 8801728597903\n7819520172771,1986-10-01 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T06:11:38.185Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6934-KXGO",
+    "requestType": "MS-NID",
+    "operator": "ROBI",
+    "payload": "01623823576",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801623823576\r\nNID: 9566135860\r\nDoB: 10/05/1977 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "nid|national\\s+id",
+        "name|dob|father|mother"
+      ],
+      "trainingScore": 39,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T06:21:50.286Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6938-91JJ",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01720394344",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801720394344\n6429805457,1980-10-24 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T06:47:43.411Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6952-YB6Z",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01735196611",
+    "requesterName": "Oc Agailjhara",
+    "messageBody": "MSISDN: 8801735196611\n6710443143841,1983-06-14 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T07:25:20.810Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6974-T0K4",
+    "requestType": "MS-NID",
+    "operator": "GP",
+    "payload": "01342984360 01342490985",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801342490985\nLastActiveDateTime: 2026-08-15 11:22:37 06:00\nLACID: 23125\nCellID: 50663\nLatitude: 23.021\nLongitude: 90.333667\nAddress: SALIMPUR, SALIMPUR, MULADI, BARISAL\nCS Status: Idle\nVolte Status: N/A [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 11,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T07:44:20.896Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6978-M8OW",
+    "requestType": "MS-NID",
+    "operator": "BANGLALINK",
+    "payload": "01410316540",
+    "requesterName": "OC,DB Barishal",
+    "messageBody": "NID 2880712159 MSISDN: 8801907398051 - Banglalink",
+    "analysis": {
+      "confidence": "LOW",
+      "payloadMatched": false,
+      "payloadMatchCount": 0,
+      "matchedPatterns": [
+        "nid|national\\s+id"
+      ],
+      "trainingScore": 13,
+      "inferredReplyFamilies": [
+        "MS-NID",
+        "NID-MS"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:48:52.452Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7008-QEIW",
+    "requestType": "MS-NID",
+    "operator": "BANGLALINK",
+    "payload": "01996019180",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN?8801996019180 smart_national_id?\nDocument Number?5112759468?\nDate of Birth?2003-01-12",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 25,
+      "inferredReplyFamilies": []
+    }
+  }
+]

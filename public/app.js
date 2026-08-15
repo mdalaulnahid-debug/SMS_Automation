@@ -6,6 +6,10 @@ let activeFilter = 'all';
 let activeSearch = '';
 
 function showAuthDialog() {
+  // Re-locking (e.g. a stored key turned out to be invalid) must hide the app
+  // content again, not just float the gate on top of it — otherwise data already
+  // rendered before the 401 stays visible underneath.
+  document.getElementById('opsApp').style.display = 'none';
   const overlay = document.getElementById('authOverlay');
   const input = document.getElementById('authKeyInput');
   input.value = localStorage.getItem('adminApiKey') || '';
@@ -14,44 +18,79 @@ function showAuthDialog() {
 }
 window.onAuthRequired = showAuthDialog;
 
-function submitAuthKey() {
+async function submitAuthKey() {
   const value = document.getElementById('authKeyInput').value.trim();
-  if (value) {
-    localStorage.setItem('adminApiKey', value);
-    document.getElementById('settingsApiKey').value = value;
-  } else {
-    localStorage.removeItem('adminApiKey');
+  const errorEl = document.getElementById('authError');
+  errorEl.style.display = 'none';
+  if (!value) {
+    errorEl.textContent = 'API key is required.';
+    errorEl.style.display = 'block';
+    return;
   }
+  // Verify with the entered key explicitly (not authHeaders()) — a stale sessionToken from an
+  // earlier login session would otherwise win over this key (see authHeaders()) and make a
+  // correct key look "invalid".
+  const res = await fetch('/api/ops/overview', { headers: { 'x-api-key': value } });
+  if (res.status === 401) {
+    errorEl.textContent = 'Invalid API key.';
+    errorEl.style.display = 'block';
+    return;
+  }
+  // Clear any stale user-login session so it can't keep shadowing this key on later requests.
+  localStorage.removeItem('sessionToken');
+  localStorage.removeItem('sessionUser');
+  localStorage.setItem('adminApiKey', value);
+  document.getElementById('settingsApiKey').value = value;
   document.getElementById('authOverlay').style.display = 'none';
+  document.getElementById('opsApp').style.display = 'block';
   updateAdminVisibility();
+  boot();
 }
 
 document.getElementById('authKeyInput').addEventListener('keydown', (event) => {
   if (event.key === 'Enter') submitAuthKey();
 });
 
-document.querySelectorAll('.nav-item').forEach((button) => {
-  button.addEventListener('click', () => {
-    document.querySelectorAll('.nav-item').forEach((item) => item.classList.remove('active'));
-    document.querySelectorAll('.tab-panel').forEach((panel) => panel.classList.remove('active'));
-    button.classList.add('active');
-    document.getElementById(`panel-${button.dataset.tab}`).classList.add('active');
-    localStorage.setItem('opsTab', button.dataset.tab);
-    if (button.dataset.tab === 'activity') renderActivityFeed();
+function selectTab(tab) {
+  document.querySelectorAll('.nav-item, .ops-sidebar-item').forEach((item) => {
+    const isMatch = item.dataset.tab === tab;
+    item.classList.toggle('active', isMatch);
+    if (isMatch) item.setAttribute('aria-current', 'page');
+    else item.removeAttribute('aria-current');
   });
+  document.querySelectorAll('.tab-panel').forEach((panel) => panel.classList.remove('active'));
+  const panel = document.getElementById(`panel-${tab}`);
+  if (panel) panel.classList.add('active');
+  localStorage.setItem('opsTab', tab);
+  if (tab === 'activity') renderActivityFeed();
+}
+
+document.querySelectorAll('.nav-item, .ops-sidebar-item').forEach((button) => {
+  button.addEventListener('click', () => selectTab(button.dataset.tab));
 });
+
+function selectSettingsGroup(group) {
+  document.querySelectorAll('.settings-nav-item').forEach((item) => {
+    const isMatch = item.dataset.group === group;
+    item.classList.toggle('active', isMatch);
+    if (isMatch) item.setAttribute('aria-current', 'page');
+    else item.removeAttribute('aria-current');
+  });
+  document.querySelectorAll('.settings-group').forEach((panel) => {
+    panel.classList.toggle('active', panel.dataset.groupPanel === group);
+  });
+}
 
 (function restoreTab() {
   const saved = localStorage.getItem('opsTab');
   if (!saved) return;
-  const button = document.querySelector(`.nav-item[data-tab="${saved}"]`);
-  if (button) button.click();
+  if (document.querySelector(`[data-tab="${saved}"]`)) selectTab(saved);
 })();
 
 function updateAdminVisibility() {
   const unlocked = isAdminUnlocked();
   document.querySelectorAll('.admin-only').forEach((element) => {
-    element.style.display = unlocked ? 'block' : 'none';
+    element.hidden = !unlocked;
   });
   const apiKeyStatus = document.getElementById('apiKeyStatus');
   const key = localStorage.getItem('adminApiKey');
@@ -59,11 +98,92 @@ function updateAdminVisibility() {
   apiKeyStatus.style.color = key ? 'var(--success)' : 'var(--text-muted)';
 }
 
+// Access-tier boundary (docs/security-hardening-v1-design.md §4): a plain
+// 'officer' session (Registered Officer) gets the informational Home + its
+// own account status, never the fleet/activity monitoring surfaces — those
+// stay reserved for admin/super_admin, matching the server-side gating on
+// /api/ops/*. The legacy admin-key path (no sessionUser at all) is always
+// treated as operational, same as before this tier existed.
+function currentRole() {
+  try {
+    const user = JSON.parse(localStorage.getItem('sessionUser') || '{}');
+    return user.role || null;
+  } catch {
+    return null;
+  }
+}
+
+function isOperationalRole() {
+  const role = currentRole();
+  return !role || role === 'admin' || role === 'super_admin';
+}
+
+function renderAccountStatus() {
+  let user;
+  try {
+    user = JSON.parse(localStorage.getItem('sessionUser') || '{}');
+  } catch {
+    return;
+  }
+  if (!user.email) return;
+
+  const statusLabels = { active: 'Active', pending_approval: 'Pending review' };
+  const statusTones = { active: 'chip-success', pending_approval: 'chip-warning' };
+  const statusLabel = statusLabels[user.status] || user.status || 'Active';
+  const statusChip = document.getElementById('accountStatusChip');
+  statusChip.textContent = statusLabel;
+  statusChip.className = `chip ${statusTones[user.status] || 'chip-muted'}`;
+
+  document.getElementById('accountSubtitle').textContent = user.status === 'pending_approval'
+    ? 'Your registration is awaiting administrator approval.'
+    : 'Registered Officer';
+
+  const fields = [
+    { label: 'Name', value: user.name },
+    { label: 'Designation', value: user.designation },
+    { label: 'Unit', value: user.unit },
+    { label: 'Email', value: user.email },
+    { label: 'Phone', value: user.phone },
+    { label: 'Telegram', value: user.telegramLinked ? 'Linked' : 'Not linked' }
+  ];
+  document.getElementById('accountGrid').innerHTML = fields.map(({ label, value }) => `
+    <div>
+      <div class="account-field-label">${esc(label)}</div>
+      <div class="account-field-value${value ? '' : ' muted'}">${value ? esc(value) : '—'}</div>
+    </div>`).join('');
+
+  document.getElementById('accountCard').hidden = false;
+}
+
+function applyRoleView() {
+  const operational = isOperationalRole();
+  document.querySelectorAll('.officer-hide').forEach((element) => {
+    element.hidden = !operational;
+  });
+  document.getElementById('homeOperational').hidden = !operational;
+  document.getElementById('homeInfo').hidden = operational;
+  if (!operational) {
+    renderAccountStatus();
+    // A previous admin/super_admin session on this browser may have left the
+    // Activity tab selected in localStorage (restoreTab() runs before role is
+    // known) — force back to Home rather than leave a hidden, unfetched panel
+    // marked active.
+    if (document.querySelector('.officer-hide.active')) selectTab('home');
+  }
+}
+
 document.getElementById('settingsApiKey').value = localStorage.getItem('adminApiKey') || '';
 document.getElementById('settingsApiKey').addEventListener('input', (event) => {
   const value = event.target.value.trim();
-  if (value) localStorage.setItem('adminApiKey', value);
-  else localStorage.removeItem('adminApiKey');
+  if (value) {
+    // A stale sessionToken from an earlier login session would otherwise win over this key
+    // on every request (see authHeaders()), silently making a correct key look broken.
+    localStorage.removeItem('sessionToken');
+    localStorage.removeItem('sessionUser');
+    localStorage.setItem('adminApiKey', value);
+  } else {
+    localStorage.removeItem('adminApiKey');
+  }
   updateAdminVisibility();
 });
 
@@ -87,69 +207,123 @@ document.querySelectorAll('#activityFilters .filter-chip').forEach((chip) => {
 function renderPosture(overview) {
   const posture = overview.posture || {};
   const alerts = overview.alerts || {};
-  document.getElementById('opsPosture').className = `posture-banner glass-panel status-strip${alerts.total ? ' warning' : ''}`;
-  document.getElementById('opsPosture').innerHTML = `
-    <div class="posture-top">
+  const warn = Boolean(alerts.total);
+  const el = document.getElementById('opsPosture');
+  el.className = `posture-banner glass-panel posture-1a${warn ? ' warn' : ''}`;
+  el.innerHTML = `
+    <div class="posture-head-row">
+      <div class="posture-badge"><span></span></div>
       <div>
-        <div class="section-eyebrow">System posture</div>
+        <div class="section-eyebrow">Operational posture · ${relativeTime(overview.generatedAt)}</div>
         <div class="posture-title">${esc(posture.summary || 'Monitoring nominal')}</div>
-        <div class="posture-sub">Backend reachability, fleet state, and exception volume are surfaced here first so operators can scan in seconds.</div>
       </div>
-      <span class="${alerts.total ? 'chip chip-warning' : 'chip chip-success'}">${alerts.total || 0} alert${alerts.total === 1 ? '' : 's'}</span>
     </div>
-    <div class="kpi-grid" style="margin-top:16px">
-      <div class="kpi-tile"><div class="kpi-value">${overview.stats?.todayRequests || 0}</div><div class="kpi-label">Today</div></div>
-      <div class="kpi-tile"><div class="kpi-value warning">${alerts.pendingApprovals || 0}</div><div class="kpi-label">Pending Review</div></div>
-      <div class="kpi-tile"><div class="kpi-value ${alerts.failedRequests ? 'danger' : ''}">${alerts.failedRequests || 0}</div><div class="kpi-label">Failed / Timeout</div></div>
-    </div>
-    <div class="quick-actions" style="margin-top:14px">
-      <button onclick="refreshOps()" class="primary-link">Refresh posture</button>
-      <a href="/admin" class="primary-link">Jump to admin</a>
-      <button onclick="openActivityTab()">Review incidents</button>
+    <div class="posture-sub">${warn
+      ? `${alerts.total} item${alerts.total === 1 ? '' : 's'} need attention — work the queue below.`
+      : 'Audit chain verified · Telegram bridge connected · no failed dispatches recently.'}</div>
+    <div class="posture-actions">
+      <button class="btn-primary" onclick="openActivityTab()">Review queue</button>
+      <button class="btn-secondary" onclick="refreshOps()">Refresh</button>
     </div>`;
 }
 
 function renderOperatorStrip(operators) {
-  document.getElementById('operatorStrip').innerHTML = operators.map((operator) => `
-    <div class="operator-mini" style="--operator-color:${operatorTone(operator.operator)}">
-      <div class="head"></div>
-      <div class="body">
-        <div class="operator-name">${esc(operator.operatorName)}</div>
-        <div class="operator-state">${esc(operator.state)}</div>
-        <div class="operator-meta">${esc(operator.gatewayId)} · ${relativeTime(operator.lastSeenAt)}</div>
+  const labels = { online: 'Online', delayed: 'Delayed', offline: 'Offline' };
+  document.getElementById('operatorStrip').innerHTML = operators.map((operator) => {
+    const state = gatewayState(operator);
+    return `
+    <div class="fleet-row state-${state}" style="--operator-color:${operatorTone(operator.operator)}">
+      <div class="fleet-id">
+        <div class="fleet-name">${esc(operator.operatorName)}</div>
+        <div class="fleet-gw">${esc(operator.gatewayId)}</div>
       </div>
-    </div>`).join('');
+      <svg class="fleet-ecg" viewBox="0 0 180 40" preserveAspectRatio="none" aria-hidden="true"><path d="${ECG_PATH_D}" /></svg>
+      <div class="fleet-state">
+        <div class="fleet-state-label"><span class="fleet-state-dot"></span>${labels[state]}</div>
+        <div class="fleet-last">${relativeTime(operator.lastSeenAt)}</div>
+      </div>
+    </div>`;
+  }).join('');
 }
 
 function renderAttentionGrid(overview) {
   const alerts = overview.alerts || {};
-  const cards = [
-    { title: 'Approvals waiting', value: alerts.pendingApprovals || 0, tone: 'warning', detail: 'Supervisor review queue' },
-    { title: 'Failed / timed out', value: alerts.failedRequests || 0, tone: alerts.failedRequests ? 'danger' : '', detail: 'Requests needing intervention' },
-    { title: 'Unmatched replies', value: alerts.unmatchedSms || 0, tone: alerts.unmatchedSms ? 'warning' : '', detail: 'Potential exception desk work' },
-    { title: 'Offline gateways', value: alerts.offlineGateways || 0, tone: alerts.offlineGateways ? 'danger' : '', detail: 'Fleet availability concern' }
+  const items = [
+    { icon: 'rate_review', tone: 'warning', value: alerts.pendingApprovals || 0, title: 'reply drafts to review', detail: 'Supervisor review queue' },
+    { icon: 'error', tone: 'danger', value: alerts.failedRequests || 0, title: 'failed / timed-out dispatches', detail: 'Requests needing intervention' },
+    { icon: 'link_off', tone: 'accent', value: alerts.unmatchedSms || 0, title: 'unmatched inbound replies', detail: 'Exception desk work' },
+    { icon: 'cell_tower', tone: 'danger', value: alerts.offlineGateways || 0, title: 'offline gateways', detail: 'Fleet availability concern' }
   ];
-  document.getElementById('attentionGrid').innerHTML = cards.map((card) => `
-    <div class="attention-card glass-panel status-strip ${card.tone || 'success'}">
-      <div class="attention-head">
-        <div class="attention-title">${card.title}</div>
-        <span class="${card.value ? `chip chip-${card.tone || 'success'}` : 'chip chip-muted'}">${card.value ? 'Attention' : 'Clear'}</span>
+  document.getElementById('attentionGrid').innerHTML = items.map((item) => {
+    const active = item.value > 0;
+    const tone = active ? item.tone : 'success';
+    const chipTone = active ? (item.tone === 'accent' ? 'accent' : item.tone) : 'muted';
+    return `
+    <div class="attention-item">
+      <span class="attention-icon ${tone}"><span class="material-symbols-outlined">${active ? item.icon : 'check_circle'}</span></span>
+      <div class="attention-body">
+        <div class="attention-item-title">${item.value} ${esc(item.title)}</div>
+        <div class="attention-item-detail">${active ? esc(item.detail) : 'All clear'}</div>
       </div>
-      <div class="attention-value ${card.tone || ''}" style="margin-top:12px">${card.value}</div>
-      <div class="attention-detail">${card.detail}</div>
-    </div>`).join('');
+      <span class="chip chip-${chipTone}">${active ? 'Act' : 'OK'}</span>
+    </div>`;
+  }).join('');
 }
 
-function renderOpsActivity(events) {
-  document.getElementById('opsActivity').innerHTML = events.slice(0, 6).map((event) => `
-    <div class="timeline-item">
-      <div class="timeline-marker ${event.severity === 'critical' ? 'danger' : event.severity === 'warning' ? 'warning' : event.severity === 'success' ? 'success' : ''}"></div>
-      <div>
-        <div class="timeline-title">${esc(event.title)}</div>
-        <div class="timeline-meta">${esc(event.summary || '')}${event.operator ? ` · ${esc(event.operator)}` : ''}</div>
-      </div>
-      <div class="timeline-time">${relativeTime(event.occurredAt)}</div>
-    </div>`).join('') || '<div class="empty">No recent activity.</div>';
+const ECG_PATH_D = 'M0 20 L40 20 L48 8 L56 32 L64 4 L72 20 L110 20 L118 12 L126 28 L134 20 L180 20';
+
+function gatewayState(operator) {
+  if (operator.state === 'MOCK') return 'delayed';
+  if (operator.online) return 'online';
+  const lastSeenMs = operator.lastSeenAt ? new Date(operator.lastSeenAt).getTime() : 0;
+  const silentForMs = Date.now() - lastSeenMs;
+  if (lastSeenMs && silentForMs < 30 * 60 * 1000) return 'delayed';
+  return 'offline';
+}
+
+function renderHomeGateways(operators) {
+  const labels = { online: 'Online', delayed: 'Delayed', offline: 'Offline' };
+  document.getElementById('homeGateways').innerHTML = operators.map((operator) => {
+    const state = gatewayState(operator);
+    return `
+    <div class="gateway-card state-${state}">
+      <div class="gateway-name">${esc(operator.operatorName)}</div>
+      <svg class="gateway-ecg" viewBox="0 0 180 40" preserveAspectRatio="none" aria-hidden="true">
+        <path d="${ECG_PATH_D}" />
+      </svg>
+      <div class="gateway-status-row"><span class="gateway-status-dot"></span>${labels[state]}</div>
+      <div class="gateway-meta">${relativeTime(operator.lastSeenAt)}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderHomeSummary(overview) {
+  const alerts = overview.alerts || {};
+  document.getElementById('homeSummary').innerHTML = `
+    <div class="summary-item"><div class="summary-value">${overview.stats?.todayRequests || 0}</div><div class="summary-label">Today</div></div>
+    <div class="summary-item"><div class="summary-value ${alerts.pendingApprovals ? 'warning' : ''}">${alerts.pendingApprovals || 0}</div><div class="summary-label">Needs Review</div></div>
+    <div class="summary-item"><div class="summary-value ${alerts.failedRequests ? 'danger' : ''}">${alerts.failedRequests || 0}</div><div class="summary-label">Failed</div></div>`;
+}
+
+function renderHomeTicker(events) {
+  const latest = (events || [])[0];
+  const ticker = document.getElementById('homeTicker');
+  if (!latest) {
+    ticker.innerHTML = '';
+    return;
+  }
+  ticker.innerHTML = `<span class="material-symbols-outlined">bolt</span>${esc(latest.title)}${latest.operator ? ` · ${esc(latest.operator)}` : ''} · ${relativeTime(latest.occurredAt)}`;
+}
+
+function renderHomeMinimal(overview) {
+  const alerts = overview.alerts || {};
+  const headline = document.getElementById('homeHeadline');
+  headline.textContent = overview.posture?.summary || 'Monitoring nominal';
+  headline.classList.toggle('warning', Boolean(alerts.total));
+  document.getElementById('homeTimestamp').textContent = `Updated ${relativeTime(overview.generatedAt)}`;
+  renderHomeGateways(overview.operators || []);
+  renderHomeSummary(overview);
+  renderHomeTicker(overview.activity || []);
 }
 
 function renderActivitySummary() {
@@ -175,8 +349,8 @@ function renderActivityFeed() {
     return haystack.includes(activeSearch);
   });
 
-  document.getElementById('activityFeed').innerHTML = filtered.map((event) => `
-    <div class="timeline-item row-accent ${event.severity === 'critical' ? 'danger' : event.severity === 'warning' ? 'warning' : event.severity === 'success' ? 'success' : 'info'}">
+  document.getElementById('activityFeed').innerHTML = filtered.map((event, i) => `
+    <div class="timeline-item timeline-in row-accent ${event.severity === 'critical' ? 'danger' : event.severity === 'warning' ? 'warning' : event.severity === 'success' ? 'success' : 'info'}" style="animation-delay:${Math.min(i, 10) * 30}ms">
       <div class="timeline-marker ${event.severity === 'critical' ? 'danger' : event.severity === 'warning' ? 'warning' : event.severity === 'success' ? 'success' : ''}"></div>
       <div>
         <div class="timeline-title">${esc(event.title)}</div>
@@ -201,10 +375,10 @@ async function refreshOps() {
     const activityData = await activityRes.json();
     opsActivity = activityData.activity || [];
 
+    renderHomeMinimal(opsOverview);
     renderPosture(opsOverview);
     renderOperatorStrip(opsOverview.operators || []);
     renderAttentionGrid(opsOverview);
-    renderOpsActivity(opsOverview.activity || []);
     renderActivityFeed();
     document.getElementById('lastRefresh')?.remove();
   } catch (error) {
@@ -212,9 +386,47 @@ async function refreshOps() {
   }
 }
 
+let booted = false;
+function boot() {
+  if (booted) return; // avoid stacking duplicate intervals if the gate re-locks and re-unlocks
+  booted = true;
+  pollHealth();
+  setInterval(pollHealth, 30_000);
+  applyRoleView();
+  // A Registered Officer session must never call /api/ops/* — that endpoint
+  // is now admin-only server-side (security-hardening v1 §4), and calling it
+  // anyway would 401 and trip apiFetch's onAuthRequired handler, which is
+  // sessionLogout() here — silently signing the officer out just for opening
+  // the home page. Skip the fetch/poll loop entirely for that tier instead.
+  if (isOperationalRole()) {
+    refreshOps();
+    setInterval(refreshOps, 15_000);
+  }
+}
+
 window._bootTime = Date.now();
-updateAdminVisibility();
-pollHealth();
-setInterval(pollHealth, 30_000);
-refreshOps();
-setInterval(refreshOps, 15_000);
+window.onAuthRequired = sessionLogout; // 401 mid-session → clear token and go to login
+
+(async function sessionInit() {
+  const sessionToken = localStorage.getItem('sessionToken');
+  if (sessionToken) {
+    let user = null;
+    try {
+      const res = await fetch('/api/auth/me', { headers: { Authorization: `Bearer ${sessionToken}` } });
+      if (res.ok) user = (await res.json()).user;
+    } catch (_) {}
+    if (user) {
+      localStorage.setItem('sessionUser', JSON.stringify(user));
+      document.getElementById('authOverlay').style.display = 'none';
+      document.getElementById('opsApp').style.display = 'block';
+      updateAdminVisibility();
+      boot();
+      return;
+    }
+    // Token no longer valid — clear and fall through to redirect.
+    localStorage.removeItem('sessionToken');
+    localStorage.removeItem('sessionUser');
+  }
+  // No valid session → go to login page.
+  location.replace('/login.html');
+})();

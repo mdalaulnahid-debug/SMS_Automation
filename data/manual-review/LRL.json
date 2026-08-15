@@ -1,0 +1,2230 @@
+[
+  {
+    "capturedAt": "2026-08-12T14:13:35.838Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6556-JRI2",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01343370220",
+    "requesterName": "Oc Kazirhat PS",
+    "messageBody": "MSISDN: 8801343370220\nLastActiveDateTime: 2026-08-12 19:59:43 06:00\nLACID: 46491\nCellID: 29339149\nLatitude: 22.830278\nLongitude: 90.464\nAddress: DARIR CHAR KHAJURIA,DARIR CHAR KHAJURIA,MEHENDIGANJ,BARISAL\nCS Status: Idle\nVolte Status: not in VoLTE network [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 102,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T14:18:14.514Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6557-WHJJ",
+    "requestType": "LRL",
+    "operator": "ROBI",
+    "payload": "01615688563",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801615688563\r\nRADIO LOCATION: Jagdal, Magura Sadar, Magura, Khulna\r\nLAC ID: 7018\r\nCELL ID: 47124\r\nLAT, LONG: 23.42048, 89.4375\r\nMS STATUS: Attached\r\nLAST ACTION TIME: 2026-08-12 20:16:13 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 102,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T14:39:58.312Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6559-P1H9",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01797277959",
+    "requesterName": "Oc Gournadi Thana",
+    "messageBody": "MSISDN: 8801797277959\nLastActiveDateTime: 2026-08-12 12:04:05 06:00\nLACID: 23124\nCellID: 22020\nLatitude: 22.975139\nLongitude: 90.230806\nAddress: AGRANI BANK BUILDING, SOUTH PALORDI, GAURNADI, BARISHAL\nCS Status: Idle\nVolte Status: N/A [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 80,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T14:43:42.826Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6560-6P6H",
+    "requestType": "LRL",
+    "operator": "BANGLALINK",
+    "payload": "01920862317",
+    "requesterName": "oc Banaripara",
+    "messageBody": "MN: 8801920862317, LAC/eNodeB_ID: 679, Cell Name: BAR_R0793_1 (Cell ID: 47921), Status: Attached, LRA: 2026-08-12 20:43:29+06:00, Add: AltaBanariparaBarisal (22.75853 90.16787),Banaripara,Barishal, Lat: 22.75853, Long: 90.16787 - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 68,
+      "inferredReplyFamilies": [
+        "LRL"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T16:07:21.725Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6563-KNST",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01355996720",
+    "requesterName": "OC BABUGONG THANA BARISAL",
+    "messageBody": "No RL Info Found of 1355996720 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "LRL"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T17:36:16.736Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6571-4Q0N",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01797277959",
+    "requesterName": "Oc Gournadi Thana",
+    "messageBody": "MSISDN: 8801797277959\nLastActiveDateTime: 2026-08-12 12:04:05 06:00\nLACID: 23124\nCellID: 22020\nLatitude: 22.975139\nLongitude: 90.230806\nAddress: AGRANI BANK BUILDING, SOUTH PALORDI, GAURNADI, BARISHAL\nCS Status: Idle\nVolte Status: N/A [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 80,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T17:55:31.299Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6577-88VZ",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01727951838",
+    "requesterName": "oc Banaripara",
+    "messageBody": "No RL Info Found of 1727951838 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "LRL"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T17:56:08.787Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6578-UNW1",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01788210704",
+    "requesterName": "oc Banaripara",
+    "messageBody": "MSISDN: 8801788210704\nLastActiveDateTime: 2026-8-12 23:20:17 06:00\nLACID: 48261\nCellID: 29887243\nLatitude: 22.66441\nLongitude: 90.33911\nAddress: RUPATOLI ADORSHO SHOROK, RUPATOLI HOUSING, 25 NO WORD, BARISHAL\nCS Status: Idle\nVolte Status: not in VolTE Call [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 88,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T17:56:13.532Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6579-S230",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01764386486",
+    "requesterName": "oc Banaripara",
+    "messageBody": "MSISDN: 8801764386486\nLastActiveDateTime: 2026-8-12 23:19:44 06:00\nLACID: 48261\nCellID: 29887243\nLatitude: 22.66441\nLongitude: 90.33911\nAddress: RUPATOLI ADORSHO SHOROK, RUPATOLI HOUSING, 25 NO WORD, BARISHAL\nCS Status: Idle\nVolte Status: not in VolTE Call [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 88,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-12T19:58:46.480Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260812-6599-XVS6",
+    "requestType": "LRL",
+    "operator": "ROBI",
+    "payload": "01862034618",
+    "requesterName": "Bakerganj Circle, Barishal",
+    "messageBody": "MSISDN: 8801862034618\r\nRADIO LOCATION: Kushiram Belpukur, Saidpur, Nilphamari, Rangpur\r\nLAC ID: -Kashiram-Belpukur-Post\r\nCELL ID: 60073\r\nLAT, LONG: 25.83405556, 88.95619444\r\nMS STATUS: Attached\r\nLAST ACTION TIME: 2026-08-13 01:17:39 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 100,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T05:59:45.137Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6621-3T3V",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01343370220",
+    "requesterName": "Oc Kazirhat PS",
+    "messageBody": "MSISDN: 8801343370220\nLastActiveDateTime: 2026-08-13 08:15:11 06:00\nLACID: 23126\nCellID: 1933\nLatitude: 22.830278\nLongitude: 90.464\nAddress: DARIR CHAR KHAJURIA,DARIR CHAR KHAJURIA,MEHENDIGANJ,BARISAL\nCS Status: Idle\nVolte Status: N/A [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 86,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T06:07:02.183Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6625-1E2X",
+    "requestType": "LRL",
+    "operator": "ROBI",
+    "payload": "01897269853",
+    "requesterName": "Oc Gournadi Thana",
+    "messageBody": "MSISDN: 8801897269853\r\nRADIO LOCATION: Number is out of network.\r\n LAST ATTACHED DATE & TIME: 2026-08-12 18:35:49 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 80,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T06:11:26.894Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6626-3S7S",
+    "requestType": "LRL",
+    "operator": "ROBI",
+    "payload": "01618688125",
+    "requesterName": "Oc Gournadi Thana",
+    "messageBody": "MSISDN: 8801618688125\r\nRADIO LOCATION: Number is out of network.\r\n LAST ATTACHED DATE & TIME: 2026-08-13 10:30:39 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 80,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T06:28:02.353Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6629-3KUL",
+    "requestType": "LRL",
+    "operator": "ROBI",
+    "payload": "01861963690",
+    "requesterName": "OC Bakergonj .",
+    "messageBody": "MSISDN: 8801861963690\r\nRADIO LOCATION: Number is out of network.\r\n LAST ATTACHED DATE & TIME: 2026-08-12 14:56:51 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 80,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T06:52:55.845Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6635-8A1O",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01343370220",
+    "requesterName": "Oc Kazirhat PS",
+    "messageBody": "MSISDN: 8801343370220\nLastActiveDateTime: 2026-08-13 08:15:11 06:00\nLACID: 23126\nCellID: 1933\nLatitude: 22.830278\nLongitude: 90.464\nAddress: DARIR CHAR KHAJURIA,DARIR CHAR KHAJURIA,MEHENDIGANJ,BARISAL\nCS Status: Idle\nVolte Status: N/A [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 86,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T06:57:14.197Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6637-WUU0",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01794342281",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801794342281\nLastActiveDateTime: 2026-8-13 12:56:18 06:00\nLACID: 48251\nCellID: 29843723\nLatitude: 22.703556\nLongitude: 90.371639\nAddress: BHUIYAN MARKET, 92/84, (RAHMANIA LIBRARY), 10, HEMAYET UDDIN ROAD,,BARISAL\nCS Status: Idle\nVolte Status: not in VolTE Call [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 94,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T07:10:11.595Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6644-R052",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01312318701",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801312318701\nLastActiveDateTime: 2026-8-13 13:09:22 06:00\nLACID: 53201\nCellID: 31354440\nLatitude: 25.874583\nLongitude: 89.508583\nAddress: VILL SHIBRAM,  P.S. & DIST. LALMONIRHAT.\nCS Status: Idle\nVolte Status: not in VolTE Call [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 92,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T07:32:28.376Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6652-3UGB",
+    "requestType": "LRL",
+    "operator": "BANGLALINK",
+    "payload": "01963307067",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MN: 8801963307067, LAC/eNodeB_ID: 18174, Cell Name: DHK_L8174_203 (Cell ID: 4652747), Status: Detached, LRA: 2026-08-12 21:29:23+06:00, Add: H # 447/1 Dighi Borabo P.O-Tarabo P.S-Rupgonj Dist-Narayangonj. (23.7231 90.52219),Rupganj,Narayanganj, Lat: 23.7231, Long: 90.52219 - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 72,
+      "inferredReplyFamilies": [
+        "LRL"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T09:34:39.225Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6667-JT2R",
+    "requestType": "LRL",
+    "operator": "ROBI",
+    "payload": "01865602893",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801865602893\r\nRADIO LOCATION: Ward No-06, Kurigram Sadar, Kurigram, Rangpur\r\nLAC ID: 3112\r\nCELL ID: 52628\r\nLAT, LONG: 25.81757, 89.66223\r\nMS STATUS: Attached\r\nLAST ACTION TIME: 2026-08-13 15:32:22 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 104,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T09:48:08.519Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6670-FLIV",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01712550772",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801712550772\nLastActiveDateTime: 2026-08-13 14:10:18 06:00\nLACID: 23096\nCellID: 43596\nLatitude: 23.528361\nLongitude: 89.589945\nAddress: VILL:KATAKHALI, MOUZA-BAGHAT BAZAR,KROKDI,MODHUKHALI,FARIDPUR\nCS Status: Idle\nVolte Status: N/A [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 85,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T09:57:51.228Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6675-U2KT",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01756884845",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801756884845\nLastActiveDateTime: 2026-08-13 15:28:06 06:00\nLACID: 56161\nCellID: 26457357\nLatitude: 23.972167\nLongitude: 90.037194\nAddress: MOUZA - KATNNARA, SATURIA BAZAR, SATURIA, MANIKGANJ\nCS Status: Idle\nVolte Status: not in VoLTE network [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 98,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T10:01:07.863Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6676-60RU",
+    "requestType": "LRL",
+    "operator": "ROBI",
+    "payload": "01615688563",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801615688563\r\nRADIO LOCATION: Arpara, Shalikha, Magura, Khulna\r\nLAC ID: 7018\r\nCELL ID: 4965\r\nLAT, LONG: 23.3695, 89.367\r\nMS STATUS: Attached\r\nLAST ACTION TIME: 2026-08-13 15:39:15 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 100,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T10:14:40.242Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6686-VFK8",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01710741988",
+    "requesterName": "Addl SP Crime & Ops",
+    "messageBody": "MSISDN: 8801710741988\nLastActiveDateTime: 2026-08-13 16:13:23 06:00\nLACID: 23023\nCellID: 52695\nLatitude: 22.47818\nLongitude: 90.297861\nAddress: MD. M.R. ISLAM  2. MD. HARUNOR RASHID  3. MD. GOLAM MOSTAFA  4. ROWSHONAR BEGUM  5. FIROZA BEGUM  6. HENA BEGUM VILL: PAR SHIBPUR  P.O: PAR SHIBPUR P.S:BAKERGANJ DIST:BARISAL 01713958894\nCS Status: Idle\nVolte Status: N/A [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 90,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T10:15:19.196Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6687-D833",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01724375353",
+    "requesterName": "Addl SP Crime & Ops",
+    "messageBody": "MSISDN: 8801724375353\nLastActiveDateTime: 2026-08-13 14:23:28 06:00\nLACID: 23022\nCellID: 50191\nLatitude: 22.524\nLongitude: 90.282306\nAddress: VILL: PORACHINA, POST: KAFILA, PS: BAKERGANJ, DIST: BARISAL\nCS Status: Idle\nVolte Status: N/A [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 90,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T10:48:46.669Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6694-TT92",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01325189733",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801325189733\nLastActiveDateTime: 2026-08-13 16:40:52 06:00\nLACID: 46301\nCellID: 29254413\nLatitude: 22.588694\nLongitude: 90.474944\nAddress: PURBA SOROSI, CHATRA, BAKERGONJ, BARISAL\nCS Status: Idle\nVolte Status: not in VoLTE network [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 102,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T10:59:32.012Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6703-D1CH",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01350432350",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801350432350\nLastActiveDateTime: 2026-8-13 16:58:55 06:00\nLACID: 48241\nCellID: 28987679\nLatitude: 22.627389\nLongitude: 90.419361\nAddress: VILL CHOR AMDI,  P.S. BAKERGANJ,  DIST. BARISHAL.\nCS Status: Idle\nVolte Status: in VoLTE Call [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 84,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T12:06:36.937Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6622-IBAV",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01711363223",
+    "requesterName": "oc Banaripara",
+    "messageBody": "No RL Info Found of 1620904061 [GP]",
+    "analysis": {
+      "confidence": "LOW",
+      "payloadMatched": false,
+      "payloadMatchCount": 0,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "LRL"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T12:25:43.745Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6717-T13R",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01711363223",
+    "requesterName": "oc Banaripara",
+    "messageBody": "MSISDN: 8801711363223\nLastActiveDateTime: 2026-8-13 18:24:30 06:00\nLACID: 46371\nCellID: 29682209\nLatitude: 22.48808\nLongitude: 89.59657\nAddress: MONGLA PORT, BAGERHAT\nCS Status: Idle\nVolte Status: not in VolTE Call [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 91,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T12:35:06.538Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6720-4FFM",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01780875644 01727492178",
+    "requesterName": "LIC Barishal",
+    "messageBody": "No RL Info Found of 1780875644 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "LRL"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T12:50:12.856Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6723-12S7",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01335871650",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801335871650\nLastActiveDateTime: 2026-08-13 18:44:45 06:00\nLACID: 23045\nCellID: 48851\nLatitude: 22.628847\nLongitude: 90.31261\nAddress: GOALKATI,NALCHITY,JHALOKATI\nCS Status: Idle\nVolte Status: N/A [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 80,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T13:23:39.228Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6728-9AOS",
+    "requestType": "LRL",
+    "operator": "BANGLALINK",
+    "payload": "01400100713",
+    "requesterName": "ASP Ujirpur Circle",
+    "messageBody": "MN: 8801400100713, LAC/eNodeB_ID: 60110, Cell Name: BAR_L0110_2 (Cell ID: 15388162), Status: Attached, LRA: 2026-08-13 19:23:27+06:00, Add: Anisuzzaman khan kamalPort road Janata Bank Bhaban Barisal Shadar Barisal. (22.70381 90.3747),Barishal Sadar (Kotwali),Barishal, Lat: 22.70381, Long: 90.3747 - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 70,
+      "inferredReplyFamilies": [
+        "LRL"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T13:24:14.894Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6729-7FIB",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01767940190",
+    "requesterName": "ASP Ujirpur Circle",
+    "messageBody": "No RL Info Found of 1767940190 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "LRL"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T13:25:29.776Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6730-GQ6S",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01704039377",
+    "requesterName": "LIC Barishal",
+    "messageBody": "No RL Info Found of 1704039377 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "LRL"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T13:26:21.009Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6731-XQD5",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01767940190",
+    "requesterName": "ASP Ujirpur Circle",
+    "messageBody": "No RL Info Found of 1767940190 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "LRL"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T13:27:41.800Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6732-BEUL",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01767940190",
+    "requesterName": "ASP Ujirpur Circle",
+    "messageBody": "MSISDN: 8801767940190\nLastActiveDateTime: 2026-8-13 19:27:06 06:00\nLACID: 48251\nCellID: 28992013\nLatitude: 22.701222\nLongitude: 90.369722\nAddress: BIRSHESTO JAHANGIR RD, SADAR RD, BARISAL SADAR, BARISAL, BARISAL  BD\nCS Status: Idle\nVolte Status: not in VolTE Call [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 99,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T13:42:21.280Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6734-RH6U",
+    "requestType": "LRL",
+    "operator": "ROBI",
+    "payload": "01862922535",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801862922535\r\nRADIO LOCATION: Number is not in use. [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 48,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T13:55:53.866Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6737-01TC",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01343370220",
+    "requesterName": "Oc Kazirhat PS",
+    "messageBody": "MSISDN: 8801343370220\nLastActiveDateTime: 2026-08-13 08:15:11 06:00\nLACID: 23126\nCellID: 1933\nLatitude: 22.830278\nLongitude: 90.464\nAddress: DARIR CHAR KHAJURIA,DARIR CHAR KHAJURIA,MEHENDIGANJ,BARISAL\nCS Status: Idle\nVolte Status: N/A [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 86,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T14:12:23.119Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6738-6224",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01727951838",
+    "requesterName": "oc Banaripara",
+    "messageBody": "MSISDN: 8801727951838\nLastActiveDateTime: 2026-8-13 20:11:52 06:00\nLACID: 46341\nCellID: 28710175\nLatitude: 22.752306\nLongitude: 90.088583\nAddress: MOUZA - KOWRIKHARA,  MIARHAT,  NESHARABAD,  PIROJPUR\nCS Status: Idle\nVolte Status: in VoLTE Call [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 80,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T14:25:43.715Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6739-Q6NT",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01727951838",
+    "requesterName": "oc Banaripara",
+    "messageBody": "MSISDN: 8801727951838\nLastActiveDateTime: 2026-8-13 20:25:03 06:00\nLACID: 46341\nCellID: 28710175\nLatitude: 22.752306\nLongitude: 90.088583\nAddress: MOUZA - KOWRIKHARA,  MIARHAT,  NESHARABAD,  PIROJPUR\nCS Status: Idle\nVolte Status: in VoLTE Call [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 80,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T15:17:10.747Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6752-7WOT",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01352106869",
+    "requesterName": "LIC Barishal",
+    "messageBody": "No RL Info Found of 1352106869 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "LRL"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T15:19:43.139Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6753-GY5V",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01783995770",
+    "requesterName": "OC,DB Barishal",
+    "messageBody": "MSISDN: 8801783995770\nLastActiveDateTime: 2026-08-13 19:26:16 06:00\nLACID: 23045\nCellID: 13005\nLatitude: 22.527617\nLongitude: 90.34056\nAddress: HALE PAD,  VARPASHA, BAKERJONG, BAKERJONG, BARISHAL\nCS Status: Idle\nVolte Status: N/A [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 80,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T15:21:20.079Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6757-3L50",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01355964398",
+    "requesterName": "OC,DB Barishal",
+    "messageBody": "No RL Info Found of 1355964398 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "LRL"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T15:28:22.786Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6763-PCCE",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01712160576",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801712160576\nLastActiveDateTime: 2026-8-13 21:16:21 06:00\nLACID: 46331\nCellID: 28866571\nLatitude: 22.76325\nLongitude: 90.311222\nAddress: PANGSHA, BABUGANJ, BARISAL, BARISAL 8200 BD\nCS Status: Idle\nVolte Status: not in VolTE Call [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 96,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T15:32:37.637Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6764-E9WH",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01726511724",
+    "requesterName": "Oc Gournadi Thana",
+    "messageBody": "MSISDN: 8801726511724\nLastActiveDateTime: 2026-08-13 21:28:35 06:00\nLACID: 58302\nCellID: 25813577\nLatitude: 23.798778\nLongitude: 90.353806\nAddress: HOUSE # 6/A, ROAD # 1, BLOCK # B, SECTION # 1, MIRPUR, DHAKA-1216\nCS Status: Idle\nVolte Status: not in VoLTE network [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 98,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T15:43:21.750Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6767-WFOQ",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01355964398",
+    "requesterName": "Addl SP Crime & Ops",
+    "messageBody": "No RL Info Found of 1355964398 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "LRL"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T15:54:29.351Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6772-HJU0",
+    "requestType": "LRL",
+    "operator": "ROBI",
+    "payload": "01615688563",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801615688563\r\nRADIO LOCATION: Arpara, Shalikha, Magura, Khulna\r\nLAC ID: \r\nCELL ID: 47011\r\nLAT, LONG: 23.3753431, 89.37328194\r\nMS STATUS: Attached\r\nLAST ACTION TIME: 2026-08-13 21:52:26 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 100,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T16:07:15.701Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6776-X4AY",
+    "requestType": "LRL",
+    "operator": "BANGLALINK",
+    "payload": "01402745829",
+    "requesterName": "Oc Gournadi Thana",
+    "messageBody": "MN: 8801402745829, LAC/eNodeB_ID: 10659, Cell Name: DHK_L0659_3 (Cell ID: 2728707), Status: Attached, LRA: 2026-08-13 22:06:58+06:00, Add: 60/2 Atish Dipankar Road South Mugdapara.Shabujbagh Dhaka. (23.72659 90.42904),Mugda,Dhaka, Lat: 23.72659, Long: 90.42904 - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 81,
+      "inferredReplyFamilies": [
+        "LRL"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T16:31:38.306Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6778-9N00",
+    "requestType": "LRL",
+    "operator": "BANGLALINK",
+    "payload": "01918542968",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MN: 8801918542968, LAC/eNodeB_ID: 60068, Cell Name: BAR_L0068_3 (Cell ID: 15377411), Status: Detached, LRA: 2026-08-13 21:31:53+06:00, Add: Abdur Rahman Hajari  Sarshi Bazaar Lakutia Road Barisal Sadar Barisal. (22.75133 90.34),Barishal Sadar (Kotwali),Barishal, Lat: 22.75133, Long: 90.34 - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 64,
+      "inferredReplyFamilies": [
+        "LRL"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T16:58:59.522Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6780-K57L",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01782078170",
+    "requesterName": "LIC Barishal",
+    "messageBody": "No RL Info Found of 1782078170 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "LRL"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T17:00:06.852Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6781-0Z0Y",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01782078170",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801782078170\nLastActiveDateTime: 2026-8-13 22:59:34 06:00\nLACID: 48251\nCellID: 35851789\nLatitude: 22.715444\nLongitude: 90.348778\nAddress: SARNA MANSION; NATULLAHBAD BUS STAND; KASHIPUR,BARISAL SADAR,BARISAL SADAR,BARISAL\nCS Status: Idle\nVolte Status: not in VolTE Call [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 111,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T17:06:42.938Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6782-B26E",
+    "requestType": "LRL",
+    "operator": "BANGLALINK",
+    "payload": "01912518600",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MN: 8801912518600, LAC/eNodeB_ID: 60057, Cell Name: BAR_L0057_61 (Cell ID: 15374623), Status: Attached, LRA: 2026-08-13 23:06:33+06:00, Add: Abdus Shukur Talukder (Salim) Chanmia house C & B road Barisal (22.70655 90.35217),Barishal Sadar (Kotwali),Barishal, Lat: 22.70655, Long: 90.35217 - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 70,
+      "inferredReplyFamilies": [
+        "LRL"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T17:14:20.951Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6783-V0ND",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01355996720",
+    "requesterName": "OC BABUGONG THANA BARISAL",
+    "messageBody": "No RL Info Found of 1355996720 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "LRL"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T17:24:54.593Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6787-IE3Y",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01727951838",
+    "requesterName": "oc Banaripara",
+    "messageBody": "No RL Info Found of 1727951838 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "LRL"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T17:30:18.654Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6789-RL2X",
+    "requestType": "LRL",
+    "operator": "BANGLALINK",
+    "payload": "01402745829",
+    "requesterName": "Oc Gournadi Thana",
+    "messageBody": "MN: 8801402745829, LAC/eNodeB_ID: 10414, Cell Name: DHK_L0414_61 (Cell ID: 2666045), Status: Attached, LRA: 2026-08-13 23:30:07+06:00, Add: H-34/3 R-3 Shymoli  Mohammadpur Dhaka (23.7776 90.364),Shere Bangla Nagar,Dhaka, Lat: 23.7776, Long: 90.364 - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 77,
+      "inferredReplyFamilies": [
+        "LRL"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T18:17:49.359Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6795-2O7J",
+    "requestType": "LRL",
+    "operator": "BANGLALINK",
+    "payload": "01913835477",
+    "requesterName": "Oc Gournadi Thana",
+    "messageBody": "MN: 8801913835477, LAC/eNodeB_ID: 60113, Cell Name: BAR_L0113_1 (Cell ID: 15388929), Status: Attached, LRA: 2026-08-14 00:17:36+06:00, Add: BM college roadWest kawnia Brishal sadar. (22.71364 90.35767),Barishal Sadar (Kotwali),Barishal, Lat: 22.71364, Long: 90.35767 - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 68,
+      "inferredReplyFamilies": [
+        "LRL"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T18:18:52.835Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6796-RTWX",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01319950973",
+    "requesterName": "Oc Gournadi Thana",
+    "messageBody": "No RL Info Found of 1319950973 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "LRL"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T20:04:40.528Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6809-20DJ",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01716246925",
+    "requesterName": "oc Banaripara",
+    "messageBody": "MSISDN: 8801716246925\nLastActiveDateTime: 2026-08-13 21:59:13 06:00\nLACID: 22048\nCellID: 22071\nLatitude: 22.8055\nLongitude: 90.193306\nAddress: VILL MADARKATI,  P.S. BANRIPARA,  DIST. BARISHAL.\nCS Status: Idle\nVolte Status: N/A [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 84,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-13T22:05:11.420Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260813-6811-PWVN",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01704039377",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801704039377\nLastActiveDateTime: 2026-8-14 4:04:39 06:00\nLACID: 48261\nCellID: 29204542\nLatitude: 22.673194\nLongitude: 90.34575\nAddress: MOUZA-RUPATALI, RUPATALI, BARISAL SADAR, BARISAL\nCS Status: Idle\nVolte Status: not in VolTE Call [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 99,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T04:21:34.720Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6815-3QO9",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01737510970",
+    "requesterName": "OC,DB Barishal",
+    "messageBody": "MSISDN: 8801737510970\nLastActiveDateTime: 2026-08-13 21:10:28 06:00\nLACID: 21045\nCellID: 16250\nLatitude: 23.727222\nLongitude: 90.410389\nAddress: 219, SAYED NAZRUL ISLAM SHARANI, GPO, RAMNA, DHAKA-1000\nCS Status: Idle\nVolte Status: N/A [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 82,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T04:23:46.334Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6814-OKI7",
+    "requestType": "LRL",
+    "operator": "ROBI",
+    "payload": "01683215703",
+    "requesterName": "OC,DB Barishal",
+    "messageBody": "MSISDN: 8801683215703\r\nRADIO LOCATION: Number is out of network.\r\n LAST ATTACHED DATE & TIME: 2026-08-14 10:20:54 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 80,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T06:26:39.871Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6822-64E4",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01715586339",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801715586339\nLastActiveDateTime: 2026-8-14 12:25:04 06:00\nLACID: 48241\nCellID: 35853323\nLatitude: 22.719083\nLongitude: 90.337694\nAddress: MOUZA-ICHAKATHI,  KASHIPUR, BARIAL SADAR, BARISAL\nCS Status: Idle\nVolte Status: not in VolTE Call [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 101,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T06:27:05.294Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6823-1HHV",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01336150533",
+    "requesterName": "oc Banaripara",
+    "messageBody": "MSISDN: 8801336150533\nLastActiveDateTime: 2026-08-14 10:30:51 06:00\nLACID: 25038\nCellID: 10717\nLatitude: 23.91\nLongitude: 90.064694\nAddress: VILL DOTARA,  P. S. SHATURIA,  DIST. MANIKGONJ.\nCS Status: Idle\nVolte Status: N/A [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 84,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T06:27:30.978Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6824-23MF",
+    "requestType": "LRL",
+    "operator": "ROBI",
+    "payload": "01857964063",
+    "requesterName": "oc Banaripara",
+    "messageBody": "MSISDN: 8801857964063\r\nRADIO LOCATION: Number is out of network.\r\n LAST ATTACHED DATE & TIME: 2026-08-14 10:37:29 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 80,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T07:09:50.407Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6828-RZIO",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01739904278",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801739904278\nLastActiveDateTime: 2026-08-14 13:00:16 06:00\nLACID: 10023\nCellID: 44849\nLatitude: 25.15904\nLongitude: 90.62857\nAddress: VILL MAIJPARA,  PO RANIKHANG,  NO.1 KULLAGRA UNION,  PS DURGAPUR,  DIST NETROKONA\nCS Status: Idle\nVolte Status: N/A [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 84,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T07:09:50.816Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6827-DYYI",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01715586339",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801715586339\nLastActiveDateTime: 2026-8-14 12:53:18 06:00\nLACID: 48241\nCellID: 35853579\nLatitude: 22.724083\nLongitude: 90.34025\nAddress: MOUZA-ICHAKATHI,  KHASHIPUR, BARISAL SADAR, BARISAL\nCS Status: Idle\nVolte Status: not in VolTE Call [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 99,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T11:46:31.453Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6840-VFDV",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01704039377",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801704039377\nLastActiveDateTime: 2026-8-14 17:45:41 06:00\nLACID: 46111\nCellID: 29605900\nLatitude: 23.019528\nLongitude: 89.8155\nAddress: VILL:GHOSER CHOR PURBO PARA,POST:GOPALGANG SADAR, P.S:GOPALGANG SADAR,DIST: GOPALGANG.\nCS Status: Idle\nVolte Status: not in VolTE Call [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 97,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T12:51:45.297Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6844-V5VL",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01759646615",
+    "requesterName": "Oc Gournadi Thana",
+    "messageBody": "No RL Info Found of 1759646615 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "LRL"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T13:08:52.648Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6847-757B",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01336150533",
+    "requesterName": "oc Banaripara",
+    "messageBody": "MSISDN: 8801336150533\nLastActiveDateTime: 2026-08-14 18:18:47 06:00\nLACID: 25038\nCellID: 10717\nLatitude: 23.91\nLongitude: 90.064694\nAddress: VILL DOTARA,  P. S. SHATURIA,  DIST. MANIKGONJ.\nCS Status: Idle\nVolte Status: N/A [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 84,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T13:15:10.625Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6848-IQ6J",
+    "requestType": "LRL",
+    "operator": "ROBI",
+    "payload": "01857964063",
+    "requesterName": "oc Banaripara",
+    "messageBody": "MSISDN: 8801857964063\r\nRADIO LOCATION: Dhankora, Saturia, Manikganj, Dhaka\r\nLAC ID: -Dhankora-1800|-P.S\r\nCELL ID: 11091\r\nLAT, LONG: 23.91017, 90.05833\r\nMS STATUS: Attached\r\nLAST ACTION TIME: 2026-08-14 19:14:40 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 103,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T13:58:06.155Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6855-3ACC",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01727951838",
+    "requesterName": "oc Banaripara",
+    "messageBody": "No RL Info Found of 1727951838 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "LRL"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T13:59:45.618Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6856-ZNNI",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01736760981",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801736760981\nLastActiveDateTime: 2026-08-14 19:59:07 06:00\nLACID: 23093\nCellID: 50634\nLatitude: 22.696778\nLongitude: 90.359972\nAddress: ALAM MANSION, MINICIPAL HOLDING NO. 599 (681/281), NEW CIRCULAR ROAD, P.S: BARISAL SADAR, BARISAL.,BARISAL,BARISAL SADAR,BARISAL\nCS Status: Idle\nVolte Status: N/A [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 95,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T14:05:45.652Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6859-UFPE",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01704039377",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801704039377\nLastActiveDateTime: 2026-8-14 20:04:54 06:00\nLACID: 46111\nCellID: 25932299\nLatitude: 23.012806\nLongitude: 89.825889\nAddress: ISLAM PARA, GHOSHER CHOR,GOPALGANJ SADAR,GOPALGANJ,\nCS Status: Idle\nVolte Status: not in VolTE Call [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 93,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T14:18:58.466Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6860-49OJ",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01703229559",
+    "requesterName": "OC,DB Barishal",
+    "messageBody": "MSISDN: 8801703229559\nLastActiveDateTime: 2026-08-14 18:45:31 06:00\nLACID: 27007\nCellID: 29441\nLatitude: 22.523083\nLongitude: 90.369194\nAddress: VILL KALASHKATHI,  P.S. BAKORGONJ,  BARISAL BAKERGANJ  BARISHAL\nCS Status: Idle\nVolte Status: N/A [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 88,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T14:34:53.155Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6861-DLF4",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01711359001",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801711359001\nLastActiveDateTime: 2026-08-14 18:09:59 06:00\nLACID: 23046\nCellID: 11349\nLatitude: 22.728889\nLongitude: 90.347222\nAddress: MOUZA-BAGHIA, VILL: KAWNIA, THANA: BARISAL SADAR, MOUZA: BAGHIA, DIST: BARISAL,\nCS Status: Idle\nVolte Status: N/A [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 95,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T14:35:42.405Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6862-VZUO",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01715586339",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801715586339\nLastActiveDateTime: 2026-8-14 20:24:13 06:00\nLACID: 48241\nCellID: 35853579\nLatitude: 22.724083\nLongitude: 90.34025\nAddress: MOUZA-ICHAKATHI,  KHASHIPUR, BARISAL SADAR, BARISAL\nCS Status: Idle\nVolte Status: not in VolTE Call [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 99,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T14:42:55.376Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6863-MB9A",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01714441286",
+    "requesterName": "OC,DB Barishal",
+    "messageBody": "MSISDN: 8801714441286\nLastActiveDateTime: 2026-08-14 20:42:23 06:00\nLACID: 43331\nCellID: 77660183\nLatitude: 22.2903\nLongitude: 91.79007\nAddress: VILL: DAKSHIN HALISHOHOR  PO: SEILOS CALONI  PS: EPZ  DIST: CHITTAGONJ\nCS Status: Idle\nVolte Status: not in VoLTE network [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 100,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T14:46:57.607Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6866-2WTS",
+    "requestType": "LRL",
+    "operator": "BANGLALINK",
+    "payload": "01920800897",
+    "requesterName": "oc Banaripara",
+    "messageBody": "MN: 8801920800897, LAC/eNodeB_ID: 679, Cell Name: BAR_R0821_2 (Cell ID: 48202), Status: Attached, LRA: 2026-08-14 20:46:46+06:00, Add: Nandur BazarSutiakathiPirojpur (22.77442 90.101438),Nesarabad (Swarupkathi),Pirojpur, Lat: 22.77442, Long: 90.101438 - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 68,
+      "inferredReplyFamilies": [
+        "LRL"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T14:54:21.143Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6867-NZ3B",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01780133527",
+    "requesterName": "oc Banaripara",
+    "messageBody": "MSISDN: 8801780133527\nLastActiveDateTime: 2026-08-14 20:47:58 06:00\nLACID: 23046\nCellID: 27052\nLatitude: 22.719361\nLongitude: 90.34425\nAddress: WARD NO.29, KASHIPUR BAZAR, MOUZA-ESSAKABI, BARISAL SADAR, BARISAL\nCS Status: Idle\nVolte Status: N/A [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 96,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T14:54:22.044Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6868-BEOF",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01736760981",
+    "requesterName": "oc Banaripara",
+    "messageBody": "MSISDN: 8801736760981\nLastActiveDateTime: 2026-08-14 20:14:11 06:00\nLACID: 23093\nCellID: 50634\nLatitude: 22.696778\nLongitude: 90.359972\nAddress: ALAM MANSION, MINICIPAL HOLDING NO. 599 (681/281), NEW CIRCULAR ROAD, P.S: BARISAL SADAR, BARISAL.,BARISAL,BARISAL SADAR,BARISAL\nCS Status: Idle\nVolte Status: N/A [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 95,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T15:09:54.664Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6870-2MYB",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01780133527",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801780133527\nLastActiveDateTime: 2026-08-14 20:57:28 06:00\nLACID: 22048\nCellID: 40625\nLatitude: 22.751333\nLongitude: 90.319972\nAddress: KALADEMA CHAHATTA, KASHIPUR, BARISAL SADAR (KOTWALI)\nCS Status: Idle\nVolte Status: N/A [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 93,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T15:13:46.946Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6874-LPRV",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01727951838",
+    "requesterName": "oc Banaripara",
+    "messageBody": "No RL Info Found of 1727951838 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "LRL"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T15:27:18.700Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6875-9IKU",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01337543110",
+    "requesterName": "oc Banaripara",
+    "messageBody": "MSISDN: 8801337543110\nLastActiveDateTime: 2026-08-14 21:23:42 06:00\nLACID: 22048\nCellID: 16982\nLatitude: 22.793917\nLongitude: 90.236861\nAddress: MOUZA-CHANGARIA, VILL-CHANGARIA PO-GUTHIA,  PS-WAZIRPUR,  BARISHAL\nCS Status: Idle\nVolte Status: N/A [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 82,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T16:01:20.386Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6884-E75F",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01704039377",
+    "requesterName": "LIC Barishal",
+    "messageBody": "No RL Info Found of 1704039377 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "LRL"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T16:13:50.240Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6885-6VLW",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01704039377",
+    "requesterName": "LIC Barishal",
+    "messageBody": "No RL Info Found of 1704039377 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "LRL"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T17:05:46.091Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6886-MR4D",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01302611703",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801302611703\nLastActiveDateTime: 2026-08-14 22:21:46 06:00\nLACID: 21043\nCellID: 45187\nLatitude: 23.726083\nLongitude: 90.37325\nAddress: CITY CORPORATION HOLDING NO. 32, WARD NO. 58, NILAMBOR SHAHA ROAD, HAJARIBAGH, DHAKA.\nCS Status: Idle\nVolte Status: N/A [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 82,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T19:01:16.712Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6891-25GL",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01723942435",
+    "requesterName": "OC Bakergonj .",
+    "messageBody": "MSISDN: 8801723942435\nLastActiveDateTime: 2026-8-15 1:00:09 06:00\nLACID: 46541\nCellID: 29135392\nLatitude: 22.531306\nLongitude: 90.519306\nAddress: VILL KALISHURI,  P.S. BAUFOL,  DIST. PATUAKHALI.\nCS Status: Idle\nVolte Status: not in VolTE Call [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 92,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-14T21:25:34.546Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260814-6897-RNBL",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01352106869",
+    "requesterName": "LIC Barishal",
+    "messageBody": "No RL Info Found of 1352106869 [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [],
+      "trainingScore": 4,
+      "inferredReplyFamilies": [
+        "LRL"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T05:13:12.847Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6916-GARE",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01300310517",
+    "requesterName": "oc Banaripara",
+    "messageBody": "MSISDN: 8801300310517\nLastActiveDateTime: 2026-08-15 11:11:10 06:00\nLACID: 56282\nCellID: 25730337\nLatitude: 23.747944\nLongitude: 90.368972\nAddress: HOUSE # 93, ROAD # 9/A(NEW), DHAMONDI R/A, DHANMONDI, DHAKA\nCS Status: Idle\nVolte Status: not in VoLTE network [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 100,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T05:32:19.536Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6918-O1A1",
+    "requestType": "LRL",
+    "operator": "BANGLALINK",
+    "payload": "01914675398",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MN: 8801914675398, LAC/eNodeB_ID: 678, Cell Name: BAR_X0111_3 (Cell ID: 61103), Status: Attached, LRA: 2026-08-15 11:26:02+06:00, Add: Hazi Manson V.I.P Gate Barisal Sadar Barisal. (22.68591 90.36546),Barishal Sadar (Kotwali),Barishal, Lat: 22.68591, Long: 90.36546 - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 68,
+      "inferredReplyFamilies": [
+        "LRL"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T05:53:03.372Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6925-U5BP",
+    "requestType": "LRL",
+    "operator": "ROBI",
+    "payload": "01845980606",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801845980606\r\nRADIO LOCATION: Palong Khali, Ukhia, Cox'S Bazar, Chittagong\r\nLAC ID: -Balukhaoi|-Union\r\nCELL ID: 23759\r\nLAT, LONG: 21.17411, 92.149001\r\nMS STATUS: Attached\r\nLAST ACTION TIME: 2026-08-15 11:04:05 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 100,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T06:15:09.623Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6935-DBMD",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01749833373",
+    "requesterName": "OC,DB Barishal",
+    "messageBody": "MSISDN: 8801749833373\nLastActiveDateTime: 2026-08-15 11:36:36 06:00\nLACID: 21044\nCellID: 14732\nLatitude: 23.714306\nLongitude: 90.395639\nAddress: HOUSE NO 15, SWORI GHAT, CHAKBAZAR, DHAKA\nCS Status: Idle\nVolte Status: N/A [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 82,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T06:24:11.448Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6940-NF3V",
+    "requestType": "LRL",
+    "operator": "ROBI",
+    "payload": "01834800342",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801834800342\r\nRADIO LOCATION: Number is not in use. [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 48,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T06:44:43.638Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6950-VZY3",
+    "requestType": "LRL",
+    "operator": "ROBI",
+    "payload": "01615688563",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801615688563\r\nRADIO LOCATION: Adabaria, Daulatpur, Kushtia, Khulna\r\nLAC ID: 7019\r\nCELL ID: 46644\r\nLAT, LONG: 23.98855556, 88.80022222\r\nMS STATUS: Attached\r\nLAST ACTION TIME: 2026-08-15 12:43:54 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 100,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T07:20:27.297Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6967-QXWM",
+    "requestType": "LRL",
+    "operator": "ROBI",
+    "payload": "01845204172",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801845204172\r\nRADIO LOCATION: Ward No-15, Barisal Sadar (kotwali), Barisal, Barisal\r\nLAC ID: 8005\r\nCELL ID: 28082\r\nLAT, LONG: 22.70069, 90.36293\r\nMS STATUS: Attached\r\nLAST ACTION TIME: 2026-08-15 13:20:15 [Robi]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 112,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T07:20:46.943Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6969-MPPP",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01793060134",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801793060134\nLastActiveDateTime: 2026-8-15 12:46:07 06:00\nLACID: 48251\nCellID: 35852577\nLatitude: 22.700083\nLongitude: 90.3645\nAddress: NORTH ALEKANDA; NEW ASHRAF RD,BARISAL SADAR,BARISAL,BARISAL\nCS Status: Idle\nVolte Status: not in VoLTE network [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 115,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T07:24:00.341Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6971-5BSF",
+    "requestType": "LRL",
+    "operator": "BANGLALINK",
+    "payload": "01993768494",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MN: 8801993768494, LAC/eNodeB_ID: 678, Cell Name: BAR_X0080_2 (Cell ID: 60792), Status: Attached, LRA: 2026-08-15 13:23:48+06:00, Add: Md. Hemayet Uddin Khan Masud Khan Bhaban Khirod Mukharjee Lane Barisal Sadar Barisal (22.70209 90.36327),Barishal Sadar (Kotwali),Barishal, Lat: 22.70209, Long: 90.36327 - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 68,
+      "inferredReplyFamilies": [
+        "LRL"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T07:25:15.062Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6973-7VT6",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01342490985 01342984360",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801342984360\nLastActiveDateTime: 2026-08-15 12:33:15 06:00\nLACID: 23125\nCellID: 50663\nLatitude: 23.021\nLongitude: 90.333667\nAddress: SALIMPUR, SALIMPUR, MULADI, BARISAL\nCS Status: Idle\nVolte Status: N/A [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 86,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T07:31:24.562Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-6975-F050",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01793060134",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801793060134\nLastActiveDateTime: 2026-08-15 13:27:04 06:00\nLACID: 48251\nCellID: 35852577\nLatitude: 22.700083\nLongitude: 90.3645\nAddress: NORTH ALEKANDA; NEW ASHRAF RD,BARISAL SADAR,BARISAL,BARISAL\nCS Status: Idle\nVolte Status: not in VoLTE network [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 115,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:35:20.604Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7009-R52B",
+    "requestType": "LRL",
+    "operator": "BANGLALINK",
+    "payload": "01996019180",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MN: 8801996019180, LAC/eNodeB_ID: 10296, Cell Name: DHK_X1868_1 (Cell ID: 8671), Status: Attached, LRA: 2026-08-15 14:35:09+06:00, Add: Hakim Ali Dhonia Noyarhat Savar Dhaka (23.91405 90.23701),Savar,Dhaka, Lat: 23.91405, Long: 90.23701 - Banglalink",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 77,
+      "inferredReplyFamilies": [
+        "LRL"
+      ]
+    }
+  },
+  {
+    "capturedAt": "2026-08-15T08:40:31.398Z",
+    "source": "auto_match",
+    "requestId": "REQ-20260815-7010-UOH7",
+    "requestType": "LRL",
+    "operator": "GP",
+    "payload": "01311850041",
+    "requesterName": "LIC Barishal",
+    "messageBody": "MSISDN: 8801311850041\nLastActiveDateTime: 2026-08-15 14:38:03 06:00\nLACID: 56901\nCellID: 25906002\nLatitude: 23.783575\nLongitude: 90.342533\nAddress: A MAZID KHAN TOWER, HOUSE NO. 240/KA, BAGBARI,AMINBAZAR, MIRPUR, DHAKA\nCS Status: Idle\nVolte Status: not in VoLTE call [GP]",
+    "analysis": {
+      "confidence": "HIGH",
+      "payloadMatched": true,
+      "payloadMatchCount": 1,
+      "matchedPatterns": [
+        "cell|lac|latitude|longitude|location"
+      ],
+      "trainingScore": 90,
+      "inferredReplyFamilies": [
+        "LRL",
+        "MS-NID"
+      ]
+    }
+  }
+]
