@@ -4,14 +4,194 @@
   "graph": {},
   "nodes": [
     {
+      "label": "reverse-weak-corrections.js",
+      "file_type": "code",
+      "source_file": "scripts/reverse-weak-corrections.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "scripts_reverse_weak_corrections",
+      "community": 118,
+      "norm_label": "reverse-weak-corrections.js"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "scripts/reverse-weak-corrections.js",
+      "source_location": "L26",
+      "_origin": "ast",
+      "id": "scripts_reverse_weak_corrections_path",
+      "community": 118,
+      "norm_label": "path"
+    },
+    {
+      "label": "{ DatabaseSync }",
+      "file_type": "code",
+      "source_file": "scripts/reverse-weak-corrections.js",
+      "source_location": "L27",
+      "_origin": "ast",
+      "id": "scripts_reverse_weak_corrections_databasesync",
+      "community": 118,
+      "norm_label": "{ databasesync }"
+    },
+    {
+      "label": "{ AutomationStore }",
+      "file_type": "code",
+      "source_file": "scripts/reverse-weak-corrections.js",
+      "source_location": "L28",
+      "_origin": "ast",
+      "id": "scripts_reverse_weak_corrections_automationstore",
+      "community": 118,
+      "norm_label": "{ automationstore }"
+    },
+    {
+      "label": "{ analyzeOperatorReply }",
+      "file_type": "code",
+      "source_file": "scripts/reverse-weak-corrections.js",
+      "source_location": "L29",
+      "_origin": "ast",
+      "id": "scripts_reverse_weak_corrections_analyzeoperatorreply",
+      "community": 118,
+      "norm_label": "{ analyzeoperatorreply }"
+    },
+    {
+      "label": "apply",
+      "file_type": "code",
+      "source_file": "scripts/reverse-weak-corrections.js",
+      "source_location": "L32",
+      "_origin": "ast",
+      "id": "scripts_reverse_weak_corrections_apply",
+      "community": 118,
+      "norm_label": "apply"
+    },
+    {
+      "label": "db",
+      "file_type": "code",
+      "source_file": "scripts/reverse-weak-corrections.js",
+      "source_location": "L35",
+      "_origin": "ast",
+      "id": "scripts_reverse_weak_corrections_db",
+      "community": 118,
+      "norm_label": "db"
+    },
+    {
+      "label": "appliedLogs",
+      "file_type": "code",
+      "source_file": "scripts/reverse-weak-corrections.js",
+      "source_location": "L38",
+      "_origin": "ast",
+      "id": "scripts_reverse_weak_corrections_appliedlogs",
+      "community": 118,
+      "norm_label": "appliedlogs"
+    },
+    {
+      "label": "toReverse",
+      "file_type": "code",
+      "source_file": "scripts/reverse-weak-corrections.js",
+      "source_location": "L47",
+      "_origin": "ast",
+      "id": "scripts_reverse_weak_corrections_toreverse",
+      "community": 118,
+      "norm_label": "toreverse"
+    },
+    {
+      "label": "store",
+      "file_type": "code",
+      "source_file": "scripts/reverse-weak-corrections.js",
+      "source_location": "L102",
+      "_origin": "ast",
+      "id": "scripts_reverse_weak_corrections_store",
+      "community": 118,
+      "norm_label": "store"
+    },
+    {
+      "label": "inboxById",
+      "file_type": "code",
+      "source_file": "scripts/reverse-weak-corrections.js",
+      "source_location": "L103",
+      "_origin": "ast",
+      "id": "scripts_reverse_weak_corrections_inboxbyid",
+      "community": 118,
+      "norm_label": "inboxbyid"
+    },
+    {
+      "label": "verify-reversal.js",
+      "file_type": "code",
+      "source_file": "scripts/verify-reversal.js",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "scripts_verify_reversal",
+      "community": 119,
+      "norm_label": "verify-reversal.js"
+    },
+    {
+      "label": "path",
+      "file_type": "code",
+      "source_file": "scripts/verify-reversal.js",
+      "source_location": "L9",
+      "_origin": "ast",
+      "id": "scripts_verify_reversal_path",
+      "community": 119,
+      "norm_label": "path"
+    },
+    {
+      "label": "{ DatabaseSync }",
+      "file_type": "code",
+      "source_file": "scripts/verify-reversal.js",
+      "source_location": "L10",
+      "_origin": "ast",
+      "id": "scripts_verify_reversal_databasesync",
+      "community": 119,
+      "norm_label": "{ databasesync }"
+    },
+    {
+      "label": "db",
+      "file_type": "code",
+      "source_file": "scripts/verify-reversal.js",
+      "source_location": "L13",
+      "_origin": "ast",
+      "id": "scripts_verify_reversal_db",
+      "community": 119,
+      "norm_label": "db"
+    },
+    {
+      "label": "topOffenders",
+      "file_type": "code",
+      "source_file": "scripts/verify-reversal.js",
+      "source_location": "L16",
+      "_origin": "ast",
+      "id": "scripts_verify_reversal_topoffenders",
+      "community": 119,
+      "norm_label": "topoffenders"
+    },
+    {
+      "label": "reversedCount",
+      "file_type": "code",
+      "source_file": "scripts/verify-reversal.js",
+      "source_location": "L24",
+      "_origin": "ast",
+      "id": "scripts_verify_reversal_reversedcount",
+      "community": 119,
+      "norm_label": "reversedcount"
+    },
+    {
+      "label": "currentlyUnmatched",
+      "file_type": "code",
+      "source_file": "scripts/verify-reversal.js",
+      "source_location": "L27",
+      "_origin": "ast",
+      "id": "scripts_verify_reversal_currentlyunmatched",
+      "community": 119,
+      "norm_label": "currentlyunmatched"
+    },
+    {
       "label": "check-blackhole-requests.js",
       "file_type": "code",
       "source_file": "scripts/check-blackhole-requests.js",
       "source_location": "L1",
       "_origin": "ast",
-      "id": "scripts_check_blackhole_requests",
       "community": 115,
-      "norm_label": "check-blackhole-requests.js"
+      "norm_label": "check-blackhole-requests.js",
+      "id": "scripts_check_blackhole_requests"
     },
     {
       "label": "path",
@@ -19,9 +199,9 @@
       "source_file": "scripts/check-blackhole-requests.js",
       "source_location": "L15",
       "_origin": "ast",
-      "id": "scripts_check_blackhole_requests_path",
       "community": 115,
-      "norm_label": "path"
+      "norm_label": "path",
+      "id": "scripts_check_blackhole_requests_path"
     },
     {
       "label": "{ DatabaseSync }",
@@ -29,9 +209,9 @@
       "source_file": "scripts/check-blackhole-requests.js",
       "source_location": "L16",
       "_origin": "ast",
-      "id": "scripts_check_blackhole_requests_databasesync",
       "community": 115,
-      "norm_label": "{ databasesync }"
+      "norm_label": "{ databasesync }",
+      "id": "scripts_check_blackhole_requests_databasesync"
     },
     {
       "label": "db",
@@ -39,9 +219,9 @@
       "source_file": "scripts/check-blackhole-requests.js",
       "source_location": "L19",
       "_origin": "ast",
-      "id": "scripts_check_blackhole_requests_db",
       "community": 115,
-      "norm_label": "db"
+      "norm_label": "db",
+      "id": "scripts_check_blackhole_requests_db"
     },
     {
       "label": "rows",
@@ -49,9 +229,9 @@
       "source_file": "scripts/check-blackhole-requests.js",
       "source_location": "L22",
       "_origin": "ast",
-      "id": "scripts_check_blackhole_requests_rows",
       "community": 115,
-      "norm_label": "rows"
+      "norm_label": "rows",
+      "id": "scripts_check_blackhole_requests_rows"
     },
     {
       "label": "byRequest",
@@ -59,9 +239,9 @@
       "source_file": "scripts/check-blackhole-requests.js",
       "source_location": "L28",
       "_origin": "ast",
-      "id": "scripts_check_blackhole_requests_byrequest",
       "community": 115,
-      "norm_label": "byrequest"
+      "norm_label": "byrequest",
+      "id": "scripts_check_blackhole_requests_byrequest"
     },
     {
       "label": "sorted",
@@ -69,9 +249,9 @@
       "source_file": "scripts/check-blackhole-requests.js",
       "source_location": "L41",
       "_origin": "ast",
-      "id": "scripts_check_blackhole_requests_sorted",
       "community": 115,
-      "norm_label": "sorted"
+      "norm_label": "sorted",
+      "id": "scripts_check_blackhole_requests_sorted"
     },
     {
       "label": "audit-applied-corrections-by-payload.js",
@@ -8859,7 +9039,7 @@
       "source_file": "src/domain.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 64,
+      "community": 97,
       "norm_label": "domain.js",
       "id": "src_domain"
     },
@@ -8879,7 +9059,7 @@
       "source_file": "src/domain.js",
       "source_location": "L27",
       "_origin": "ast",
-      "community": 87,
+      "community": 117,
       "norm_label": "request_types",
       "id": "src_domain_request_types"
     },
@@ -8889,7 +9069,7 @@
       "source_file": "src/domain.js",
       "source_location": "L35",
       "_origin": "ast",
-      "community": 64,
+      "community": 97,
       "norm_label": "request_definitions",
       "id": "src_domain_request_definitions"
     },
@@ -8909,7 +9089,7 @@
       "source_file": "src/domain.js",
       "source_location": "L80",
       "_origin": "ast",
-      "community": 87,
+      "community": 64,
       "norm_label": "dispatch_statuses",
       "id": "src_domain_dispatch_statuses"
     },
@@ -8929,7 +9109,7 @@
       "source_file": "src/domain.js",
       "source_location": "L94",
       "_origin": "ast",
-      "community": 64,
+      "community": 97,
       "norm_label": "status_transitions",
       "id": "src_domain_status_transitions"
     },
@@ -8939,7 +9119,7 @@
       "source_file": "src/domain.js",
       "source_location": "L113",
       "_origin": "ast",
-      "community": 64,
+      "community": 97,
       "norm_label": "normalizeoperator()",
       "id": "src_domain_normalizeoperator"
     },
@@ -8949,7 +9129,7 @@
       "source_file": "src/domain.js",
       "source_location": "L121",
       "_origin": "ast",
-      "community": 64,
+      "community": 15,
       "norm_label": "operatorformsisdn()",
       "id": "src_domain_operatorformsisdn"
     },
@@ -8959,7 +9139,7 @@
       "source_file": "src/domain.js",
       "source_location": "L128",
       "_origin": "ast",
-      "community": 64,
+      "community": 15,
       "norm_label": "targetoperatorsforrequest()",
       "id": "src_domain_targetoperatorsforrequest"
     },
@@ -8979,7 +9159,7 @@
       "source_file": "src/domain.js",
       "source_location": "L143",
       "_origin": "ast",
-      "community": 64,
+      "community": 97,
       "norm_label": "operatorforgateway()",
       "id": "src_domain_operatorforgateway"
     },
@@ -8989,7 +9169,7 @@
       "source_file": "src/domain.js",
       "source_location": "L147",
       "_origin": "ast",
-      "community": 64,
+      "community": 97,
       "norm_label": "istrustedsenderforgateway()",
       "id": "src_domain_istrustedsenderforgateway"
     },
@@ -9009,7 +9189,7 @@
       "source_file": "src/domain.js",
       "source_location": "L164",
       "_origin": "ast",
-      "community": 64,
+      "community": 33,
       "norm_label": "normalizephonenumber()",
       "id": "src_domain_normalizephonenumber"
     },
@@ -9869,7 +10049,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 87,
+      "community": 117,
       "norm_label": "replyanalyzer.js",
       "id": "src_replyanalyzer"
     },
@@ -9879,7 +10059,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 87,
+      "community": 117,
       "norm_label": "{ request_types }",
       "id": "src_replyanalyzer_request_types"
     },
@@ -9889,7 +10069,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 87,
+      "community": 117,
       "norm_label": "{ extractsilentreference }",
       "id": "src_replyanalyzer_extractsilentreference"
     },
@@ -9899,7 +10079,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 87,
+      "community": 117,
       "norm_label": "{ matchreplyagainsttraining, scorereplyfamiliesfromtraining }",
       "id": "src_replyanalyzer_matchreplyagainsttraining_scorereplyfamiliesfromtraining"
     },
@@ -9909,7 +10089,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 87,
+      "community": 117,
       "norm_label": "reply_patterns",
       "id": "src_replyanalyzer_reply_patterns"
     },
@@ -9919,7 +10099,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L15",
       "_origin": "ast",
-      "community": 87,
+      "community": 117,
       "norm_label": "strong_reply_family_patterns",
       "id": "src_replyanalyzer_strong_reply_family_patterns"
     },
@@ -9929,7 +10109,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L62",
       "_origin": "ast",
-      "community": 87,
+      "community": 117,
       "norm_label": "analyzeoperatorreply()",
       "id": "src_replyanalyzer_analyzeoperatorreply"
     },
@@ -9949,7 +10129,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L128",
       "_origin": "ast",
-      "community": 87,
+      "community": 117,
       "norm_label": "payloadinreply()",
       "id": "src_replyanalyzer_payloadinreply"
     },
@@ -9959,7 +10139,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L155",
       "_origin": "ast",
-      "community": 87,
+      "community": 117,
       "norm_label": "reply_identifier_extractors",
       "id": "src_replyanalyzer_reply_identifier_extractors"
     },
@@ -9969,7 +10149,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L162",
       "_origin": "ast",
-      "community": 87,
+      "community": 117,
       "norm_label": "stripmsisdnprefix()",
       "id": "src_replyanalyzer_stripmsisdnprefix"
     },
@@ -9979,7 +10159,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L171",
       "_origin": "ast",
-      "community": 87,
+      "community": 117,
       "norm_label": "replycontradictspayload()",
       "id": "src_replyanalyzer_replycontradictspayload"
     },
@@ -9989,7 +10169,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L191",
       "_origin": "ast",
-      "community": 87,
+      "community": 117,
       "norm_label": "matchtrainingpattern()",
       "id": "src_replyanalyzer_matchtrainingpattern"
     },
@@ -9999,7 +10179,7 @@
       "source_file": "src/replyAnalyzer.js",
       "source_location": "L199",
       "_origin": "ast",
-      "community": 87,
+      "community": 117,
       "norm_label": "confidencescore()",
       "id": "src_replyanalyzer_confidencescore"
     },
@@ -10149,7 +10329,7 @@
       "source_file": "src/service.js",
       "source_location": "L46",
       "_origin": "ast",
-      "community": 87,
+      "community": 15,
       "norm_label": ".submitrequest()",
       "id": "src_service_automationservice_submitrequest"
     },
@@ -10679,7 +10859,7 @@
       "source_file": "src/store.js",
       "source_location": "L20",
       "_origin": "ast",
-      "community": 2,
+      "community": 64,
       "norm_label": "duplicate_blocking_statuses",
       "id": "src_store_duplicate_blocking_statuses"
     },
@@ -10969,7 +11149,7 @@
       "source_file": "src/store.js",
       "source_location": "L370",
       "_origin": "ast",
-      "community": 2,
+      "community": 64,
       "norm_label": ".listrequests()",
       "id": "src_store_automationstore_listrequests"
     },
@@ -11109,7 +11289,7 @@
       "source_file": "src/store.js",
       "source_location": "L506",
       "_origin": "ast",
-      "community": 2,
+      "community": 64,
       "norm_label": ".findrecentduplicaterequest()",
       "id": "src_store_automationstore_findrecentduplicaterequest"
     },
@@ -11119,7 +11299,7 @@
       "source_file": "src/store.js",
       "source_location": "L518",
       "_origin": "ast",
-      "community": 2,
+      "community": 64,
       "norm_label": ".listduplicateriskgroups()",
       "id": "src_store_automationstore_listduplicateriskgroups"
     },
@@ -11439,7 +11619,7 @@
       "source_file": "src/trainingData.js",
       "source_location": "L139",
       "_origin": "ast",
-      "community": 87,
+      "community": 7,
       "norm_label": "scorereplyfamiliesfromtraining()",
       "id": "src_trainingdata_scorereplyfamiliesfromtraining"
     },
@@ -14229,7 +14409,7 @@
       "source_file": "test/replyMatching.test.js",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 97,
+      "community": 117,
       "norm_label": "replymatching.test.js",
       "id": "test_replymatching_test"
     },
@@ -14239,7 +14419,7 @@
       "source_file": "test/replyMatching.test.js",
       "source_location": "L3",
       "_origin": "ast",
-      "community": 97,
+      "community": 117,
       "norm_label": "test",
       "id": "test_replymatching_test_test"
     },
@@ -14249,7 +14429,7 @@
       "source_file": "test/replyMatching.test.js",
       "source_location": "L4",
       "_origin": "ast",
-      "community": 97,
+      "community": 117,
       "norm_label": "assert",
       "id": "test_replymatching_test_assert"
     },
@@ -14259,7 +14439,7 @@
       "source_file": "test/replyMatching.test.js",
       "source_location": "L5",
       "_origin": "ast",
-      "community": 97,
+      "community": 117,
       "norm_label": "{ automationstore }",
       "id": "test_replymatching_test_automationstore"
     },
@@ -14269,7 +14449,7 @@
       "source_file": "test/replyMatching.test.js",
       "source_location": "L6",
       "_origin": "ast",
-      "community": 97,
+      "community": 117,
       "norm_label": "{ operatorqueue }",
       "id": "test_replymatching_test_operatorqueue"
     },
@@ -14279,7 +14459,7 @@
       "source_file": "test/replyMatching.test.js",
       "source_location": "L7",
       "_origin": "ast",
-      "community": 97,
+      "community": 117,
       "norm_label": "{ smsgatewayclient }",
       "id": "test_replymatching_test_smsgatewayclient"
     },
@@ -14289,7 +14469,7 @@
       "source_file": "test/replyMatching.test.js",
       "source_location": "L8",
       "_origin": "ast",
-      "community": 97,
+      "community": 117,
       "norm_label": "{ automationservice }",
       "id": "test_replymatching_test_automationservice"
     },
@@ -14299,7 +14479,7 @@
       "source_file": "test/replyMatching.test.js",
       "source_location": "L9",
       "_origin": "ast",
-      "community": 97,
+      "community": 117,
       "norm_label": "{ statuses }",
       "id": "test_replymatching_test_statuses"
     },
@@ -14309,7 +14489,7 @@
       "source_file": "test/replyMatching.test.js",
       "source_location": "L10",
       "_origin": "ast",
-      "community": 97,
+      "community": 117,
       "norm_label": "{ inferreplyfamilies, replycontradictspayload, analyzeoperatorreply }",
       "id": "test_replymatching_test_inferreplyfamilies_replycontradictspayload_analyzeoperatorreply"
     },
@@ -14319,7 +14499,7 @@
       "source_file": "test/replyMatching.test.js",
       "source_location": "L12",
       "_origin": "ast",
-      "community": 97,
+      "community": 117,
       "norm_label": "createharness()",
       "id": "test_replymatching_test_createharness"
     },
@@ -15239,7 +15419,7 @@
       "source_file": "test/workflow.test.js",
       "source_location": "L20",
       "_origin": "ast",
-      "community": 97,
+      "community": 15,
       "norm_label": "assertinvalidparse()",
       "id": "test_workflow_test_assertinvalidparse"
     },
@@ -19599,7 +19779,7 @@
       "source_file": "architecture.md",
       "source_location": "L37",
       "_origin": "ast",
-      "community": 271,
+      "community": 122,
       "norm_label": "3. components",
       "id": "architecture_3_components"
     },
@@ -19609,7 +19789,7 @@
       "source_file": "architecture.md",
       "source_location": "L39",
       "_origin": "ast",
-      "community": 271,
+      "community": 122,
       "norm_label": "3.1 backend (`src/`)",
       "id": "architecture_3_1_backend_src"
     },
@@ -19619,7 +19799,7 @@
       "source_file": "architecture.md",
       "source_location": "L55",
       "_origin": "ast",
-      "community": 271,
+      "community": 122,
       "norm_label": "3.2 android gateway (`android-gateway/`)",
       "id": "architecture_3_2_android_gateway_android_gateway"
     },
@@ -19629,7 +19809,7 @@
       "source_file": "architecture.md",
       "source_location": "L69",
       "_origin": "ast",
-      "community": 271,
+      "community": 122,
       "norm_label": "3.3 dashboard (`public/`)",
       "id": "architecture_3_3_dashboard_public"
     },
@@ -20699,7 +20879,7 @@
       "source_file": "docs/claude-design-brief.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 93,
+      "community": 121,
       "norm_label": "claude-design-brief.md",
       "id": "docs_claude_design_brief"
     },
@@ -20799,7 +20979,7 @@
       "source_file": "docs/design-system.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 93,
+      "community": 121,
       "norm_label": "design-system.md",
       "id": "docs_design_system"
     },
@@ -21619,7 +21799,7 @@
       "source_file": "docs/redesign.md",
       "source_location": "L145",
       "_origin": "ast",
-      "community": 89,
+      "community": 120,
       "norm_label": "phase 3: officer portal port",
       "id": "docs_redesign_phase_3_officer_portal_port"
     },
@@ -21629,7 +21809,7 @@
       "source_file": "docs/redesign.md",
       "source_location": "L147",
       "_origin": "ast",
-      "community": 89,
+      "community": 120,
       "norm_label": "what's being ported",
       "id": "docs_redesign_what_s_being_ported_147"
     },
@@ -21639,7 +21819,7 @@
       "source_file": "docs/redesign.md",
       "source_location": "L156",
       "_origin": "ast",
-      "community": 89,
+      "community": 120,
       "norm_label": "why this phase, right after auth (not ops ui or admin)",
       "id": "docs_redesign_why_this_phase_right_after_auth_not_ops_ui_or_admin"
     },
@@ -21649,7 +21829,7 @@
       "source_file": "docs/redesign.md",
       "source_location": "L168",
       "_origin": "ast",
-      "community": 89,
+      "community": 120,
       "norm_label": "architecture",
       "id": "docs_redesign_architecture_168"
     },
@@ -21659,7 +21839,7 @@
       "source_file": "docs/redesign.md",
       "source_location": "L190",
       "_origin": "ast",
-      "community": 89,
+      "community": 120,
       "norm_label": "files (when built)",
       "id": "docs_redesign_files_when_built_190"
     },
@@ -21669,7 +21849,7 @@
       "source_file": "docs/redesign.md",
       "source_location": "L197",
       "_origin": "ast",
-      "community": 89,
+      "community": 120,
       "norm_label": "verification (when built)",
       "id": "docs_redesign_verification_when_built_197"
     },
@@ -21919,7 +22099,7 @@
       "source_file": "docs/system-design-v2.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 93,
+      "community": 121,
       "norm_label": "system-design-v2.md",
       "id": "docs_system_design_v2"
     },
@@ -22249,7 +22429,7 @@
       "source_file": "docs/telegram-bridge.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 93,
+      "community": 121,
       "norm_label": "telegram-bridge.md",
       "id": "docs_telegram_bridge"
     },
@@ -22499,7 +22679,7 @@
       "source_file": "docs/ui-design-guide-v2.md",
       "source_location": "L1",
       "_origin": "ast",
-      "community": 93,
+      "community": 121,
       "norm_label": "ui-design-guide-v2.md",
       "id": "docs_ui_design_guide_v2"
     },
@@ -22529,7 +22709,7 @@
       "source_file": "docs/ui-design-guide-v2.md",
       "source_location": "L47",
       "_origin": "ast",
-      "community": 250,
+      "community": 124,
       "norm_label": "2. visual direction",
       "id": "docs_ui_design_guide_v2_2_visual_direction"
     },
@@ -22539,7 +22719,7 @@
       "source_file": "docs/ui-design-guide-v2.md",
       "source_location": "L49",
       "_origin": "ast",
-      "community": 250,
+      "community": 124,
       "norm_label": "core aesthetic",
       "id": "docs_ui_design_guide_v2_core_aesthetic"
     },
@@ -22549,7 +22729,7 @@
       "source_file": "docs/ui-design-guide-v2.md",
       "source_location": "L66",
       "_origin": "ast",
-      "community": 250,
+      "community": 124,
       "norm_label": "shape language",
       "id": "docs_ui_design_guide_v2_shape_language"
     },
@@ -22559,7 +22739,7 @@
       "source_file": "docs/ui-design-guide-v2.md",
       "source_location": "L85",
       "_origin": "ast",
-      "community": 250,
+      "community": 123,
       "norm_label": "3. color system",
       "id": "docs_ui_design_guide_v2_3_color_system"
     },
@@ -22569,7 +22749,7 @@
       "source_file": "docs/ui-design-guide-v2.md",
       "source_location": "L89",
       "_origin": "ast",
-      "community": 250,
+      "community": 123,
       "norm_label": "recommended base palette",
       "id": "docs_ui_design_guide_v2_recommended_base_palette"
     },
@@ -22579,7 +22759,7 @@
       "source_file": "docs/ui-design-guide-v2.md",
       "source_location": "L97",
       "_origin": "ast",
-      "community": 250,
+      "community": 123,
       "norm_label": "semantic accents",
       "id": "docs_ui_design_guide_v2_semantic_accents"
     },
@@ -22589,7 +22769,7 @@
       "source_file": "docs/ui-design-guide-v2.md",
       "source_location": "L105",
       "_origin": "ast",
-      "community": 250,
+      "community": 123,
       "norm_label": "operator identity accents",
       "id": "docs_ui_design_guide_v2_operator_identity_accents"
     },
@@ -22669,7 +22849,7 @@
       "source_file": "docs/ui-design-guide-v2.md",
       "source_location": "L233",
       "_origin": "ast",
-      "community": 250,
+      "community": 125,
       "norm_label": "7. component direction",
       "id": "docs_ui_design_guide_v2_7_component_direction"
     },
@@ -22679,7 +22859,7 @@
       "source_file": "docs/ui-design-guide-v2.md",
       "source_location": "L235",
       "_origin": "ast",
-      "community": 250,
+      "community": 125,
       "norm_label": "use more of these",
       "id": "docs_ui_design_guide_v2_use_more_of_these"
     },
@@ -22689,7 +22869,7 @@
       "source_file": "docs/ui-design-guide-v2.md",
       "source_location": "L246",
       "_origin": "ast",
-      "community": 250,
+      "community": 125,
       "norm_label": "use less of these",
       "id": "docs_ui_design_guide_v2_use_less_of_these"
     },
@@ -24198,12 +24378,172 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "scripts/reverse-weak-corrections.js",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "scripts_reverse_weak_corrections",
+      "target": "scripts_reverse_weak_corrections_analyzeoperatorreply",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/reverse-weak-corrections.js",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "scripts_reverse_weak_corrections",
+      "target": "scripts_reverse_weak_corrections_appliedlogs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/reverse-weak-corrections.js",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "scripts_reverse_weak_corrections",
+      "target": "scripts_reverse_weak_corrections_apply",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/reverse-weak-corrections.js",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "scripts_reverse_weak_corrections",
+      "target": "scripts_reverse_weak_corrections_automationstore",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/reverse-weak-corrections.js",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "scripts_reverse_weak_corrections",
+      "target": "scripts_reverse_weak_corrections_databasesync",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/reverse-weak-corrections.js",
+      "source_location": "L35",
+      "weight": 1.0,
+      "source": "scripts_reverse_weak_corrections",
+      "target": "scripts_reverse_weak_corrections_db",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/reverse-weak-corrections.js",
+      "source_location": "L103",
+      "weight": 1.0,
+      "source": "scripts_reverse_weak_corrections",
+      "target": "scripts_reverse_weak_corrections_inboxbyid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/reverse-weak-corrections.js",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "scripts_reverse_weak_corrections",
+      "target": "scripts_reverse_weak_corrections_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/reverse-weak-corrections.js",
+      "source_location": "L102",
+      "weight": 1.0,
+      "source": "scripts_reverse_weak_corrections",
+      "target": "scripts_reverse_weak_corrections_store",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/reverse-weak-corrections.js",
+      "source_location": "L47",
+      "weight": 1.0,
+      "source": "scripts_reverse_weak_corrections",
+      "target": "scripts_reverse_weak_corrections_toreverse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/verify-reversal.js",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "scripts_verify_reversal",
+      "target": "scripts_verify_reversal_currentlyunmatched",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/verify-reversal.js",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "scripts_verify_reversal",
+      "target": "scripts_verify_reversal_databasesync",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/verify-reversal.js",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "scripts_verify_reversal",
+      "target": "scripts_verify_reversal_db",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/verify-reversal.js",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "scripts_verify_reversal",
+      "target": "scripts_verify_reversal_path",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/verify-reversal.js",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "scripts_verify_reversal",
+      "target": "scripts_verify_reversal_reversedcount",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "scripts/verify-reversal.js",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "scripts_verify_reversal",
+      "target": "scripts_verify_reversal_topoffenders",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "scripts/check-blackhole-requests.js",
       "source_location": "L28",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_check_blackhole_requests",
-      "target": "scripts_check_blackhole_requests_byrequest",
-      "confidence_score": 1.0
+      "target": "scripts_check_blackhole_requests_byrequest"
     },
     {
       "relation": "contains",
@@ -24211,9 +24551,9 @@
       "source_file": "scripts/check-blackhole-requests.js",
       "source_location": "L16",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_check_blackhole_requests",
-      "target": "scripts_check_blackhole_requests_databasesync",
-      "confidence_score": 1.0
+      "target": "scripts_check_blackhole_requests_databasesync"
     },
     {
       "relation": "contains",
@@ -24221,9 +24561,9 @@
       "source_file": "scripts/check-blackhole-requests.js",
       "source_location": "L19",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_check_blackhole_requests",
-      "target": "scripts_check_blackhole_requests_db",
-      "confidence_score": 1.0
+      "target": "scripts_check_blackhole_requests_db"
     },
     {
       "relation": "contains",
@@ -24231,9 +24571,9 @@
       "source_file": "scripts/check-blackhole-requests.js",
       "source_location": "L15",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_check_blackhole_requests",
-      "target": "scripts_check_blackhole_requests_path",
-      "confidence_score": 1.0
+      "target": "scripts_check_blackhole_requests_path"
     },
     {
       "relation": "contains",
@@ -24241,9 +24581,9 @@
       "source_file": "scripts/check-blackhole-requests.js",
       "source_location": "L22",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_check_blackhole_requests",
-      "target": "scripts_check_blackhole_requests_rows",
-      "confidence_score": 1.0
+      "target": "scripts_check_blackhole_requests_rows"
     },
     {
       "relation": "contains",
@@ -24251,9 +24591,9 @@
       "source_file": "scripts/check-blackhole-requests.js",
       "source_location": "L41",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "scripts_check_blackhole_requests",
-      "target": "scripts_check_blackhole_requests_sorted",
-      "confidence_score": 1.0
+      "target": "scripts_check_blackhole_requests_sorted"
     },
     {
       "relation": "contains",
@@ -67618,5 +67958,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "26309beb1acb43c12166b53b14c74d338611672c"
+  "built_at_commit": "7f4a4a7d2bc571c8318790fbca55b3a2d741715d"
 }
