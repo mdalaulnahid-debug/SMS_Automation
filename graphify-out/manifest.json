@@ -2130,8 +2130,8 @@
     "semantic_hash": ""
   },
   ".impeccable/hook.cache.json": {
-    "mtime": 1786780014.178104,
-    "ast_hash": "d543254caaf6b82df10b40b09937e5cd",
+    "mtime": 1786780521.503427,
+    "ast_hash": "ca5731e2c8bc058cae2652c79eebc293",
     "semantic_hash": ""
   },
   "config/auth.example.json": {
@@ -3832,6 +3832,11 @@
   "scripts/audit-applied-corrections-by-payload.js": {
     "mtime": 1786780014.0528665,
     "ast_hash": "bf1995d2dfe2aa6b84e2b9dbd675a2c5",
+    "semantic_hash": ""
+  },
+  "scripts/check-blackhole-requests.js": {
+    "mtime": 1786780521.407971,
+    "ast_hash": "884c8f92f36b94e9c54d52e317cb9c39",
     "semantic_hash": ""
   }
 }
