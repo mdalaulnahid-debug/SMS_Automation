@@ -2130,8 +2130,8 @@
     "semantic_hash": ""
   },
   ".impeccable/hook.cache.json": {
-    "mtime": 1786954348.6873977,
-    "ast_hash": "c325d006e95480fc898e6e1de108a672",
+    "mtime": 1786955548.2759142,
+    "ast_hash": "e195303ff8ba30ec41e2bf557bf0ef27",
     "semantic_hash": ""
   },
   "config/auth.example.json": {
@@ -3085,8 +3085,8 @@
     "semantic_hash": ""
   },
   "public/login.html": {
-    "mtime": 1785651560.1328113,
-    "ast_hash": "85e4fa2e8c33028c0d111b8cbc5d04b0",
+    "mtime": 1786955548.1664376,
+    "ast_hash": "97514db60385a91b9947f0d461a0ebd3",
     "semantic_hash": ""
   },
   "public/register.html": {
