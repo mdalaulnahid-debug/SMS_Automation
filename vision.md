@@ -26,7 +26,27 @@ An authorized user submits a formatted request. The backend routes it safely, se
 - Better extractor rules for `IMEI`, `MSISDN`, `NID`, `IMSI`, location, date, and address fields.
 - Telegram bridge handles intake and reply posting (`telegram-bridge/`); see `docs/telegram-bridge.md`.
 
-## Current MVP State (June 2026)
+## Current State (as of 2026-08-17)
+
+Long past MVP — live in production, handling real police-investigation
+traffic across all three operators (GP/Robi/Banglalink), with a full
+audit-logged request/dispatch/reply pipeline, admin console, and (on the VPS
+only, not yet merged back — see below) a real per-officer email+password+MFA
+login system replacing the original single shared admin key.
+
+For the current, accurate state of what's built vs. in-progress vs.
+deployed, **read `progress_tracker.md`'s most recent session handoff and
+`todo.md`'s open items** — this file stays a stable statement of goals and
+principles, not a state tracker, and gets stale fast if treated as one (the
+"June 2026" MVP snapshot below is kept only as history).
+
+**One standing fact worth knowing before touching anything here:** the
+production VPS's own `main` branch has diverged significantly from
+`origin/main` (147 commits, plus VPS-only work never pushed until backed up
+as `vps-only-backup-20260815`) — don't assume the deployed code matches any
+local branch without checking. Full detail in `todo.md`'s CRITICAL entry.
+
+### Historical MVP snapshot (June 2026, kept for reference)
 
 - Test mode works: app Test Request → SMS via gateway phone → manual reply → backend draft with `@requesterName`.
 - Telegram chat ID and requester metadata come from the Telegram message; drafts appear on the dashboard for review, then the bridge posts approved replies back to the group.

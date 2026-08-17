@@ -129,3 +129,29 @@ in this environment).
   *future* endpoint — validation failures are currently only visible via the
   general audit log (`REQUEST_VALIDATION_FAILED` events), filterable in the
   web admin Audit tab.
+
+## Bug found & fixed (2026-08-17) — the dispatch-closing half of "reply collection across a batch" was never actually correct
+
+The "Reply collection across a batch" fix above (`c26b896`) made the
+*display* layer (`collectDispatchReplyMessages()`) correctly gather every
+inbound SMS matched to a dispatch — but nothing analogous was ever done for
+the *dispatch-closing* logic underneath it. `store.js`'s
+`markDispatchReplied()` unconditionally marked a dispatch terminal
+(`REPLY_RECEIVED`) on the very FIRST matched reply, regardless of how many
+identifiers the batch actually contained. For a 1-of-1 request this is
+correct and was never wrong; for a genuine multi-identifier batch (2–5
+numbers/IMEIs in one payload, per rule 1 above), the request finalized —
+and with Telegram `autoApprove` on, often auto-posted — after just the
+first operator reply, before the remaining identifiers' replies ever
+arrived. Those later replies then found the request already `COMPLETED`
+and landed permanently unmatched.
+
+**This was a live, active production bug** discovered via the "why are so
+many SMS still unmatched" investigation on 2026-08-17 (see
+`progress_tracker.md`'s 2026-08-17 handoff for the full root-cause trace
+and fix: new `PARTIAL_REPLY` dispatch status, `markDispatchReplied()` now
+counts matched replies against `expectedReplyCount(request)` before
+closing, timeout sweep finalizes a stalled partial dispatch with whatever
+arrived instead of dropping it). 1,158 already-orphaned replies from this
+bug were corrected in the historical backlog
+(`scripts/correct-multi-id-orphaned-replies.js`).

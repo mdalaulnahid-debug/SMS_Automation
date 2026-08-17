@@ -69,7 +69,11 @@ by `src/store.js`.
 |---|---|
 | `MANUAL_MATCH` | An admin manually attached an unmatched reply to a waiting request. |
 | `MANUAL_REMATCH_CORRECTION` | An admin re-attached a reply to a request that was already finalized (e.g. `COMPLETED`) — corrects a previously wrong auto-match. See `architecture.md` §8 and the 2026-06-20 incident in `progress_tracker.md`. |
-| `DISPATCH_TIMEOUT` | A per-operator dispatch hit its reply-window deadline. |
+| `DISPATCH_TIMEOUT` | A per-operator dispatch hit its reply-window deadline (never received any reply). |
+| `DISPATCH_PARTIAL_REPLY_FINALIZED` | A multi-identifier dispatch (`PARTIAL_REPLY` — some but not all expected replies arrived) hit its reply-window deadline; finalized as `REPLY_RECEIVED` with whatever data came in, rather than discarding it. Added 2026-08-17 with the multi-identifier premature-dispatch-completion fix — see `progress_tracker.md`. |
+| `BACKLOG_MATCH_CORRECTED` | Database-only historical backlog correction (`scripts/apply-historical-corrections.js`) — an unmatched inbox row was attached to an already-finalized request. No reply draft, nothing posted to Telegram. |
+| `BACKLOG_MATCH_REVERSED` | Database-only reversal of a previously-applied `BACKLOG_MATCH_CORRECTED` row that turned out to have no payload/identifier confirmation (`scripts/reverse-weak-corrections.js`) — the "black hole" match-corruption cleanup, 2026-08-17. |
+| `BACKLOG_MULTI_ID_REPLY_ATTACHED` | Database-only backlog correction specifically for the multi-identifier premature-completion bug (`scripts/correct-multi-id-orphaned-replies.js`) — a reply orphaned when its sibling identifier's reply closed the dispatch first, re-attached via a STRONG payload match. 2026-08-17. |
 | `SETTINGS_TELEGRAM_GROUP_UPDATED` / `SETTINGS_OPERATOR_CONTACT_UPDATED` | Telegram group ID or operator hotline number changed via the admin console/app. |
 | `SETTINGS_AUTHORIZED_USER_ADDED` / `SETTINGS_AUTHORIZED_USER_REMOVED` | Telegram private-DM allowlist changed. |
 | `USER_UPSERTED` / `USER_STATUS_CHANGED` | Requester user record created/edited or enabled/disabled. |

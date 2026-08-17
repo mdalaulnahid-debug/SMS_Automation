@@ -181,6 +181,7 @@ the detection algorithm built on this format.
 - For `LRL`, geographic/radio-location fields are stronger differentiators.
 - For `IMEI-MS`, the first echoed IMEI is a higher-confidence discriminator than generic `MSISDN` tokens.
 - If a reply body looks like a different request family than the pending request, prefer manual review over auto-attach.
+- For a multi-identifier batch (2–5 numbers/IMEIs in one payload — see `docs/multi-number-batching-plan.md`), a dispatch must not be considered "done" until it has received as many replies as the payload has identifiers (or the reply window times out) — closing on the first reply orphans every later identifier's reply as unmatched. Fixed 2026-08-17 after this was found live in production; see `progress_tracker.md`'s 2026-08-17 handoff.
 
 ## Self-Training Rules
 
