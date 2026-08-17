@@ -97,15 +97,30 @@
       // re-auth (security-hardening v1 follow-on: super-admin console access
       // requires a *fresh* login, so a still-valid-but-stale localStorage
       // session must not silently bounce past this form).
-      (function checkExistingSession() {
+      //
+      // MUST verify server-side before redirecting (mirrors admin.js's own
+      // sessionInit): /admin's page gate checks a separate cookie-based
+      // session, not this localStorage token. Redirecting on the token's
+      // mere presence -- without confirming it's still valid -- caused an
+      // infinite reload loop whenever the two disagreed (expired session,
+      // stale browser data, etc.): this page bounces to /admin, /admin's
+      // server-side gate rejects and bounces back to /login.html, which
+      // never got a chance to clear the stale token because the redirect
+      // happened before admin.js's own cleanup logic could ever run.
+      (async function checkExistingSession() {
         if (isStepUp) return;
         const token = localStorage.getItem('sessionToken');
-        const raw = localStorage.getItem('sessionUser');
-        if (!token || !raw) return;
+        if (!token) return;
         try {
-          const user = JSON.parse(raw);
+          const res = await fetch('/api/auth/me', { headers: { Authorization: `Bearer ${token}` } });
+          if (!res.ok) throw new Error('invalid session');
+          const { user } = await res.json();
+          localStorage.setItem('sessionUser', JSON.stringify(user));
           redirectByRole(user.role);
-        } catch (_) {}
+        } catch (_) {
+          localStorage.removeItem('sessionToken');
+          localStorage.removeItem('sessionUser');
+        }
       })();
 
       // Show "email verified" banner when redirected from verify-email.
