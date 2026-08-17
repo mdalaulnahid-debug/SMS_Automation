@@ -6,19 +6,109 @@ Start with `progress_tracker.md` for the latest session handoff, test results, a
 
 ---
 
-## ⚠️ CRITICAL — 2026-07-15: `feature/security-hardening-v1` never merged/deployed (40 commits behind main) · `P1`
+## ✅ DONE — 2026-08-17: Production data-integrity + admin-auth bug fixes · `P1`
 
-Discovered while patching a production bug report (missing fields on
-`register.html`). The **entire** Security Hardening V1 initiative — steps
-1–9, registry-gated registration, server-side page gating, quota/OTP
-middleware, admin group actions, anomaly tripwire, plus every session's work
-built on top of it since — has never been merged to `main` or deployed.
-Production is running pre-hardening code. A cosmetic-only hand patch was
-applied directly to production's `register.html` (adds the missing
-Designation/Unit/Phone fields) at the user's explicit request; registration
-still won't enforce a registry match until the real merge+deploy happens.
+Full session detail in `progress_tracker.md`'s 2026-08-17 handoff. Four
+distinct issues found and fixed directly on the VPS this session (with the
+user's explicit, session-scoped withdrawal of the earlier "never SSH into
+the VPS" rule — see below), each verified against live production traffic
+before being committed.
 
-- [ ] **`P1`** Decide and execute: merge `feature/security-hardening-v1` → `main`, deploy properly. Needs explicit user sign-off — registry-gated registration is a real behavior change (any registrant whose phone+email don't match an imported Personnel Registry record gets rejected), not just a bugfix.
+- [x] **Black-hole match corruption (historical)** — the pre-existing
+  unbounded-open-dispatch-window bug had let a handful of "black hole"
+  requests (whose own dispatch never got `replied_at` set) silently absorb
+  hundreds of unrelated operator replies over days as the only apparent
+  "open" candidate. Confirmed on production: one request alone had absorbed
+  627 inbox rows (543 distinct message bodies — genuinely unrelated
+  IMEIs/MSISDNs/NIDs from many different real subjects). Reversed 1,258
+  wrongly-attributed rows back to unmatched via `scripts/reverse-weak-
+  corrections.js` (database-only: no Telegram, no reply drafts — reuses the
+  `analyzeOperatorReply().payloadMatched` STRONG-match signal to keep only
+  genuinely payload-confirmed matches).
+- [x] **Multi-identifier premature dispatch completion (live, active bug)**
+  — `IMEI-MS`/`NID-MS`/`MS-NID`/`LRL`/`LCL` requests with several identifiers
+  in one payload get ONE dispatch per operator, but the operator replies
+  with ONE SMS per identifier. `markDispatchReplied()` was marking the whole
+  dispatch terminal (`REPLY_RECEIVED`) on the very FIRST reply, finalizing
+  (and often auto-posting) the request before the remaining identifiers'
+  replies ever arrived — silently orphaning them as unmatched forever once
+  the request reached `COMPLETED`. Fixed: new `PARTIAL_REPLY` dispatch
+  status (`src/domain.js`), `markDispatchReplied()` now counts matched
+  replies against `expectedReplyCount(request)` before closing
+  (`src/store.js`), and the timeout sweep finalizes a stalled partial
+  dispatch with whatever data arrived instead of discarding it
+  (`src/service.js`). Verified live: two real multi-identifier requests
+  after deploy showed `2/2` matched on every operator dispatch before
+  closing. Backlog corrected too — 1,158 orphaned replies re-attached via
+  `scripts/correct-multi-id-orphaned-replies.js` (same database-only
+  philosophy, 153 ambiguous cases correctly skipped rather than guessed).
+- [x] **Admin login infinite reload loop** — `public/login.html`'s "skip
+  login if already authenticated" check trusted `localStorage.sessionToken`
+  blindly without verifying it server-side, while `/admin`'s actual gate
+  checks a separate, server-side cookie session (`guardPage`/`pageSession`).
+  Whenever the two disagreed (expired session, stale browser data — the
+  only session ever recorded in `auth.db` was from over a month before this
+  was reported), the page bounced to `/admin`, got rejected server-side,
+  bounced back, forever. Fixed to mirror `admin.js`'s already-correct
+  pattern: verify via `/api/auth/me` first, clear stale `localStorage` on
+  failure instead of redirecting on it.
+- [x] **Super-admin gate cleanup** — consolidated from two confusing
+  super_admin accounts (`opsbarishal@gmail.com` +
+  `mdalaulnahid@gmail.com`) down to one (`opsbarishal@gmail.com`, at the
+  user's explicit request); rotated the hidden super-admin gate URL from a
+  random slug to `/console/admin` (at the user's explicit request, with the
+  security tradeoff — an easily-guessed path — flagged and accepted).
+
+**Standing-rule change (session-scoped so far):** the user explicitly
+withdrew the "never SSH into the VPS directly" rule mid-session ("now i am
+withdrawing the earlier rule that u cant ssh to the VPS"), after SSH
+key-based auth was set up. Direct SSH is now used for investigation/fixes;
+see `[VPS SSH access rule]` in Claude's memory system for the full note —
+ordinary care still applies to anything state-changing on production.
+
+---
+
+## ⚠️ CRITICAL — 2026-07-15 (status update 2026-08-17): `feature/security-hardening-v1` never merged/deployed — **now 147 commits behind `main`, and the VPS's own `main` has independently diverged too** · `P1`
+
+Originally discovered 2026-07-15 at "40 commits behind main." Re-checked
+2026-08-17 while doing unrelated production bugfix work directly on the
+VPS: the gap has grown to **147 commits**, and the situation is worse than
+just "behind" — **the VPS's local `main` branch itself has its own
+unmerged, uncommitted-until-now work that was never pushed to GitHub at
+all**: a full auth/portal system (login, registration, forgot/reset-
+password, super-admin login, `src/userAuth.js`, `src/otp.js`,
+`src/mailer.js`, `src/quota.js`, `src/settingsStore.js`,
+`src/telegramLoginAuth.js`, `src/anomalyDetector.js`,
+`src/manualReviewStore.js`, `src/cookies.js`, `src/personnelRegistry.js`,
+`src/trainingData.js`, plus training-data caches and manual-review data) —
+apparently built directly on the server at some point, in parallel with
+the `feature/security-hardening-v1` work in this repo, and never
+committed or pushed anywhere until this session.
+
+That VPS-only work is now safely captured and pushed to GitHub as branch
+[`vps-only-backup-20260815`](https://github.com/mdalaulnahid-debug/SMS_Automation/tree/vps-only-backup-20260815)
+(built via `git bundle` off the VPS, since the VPS itself had no GitHub
+push credentials configured) — **nothing is at risk of being lost
+anymore**, but the reconciliation itself (deciding which version wins on
+every file both histories touched — `src/app.js`, `public/admin.html`,
+`public/app.js`, `nginx/sms-backend.conf`, and more) has **not been done**.
+This session's production fixes (the 2026-08-17 entry above) were applied
+directly to the VPS's `main` as targeted patches/scripts specifically
+*because* attempting a full merge mid-incident would have been unsafe —
+they're committed on VPS `main` (`2979c0a`, `a98360a`, `779f931`) and
+separately on `feature/security-hardening-v1` (`1a9b39b`, `a95d89f`,
+`6ab62f0`), matching in content but not sharing commit history yet.
+
+- [ ] **`P1`** Decide and execute the full reconciliation: start from
+  `vps-only-backup-20260815` vs `origin/main`, diff file-by-file on the
+  overlapping set, and work out per-file which side is authoritative —
+  don't attempt an automatic merge given the scale of independent changes
+  on both sides. This is a dedicated session's worth of work on its own.
+- [ ] **`P1`** Once reconciled: merge `feature/security-hardening-v1` →
+  `main`, deploy properly. Needs explicit user sign-off — registry-gated
+  registration is a real behavior change (any registrant whose phone+email
+  don't match an imported Personnel Registry record gets rejected), not
+  just a bugfix.
 
 ---
 

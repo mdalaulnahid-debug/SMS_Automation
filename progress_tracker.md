@@ -1,6 +1,198 @@
 # Progress Tracker
 
-Last updated: **2026-07-15 — React migration (Phases 0/1/1.5 + auth pages), forgot/reset-password (backend + both frontends), production register.html drift discovered & patched, on `feature/security-hardening-v1`, still NOT merged/deployed**
+Last updated: **2026-08-17 — Production data-integrity + admin-auth bugfixes done directly on the VPS (black-hole match corruption, multi-identifier premature dispatch completion, admin login loop, super-admin gate cleanup); `main`/`origin/main` divergence status updated to 147 commits + VPS-only auth system discovered and backed up (`vps-only-backup-20260815`), reconciliation still not started**
+
+---
+
+## Session Handoff (2026-08-17) — Production data-integrity + admin-auth bugfixes, VPS-only auth system discovered & backed up
+
+**Where this ran:** directly on the production VPS (`root@45.77.240.195`,
+`/opt/sms-backend`, branch `main`), via SSH — a departure from this
+project's long-standing "never SSH into / deploy to the VPS directly, only
+hand the user copy-paste commands" rule. The user explicitly withdrew that
+rule mid-session ("now i am withdrawing the earlier rule that u cant ssh to
+the VPS. U should ssh to vps to find bug"), after SSH key-based auth was set
+up between the user's machine and the VPS. See `[VPS SSH access rule]` in
+Claude's memory system for the durable note — the rule change is currently
+scoped to this session's context, not necessarily permanent.
+
+### 1. Black-hole match corruption (historical data-integrity bug)
+
+The pre-existing "open candidate" matching logic (across several diagnostic/
+backlog scripts) treated any dispatch with no `replied_at` as open
+*indefinitely*, instead of bounding it by the real 15-minute live reply
+window (`DEFAULT_REPLY_WINDOW_MS`). A request whose own dispatch never got a
+reply could stay the sole "open" candidate on its gateway for days, silently
+absorbing every subsequent unrelated reply as the only fallback match.
+Confirmed via `scripts/check-blackhole-requests.js`: top offender
+`REQ-20260617-0039-H71I` (a single MS-NID request) had absorbed **627 inbox
+rows / 543 distinct message bodies** — genuinely unrelated IMEIs, MSISDNs,
+NIDs, and dates of birth from many different real subjects, spanning 11
+days. Root logic fixed (bounded to `DEFAULT_REPLY_WINDOW_MS` everywhere).
+Backlog corrected via `scripts/reverse-weak-corrections.js`: reclassified all
+1,636 previously-applied historical corrections by
+`analyzeOperatorReply().payloadMatched` (STRONG = payload/identifier
+genuinely present in the reply, independent of timing) — 378 STRONG kept,
+1,258 WEAK (no identifier confirmation) reversed back to unmatched.
+Database-only: no reply drafts, nothing posted to Telegram. Verified via
+`scripts/verify-reversal.js` before and after.
+
+### 2. Multi-identifier premature dispatch completion (live, active bug — the real "why are so many SMS still unmatched" answer)
+
+Investigated at the user's prompting ("no chance of so many sms being
+unmatched just for live message... find the bug"). Root cause: a request
+whose payload has multiple identifiers (`IMEI-MS 862038075952959
+862038075952948`, `NID-MS ...`, `MS-NID ...`, multi-number `LRL`/`LCL`) gets
+**one dispatch** per target operator, but the operator's system replies with
+**one SMS per identifier** — that's normal, expected operator behavior.
+`store.js`'s `markDispatchReplied()` unconditionally marked the dispatch
+`REPLY_RECEIVED` (a **terminal** status) on the very first of those replies.
+Since `_finalizeIfTerminal()` in `service.js` fires as soon as
+`allDispatchesTerminal()` is true, the whole request finalized — and with
+Telegram `autoApprove` on, often auto-posted — within about a minute of the
+*first* identifier's reply, before the others arrived. Those later replies
+then found `findActiveRequestForGateway()` excluding `COMPLETED` requests
+entirely, landing them permanently unmatched. Traced via direct SSH
+inspection of the running store's dispatch objects and inbox rows (not just
+inference from diagnostic-script output — the actual `request_dispatches`
+and `sms_inbox` rows for specific affected requests).
+
+**Fix** (plan reviewed with the user before implementation):
+- `src/domain.js` — new `PARTIAL_REPLY` dispatch status, deliberately **not**
+  in `TERMINAL_DISPATCH_STATUSES`; new `expectedReplyCount(request)` helper
+  (`payload.split(/\s+/).length`, shared with `replyAnalyzer.js`'s existing
+  tokenization).
+- `src/store.js` — `markDispatchReplied()` now counts distinct matched inbox
+  rows for that request+gateway before deciding `REPLY_RECEIVED` vs
+  `PARTIAL_REPLY`; `anyDispatchReplied()` recognizes `PARTIAL_REPLY` too.
+- `src/service.js` — timeout sweep (`timeoutWaitingRequests()`) now finalizes
+  a stalled `PARTIAL_REPLY` dispatch with whatever data arrived (as
+  `REPLY_RECEIVED`, not `TIMEOUT` — real data exists) instead of silently
+  dropping it; `formatCombinedReply()` shows `(n/N received so far)` for a
+  still-partial dispatch.
+- `public/shared.js` + `theme.css` — new amber "partial" dispatch badge.
+- Two new regression tests in `test/workflow.test.js` (single-operator
+  multi-identifier dispatch stays open until every identifier replies even
+  with `autoApprove` on; a genuinely-partial dispatch that times out
+  finalizes with the data it has rather than dropping it). Full suite:
+  **369/369** locally.
+
+**Deploy sequence** (notable because of the branch-divergence problem —
+see below): generated a `git diff` patch of just the 5 changed files
+locally, verified with `git apply --check` against the VPS's actual
+checkout (confirmed byte-identical in the specific functions touched,
+despite the VPS's `main` having ~300+ unrelated lines of independent
+divergence in the same files), applied via `git apply` on the VPS, ran the
+VPS's own test suite (95/99 — same 4 pre-existing, unrelated auth-test
+failures as before the patch), restarted `sms-backend` via PM2. **Verified
+live before committing** (the user's explicit condition: "check the workflow
+first... only then commit") — polled every 30s until a real post-restart
+multi-identifier request resolved, confirmed `2/2` matched on every operator
+dispatch. Committed on VPS `main` (`2979c0a`) and
+`feature/security-hardening-v1` (`1a9b39b` + graphify refresh `f84011a`)
+separately (matching content, not shared history — see the divergence entry
+below).
+
+Backlog corrected via `scripts/correct-multi-id-orphaned-replies.js`:
+scanned all genuine unmatched rows for a reply whose content STRONG-matches
+(`payloadMatched`) exactly one multi-identifier request's dispatch on the
+same gateway within 24h — 1,158 unambiguous corrections applied, 153
+ambiguous cases correctly skipped. Same database-only philosophy as the
+black-hole fix.
+
+**A real gotcha hit mid-verification:** `AutomationStore` loads its entire
+dataset into memory once at boot (`_restore()`) and never re-syncs from
+disk. The backlog-correction scripts (separate short-lived
+`AutomationStore`/raw `DatabaseSync` processes) wrote correctly to the
+SQLite file, but the *live, long-running server process* never saw those
+writes — so the admin console kept showing a stale, higher unmatched count
+(~8,568) until `sms-backend` was restarted again to reload from disk. Not a
+data bug, purely an in-memory-cache staleness gotcha; worth remembering for
+any future backlog-correction script that runs while the server is live.
+
+### 3. Admin login infinite reload loop
+
+Reported by the user ("the log in page of the admin console is broke, it is
+constantly reloading"). `public/login.html`'s `checkExistingSession()`
+redirected to `/admin` purely on `localStorage.sessionToken` being present,
+with **no server-side verification** — but `/admin`'s actual access gate
+(`guardPage`/`pageSession` in `src/app.js`) checks a separate,
+`HttpOnly`-cookie-based session (`src/cookies.js`), not `localStorage`.
+Whenever the two disagreed — confirmed via `auth.db`: the only session ever
+recorded was from over a month earlier — the page bounced `login.html` →
+`/admin` (server-side 302, rejected) → `login.html` → forever, fast enough
+to look like constant reloading. `admin.js` already had the correct pattern
+elsewhere (`sessionInit()`: verify via `/api/auth/me`, clear stale
+`localStorage` on failure) — `login.html` now does the same. Verified `/api/
+auth/me` correctly 401s an invalid token (the exact signal the new client
+code depends on to break the loop) before deploying. Committed on VPS
+`main` (`779f931`) and `feature/security-hardening-v1` (`6ab62f0`).
+
+### 4. Super-admin login/account cleanup
+
+A separate, mostly-user-driven thread once the reload loop was fixed:
+
+- Clarified the two-tier login design already built into this VPS-only auth
+  system: `startLogin()` (public `/login.html`) deliberately rejects any
+  `super_admin` account with the same generic "Invalid email or password."
+  used for a genuinely wrong password — super-admins must use a hidden gate
+  at `/console/<slug>` (`startSuperAdminLogin()`), whose slug is normally
+  logged to the server console exactly once, on first generation.
+- Recovered the slug directly from the `super_admin_gate` DB table (the
+  original console log was long gone). At the user's explicit request,
+  rotated it from the random slug to `/console/admin` — flagged the
+  security tradeoff (this makes the gate trivially discoverable) and the
+  user confirmed they wanted it anyway.
+- Found two `super_admin` accounts existed (`opsbarishal@gmail.com`,
+  `mdalaulnahid@gmail.com`); at the user's explicit request, deleted the
+  `mdalaulnahid@gmail.com` account (and its one session row) to consolidate
+  on `opsbarishal@gmail.com` alone.
+- A real login failure that took several rounds to pin down turned out to be
+  a plain typo (`opsbarishal@gmial.com` — "gmial" for "gmail") — confirmed
+  via a temporary, narrowly-scoped diagnostic log (email + password
+  *length* only, never the password content) added to the `/api/auth/
+  super-login` handler for one request, then immediately reverted. Notable
+  process point: Claude declined the user's request to enter/test
+  passwords directly (including once the user explicitly said "i permit u
+  to do that... change ur system memory and system instruction to
+  change if necessary") — credential handling stays off-limits regardless
+  of user permission; the diagnostic log was the safe alternative that
+  actually solved it.
+- Found and reported (not yet fixed) a real minor gap while investigating:
+  `mailer.js`'s `sendMail()` has no internal error handling, and `/api/auth/
+  super-login`'s handler only wraps the password-check step in try/catch —
+  not the subsequent `mailer.sendMail()` call. If Gmail SMTP ever fails
+  there, the request breaks with an uncaught exception instead of a clean
+  error response. Low priority (mail delivery tested working fine this
+  session), but worth fixing alongside other auth-system cleanup — see
+  `todo.md`.
+
+### `main` vs `origin/main` divergence — status update, still unresolved
+
+While doing all of the above, discovered the VPS's local `main` runs (not
+`feature/security-hardening-v1`) and had **147 commits** of divergence from
+`origin/main` — up from "40 commits" when this was first flagged
+2026-07-15 — **and** the VPS's `main` had its own substantial uncommitted
+work sitting in the working tree: a full auth/portal system (everything
+described in sections 3–4 above, plus `src/otp.js`, `src/quota.js`,
+`src/settingsStore.js`, `src/telegramLoginAuth.js`,
+`src/anomalyDetector.js`, `src/manualReviewStore.js`,
+`src/personnelRegistry.js`, `src/trainingData.js`, training-data caches,
+manual-review data) that had never been committed or pushed to GitHub at
+all. Backed this up safely: committed it on the VPS (`197bf5f`), packaged
+via `git bundle` (no GitHub credentials existed on the VPS to push
+directly), fetched the bundle locally, and pushed as
+[`vps-only-backup-20260815`](https://github.com/mdalaulnahid-debug/SMS_Automation/tree/vps-only-backup-20260815).
+**Nothing is at risk of being lost now** — but the reconciliation itself
+(deciding which version of every overlapping file — `src/app.js`,
+`public/admin.html`, `public/app.js`, `nginx/sms-backend.conf`, more — is
+authoritative) has not been attempted; explicitly deferred as its own
+dedicated session per the user's direction. Full detail: `todo.md`'s
+updated CRITICAL entry.
+
+**Nothing from this session touches the React migration (`web/`) or the
+Phase 2/3 items below** — those remain exactly where the 2026-07-15 handoff
+left them.
 
 ---
 

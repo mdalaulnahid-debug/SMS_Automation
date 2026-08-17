@@ -104,7 +104,7 @@ becoming an email-enumeration oracle). Wired into both the vanilla site
 standalone recovery CLI meant to be run by hand over SSH on the VPS — it never
 receives the plaintext password from Claude, only from whoever runs it.
 
-## ⚠️ Deployment gap — `feature/security-hardening-v1` was never merged
+## ⚠️ Deployment gap — `feature/security-hardening-v1` was never merged (now much bigger than first thought)
 
 Discovered 2026-07-15: this branch is **40 commits ahead of `main`**, covering
 the *entire* Security Hardening V1 initiative (steps 1–9: registry-gated
@@ -119,6 +119,31 @@ request, informed it wouldn't enable registry matching without the paired
 backend deploy). **Real fix, not yet done:** merge `feature/security-
 hardening-v1` → `main` and deploy properly — needs explicit user sign-off
 given the size of what's shipping.
+
+**Update 2026-08-17 — it's worse than "behind":** the gap is now **147
+commits**, and the VPS's own `main` had *independently* diverged — a full,
+never-committed auth/portal system (login, registration, forgot/reset-
+password, super-admin gate, quota/OTP, anomaly detection — much of it
+overlapping in scope with this branch's own work) was sitting directly on
+the server's filesystem, uncommitted, discovered while fixing an unrelated
+production bug this session. It's now safely backed up as
+`vps-only-backup-20260815` on GitHub (nothing lost), but reconciling three
+divergent histories (`origin/main`, `feature/security-hardening-v1`, and
+this VPS-only work) is unstarted — a dedicated session's worth of work on
+its own. Full detail: `progress_tracker.md`'s 2026-08-17 handoff, `todo.md`'s
+CRITICAL entry.
+
+**Also this session:** the long-standing "never SSH into / deploy to the VPS
+directly" rule was explicitly withdrawn by the user, after SSH key auth was
+set up — direct SSH is now the normal way Claude investigates/fixes
+production issues (with ordinary care still applied to state-changing
+actions). Four real production bugs were found and fixed this way: a
+historical data-integrity bug (SMS replies silently misattributed to the
+wrong request, 1,258 rows corrected), a live active bug (multi-identifier
+requests finalizing before all their replies arrived, 1,158-row backlog
+corrected), an admin-login infinite reload loop, and a super-admin
+login/account cleanup. See `progress_tracker.md`'s 2026-08-17 handoff for
+full technical detail on each.
 
 ## Planned feature — Lost/Stolen Phone Recovery Watch (GD-linked)
 

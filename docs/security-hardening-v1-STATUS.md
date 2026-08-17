@@ -19,6 +19,15 @@ was discovered while fixing an unrelated production bug report (production's
 explicitly (registry-gated registration is a behavior change, not just a
 bugfix) — tracked as a `P1` CRITICAL item in `todo.md`.
 
+**⚠️ Update 2026-08-17: the gap is now 147 commits, and it's worse than
+"behind" — the VPS's own `main` had independently diverged too**, with a
+full unmerged/uncommitted auth-and-portal system built directly on the
+server (overlapping in scope with much of this branch's own auth work).
+That work is now safely backed up as `vps-only-backup-20260815` on GitHub;
+reconciling it against both this branch and `origin/main` is unstarted and
+explicitly deferred as its own session. Full detail:
+`progress_tracker.md`'s 2026-08-17 handoff and `todo.md`'s CRITICAL entry.
+
 ## Status by component (per design doc §14 build order)
 
 | # | Component | Status |
