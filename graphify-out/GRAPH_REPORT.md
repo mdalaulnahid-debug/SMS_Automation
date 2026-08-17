@@ -1,16 +1,16 @@
 # Graph Report - SMS_Automation  (2026-08-17)
 
 ## Corpus Check
-- 239 files · ~442,892 words
+- 239 files · ~443,467 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2480 nodes · 4166 edges · 177 communities (165 shown, 12 thin omitted)
+- 2482 nodes · 4168 edges · 168 communities (157 shown, 11 thin omitted)
 - Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 191 edges (avg confidence: 0.65)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `67f75daf`
+- Built from commit: `630c528d`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -122,22 +122,14 @@
 - [[_COMMUNITY_replyMatching.test.js|replyMatching.test.js]]
 - [[_COMMUNITY_reverse-weak-corrections.js|reverse-weak-corrections.js]]
 - [[_COMMUNITY_verify-reversal.js|verify-reversal.js]]
-- [[_COMMUNITY_Phase 3 Officer Portal port|Phase 3: Officer Portal port]]
 - [[_COMMUNITY_design-system|design-system.md]]
-- [[_COMMUNITY_behavioralAnomaly.test.js|behavioralAnomaly.test.js]]
-- [[_COMMUNITY_adminGroupActions.test.js|adminGroupActions.test.js]]
-- [[_COMMUNITY_5. API Boundary Plan|5. API Boundary Plan]]
-- [[_COMMUNITY_Reply Shape Rules|Reply Shape Rules]]
 - [[_COMMUNITY_Session Handoff (2026-08-17) — Production data-integrity + admin-auth bugfixes, VPS-only auth system discovered & backed up|Session Handoff (2026-08-17) — Production data-integrity + admin-auth bugfixes, VPS-only auth system discovered & backed up]]
 - [[_COMMUNITY_Session Handoff (2026-06-30) — Phase 1.0 loginMFA backend core|Session Handoff (2026-06-30) — Phase 1.0 login/MFA backend core]]
-- [[_COMMUNITY_8. Security Model|8. Security Model]]
 - [[_COMMUNITY_Session Handoff (2026-06-20)|Session Handoff (2026-06-20)]]
 - [[_COMMUNITY_Session Handoff (2026-07-04) — Web UI redesign, reskin, deploy|Session Handoff (2026-07-04) — Web UI redesign, reskin, deploy]]
 - [[_COMMUNITY_Session Handoff (2026-06-23) — open group auth + forward-aware tagging|Session Handoff (2026-06-23) — open group auth + forward-aware tagging]]
 - [[_COMMUNITY_Session Handoff (2026-07-15) — React redesign progress, forgotreset-password, production deployment-gap discovery|Session Handoff (2026-07-15) — React redesign progress, forgot/reset-password, production deployment-gap discovery]]
 - [[_COMMUNITY_Session Handoff (2026-06-20 night) — reply-type misclassification incident|Session Handoff (2026-06-20 night) — reply-type misclassification incident]]
-- [[_COMMUNITY_3. Components|3. Components]]
-- [[_COMMUNITY_7. Deployment Model|7. Deployment Model]]
 - [[_COMMUNITY_Session Handoff (2026-06-29) — diagnosed retried-request reply auto-matching bug|Session Handoff (2026-06-29) — diagnosed retried-request reply auto-matching bug]]
 - [[_COMMUNITY_Progress Tracker|Progress Tracker]]
 - [[_COMMUNITY_Cybernetic Command Design System|Cybernetic Command Design System]]
@@ -206,7 +198,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (177 total, 12 thin omitted)
+## Communities (168 total, 11 thin omitted)
 
 ### Community 0 - "Web Frontend (ops+admin)"
 Cohesion: 0.10
@@ -217,8 +209,8 @@ Cohesion: 0.21
 Nodes (4): AnomalyDetector, { AnomalyDetector }, assert, test
 
 ### Community 2 - "Automation Store & Audit"
-Cohesion: 0.09
-Nodes (4): expectedReplyCount(), AutomationStore, nowIso(), randomId()
+Cohesion: 0.08
+Nodes (5): createRequestId(), expectedReplyCount(), AutomationStore, nowIso(), randomId()
 
 ### Community 3 - "Android Gateway Log/DB"
 Cohesion: 0.16
@@ -237,8 +229,8 @@ Cohesion: 0.08
 Nodes (21): android, GatewayForegroundService, Boolean, Int, Intent, org, String, HttpServer (+13 more)
 
 ### Community 7 - "Training Data & Matching"
-Cohesion: 0.06
-Nodes (56): { join }, main(), { rebuildTrainingCache }, REQUEST_TYPES, analyzeOperatorReply(), confidenceScore(), { extractSilentReference }, inferReplyFamilies() (+48 more)
+Cohesion: 0.08
+Nodes (42): { join }, main(), { rebuildTrainingCache }, { basename, dirname, extname, join }, buildPatterns(), buildSignature(), buildSummary(), emptyCatalog() (+34 more)
 
 ### Community 8 - "Android Admin Dashboard"
 Cohesion: 0.11
@@ -273,8 +265,8 @@ Cohesion: 0.10
 Nodes (14): BootReceiver, Context, Intent, Context, Intent, String, SmsReceiver, Context (+6 more)
 
 ### Community 15 - "Request Parser"
-Cohesion: 0.18
-Nodes (20): operatorForMsisdn(), targetOperatorsForRequest(), diagnoseIdentifierError(), ERROR_DEFINITIONS, HYPHENATED_COMMANDS, identifierMatchesType(), invalidResult(), invalidResultWithText() (+12 more)
+Cohesion: 0.20
+Nodes (18): diagnoseIdentifierError(), ERROR_DEFINITIONS, HYPHENATED_COMMANDS, identifierMatchesType(), invalidResult(), invalidResultWithText(), isImei(), isMsisdn() (+10 more)
 
 ### Community 16 - "Android Settings Screen"
 Cohesion: 0.18
@@ -401,22 +393,12 @@ Cohesion: 0.19
 Nodes (12): exportAuditCsv(), applyTheme(), auditLogsToCsv(), downloadCsv(), esc(), generateProvisionQr(), postJson(), renderDispatches() (+4 more)
 
 ### Community 48 - "app.js"
-Cohesion: 0.19
-Nodes (6): generateCode(), OtpStore, { randomInt }, assert, { OtpStore, generateCode }, test
+Cohesion: 0.10
+Nodes (17): generateCode(), OtpStore, { randomInt }, assert, { OtpStore, generateCode }, test, appWith(), assert (+9 more)
 
 ### Community 64 - "BackendClient"
-Cohesion: 0.17
-Nodes (9): createRequestId(), normalizePhoneNumber(), normalizeSenderId(), canonicalize(), { createHash }, extractSilentReference(), hashAuditRow(), {
-  OPERATORS,
-  STATUSES,
-  DISPATCH_STATUSES,
-  TERMINAL_DISPATCH_STATUSES,
-  assertTransition,
-  createRequestId,
-  normalizePhoneNumber,
-  normalizeSenderId,
-  expectedReplyCount
-} (+1 more)
+Cohesion: 0.15
+Nodes (10): assertTransition(), normalizePhoneNumber(), normalizeSenderId(), canonicalize(), { createHash }, DUPLICATE_BLOCKING_STATUSES, extractSilentReference(), hashAuditRow() (+2 more)
 
 ### Community 66 - "index.mjs"
 Cohesion: 0.50
@@ -512,8 +494,8 @@ Cohesion: 0.24
 Nodes (7): Bundle, Int, List, LogAdapter, VH, RecyclerView, ViewGroup
 
 ### Community 89 - "React + TypeScript Migration — Vision, Architecture, and Phase Plan"
-Cohesion: 0.15
-Nodes (10): assert, { AutomationService }, { AutomationStore }, { join }, { mkdtempSync, rmSync }, { OperatorQueue }, { SmsGatewayClient }, { STATUSES } (+2 more)
+Cohesion: 0.11
+Nodes (22): REQUEST_TYPES, analyzeOperatorReply(), confidenceScore(), { extractSilentReference }, inferReplyFamilies(), { matchReplyAgainstTraining, scoreReplyFamiliesFromTraining }, matchTrainingPattern(), payloadInReply() (+14 more)
 
 ### Community 90 - "classify-unmatched.js"
 Cohesion: 0.20
@@ -536,8 +518,12 @@ Cohesion: 0.20
 Nodes (8): appliedLogs, { confidenceRank, replyTypeScore, DEFAULT_REPLY_WINDOW_MS }, { DatabaseSync }, db, disagreements, dispatchesByGateway, { inferReplyFamilies, analyzeOperatorReply }, path
 
 ### Community 96 - "service.js"
-Cohesion: 0.10
-Nodes (19): assertTransition(), formatOperatorSms(), isTrustedSenderForGateway(), operatorForGateway(), OPERATORS, REQUEST_DEFINITIONS, STATUS_TRANSITIONS, STATUSES (+11 more)
+Cohesion: 0.09
+Nodes (22): formatOperatorSms(), isTrustedSenderForGateway(), operatorForGateway(), operatorForMsisdn(), OPERATORS, REQUEST_DEFINITIONS, STATUS_TRANSITIONS, STATUSES (+14 more)
+
+### Community 97 - "OperatorQueue"
+Cohesion: 0.24
+Nodes (8): appWith(), assert, call(), { createApp }, mockReq(), mockRes(), { Readable }, test
 
 ### Community 98 - ".oxlintrc.json"
 Cohesion: 0.33
@@ -564,8 +550,8 @@ Cohesion: 0.22
 Nodes (7): { DatabaseSync }, db, { DEFAULT_REPLY_WINDOW_MS }, dispatchesByGateway, now, path, rows
 
 ### Community 105 - "behavioralAnomaly.test.js"
-Cohesion: 0.20
-Nodes (4): QuotaTracker, assert, { QuotaTracker }, test
+Cohesion: 0.11
+Nodes (13): QuotaTracker, { AnomalyDetector }, appWith(), assert, call(), { createApp }, mockReq(), mockRes() (+5 more)
 
 ### Community 106 - "App.tsx"
 Cohesion: 0.12
@@ -615,29 +601,9 @@ Nodes (10): { analyzeOperatorReply }, appliedLogs, apply, { AutomationStore }, {
 Cohesion: 0.29
 Nodes (6): currentlyUnmatched, { DatabaseSync }, db, path, reversedCount, topOffenders
 
-### Community 120 - "Phase 3: Officer Portal port"
-Cohesion: 0.19
-Nodes (11): appWith(), assert, call(), { createApp }, mockReq(), mockRes(), { OtpStore }, { QuotaTracker } (+3 more)
-
 ### Community 121 - "design-system.md"
 Cohesion: 0.33
 Nodes (5): { DatabaseSync }, db, [gatewayId, from, to], path, rows
-
-### Community 122 - "behavioralAnomaly.test.js"
-Cohesion: 0.22
-Nodes (9): { AnomalyDetector }, appWith(), assert, call(), { createApp }, mockReq(), mockRes(), { Readable } (+1 more)
-
-### Community 123 - "adminGroupActions.test.js"
-Cohesion: 0.24
-Nodes (8): appWith(), assert, call(), { createApp }, mockReq(), mockRes(), { Readable }, test
-
-### Community 124 - "5. API Boundary Plan"
-Cohesion: 0.33
-Nodes (6): 5. API Boundary Plan, Admin API, Gateway device API, Integration API, Operations API, Public health and bootstrap
-
-### Community 125 - "Reply Shape Rules"
-Cohesion: 0.33
-Nodes (6): IMEI-MS, LCL, LRL, MS-NID, NID-MS, Reply Shape Rules
 
 ### Community 126 - "Session Handoff (2026-08-17) — Production data-integrity + admin-auth bugfixes, VPS-only auth system discovered & backed up"
 Cohesion: 0.33
@@ -646,10 +612,6 @@ Nodes (6): 1. Black-hole match corruption (historical data-integrity bug), 2. Mu
 ### Community 127 - "Session Handoff (2026-06-30) — Phase 1.0 login/MFA backend core"
 Cohesion: 0.33
 Nodes (6): Email infrastructure decided + confirmed working this session, Important files, Not yet done (see `todo.md`'s Phase 1 entry), Session Handoff (2026-06-30) — Phase 1.0 login/MFA backend core, Verified, What was built
-
-### Community 129 - "8. Security Model"
-Cohesion: 0.40
-Nodes (5): 8. Security Model, Audit model, Identity and auth, Recommended security upgrades, Secret handling
 
 ### Community 130 - "Session Handoff (2026-06-20)"
 Cohesion: 0.40
@@ -670,14 +632,6 @@ Nodes (5): ⚠️ Deployment-gap discovery, Forgot-password / reset-password —
 ### Community 134 - "Session Handoff (2026-06-20 night) — reply-type misclassification incident"
 Cohesion: 0.40
 Nodes (5): Fix (deployed, tested), Root cause, Session Handoff (2026-06-20 night) — reply-type misclassification incident, Verified, What happened
-
-### Community 135 - "3. Components"
-Cohesion: 0.50
-Nodes (4): 3.1 Backend (`src/`), 3.2 Android Gateway (`android-gateway/`), 3.3 Dashboard (`public/`), 3. Components
-
-### Community 136 - "7. Deployment Model"
-Cohesion: 0.50
-Nodes (4): 7. Deployment Model, Current acceptable deployment, Environments, Target enterprise deployment
 
 ### Community 137 - "Session Handoff (2026-06-29) — diagnosed retried-request reply auto-matching bug"
 Cohesion: 0.50
@@ -704,12 +658,12 @@ Cohesion: 0.05
 Nodes (40): Architecture, Architecture, Architecture decisions (locked), Files (when built), Files (when built), Full phase table, Phase 2: Auth pages (Login + Register), Phase 3: Officer Portal port (+32 more)
 
 ### Community 271 - "Architecture"
-Cohesion: 0.12
-Nodes (17): 10. Reply Drafting and Posting, 11. Security Model, 12. Failure Modes and Recovery, 13. Testing Strategy, 14. Planned extensions, 15. Workstation portability, 1. Purpose, 2. Topology (+9 more)
+Cohesion: 0.10
+Nodes (21): 10. Reply Drafting and Posting, 11. Security Model, 12. Failure Modes and Recovery, 13. Testing Strategy, 14. Planned extensions, 15. Workstation portability, 1. Purpose, 2. Topology (+13 more)
 
 ### Community 276 - "System Design v2"
-Cohesion: 0.12
-Nodes (17): 10. Maintainability Rules, 11. Immediate Design Decisions, 12. Suggested Next Implementation Order, 1. Product Surfaces, 2. Product Principle, 3. Component Diagram, 3a. Intake Validation Boundary, 4. Role Model (+9 more)
+Cohesion: 0.06
+Nodes (32): 10. Maintainability Rules, 11. Immediate Design Decisions, 12. Suggested Next Implementation Order, 1. Product Surfaces, 2. Product Principle, 3. Component Diagram, 3a. Intake Validation Boundary, 4. Role Model (+24 more)
 
 ### Community 304 - "Enterprise Architecture Baseline"
 Cohesion: 0.11
@@ -736,8 +690,8 @@ Cohesion: 0.13
 Nodes (14): 1. Poll and claim jobs, 2. Ack send result, Android Phone SMS Gateway Contract, Backend health, Backend -> Phone: SMS Dispatch, Discovery And Registration, Gateway registration, Heartbeat (+6 more)
 
 ### Community 371 - "Training And Matching Rules"
-Cohesion: 0.22
-Nodes (8): Current Practical Warning, Intake Normalization Rules, Matching Safety Rules, Request Routing Rules, Self-Training Rules, Silent Reference Rule, Training And Matching Rules, Training Data Source
+Cohesion: 0.13
+Nodes (14): Current Practical Warning, IMEI-MS, Intake Normalization Rules, LCL, LRL, Matching Safety Rules, MS-NID, NID-MS (+6 more)
 
 ### Community 402 - "Debug Start Service crash in Android Studio"
 Cohesion: 0.15
@@ -760,8 +714,8 @@ Cohesion: 0.20
 Nodes (9): Actors, Audit Log Reference, Manual correction & admin actions, Reply handling (`REPLY_*`), Request lifecycle (`REQUEST_*`), Security, SMS plumbing (`SMS_*`), Source (+1 more)
 
 ### Community 487 - "Multi-number batching — official rules and implementation status"
-Cohesion: 0.20
-Nodes (9): Auto-correct — now implemented (2026-06-19), Multi-number batching — official rules and implementation status, Open follow-ups, Other things that shipped alongside this (not in the original plan), Specific validation error messages (2026-06-19), The official rules (as given), Verification, What actually shipped — `src/parser.js` (+1 more)
+Cohesion: 0.18
+Nodes (10): Auto-correct — now implemented (2026-06-19), Bug found & fixed (2026-08-17) — the dispatch-closing half of "reply collection across a batch" was never actually correct, Multi-number batching — official rules and implementation status, Open follow-ups, Other things that shipped alongside this (not in the original plan), Specific validation error messages (2026-06-19), The official rules (as given), Verification (+2 more)
 
 ### Community 497 - "Lost/Stolen Phone Recovery Watch — System Design (Planned, `P2`)"
 Cohesion: 0.18
@@ -780,7 +734,7 @@ Cohesion: 0.22
 Nodes (8): Brand & Style, Colors, Components, Elevation & Depth, Implementation Status Note, Layout & Spacing, Shapes, Typography
 
 ### Community 510 - "Telegram Bridge"
-Cohesion: 0.22
+Cohesion: 0.20
 Nodes (9): Architecture, Backend API used by the bridge, Files, Notes & limits, Run, Setup, Telegram Bridge, Why a two-step post (approve → bridge confirms) (+1 more)
 
 ### Community 517 - "Project Plan"
@@ -796,8 +750,8 @@ Cohesion: 0.29
 Nodes (6): Active source of truth, Important policy, Rule reminder, Runtime usage, Suggested workbook columns, Training Data Organization
 
 ### Community 550 - "Vision"
-Cohesion: 0.29
-Nodes (6): Current MVP State (June 2026), Goal, Long-Term Direction, Principles, Target Outcome, Vision
+Cohesion: 0.25
+Nodes (7): Current State (as of 2026-08-17), Goal, Historical MVP snapshot (June 2026, kept for reference), Long-Term Direction, Principles, Target Outcome, Vision
 
 ### Community 552 - "/resume — session catch-up"
 Cohesion: 0.33
@@ -832,24 +786,24 @@ Cohesion: 0.50
 Nodes (4): Phase 1: Add Encrypted Block Storage (Vultr) — RECOMMENDED, Phase 2: Application-Level Encryption (Optional, High Security), Phase 3: Key Rotation & Backup (If Implementing Phase 2), Todo — 2026-06-24: Data Encryption at Rest (Optional, Recommended)
 
 ## Knowledge Gaps
-- **999 isolated node(s):** `What this project is`, `Architecture — four surfaces, one backend`, `Auth model`, `Deploy — production VPS`, `Design system (current)` (+994 more)
+- **1000 isolated node(s):** `Request lifecycle (`REQUEST_*`)`, `Reply handling (`REPLY_*`)`, `SMS plumbing (`SMS_*`)`, `Manual correction & admin actions`, `Telegram bridge safeguards` (+995 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **12 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **11 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `UserAuthStore` connect `User Auth & Sessions` to `Login.tsx`, `replyMatching.test.js`, `Ops/Admin Data Builder`, `Portal.tsx`?**
-  _High betweenness centrality (0.167) - this node is a cross-community bridge._
+  _High betweenness centrality (0.180) - this node is a cross-community bridge._
 - **Why does `PhoneInbox()` connect `Android Admin Design System` to `App.tsx`, `Phase 3: Officer Portal port`, `button.tsx`, `Portal.tsx`?**
-  _High betweenness centrality (0.075) - this node is a cross-community bridge._
+  _High betweenness centrality (0.080) - this node is a cross-community bridge._
 - **Why does `cn()` connect `button.tsx` to `App.tsx`, `Login.tsx`, `Phase 3: Officer Portal port`, `card.tsx`, `Portal.tsx`, `domain.js`, `Android Admin Design System`?**
-  _High betweenness centrality (0.064) - this node is a cross-community bridge._
-- **What connects `What this project is`, `Architecture — four surfaces, one backend`, `Auth model` to the rest of the system?**
-  _999 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _High betweenness centrality (0.073) - this node is a cross-community bridge._
+- **What connects `Request lifecycle (`REQUEST_*`)`, `Reply handling (`REPLY_*`)`, `SMS plumbing (`SMS_*`)` to the rest of the system?**
+  _1000 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Web Frontend (ops+admin)` be split into smaller, more focused modules?**
   _Cohesion score 0.10317460317460317 - nodes in this community are weakly interconnected._
 - **Should `Automation Store & Audit` be split into smaller, more focused modules?**
-  _Cohesion score 0.09090909090909091 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07993197278911565 - nodes in this community are weakly interconnected._
 - **Should `Android Prefs Storage` be split into smaller, more focused modules?**
   _Cohesion score 0.14285714285714285 - nodes in this community are weakly interconnected._
