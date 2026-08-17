@@ -195,8 +195,8 @@
     "semantic_hash": ""
   },
   "public/shared.js": {
-    "mtime": 1785651560.1328113,
-    "ast_hash": "27cc76f3a97d3a0b6254a365c7d98ea2",
+    "mtime": 1786945585.2215524,
+    "ast_hash": "9b2711373aeb2628692216c0b19a415f",
     "semantic_hash": ""
   },
   "scripts/backup.sh": {
@@ -280,9 +280,9 @@
     "semantic_hash": ""
   },
   "src/domain.js": {
-    "mtime": 1781788714.0680149,
-    "ast_hash": "1c3f53096b34a8bcaea31c8d9d5cd7d1",
-    "semantic_hash": "1c3f53096b34a8bcaea31c8d9d5cd7d1"
+    "mtime": 1786945491.2618456,
+    "ast_hash": "21f0a62dbb818348b261cf8c3066720c",
+    "semantic_hash": ""
   },
   "src/mailer.js": {
     "mtime": 1785651560.1414783,
@@ -330,8 +330,8 @@
     "semantic_hash": "c2ddb13641a9fcb3398445932020564b"
   },
   "src/service.js": {
-    "mtime": 1785676085.19975,
-    "ast_hash": "61590601dc720f5bbbe2b8c17fff9094",
+    "mtime": 1786945568.293859,
+    "ast_hash": "e42192f40f3243494873f879e22e9ee0",
     "semantic_hash": ""
   },
   "src/settingsStore.js": {
@@ -345,8 +345,8 @@
     "semantic_hash": "b3a4f73f626432c7cebb2b6f05196ca1"
   },
   "src/store.js": {
-    "mtime": 1784016270.9186656,
-    "ast_hash": "209df87eb932352b74520cdb867fb837",
+    "mtime": 1786945498.8999743,
+    "ast_hash": "463951046a9c6dfb3f50954ac9fe281e",
     "semantic_hash": ""
   },
   "src/trainingData.js": {
@@ -420,8 +420,8 @@
     "semantic_hash": ""
   },
   "test/workflow.test.js": {
-    "mtime": 1785651560.152215,
-    "ast_hash": "f9ea83efe5ed5955aa2f55b9ea65fe3e",
+    "mtime": 1786945732.917238,
+    "ast_hash": "d5b479117999ce347338d979f3c8e421",
     "semantic_hash": ""
   },
   ".agents/skills/impeccable/scripts/command-metadata.json": {
@@ -2130,8 +2130,8 @@
     "semantic_hash": ""
   },
   ".impeccable/hook.cache.json": {
-    "mtime": 1786785742.9117732,
-    "ast_hash": "0a19a407f20ee4cc7f7d0b39e72816ec",
+    "mtime": 1786953789.5189857,
+    "ast_hash": "39f7acd4963f18d02159d29af56a3399",
     "semantic_hash": ""
   },
   "config/auth.example.json": {
@@ -3847,6 +3847,21 @@
   "scripts/verify-reversal.js": {
     "mtime": 1786785742.812204,
     "ast_hash": "702ef3e8da85429798c30810a8357da5",
+    "semantic_hash": ""
+  },
+  "scripts/analyze-unmatched-window.js": {
+    "mtime": 1786861757.3774276,
+    "ast_hash": "ffa1d3e60c390fe969a16933ebf0f612",
+    "semantic_hash": ""
+  },
+  "scripts/inspect-window.js": {
+    "mtime": 1786953185.1351852,
+    "ast_hash": "e7fd821005264b49451f1eb0abea2ec9",
+    "semantic_hash": ""
+  },
+  "scripts/wait-for-multi-id-request.js": {
+    "mtime": 1786953789.4197483,
+    "ast_hash": "c9a9b534834e81b0576a72ce8c658abc",
     "semantic_hash": ""
   }
 }
