@@ -80,6 +80,12 @@ const STATUSES = Object.freeze({
 const DISPATCH_STATUSES = Object.freeze({
   QUEUED: 'QUEUED',
   WAITING_REPLY: 'WAITING_REPLY',
+  // Multi-identifier payloads (IMEI-MS/NID-MS/MS-NID with several targets) get ONE dispatch
+  // but the operator sends back ONE SMS per identifier. PARTIAL_REPLY means at least one of
+  // those replies has arrived but not all of them yet -- deliberately NOT in
+  // TERMINAL_DISPATCH_STATUSES so the request stays open for the remaining replies instead
+  // of finalizing (and posting) after just the first one.
+  PARTIAL_REPLY: 'PARTIAL_REPLY',
   REPLY_RECEIVED: 'REPLY_RECEIVED',
   TIMEOUT: 'TIMEOUT',
   FAILED: 'FAILED'
@@ -176,6 +182,13 @@ function normalizeSenderId(value) {
   return String(value || '').trim().toUpperCase();
 }
 
+// Multi-identifier payloads (IMEI-MS/NID-MS/MS-NID with several targets, space-separated)
+// expect one reply SMS per identifier from the operator. Same tokenization as
+// replyAnalyzer.js's payloadInReply/replyContradictsPayload, kept in sync deliberately.
+function expectedReplyCount(request) {
+  return String(request?.payload || '').trim().split(/\s+/).filter(Boolean).length || 1;
+}
+
 function createRequestId(date = new Date(), sequence = 1) {
   const yyyy = date.getUTCFullYear();
   const mm = String(date.getUTCMonth() + 1).padStart(2, '0');
@@ -200,6 +213,7 @@ module.exports = {
   formatOperatorSms,
   operatorForGateway,
   isTrustedSenderForGateway,
+  expectedReplyCount,
   createRequestId,
   assertTransition
 };

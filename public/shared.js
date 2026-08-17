@@ -130,9 +130,11 @@ function renderDispatches(dispatches) {
   return `<div class="dispatch-row">${dispatches.map((dispatch) => {
     const cls = dispatch.status === 'REPLY_RECEIVED'
       ? 'dispatch-ok'
-      : ['TIMEOUT', 'FAILED'].includes(dispatch.status)
-        ? 'dispatch-err'
-        : 'dispatch-pending';
+      : dispatch.status === 'PARTIAL_REPLY'
+        ? 'dispatch-warning'
+        : ['TIMEOUT', 'FAILED'].includes(dispatch.status)
+          ? 'dispatch-err'
+          : 'dispatch-pending';
     return `<span class="dispatch-badge ${cls}">${esc(dispatch.operator)} · ${esc(dispatch.status.replaceAll('_', ' '))}</span>`;
   }).join('')}</div>`;
 }

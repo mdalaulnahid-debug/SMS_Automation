@@ -8,7 +8,8 @@ const {
   assertTransition,
   createRequestId,
   normalizePhoneNumber,
-  normalizeSenderId
+  normalizeSenderId,
+  expectedReplyCount
 } = require('./domain');
 const { createHash } = require('node:crypto');
 const { Persistence } = require('./persistence');
@@ -227,7 +228,18 @@ class AutomationStore {
   markDispatchReplied(requestId, operatorKey, { inboxId } = {}) {
     const dispatch = this.getDispatch(requestId, operatorKey);
     if (!dispatch) return null;
-    dispatch.status = DISPATCH_STATUSES.REPLY_RECEIVED;
+    const request = this.getRequest(requestId);
+    const receivedCount = this.smsInbox.filter((row) => {
+      return row.matchedRequestId === requestId && row.gatewayId === dispatch.gatewayId;
+    }).length;
+    // Multi-identifier payloads (IMEI-MS/NID-MS/MS-NID with several targets) expect one
+    // reply SMS per identifier from the same operator/gateway. Only mark the dispatch
+    // terminal once all of them are in -- otherwise stay PARTIAL_REPLY so the request
+    // remains findable for the rest instead of finalizing after just the first one.
+    const expected = expectedReplyCount(request);
+    dispatch.status = receivedCount >= expected
+      ? DISPATCH_STATUSES.REPLY_RECEIVED
+      : DISPATCH_STATUSES.PARTIAL_REPLY;
     dispatch.inboxId = inboxId || dispatch.inboxId || null;
     dispatch.repliedAt = nowIso();
     if (this.persistence) this.persistence.upsertDispatch(dispatch);
@@ -250,7 +262,9 @@ class AutomationStore {
 
   anyDispatchReplied(requestId) {
     const request = this.getRequest(requestId);
-    return (request.dispatches || []).some((d) => d.status === DISPATCH_STATUSES.REPLY_RECEIVED);
+    return (request.dispatches || []).some((d) => {
+      return d.status === DISPATCH_STATUSES.REPLY_RECEIVED || d.status === DISPATCH_STATUSES.PARTIAL_REPLY;
+    });
   }
 
   updateRequestStatus(requestId, nextStatus, details = {}) {

@@ -7,7 +7,7 @@ const { OperatorQueue } = require('../src/queue');
 const { SmsGatewayClient } = require('../src/smsGateway');
 const { AutomationService } = require('../src/service');
 const { parseRequestText } = require('../src/parser');
-const { STATUSES } = require('../src/domain');
+const { STATUSES, DISPATCH_STATUSES } = require('../src/domain');
 
 function createHarness(gatewayConfig = {}, serviceOptions = {}) {
   const store = new AutomationStore(gatewayConfig);
@@ -507,6 +507,95 @@ test('single-operator batch replies include multiple matched inbound SMS message
   assert.ok(draft);
   assert.match(draft.replyText, /8801916018151/);
   assert.match(draft.replyText, /8801937690281/);
+});
+
+test('single-operator multi-identifier dispatch stays open until every identifier replies, even with autoApprove on', async () => {
+  // Reproduces the production bug: a single dispatch carrying 2 identifiers used to finalize
+  // (and auto-post) after just the FIRST reply, permanently orphaning the second.
+  const { store, service } = createHarness(
+    { BANGLALINK: { trustedSenders: ['8801924400990'] } },
+    { autoApproveChannels: ['telegram'] }
+  );
+  const submitted = await service.submitRequest({
+    channel: 'telegram',
+    chatId: 'operations',
+    sourceMessageId: 900,
+    requesterName: 'LIC Barisal',
+    requesterId: '8739371943',
+    text: 'LRL 01937690281 01916018151'
+  });
+  const requestId = submitted.request.requestId;
+
+  const first = service.receiveSmsWebhook({
+    gatewayId: 'BANGLALINK_PHONE_01',
+    from: '8801924400990',
+    body: 'MN: 8801916018151, Cell Name: DHK_X0118_1 - Banglalink'
+  });
+  assert.equal(first.ok, true);
+
+  // Must NOT finalize (or auto-post) yet -- only 1 of 2 expected replies has arrived.
+  let request = store.getRequest(requestId);
+  assert.equal(request.status, STATUSES.WAITING_OPERATOR_REPLY);
+  assert.equal(request.dispatches[0].status, DISPATCH_STATUSES.PARTIAL_REPLY);
+  assert.equal(store.listReplyDrafts({ status: 'APPROVED_FOR_POST' }).length, 0);
+
+  const second = service.receiveSmsWebhook({
+    gatewayId: 'BANGLALINK_PHONE_01',
+    from: '8801924400990',
+    body: 'MN: 8801937690281, Cell Name: BAR_X0080_2 - Banglalink'
+  });
+  assert.equal(second.ok, true);
+
+  // Now both identifiers are in -- finalizes and auto-approves for posting.
+  request = store.getRequest(requestId);
+  assert.equal(request.status, STATUSES.NEEDS_MANUAL_REVIEW);
+  assert.equal(request.dispatches[0].status, DISPATCH_STATUSES.REPLY_RECEIVED);
+  const approved = store.listReplyDrafts({ status: 'APPROVED_FOR_POST' });
+  assert.equal(approved.length, 1);
+  assert.match(approved[0].replyText, /8801916018151/);
+  assert.match(approved[0].replyText, /8801937690281/);
+
+  // Bridge confirms posting -- only now does the request complete.
+  const completed = await service.markReplyPosted(approved[0].id, { postedMessageId: 55 });
+  assert.equal(completed.status, STATUSES.COMPLETED);
+});
+
+test('multi-identifier dispatch that times out with only partial replies finalizes with the data received', async () => {
+  const { store, service } = createHarness({
+    BANGLALINK: { trustedSenders: ['8801924400990'] }
+  });
+  const submitted = await service.submitRequest({
+    chatId: 'operations',
+    requesterName: 'LIC Barisal',
+    requesterId: '8739371943',
+    text: 'LRL 01937690281 01916018151'
+  });
+  const requestId = submitted.request.requestId;
+
+  service.receiveSmsWebhook({
+    gatewayId: 'BANGLALINK_PHONE_01',
+    from: '8801924400990',
+    body: 'MN: 8801916018151, Cell Name: DHK_X0118_1 - Banglalink'
+  });
+  assert.equal(store.getRequest(requestId).dispatches[0].status, DISPATCH_STATUSES.PARTIAL_REPLY);
+
+  // Second identifier never replies -- age the dispatch's send past the reply window.
+  const outbox = store.smsOutbox.find((row) => row.requestId === requestId);
+  store.claimPendingJobs(outbox.gatewayId);
+  store.ackOutboxJob(outbox.id, { ok: true, providerMessageId: 'sms_partial' });
+  outbox.sendResult.confirmedAt = new Date(Date.now() - 16 * 60 * 1000).toISOString();
+
+  const finalized = await service.timeoutWaitingRequests();
+  assert.equal(finalized.length, 1);
+
+  const request = store.getRequest(requestId);
+  // Finalized with the partial data captured -- NOT dropped, and NOT a blanket TIMEOUT
+  // (a genuinely replied dispatch belongs in NEEDS_MANUAL_REVIEW, same as any other reply).
+  assert.equal(request.status, STATUSES.NEEDS_MANUAL_REVIEW);
+  assert.equal(request.dispatches[0].status, DISPATCH_STATUSES.REPLY_RECEIVED);
+  const draft = store.listReplyDrafts().find((r) => r.requestId === requestId);
+  assert.ok(draft);
+  assert.match(draft.replyText, /8801916018151/);
 });
 
 test('manual approval completes request after reply review', async () => {

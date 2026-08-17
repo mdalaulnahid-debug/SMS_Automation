@@ -1,6 +1,6 @@
 'use strict';
 
-const { OPERATORS, STATUSES, DISPATCH_STATUSES, TERMINAL_DISPATCH_STATUSES } = require('./domain');
+const { OPERATORS, STATUSES, DISPATCH_STATUSES, TERMINAL_DISPATCH_STATUSES, expectedReplyCount } = require('./domain');
 const { parseRequestText } = require('./parser');
 const { analyzeOperatorReply, inferReplyFamilies, replyContradictsPayload } = require('./replyAnalyzer');
 
@@ -428,7 +428,8 @@ class AutomationService {
         this.store.audit('system', 'REQUEST_PARTIAL_OPERATOR_REPLY', matchedRequest.requestId, {
           operator: operatorKey, inboxId: inbox.id, analysis,
           repliedOperators: (request.dispatches || [])
-            .filter((d) => d.status === DISPATCH_STATUSES.REPLY_RECEIVED).map((d) => d.operator),
+            .filter((d) => d.status === DISPATCH_STATUSES.REPLY_RECEIVED || d.status === DISPATCH_STATUSES.PARTIAL_REPLY)
+            .map((d) => d.operator),
           pendingOperators: (request.dispatches || [])
             .filter((d) => !TERMINAL_DISPATCH_STATUSES.includes(d.status)).map((d) => d.operator)
         });
@@ -507,7 +508,7 @@ class AutomationService {
         inboxId: inbox.id,
         analysis,
         repliedOperators: (request.dispatches || [])
-          .filter((d) => d.status === DISPATCH_STATUSES.REPLY_RECEIVED)
+          .filter((d) => d.status === DISPATCH_STATUSES.REPLY_RECEIVED || d.status === DISPATCH_STATUSES.PARTIAL_REPLY)
           .map((d) => d.operator),
         pendingOperators: (request.dispatches || [])
           .filter((d) => !TERMINAL_DISPATCH_STATUSES.includes(d.status))
@@ -908,6 +909,25 @@ class AutomationService {
 
       let changed = false;
       for (const dispatch of request.dispatches || []) {
+        // PARTIAL_REPLY: some but not all of a multi-identifier payload's replies arrived.
+        // If the reply window elapses before the rest show up, finalize with whatever data
+        // was received instead of discarding it -- REPLY_RECEIVED (not TIMEOUT), since real
+        // operator data exists and belongs in the combined draft.
+        if (dispatch.status === DISPATCH_STATUSES.PARTIAL_REPLY) {
+          const timeout = this.dispatchTimeoutState(request.requestId, dispatch);
+          if (timeout.timeoutAt !== null && timeout.timeoutAt < now) {
+            dispatch.status = DISPATCH_STATUSES.REPLY_RECEIVED;
+            if (this.store.persistence) this.store.persistence.upsertDispatch(dispatch);
+            this.store.audit('system', 'DISPATCH_PARTIAL_REPLY_FINALIZED', request.requestId, {
+              operator: dispatch.operator,
+              phase: timeout.phase,
+              anchorAt: timeout.anchorAt,
+              outboxStatus: timeout.outboxStatus
+            });
+            changed = true;
+          }
+          continue;
+        }
         if (dispatch.status !== DISPATCH_STATUSES.WAITING_REPLY) continue;
         const timeout = this.dispatchTimeoutState(request.requestId, dispatch);
         if (timeout.timeoutAt !== null && timeout.timeoutAt < now) {
@@ -997,9 +1017,13 @@ function formatCombinedReply(request, store) {
 
   for (const dispatch of request.dispatches || []) {
     const name = OPERATORS[dispatch.operator]?.name || dispatch.operator;
-    if (dispatch.status === DISPATCH_STATUSES.REPLY_RECEIVED) {
+    if (dispatch.status === DISPATCH_STATUSES.REPLY_RECEIVED || dispatch.status === DISPATCH_STATUSES.PARTIAL_REPLY) {
       const inboxMessages = collectDispatchReplyMessages(request, dispatch, store);
-      lines.push(`— ${name}:`);
+      const expected = expectedReplyCount(request);
+      const suffix = dispatch.status === DISPATCH_STATUSES.PARTIAL_REPLY
+        ? ` (${inboxMessages.length}/${expected} received so far)`
+        : '';
+      lines.push(`— ${name}:${suffix}`);
       if (!inboxMessages.length) {
         lines.push('(reply captured)');
       } else {

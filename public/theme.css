@@ -346,6 +346,7 @@ table.data-table tbody tr:last-child td { border-bottom: none; }
 }
 .dispatch-ok { color: var(--success); border-color: rgba(86, 216, 139, 0.24); background: var(--success-bg); }
 .dispatch-err { color: var(--danger); border-color: rgba(255, 109, 127, 0.24); background: var(--danger-bg); }
+.dispatch-warning { color: var(--warning); border-color: rgba(255, 191, 95, 0.24); background: var(--warning-bg); }
 .dispatch-pending { color: var(--accent); border-color: var(--accent-border); background: var(--accent-bg); }
 
 .btn-sm,
