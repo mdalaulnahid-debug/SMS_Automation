@@ -1,16 +1,16 @@
 # Graph Report - SMS_Automation  (2026-08-17)
 
 ## Corpus Check
-- 238 files · ~439,452 words
+- 239 files · ~440,169 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 2458 nodes · 4147 edges · 161 communities (149 shown, 12 thin omitted)
+- 2473 nodes · 4162 edges · 163 communities (152 shown, 11 thin omitted)
 - Extraction: 95% EXTRACTED · 5% INFERRED · 0% AMBIGUOUS · INFERRED: 191 edges (avg confidence: 0.65)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `1a9b39b4`
+- Built from commit: `a95d89fb`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -124,6 +124,8 @@
 - [[_COMMUNITY_verify-reversal.js|verify-reversal.js]]
 - [[_COMMUNITY_Phase 3 Officer Portal port|Phase 3: Officer Portal port]]
 - [[_COMMUNITY_design-system|design-system.md]]
+- [[_COMMUNITY_behavioralAnomaly.test.js|behavioralAnomaly.test.js]]
+- [[_COMMUNITY_adminGroupActions.test.js|adminGroupActions.test.js]]
 - [[_COMMUNITY_Progress Tracker|Progress Tracker]]
 - [[_COMMUNITY_Cybernetic Command Design System|Cybernetic Command Design System]]
 - [[_COMMUNITY_Todo|Todo]]
@@ -191,7 +193,7 @@
 ## Import Cycles
 - None detected.
 
-## Communities (161 total, 12 thin omitted)
+## Communities (163 total, 11 thin omitted)
 
 ### Community 0 - "Web Frontend (ops+admin)"
 Cohesion: 0.10
@@ -202,8 +204,8 @@ Cohesion: 0.21
 Nodes (4): AnomalyDetector, { AnomalyDetector }, assert, test
 
 ### Community 2 - "Automation Store & Audit"
-Cohesion: 0.09
-Nodes (4): expectedReplyCount(), AutomationStore, nowIso(), randomId()
+Cohesion: 0.08
+Nodes (5): createRequestId(), expectedReplyCount(), AutomationStore, nowIso(), randomId()
 
 ### Community 3 - "Android Gateway Log/DB"
 Cohesion: 0.16
@@ -222,8 +224,8 @@ Cohesion: 0.08
 Nodes (21): android, GatewayForegroundService, Boolean, Int, Intent, org, String, HttpServer (+13 more)
 
 ### Community 7 - "Training Data & Matching"
-Cohesion: 0.06
-Nodes (57): { join }, main(), { rebuildTrainingCache }, REQUEST_TYPES, analyzeOperatorReply(), confidenceScore(), { extractSilentReference }, inferReplyFamilies() (+49 more)
+Cohesion: 0.08
+Nodes (42): { join }, main(), { rebuildTrainingCache }, { basename, dirname, extname, join }, buildPatterns(), buildSignature(), buildSummary(), emptyCatalog() (+34 more)
 
 ### Community 8 - "Android Admin Dashboard"
 Cohesion: 0.11
@@ -386,12 +388,12 @@ Cohesion: 0.19
 Nodes (12): exportAuditCsv(), applyTheme(), auditLogsToCsv(), downloadCsv(), esc(), generateProvisionQr(), postJson(), renderDispatches() (+4 more)
 
 ### Community 48 - "app.js"
-Cohesion: 0.10
-Nodes (17): generateCode(), OtpStore, { randomInt }, assert, { OtpStore, generateCode }, test, appWith(), assert (+9 more)
+Cohesion: 0.19
+Nodes (6): generateCode(), OtpStore, { randomInt }, assert, { OtpStore, generateCode }, test
 
 ### Community 64 - "BackendClient"
-Cohesion: 0.12
-Nodes (15): assertTransition(), createRequestId(), isTrustedSenderForGateway(), normalizePhoneNumber(), normalizeSenderId(), operatorForGateway(), operatorForMsisdn(), REQUEST_DEFINITIONS (+7 more)
+Cohesion: 0.15
+Nodes (10): assertTransition(), normalizePhoneNumber(), normalizeSenderId(), canonicalize(), { createHash }, DUPLICATE_BLOCKING_STATUSES, extractSilentReference(), hashAuditRow() (+2 more)
 
 ### Community 66 - "index.mjs"
 Cohesion: 0.50
@@ -495,8 +497,8 @@ Cohesion: 0.20
 Nodes (8): buckets, byType, { DatabaseSync }, db, { inferReplyFamilies }, JUNK_MARKERS, path, rows
 
 ### Community 91 - "adminPromotion.test.js"
-Cohesion: 0.24
-Nodes (8): appWith(), assert, call(), { createApp }, mockReq(), mockRes(), { Readable }, test
+Cohesion: 0.14
+Nodes (14): { analyzeOperatorReply }, apply, applyStartedAt, { AutomationStore }, { DatabaseSync }, db, dispatchesByGateway, inboxById (+6 more)
 
 ### Community 92 - "AppDatabase"
 Cohesion: 0.29
@@ -511,12 +513,12 @@ Cohesion: 0.20
 Nodes (8): appliedLogs, { confidenceRank, replyTypeScore, DEFAULT_REPLY_WINDOW_MS }, { DatabaseSync }, db, disagreements, dispatchesByGateway, { inferReplyFamilies, analyzeOperatorReply }, path
 
 ### Community 96 - "service.js"
-Cohesion: 0.15
-Nodes (10): assert, { AutomationService }, { AutomationStore }, { join }, { mkdtempSync, rmSync }, { OperatorQueue }, { SmsGatewayClient }, { STATUSES } (+2 more)
+Cohesion: 0.09
+Nodes (22): formatOperatorSms(), isTrustedSenderForGateway(), operatorForGateway(), operatorForMsisdn(), OPERATORS, REQUEST_DEFINITIONS, STATUS_TRANSITIONS, STATUSES (+14 more)
 
 ### Community 97 - "OperatorQueue"
-Cohesion: 0.12
-Nodes (14): formatOperatorSms(), OPERATORS, STATUSES, { OPERATORS, STATUSES }, { OPERATORS, STATUSES, formatOperatorSms }, SmsGatewayClient, assert, { AutomationService } (+6 more)
+Cohesion: 0.11
+Nodes (22): REQUEST_TYPES, analyzeOperatorReply(), confidenceScore(), { extractSilentReference }, inferReplyFamilies(), { matchReplyAgainstTraining, scoreReplyFamiliesFromTraining }, matchTrainingPattern(), payloadInReply() (+14 more)
 
 ### Community 98 - ".oxlintrc.json"
 Cohesion: 0.33
@@ -543,8 +545,8 @@ Cohesion: 0.22
 Nodes (7): { DatabaseSync }, db, { DEFAULT_REPLY_WINDOW_MS }, dispatchesByGateway, now, path, rows
 
 ### Community 105 - "behavioralAnomaly.test.js"
-Cohesion: 0.11
-Nodes (13): QuotaTracker, { AnomalyDetector }, appWith(), assert, call(), { createApp }, mockReq(), mockRes() (+5 more)
+Cohesion: 0.20
+Nodes (4): QuotaTracker, assert, { QuotaTracker }, test
 
 ### Community 106 - "App.tsx"
 Cohesion: 0.12
@@ -594,9 +596,21 @@ Nodes (10): { analyzeOperatorReply }, appliedLogs, apply, { AutomationStore }, {
 Cohesion: 0.29
 Nodes (6): currentlyUnmatched, { DatabaseSync }, db, path, reversedCount, topOffenders
 
+### Community 120 - "Phase 3: Officer Portal port"
+Cohesion: 0.19
+Nodes (11): appWith(), assert, call(), { createApp }, mockReq(), mockRes(), { OtpStore }, { QuotaTracker } (+3 more)
+
 ### Community 121 - "design-system.md"
 Cohesion: 0.33
 Nodes (5): { DatabaseSync }, db, [gatewayId, from, to], path, rows
+
+### Community 122 - "behavioralAnomaly.test.js"
+Cohesion: 0.22
+Nodes (9): { AnomalyDetector }, appWith(), assert, call(), { createApp }, mockReq(), mockRes(), { Readable } (+1 more)
+
+### Community 123 - "adminGroupActions.test.js"
+Cohesion: 0.24
+Nodes (8): appWith(), assert, call(), { createApp }, mockReq(), mockRes(), { Readable }, test
 
 ### Community 194 - "Progress Tracker"
 Cohesion: 0.05
@@ -747,9 +761,9 @@ Cohesion: 0.50
 Nodes (4): Phase 1: Add Encrypted Block Storage (Vultr) — RECOMMENDED, Phase 2: Application-Level Encryption (Optional, High Security), Phase 3: Key Rotation & Backup (If Implementing Phase 2), Todo — 2026-06-24: Data Encryption at Rest (Optional, Recommended)
 
 ## Knowledge Gaps
-- **981 isolated node(s):** `{ DatabaseSync }`, `path`, `{ DEFAULT_REPLY_WINDOW_MS }`, `db`, `sinceIso` (+976 more)
+- **993 isolated node(s):** `path`, `{ AutomationStore }`, `{ analyzeOperatorReply }`, `apply`, `db` (+988 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **12 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **11 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
@@ -759,12 +773,12 @@ _Questions this graph is uniquely positioned to answer:_
 - **Why does `PhoneInbox()` connect `Android Admin Design System` to `App.tsx`, `Phase 3: Officer Portal port`, `button.tsx`, `Portal.tsx`?**
   _High betweenness centrality (0.094) - this node is a cross-community bridge._
 - **Why does `cn()` connect `button.tsx` to `App.tsx`, `Login.tsx`, `Phase 3: Officer Portal port`, `card.tsx`, `Portal.tsx`, `domain.js`, `Android Admin Design System`?**
-  _High betweenness centrality (0.083) - this node is a cross-community bridge._
-- **What connects `{ DatabaseSync }`, `path`, `{ DEFAULT_REPLY_WINDOW_MS }` to the rest of the system?**
-  _981 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _High betweenness centrality (0.075) - this node is a cross-community bridge._
+- **What connects `path`, `{ AutomationStore }`, `{ analyzeOperatorReply }` to the rest of the system?**
+  _993 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Web Frontend (ops+admin)` be split into smaller, more focused modules?**
   _Cohesion score 0.10317460317460317 - nodes in this community are weakly interconnected._
 - **Should `Automation Store & Audit` be split into smaller, more focused modules?**
-  _Cohesion score 0.09090909090909091 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07993197278911565 - nodes in this community are weakly interconnected._
 - **Should `Android Prefs Storage` be split into smaller, more focused modules?**
   _Cohesion score 0.14285714285714285 - nodes in this community are weakly interconnected._
